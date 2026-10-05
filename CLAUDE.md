@@ -6,7 +6,7 @@ otherwise. If a ticket seems to require breaking one, stop and ask.
 
 Read `docs/engineering-standards.md` (shared SimpleFit workflow, commits,
 ownership, quality gates, Definition of Done) and `docs/architecture/README.md`
-before structural changes.
+before structural changes, and `docs/design-system.md` before any UI work.
 
 ## What this is
 
@@ -78,7 +78,9 @@ role-aware capabilities**; a person can hold several roles, so never model
 21. **Utility-first styling.** Static styling (spacing, layout, alignment,
     borders, radius, colours, typography, static positioning) uses NativeWind
     `className` with semantic token classes (`bg-surface`,
-    `text-muted-foreground`, `border-border`), never raw colours. Do not create
+    `text-muted-foreground`, `border-border`), never raw colours, hex values or
+    palette names (ESLint enforces it); compose `src/shared/ui` primitives and
+    `<Text variant>` typography; Lucide is the only icon set. Do not create
     `StyleSheet.create` blocks or static inline style objects for ordinary
     styling (ESLint enforces this). `style` is only for Reanimated/gesture
     styles, runtime-calculated values (insets, dynamic dimensions), NativeWind
