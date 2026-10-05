@@ -6,7 +6,8 @@ import type { SemanticColors } from "@/shared/styles/tokens";
 import { Icon, type LucideIcon } from "./icon";
 import { Text, type TextColor } from "./text";
 
-export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "destructive";
+export type ButtonVariant =
+  "primary" | "secondary" | "quiet" | "outline" | "ghost" | "destructive" | "destructiveSubtle";
 export type ButtonSize = "sm" | "md" | "lg" | "gym";
 
 export type ButtonProps = {
@@ -24,25 +25,44 @@ export type ButtonProps = {
   testID?: string;
 };
 
-// One olive primary action per screen (design principle "Olive = action").
+/*
+ * Variants follow the canonical design (docs/design-tokens.json): one olive
+ * `primary` action per screen, `secondary` (bone) for the strong neutral
+ * action, `quiet` (graphite) for everyday secondary actions, `outline` for a
+ * quiet olive action, `ghost` for low-emphasis text actions, `destructive`
+ * and `destructiveSubtle` (tinted coral) for irreversible ones.
+ */
 const variants: Record<
   ButtonVariant,
   { container: string; text: TextColor & keyof SemanticColors }
 > = {
   primary: { container: "bg-primary border-primary", text: "primaryForeground" },
   secondary: { container: "bg-secondary border-secondary", text: "secondaryForeground" },
-  outline: { container: "bg-transparent border-primary/70", text: "primary" },
-  ghost: { container: "bg-transparent border-transparent", text: "foreground" },
+  quiet: { container: "bg-surface-elevated border-input", text: "foreground" },
+  outline: { container: "bg-transparent border-primary-muted", text: "highlight" },
+  ghost: { container: "bg-transparent border-transparent", text: "mutedForeground" },
   destructive: { container: "bg-destructive border-destructive", text: "destructiveForeground" },
+  destructiveSubtle: {
+    container: "bg-destructive-subtle border-destructive-border",
+    text: "destructiveSubtleForeground",
+  },
 };
 
-// Touch targets: sm keeps 44 pt with hitSlop; gym = 60 pt (gym mode).
-const sizes: Record<ButtonSize, { container: string; textVariant: "bodySmall" | "body" }> = {
-  sm: { container: "min-h-9 px-3", textVariant: "bodySmall" },
-  md: { container: "min-h-touch px-4", textVariant: "body" },
-  lg: { container: "min-h-14 px-6", textVariant: "body" },
-  gym: { container: "min-h-touch-gym px-6", textVariant: "body" },
-};
+/*
+ * Canonical mobile control sizes (docs/design-tokens.json controls.button.mobile):
+ * sm 36 pt pill (touch target extended to 44 pt with hitSlop), md 50, lg 56
+ * (the main call to action), gym 60 (gym mode). Labels are Manrope 800.
+ */
+const sizes: Record<ButtonSize, { container: string; textVariant: "bodySm" | "body" | "bodyLg" }> =
+  {
+    sm: { container: "min-h-button-sm rounded-full px-3.5", textVariant: "bodySm" },
+    md: { container: "min-h-button-md rounded-xl px-4.5", textVariant: "body" },
+    lg: { container: "min-h-button-lg rounded-xl px-4.5", textVariant: "bodyLg" },
+    gym: { container: "min-h-touch-gym rounded-2xl px-6", textVariant: "bodyLg" },
+  };
+
+/** Extra touch area so every button reaches the 44 pt minimum target. */
+const hitSlop: Record<ButtonSize, number> = { sm: 4, md: 0, lg: 0, gym: 0 };
 
 export function Button({
   label,
@@ -68,9 +88,9 @@ export function Button({
       accessibilityState={{ disabled: inactive, busy: loading }}
       disabled={inactive}
       onPress={onPress}
-      hitSlop={size === "sm" ? 6 : 4}
+      hitSlop={hitSlop[size]}
       testID={testID}
-      className={`items-center justify-center rounded-md border active:opacity-80 ${tone.container} ${scale.container} ${inactive ? "opacity-50" : ""}`}
+      className={`items-center justify-center border active:opacity-80 ${tone.container} ${scale.container} ${inactive ? "opacity-50" : ""}`}
     >
       <View className="flex-row items-center gap-2">
         {loading ? (
@@ -78,7 +98,7 @@ export function Button({
         ) : (
           icon && <Icon icon={icon} color={tone.text} />
         )}
-        <Text variant={scale.textVariant} weight="bold" color={tone.text}>
+        <Text variant={scale.textVariant} weight="extrabold" color={tone.text}>
           {label}
         </Text>
       </View>

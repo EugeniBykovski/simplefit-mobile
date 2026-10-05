@@ -1,10 +1,31 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+import spec from "../../../docs/design-tokens.json";
+
 import { palettes, rawPalette, themeVariables, tokenCssName, type SemanticColors } from "./tokens";
+
+/*
+ * The mobile implementation of the shared design-system contract
+ * (docs/design-tokens.json, kept identical in simplefit-platform). These tests
+ * keep tokens.ts, tailwind.config.js, fonts and Metro in lockstep with it, so
+ * web and mobile share one design language.
+ */
 
 // tailwind.config.js is plain Node config; it exports its semantic colour names.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const tailwindConfig = require("../../../tailwind.config.js");
 
-const tokens = Object.keys(palettes.dark) as (keyof SemanticColors)[];
+type Scheme = "dark" | "light";
+const specPalette: Record<string, string> = spec.palette;
+const specSemantic = spec.semantic as Record<Scheme, Record<string, string>>;
+
+/** "graphite-950" -> "graphite950", "surface-elevated" -> "surfaceElevated". */
+function camel(name: string): string {
+  return name.replace(/-([a-z0-9])/g, (_, char: string) =>
+    /\d/.test(char) ? char : char.toUpperCase(),
+  );
+}
 
 /** WCAG 2.x relative luminance contrast ratio of two #rrggbb colours. */
 function contrast(a: string, b: string): number {
@@ -19,88 +40,43 @@ function contrast(a: string, b: string): number {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-// Text/background pairs components actually render.
-const textPairs: [keyof SemanticColors, keyof SemanticColors][] = [
-  ["foreground", "background"],
-  ["mutedForeground", "background"],
-  ["surfaceForeground", "surface"],
-  ["mutedForeground", "surface"],
-  ["foreground", "surfaceElevated"],
-  ["mutedForeground", "muted"],
-  ["primaryForeground", "primary"],
-  ["primary", "background"],
-  ["secondaryForeground", "secondary"],
-  ["accentForeground", "accent"],
-  ["destructiveForeground", "destructive"],
-  ["destructive", "background"],
-  ["destructiveSubtleForeground", "destructiveSubtle"],
-  ["successForeground", "success"],
-  ["successSubtleForeground", "successSubtle"],
-  ["warningForeground", "warning"],
-  ["warningSubtleForeground", "warningSubtle"],
-  ["infoForeground", "info"],
-  ["infoSubtleForeground", "infoSubtle"],
-];
+const color = (scheme: Scheme, token: string) =>
+  palettes[scheme][camel(token) as keyof SemanticColors];
 
 describe("design tokens", () => {
-  it("defines the shared semantic token contract in both themes", () => {
-    expect(tokens).toEqual(
-      expect.arrayContaining([
-        "background",
-        "foreground",
-        "surface",
-        "surfaceSubtle",
-        "surfaceElevated",
-        "muted",
-        "mutedForeground",
-        "border",
-        "input",
-        "ring",
-        "primary",
-        "primaryForeground",
-        "secondary",
-        "secondaryForeground",
-        "destructive",
-        "destructiveForeground",
-        "success",
-        "successForeground",
-        "warning",
-        "warningForeground",
-        "info",
-        "infoForeground",
-      ]),
+  it("matches the shared raw palette", () => {
+    const expected = Object.fromEntries(
+      Object.entries(specPalette).map(([name, value]) => [camel(name), value]),
     );
-    expect(Object.keys(palettes.light)).toEqual(tokens);
+    expect(rawPalette).toEqual(expected);
   });
+
+  it.each(["dark", "light"] as const)(
+    "maps every semantic token of the contract in the %s theme",
+    (scheme) => {
+      for (const [token, paletteName] of Object.entries(specSemantic[scheme])) {
+        expect(color(scheme, token)).toBe(specPalette[paletteName]);
+      }
+      // overlay is mobile-only: the scrim colour, opacity applied by components.
+      expect(Object.keys(palettes[scheme]).sort()).toEqual(
+        [...Object.keys(specSemantic[scheme]).map(camel), "overlay"].sort(),
+      );
+    },
+  );
 
   it.each(["dark", "light"] as const)("meets WCAG AA text contrast in the %s theme", (scheme) => {
-    const colors = palettes[scheme];
-    const failing = textPairs
-      .map(
-        ([text, surface]) =>
-          `${text}/${surface} ${contrast(colors[text], colors[surface]).toFixed(2)}`,
-      )
-      .filter((entry) => Number(entry.split(" ")[1]) < 4.5);
+    const failing = spec.contrast.text
+      .map(([fg, bg]) => [`${fg}/${bg}`, contrast(color(scheme, fg!), color(scheme, bg!))] as const)
+      .filter(([, ratio]) => ratio < 4.5);
     expect(failing).toEqual([]);
     // Focus indicators and control boundaries: 3:1 (WCAG 1.4.11).
-    expect(contrast(colors.ring, colors.background)).toBeGreaterThanOrEqual(3);
-  });
-
-  it("keeps the canonical Graphite × Olive values shared with the web", () => {
-    expect(rawPalette).toMatchObject({
-      graphite950: "#111312",
-      graphite900: "#181b19",
-      bone: "#edefe7",
-      olive400: "#aeb95a",
-      olive300: "#c9d17e",
-      amber: "#e2a250",
-      coral: "#df7a5e",
-    });
-    expect(palettes.dark.background).toBe(rawPalette.graphite950);
-    expect(palettes.dark.primary).toBe(rawPalette.olive400);
+    for (const [fg, bg] of spec.contrast.nonText) {
+      expect(contrast(color(scheme, fg!), color(scheme, bg!))).toBeGreaterThanOrEqual(3);
+    }
   });
 
   it("exposes exactly the semantic tokens as Tailwind colours (no default palette)", () => {
+    const tokens = Object.keys(palettes.dark) as (keyof SemanticColors)[];
     expect([...tailwindConfig.semanticColors].sort()).toEqual(tokens.map(tokenCssName).sort());
     const colors = tailwindConfig.theme.colors;
     expect(Object.keys(colors).sort()).toEqual(
@@ -111,28 +87,59 @@ describe("design tokens", () => {
     }
   });
 
-  it("defines touch target, radius and type scale utilities", () => {
-    const { extend } = tailwindConfig.theme;
-    expect(extend.minHeight).toEqual({ touch: "44px", "touch-gym": "60px" });
-    expect(extend.borderRadius.xl).toBe("22px");
-    expect(Object.keys(extend.fontSize)).toEqual([
-      "display",
-      "h1",
-      "h2",
-      "h3",
-      "title",
-      "body",
-      "body-sm",
-      "label",
-      "caption",
-    ]);
-  });
-
   it("uses hex colours so they convert to CSS variable channels", () => {
     for (const scheme of ["light", "dark"] as const) {
       for (const value of Object.values(palettes[scheme])) expect(value).toMatch(/^#[0-9a-f]{6}$/);
     }
     expect(tokenCssName("surfaceElevated")).toBe("surface-elevated");
     expect(themeVariables("dark")).toBeDefined();
+  });
+});
+
+describe("scales", () => {
+  const { theme } = tailwindConfig;
+
+  it("replaces the type scale with exactly the contract's roles", () => {
+    const expected = Object.fromEntries(
+      Object.entries(spec.typography.roles).map(([role, def]) => [
+        role,
+        [`${def.size}px`, `${def.lineHeight}px`],
+      ]),
+    );
+    expect(theme.fontSize).toEqual(expected);
+  });
+
+  it("converts each role's tracking to px", () => {
+    for (const [role, def] of Object.entries(spec.typography.roles)) {
+      if (!def.tracking) continue;
+      expect(theme.extend.letterSpacing[role]).toBe(`${+(def.size * def.tracking).toFixed(2)}px`);
+    }
+  });
+
+  it("replaces the radius scale with the contract's", () => {
+    const expected = Object.fromEntries(
+      Object.entries(spec.radius).map(([name, px]) => [name, `${px}px`]),
+    );
+    expect(theme.borderRadius).toEqual({ none: "0px", ...expected, full: "9999px" });
+  });
+
+  it("has every spacing step at its canonical size (1 step = 4 px at 16 px per rem)", () => {
+    // Steps outside the Tailwind default scale are added in px.
+    expect(theme.extend.spacing).toEqual({ 4.5: "18px", 5.5: "22px" });
+    // Metro renders 1 rem = 16 pt so the default steps keep their px value.
+    const metro = readFileSync(join(__dirname, "../../../metro.config.js"), "utf8");
+    expect(metro).toMatch(/inlineRem:\s*16\b/);
+  });
+
+  it("defines the canonical control heights and touch targets", () => {
+    const button = spec.controls.button.mobile;
+    expect(theme.extend.minHeight).toEqual({
+      touch: "44px",
+      "touch-gym": `${button.gym.height}px`,
+      "button-sm": `${button.sm.height}px`,
+      "button-md": `${button.md.height}px`,
+      "button-lg": `${button.lg.height}px`,
+      field: `${spec.controls.field.mobile.height}px`,
+    });
   });
 });

@@ -34,9 +34,9 @@ export function Checkbox({
         {checked ? <Icon icon={Check} size={16} color="primaryForeground" /> : null}
       </View>
       <View className="flex-1">
-        <Text weight="medium">{label}</Text>
+        <Text weight="bold">{label}</Text>
         {description ? (
-          <Text variant="caption" color="mutedForeground">
+          <Text variant="caption" color="faintForeground">
             {description}
           </Text>
         ) : null}

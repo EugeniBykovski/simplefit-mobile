@@ -1,38 +1,56 @@
 import { Text as RNText, type TextProps as RNTextProps } from "react-native";
 
-// Literal class names so Tailwind can see them. Families encode the weight
-// (React Native does not synthesize weights for custom fonts).
+/*
+ * The SimpleFit type roles (docs/design-tokens.json typography.roles), the
+ * same semantic scale as the web `type-*` utilities. Literal class names so
+ * Tailwind can see them. React Native does not synthesize weights for custom
+ * fonts, so each role names the font family of its weight.
+ */
 const variants = {
-  display: "font-display text-display tracking-display",
-  h1: "font-display text-h1",
-  h2: "font-display-semibold text-h2",
-  h3: "font-sans-bold text-h3",
-  title: "font-sans-bold text-title",
-  body: "font-sans text-body",
-  bodySmall: "font-sans text-body-sm",
-  label: "font-mono text-label uppercase tracking-label",
-  caption: "font-sans-medium text-caption",
+  display: { family: "font-display", classes: "text-display tracking-display" },
+  h1: { family: "font-display", classes: "text-h1 tracking-h1" },
+  h2: { family: "font-display", classes: "text-h2 tracking-h2" },
+  h3: { family: "font-display", classes: "text-h3 tracking-h3" },
+  title: { family: "font-display", classes: "text-title" },
+  metricXl: { family: "font-display-bold", classes: "text-metric-xl tracking-metric-xl" },
+  metricLg: { family: "font-display-bold", classes: "text-metric-lg tracking-metric-lg" },
+  metric: { family: "font-display-bold", classes: "text-metric tracking-metric" },
+  metricSm: { family: "font-display-bold", classes: "text-metric-sm tracking-metric-sm" },
+  bodyLg: { family: "font-sans", classes: "text-body-lg" },
+  body: { family: "font-sans", classes: "text-body" },
+  bodySm: { family: "font-sans", classes: "text-body-sm" },
+  caption: { family: "font-sans", classes: "text-caption" },
+  micro: { family: "font-sans", classes: "text-micro" },
+  badge: { family: "font-sans-extrabold", classes: "text-badge uppercase" },
+  labelLg: { family: "font-mono", classes: "text-label-lg uppercase tracking-label-lg" },
+  label: { family: "font-mono", classes: "text-label uppercase tracking-label" },
 } as const;
 
+/** Manrope weights of the contract above the role's regular 400. */
 const weights = {
-  medium: "font-sans-medium",
   semibold: "font-sans-semibold",
   bold: "font-sans-bold",
+  extrabold: "font-sans-extrabold",
 } as const;
 
 const colors = {
   foreground: "text-foreground",
   mutedForeground: "text-muted-foreground",
+  faintForeground: "text-faint-foreground",
   surfaceForeground: "text-surface-foreground",
+  highlight: "text-highlight",
+  highlightForeground: "text-highlight-foreground",
   primary: "text-primary",
   primaryForeground: "text-primary-foreground",
   secondaryForeground: "text-secondary-foreground",
   accentForeground: "text-accent-foreground",
+  accentMutedForeground: "text-accent-muted-foreground",
   destructive: "text-destructive",
   destructiveForeground: "text-destructive-foreground",
   destructiveSubtleForeground: "text-destructive-subtle-foreground",
   successForeground: "text-success-foreground",
   successSubtleForeground: "text-success-subtle-foreground",
+  warning: "text-warning",
   warningForeground: "text-warning-foreground",
   warningSubtleForeground: "text-warning-subtle-foreground",
   infoForeground: "text-info-foreground",
@@ -41,18 +59,25 @@ const colors = {
 
 export type TextVariant = keyof typeof variants;
 export type TextColor = keyof typeof colors;
+export type TextWeight = keyof typeof weights;
 
 export type TextProps = RNTextProps & {
   variant?: TextVariant;
   color?: TextColor;
-  /** Heavier Manrope weight for body/caption text (e.g. button labels). */
-  weight?: keyof typeof weights;
+  /** Heavier Manrope weight for interface text (600 values, 700 labels, 800 emphasis). */
+  weight?: TextWeight;
 };
 
 const headers: readonly TextVariant[] = ["display", "h1", "h2", "h3"];
 
+/** Font family class for a role, raised to the requested Manrope weight. */
+export function textFamily(variant: TextVariant, weight?: TextWeight): string {
+  const { family } = variants[variant];
+  return weight && family.startsWith("font-sans") ? weights[weight] : family;
+}
+
 /**
- * Themed text on the SimpleFit type scale. Display and heading variants are
+ * Themed text on the SimpleFit type scale. Display and heading roles are
  * exposed to assistive technology as headers. Font scaling is respected (up
  * to 2× to keep layouts usable).
  */
@@ -68,7 +93,7 @@ export function Text({
       accessibilityRole={headers.includes(variant) ? "header" : props.accessibilityRole}
       maxFontSizeMultiplier={2}
       {...props}
-      className={`${variants[variant]} ${weight ? weights[weight] : ""} ${colors[color]} ${className ?? ""}`}
+      className={`${textFamily(variant, weight)} ${variants[variant].classes} ${colors[color]} ${className ?? ""}`}
     />
   );
 }

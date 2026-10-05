@@ -14,15 +14,34 @@ const rawColorMessage =
   "Use semantic colour tokens (bg-surface, text-muted-foreground, ...), not hex values, arbitrary colours or palette names.";
 
 /**
- * Design-scale guard (docs/design-handoff.md §8.1, SF-16): design values are
- * translated through the SF-13 spacing, radius and type scales, never copied
- * as arbitrary values. Primitives in src/shared/ui own their internal geometry
- * and are exempt; layout dimensions (w/h/size/inset) may stay arbitrary.
+ * Design-scale guards (docs/design-tokens.json, SF-16/SF-17).
+ *
+ * typeScale (every component file): text is sized only by <Text variant>
+ * roles; Tailwind's default font sizes, leading and tracking presets and
+ * non-canonical weights are not part of the design system, and bare `rounded`
+ * has no value in the SimpleFit radius scale.
+ *
+ * offScale and spacingSteps (product code; primitives in src/shared/ui own
+ * their internal geometry): no arbitrary spacing, radius or type values, and
+ * spacing uses only the canonical steps. Layout dimensions (w/h/size/inset)
+ * may stay arbitrary.
  */
+const typeScale =
+  "\\b(text-(xs|sm|base|lg|xl|[2-9]xl)|font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)|leading-(none|tight|snug|normal|relaxed|loose)|tracking-(tighter|tight|normal|wide|wider|widest))(?![\\w-])|(^|[\\s:])rounded(?![\\w-])";
+const typeScaleMessage =
+  "Use <Text variant> roles and the SimpleFit radius scale (docs/design-tokens.json): Tailwind's default text sizes, weights, leading, tracking and bare `rounded` are not part of the design system.";
 const offScale =
   "\\b(-?[pm][xytrblse]?|gap(-[xy])?|space-[xy]|rounded(-[a-z]{1,2})?|text|leading|tracking|font)-\\[";
 const offScaleMessage =
   "Off-scale value: use the SF-13 spacing, radius and type scales (docs/design-handoff.md §8.1), not arbitrary values.";
+const spacingSteps =
+  "(^|[\\s:])-?([pm][xytrblse]?|gap(-[xy])?|space-[xy])-(?=\\d)(?!(0|0\\.5|1|1\\.5|2|2\\.5|3|3\\.5|4|4\\.5|5|5\\.5|6|8|10|12|14|16|20)(?![\\w.-]))";
+const spacingStepsMessage =
+  "Spacing step outside the SimpleFit scale (docs/design-tokens.json spacing.steps: 0.5–6 in half steps, then 8, 10, 12, 14, 16, 20).";
+const literalGuard = (pattern, message) => [
+  { selector: `Literal[value=/${pattern}/]`, message },
+  { selector: `TemplateElement[value.raw=/${pattern}/]`, message },
+];
 
 // Utility-first styling selectors, shared by the .ts and .tsx blocks (flat
 // config replaces rule options per block, so the .tsx block repeats them).
@@ -157,6 +176,7 @@ module.exports = defineConfig([
         ...stylingSelectors,
         { selector: `Literal[value=/${rawColor}/]`, message: rawColorMessage },
         { selector: `TemplateElement[value.raw=/${rawColor}/]`, message: rawColorMessage },
+        ...literalGuard(typeScale, typeScaleMessage),
       ],
     },
   },
@@ -171,8 +191,9 @@ module.exports = defineConfig([
         ...stylingSelectors,
         { selector: `Literal[value=/${rawColor}/]`, message: rawColorMessage },
         { selector: `TemplateElement[value.raw=/${rawColor}/]`, message: rawColorMessage },
-        { selector: `Literal[value=/${offScale}/]`, message: offScaleMessage },
-        { selector: `TemplateElement[value.raw=/${offScale}/]`, message: offScaleMessage },
+        ...literalGuard(typeScale, typeScaleMessage),
+        ...literalGuard(offScale, offScaleMessage),
+        ...literalGuard(spacingSteps, spacingStepsMessage),
       ],
     },
   },
