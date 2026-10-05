@@ -6,7 +6,8 @@ otherwise. If a ticket seems to require breaking one, stop and ask.
 
 Read `docs/engineering-standards.md` (shared SimpleFit workflow, commits,
 ownership, quality gates, Definition of Done) and `docs/architecture/README.md`
-before structural changes, and `docs/design-system.md` before any UI work.
+before structural changes, `docs/design-system.md` before any UI work, and
+`docs/design-handoff.md` before implementing any designed screen.
 
 ## What this is
 
@@ -91,14 +92,31 @@ role-aware capabilities**; a person can hold several roles, so never model
     libraries (shadcn DOM components, Radix) in React Native.
 22. Respect safe areas, keyboard and platform conventions (see the screen
     composition section of the architecture doc).
+23. **Design handoff** (`docs/design-handoff.md`). The canonical product
+    design is the Claude Design artifact
+    https://claude.ai/artifact/JEsBg51MjX8KiHWEro8omY. It is the visual source
+    of truth; SF-13 tokens and primitives are the implementation source of
+    truth. Before implementing a screen, read its referenced artboard source
+    (`project/<Name>.dc.html` + `project/canvas.json`) with the Artifact tool.
+    Never work from screenshots or memory. Translate every value through
+    SF-13 tokens, `src/shared/ui` primitives, `<Text variant>`, `<Icon>`
+    (Lucide) and i18n. Never copy `.dc.html` markup, hex values or design
+    files into the repo. Off-scale values follow §8.1: nearest step within
+    tolerance, otherwise stop and ask. Build domain components and shells only
+    when a ticket first needs them. Never change tokens to follow an artboard
+    without an explicit decision. Every UI PR carries a Design QA section
+    (§11, checked on a 390 × 844 pt device). This repo owns `fighter-mobile`,
+    `coach-mobile`, `gym-mobile` and the 390 px `onboarding` artboards. Never
+    modify the design artifact, and never run `/design-sync` unless a ticket
+    asks.
 
 ### Code quality
 
-23. Strict TypeScript: no `any`, no `@ts-ignore`, no silencing lint/type
+24. Strict TypeScript: no `any`, no `@ts-ignore`, no silencing lint/type
     errors.
-24. **Tests accompany meaningful behaviour** (Jest + RNTL): query by role and
+25. **Tests accompany meaningful behaviour** (Jest + RNTL): query by role and
     accessible name; mock the network at `fetch`.
-25. **Dependencies require justification**: current problem, why existing
+26. **Dependencies require justification**: current problem, why existing
     tools fall short, maintenance, license, Expo SDK compatibility
     (`pnpm expo:check`, `pnpm expo:doctor`). Pin exact versions; respect the pnpm
     release-age gate; review install scripts in `pnpm-workspace.yaml`; update
@@ -107,11 +125,11 @@ role-aware capabilities**; a person can hold several roles, so never model
 
 ### Git and Jira
 
-26. **A Jira key is required in every commit:**
+27. **A Jira key is required in every commit:**
     `<type>: SF-<ticket> - <description>`, e.g. `feat: SF-16 - add identity domain`.
     Types: feat, fix, refactor, test, docs, chore, build, ci, perf.
     Never bypass hooks (`--no-verify`).
-27. **Branch per ticket from `main`**: `SF-<ticket>-<kebab-description>`
+28. **Branch per ticket from `main`**: `SF-<ticket>-<kebab-description>`
     (e.g. `SF-16-identity-authentication`). Never commit or push to `main`,
     never force-push it, never rewrite pushed history. Run
     `pnpm install --frozen-lockfile` and `pnpm quality` before pushing; PR title
