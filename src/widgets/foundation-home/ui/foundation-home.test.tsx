@@ -34,4 +34,12 @@ describe("FoundationHome", () => {
     expect(screen.getByRole("button", { name: "Відкрити застосунок" })).toBeOnTheScreen();
     expect(screen.getByText("Вибрано в застосунку")).toBeOnTheScreen();
   });
+
+  it("offers the theme choice and a developer-only gallery link", async () => {
+    await renderWithProviders(<FoundationHome />);
+    expect(screen.getByRole("radio", { name: "Dark" })).toBeChecked();
+
+    await userEvent.press(screen.getByRole("link", { name: "Design system gallery" }));
+    expect(mockPush).toHaveBeenCalledWith("/dev/design-system");
+  });
 });

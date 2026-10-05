@@ -54,5 +54,11 @@
     "requestId": "Anfrage-ID: {requestId}",
     "lastChecked": "Zuletzt geprüft um {time}",
     "notChecked": "Noch nicht geprüft"
+  },
+  "theme": {
+    "title": "Darstellung",
+    "dark": "Dunkel",
+    "light": "Hell",
+    "system": "Wie auf dem Gerät"
   }
 }

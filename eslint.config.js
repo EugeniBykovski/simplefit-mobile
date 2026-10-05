@@ -3,6 +3,37 @@ const { defineConfig, globalIgnores } = require("eslint/config");
 const expoConfig = require("eslint-config-expo/flat");
 const prettier = require("eslint-config-prettier/flat");
 
+/**
+ * Raw colours bypass the theme (and break light/dark switching). Every string
+ * in a component file is checked, because variant maps hold class names
+ * outside className attributes. Hex values live only in src/shared/styles.
+ */
+const rawColor =
+  "#[0-9a-fA-F]{3,8}\\b|-\\[(#|rgb|hsl)|\\b(bg|text|border|ring|fill|stroke|outline|divide|from|via|to|shadow|caret|accent|decoration|placeholder|tint)-(black|white|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-[0-9]{2,3})?\\b";
+const rawColorMessage =
+  "Use semantic colour tokens (bg-surface, text-muted-foreground, ...), not hex values, arbitrary colours or palette names.";
+
+// Utility-first styling selectors, shared by the .ts and .tsx blocks (flat
+// config replaces rule options per block, so the .tsx block repeats them).
+const stylingSelectors = [
+  {
+    selector: "CallExpression[callee.object.name='StyleSheet'][callee.property.name='create']",
+    message:
+      "Use NativeWind className for static styling. StyleSheet.create is reserved for justified native/animation exceptions (disable inline with a reason).",
+  },
+  {
+    selector:
+      "JSXAttribute[name.name='style'] > JSXExpressionContainer > ObjectExpression:not(:has(SpreadElement)):not(:has(Property[value.type!='Literal']))",
+    message:
+      "Static inline style: use className. Keep `style` for genuinely dynamic values (disable inline with a reason for third-party components without className).",
+  },
+  {
+    selector:
+      "ImportDeclaration[source.value=/^(styled-components(\\/native)?|@emotion\\/(native|react|styled))$/]",
+    message: "CSS-in-JS is not used: style with NativeWind className.",
+  },
+];
+
 /** Higher layers each FSD-lite layer must not import from. */
 // The FSD "app" layer is src/app (Expo Router routes) + src/providers.
 const forbiddenLayers = {
@@ -103,25 +134,18 @@ module.exports = defineConfig([
     files: ["src/**/*.tsx", "src/**/*.ts"],
     ignores: ["**/*.test.ts", "**/*.test.tsx"],
     rules: {
+      "no-restricted-syntax": ["error", ...stylingSelectors],
+    },
+  },
+  {
+    files: ["src/**/*.tsx"],
+    ignores: ["**/*.test.tsx"],
+    rules: {
       "no-restricted-syntax": [
         "error",
-        {
-          selector:
-            "CallExpression[callee.object.name='StyleSheet'][callee.property.name='create']",
-          message:
-            "Use NativeWind className for static styling. StyleSheet.create is reserved for justified native/animation exceptions (disable inline with a reason).",
-        },
-        {
-          selector:
-            "JSXAttribute[name.name='style'] > JSXExpressionContainer > ObjectExpression:not(:has(SpreadElement)):not(:has(Property[value.type!='Literal']))",
-          message:
-            "Static inline style: use className. Keep `style` for genuinely dynamic values (disable inline with a reason for third-party components without className).",
-        },
-        {
-          selector:
-            "ImportDeclaration[source.value=/^(styled-components(\\/native)?|@emotion\\/(native|react|styled))$/]",
-          message: "CSS-in-JS is not used: style with NativeWind className.",
-        },
+        ...stylingSelectors,
+        { selector: `Literal[value=/${rawColor}/]`, message: rawColorMessage },
+        { selector: `TemplateElement[value.raw=/${rawColor}/]`, message: rawColorMessage },
       ],
     },
   },

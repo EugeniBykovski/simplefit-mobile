@@ -14,7 +14,7 @@ export default function NotFoundRoute() {
   return (
     <Screen>
       <Stack.Screen options={{ title: t("title") }} />
-      <Text variant="title">{t("title")}</Text>
+      <Text variant="h2">{t("title")}</Text>
       <Text color="mutedForeground">{t("description")}</Text>
       <Button
         label={actions("backToHome")}

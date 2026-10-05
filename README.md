@@ -79,7 +79,10 @@ Production builds require `https://`.
   (`bg-surface`, `text-muted-foreground`); `style` only for runtime values.
   No `StyleSheet.create` for ordinary styling (ESLint enforces it).
 - **Add a UI primitive:** create it in `src/shared/ui` with token classes,
-  accessibility role/label/state and a test.
+  accessibility role/label/state, a test and a gallery entry
+  ([design system](docs/design-system.md)).
+- **Open the design system gallery (dev only):** home screen → "Design system
+  gallery", or `simplefit://dev/design-system`.
 - **Add a feature slice:** `src/features/<action>/` with `ui/`, optional
   `model/`, an `index.ts` public API and tests; compose it in a widget, render
   the widget from a thin route in `src/app`.
@@ -104,4 +107,6 @@ Supported locales: `en` (default), `ru`, `pl`, `de`, `uk`, `es`, `es-MX`, `fr`.
 - [Architecture](docs/architecture/README.md): layers, Expo Router, API and
   Orval, transport, Query, forms, storage, i18n, styling, primitives, mobile
   UX, testing, accessibility, CI, EAS, security, dependencies.
+- [Design system](docs/design-system.md): Graphite × Olive tokens, theme,
+  primitives, accessibility, the dev-only gallery.
 - [CLAUDE.md](CLAUDE.md): non-negotiable engineering rules.

@@ -1,11 +1,18 @@
 import { View, type ViewProps } from "react-native";
 
-/** Raised container on the `surface` token. */
-export function Card({ className, ...props }: ViewProps) {
+/**
+ * Container on the `surface` token (radius xl = 22 pt, per the visual system).
+ * `elevated` lifts it onto surface-elevated for nested emphasis.
+ */
+export function Card({
+  className,
+  elevated = false,
+  ...props
+}: ViewProps & { elevated?: boolean }) {
   return (
     <View
       {...props}
-      className={`gap-3 rounded-lg border border-border bg-surface p-4 ${className ?? ""}`}
+      className={`gap-3 rounded-xl border border-border p-5 ${elevated ? "bg-surface-elevated" : "bg-surface"} ${className ?? ""}`}
     />
   );
 }

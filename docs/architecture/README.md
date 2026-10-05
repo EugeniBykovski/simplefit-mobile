@@ -59,7 +59,7 @@ the same rules; both generate their clients from the same artifact.
 | i18n         | use-intl 4 (next-intl's core: same ICU messages and API as web) + expo-localization     |
 | Storage      | expo-secure-store (sensitive), AsyncStorage (preferences)                               |
 | Styling      | NativeWind 4 (Tailwind 3.4) utility classes + semantic CSS-variable tokens (light/dark) |
-| Icons        | @expo/vector-icons (Ionicons)                                                           |
+| Icons        | lucide-react-native (same set as web)                                                   |
 | Native       | react-native-gesture-handler, react-native-reanimated, safe-area-context, screens       |
 | Tests        | Jest (jest-expo) + React Native Testing Library 14                                      |
 | Quality      | ESLint 9 (eslint-config-expo), Prettier, Husky, lint-staged, commitlint, expo-doctor    |
@@ -338,56 +338,28 @@ Formatting uses Intl through use-intl (`useFormatter`) with named presets in
 NativeWind 5 (Tailwind 4, matching web) is a release candidate; migrate when it
 is stable.
 
-**Tokens:**
+**Tokens, theme and primitives:** see **[design-system.md](../design-system.md)**
+(SF-13: Graphite × Olive tokens shared with web, dark-default theme with a
+persisted dark/light/system preference, brand fonts, raw-colour lint guard,
+the primitive catalogue and the dev-only gallery). In short:
 
-- `shared/styles/tokens.ts` is the single source of colour VALUES: light and
-  dark palettes with the **web token names** (`background`, `foreground`,
-  `surface`, `muted`, `primary`, `secondary`, `accent`, `success`, `warning`,
-  `danger`, `border`, `input`, `ring`, each content colour with a
-  `*Foreground`). Values are **neutral placeholders** until SF-13.
-- `ThemeRoot` (`shared/styles/theme.tsx`) applies the active palette as CSS
-  variables with NativeWind `vars()`; `tailwind.config.js` maps every token to
-  `rgb(var(--color-<name>) / <alpha-value>)`, giving classes such as
-  `bg-background`, `bg-surface`, `text-foreground`, `text-muted-foreground`,
-  `border-border`, `bg-primary`, `text-primary-foreground`, `bg-danger`
-  (opacity modifiers like `bg-primary/80` work).
-- Also in the Tailwind theme: radius (`rounded-sm|md|lg`), type scale
-  (`text-title|heading|body|label|caption`), `font-mono` (platform-specific)
-  and the touch target (`min-h-touch`, 44 pt).
-- Native props that cannot take a className (icon `color`, `ActivityIndicator`
-  `color`, `placeholderTextColor`, the navigation theme) read the same palette
-  through `useTheme().colors`.
-- Theme follows the OS appearance (`useColorScheme`); an explicit theme
-  preference (SF-13) only changes which palette `ThemeRoot` applies. A test
-  keeps `tailwind.config.js` and the palettes in sync.
+- `shared/styles/tokens.ts` is the single source of colour values (raw
+  palette + semantic `palettes.dark|light`, same names as web);
+  `tailwind.config.js` replaces Tailwind's palette with the semantic tokens.
+- `ThemeProvider`/`ThemeRoot` (`shared/styles/theme.tsx`) apply the active
+  palette as NativeWind `vars()`. Native props that cannot take a className
+  read `useTheme().colors`.
 - No web-only libraries (no shadcn DOM components, no Radix).
-
-**Web consistency (follow-up, not changed by SF-12):** the web convention is
-the same: static styling in Tailwind `className`; inline `style` only for
-genuinely runtime-calculated values; no CSS modules for ordinary product
-styling, no styled-components or emotion, no static inline style objects.
-Recorded as a follow-up for SF-13/SF-14 to document and enforce in
-`simplefit-platform`.
 
 ## Native UI primitives
 
-Locally owned in `src/shared/ui`, styled with NativeWind token classes, all
-accessible:
-
-| Primitive    | Notes                                                                                                               |
-| ------------ | ------------------------------------------------------------------------------------------------------------------- |
-| `Text`       | variants `title`/`heading` (exposed as headers), `body`, `label`, `caption`; semantic colour; font scaling up to 2× |
-| `Button`     | `label` is the accessible name; disabled/busy states; 44 pt min height; optional icon                               |
-| `Input`      | labelled field; error announced (`alert`, live region) and shown by text + border                                   |
-| `Card`       | surface container                                                                                                   |
-| `Screen`     | safe area + background + optional scroll (see below)                                                                |
-| `Separator`  | decorative, hidden from assistive tech                                                                              |
-| `Spinner`    | announced progress indicator with label                                                                             |
-| `RadioGroup` | single choice; radios with checked state; icon + weight, not colour alone                                           |
-| `Icon`       | the single icon set (Ionicons); decorative                                                                          |
-
-Add a primitive only when a screen needs it; style it with token classes;
-keep labels as props (no copy in primitives).
+Locally owned in `src/shared/ui`, styled with token classes, all accessible:
+`Text`, `Button`, `Input`, `Textarea`, `Checkbox`, `RadioGroup`, `Switch`,
+`SegmentedControl`, `Badge`, `Avatar`, `Card`, `Separator`, `Skeleton`,
+`Spinner`, `Modal`, `Toast` (`ToastProvider`/`useToast`), `Screen`, `Icon`
+(Lucide). Variants, sizes and accessibility contracts are in
+[design-system.md](../design-system.md). Add a primitive only when a screen
+needs it; keep labels as props (no copy in primitives); add it to the gallery.
 
 ## Screen composition and mobile UX
 
@@ -538,14 +510,16 @@ unless reviewed in `pnpm-workspace.yaml`.
 
 Installed beyond the obvious: `react-dom` (required peer of
 `@expo/metro-runtime`; the app does not target web), `@react-native/metro-config`
-(pinned to RN 0.86 to satisfy the CLI peer), `expo-font` (required native peer
-of `@expo/vector-icons`), `test-renderer` 1.2 (RNTL peer matching React 19.2),
+(pinned to RN 0.86 to satisfy the CLI peer), `expo-font` (loads the bundled brand fonts), `test-renderer` 1.2 (RNTL peer matching React 19.2),
 `expo-doctor` (pinned project diagnostics), `nativewind` 4.2.7 +
 `tailwindcss` 3.4.19 (utility-first styling), `react-native-css-interop` 0.2.7
 (imported by NativeWind's JSX transform from app code, so it must be a direct
 dependency under pnpm), `babel-preset-expo` (resolvable from
 `babel.config.js` under pnpm), `prettier-plugin-tailwindcss` (class order, as
-on web).
+on web), `lucide-react-native` + `react-native-svg` (SF-13: the single icon
+set, same as web's `lucide-react`; ISC / MIT; replaces `@expo/vector-icons`),
+`@expo-google-fonts/unbounded|manrope|jetbrains-mono` (SF-13: brand
+typefaces, SIL OFL; imported per weight).
 
 **Deferred until a ticket needs them:** FlashList, keyboard-controller,
 expo-image, haptics, auth SDKs (Google/Apple), Stripe, RevenueCat, Sentry,
@@ -556,8 +530,9 @@ sharing, feature flags, query cache persistence, Maestro/Detox, expo-updates.
 **Rejected:** react-native-web, Axios, Redux/Zustand, i18next (would diverge
 from web's ICU messages), CSS-in-JS / styled-components, NativeWind 5 RC (until
 stable), eslint-plugin-react-native-a11y (ESLint ≤ 8 only). clsx /
-tailwind-merge / CVA are not added yet: literal conditional class strings are
-enough for the current primitives; revisit with SF-13 variants.
+tailwind-merge / CVA are not added: typed variant maps of literal class
+strings cover the SF-13 primitives. `@gorhom/bottom-sheet` is deferred until a
+screen needs a sheet (`Modal` until then).
 
 ## Known limitations
 
@@ -568,7 +543,9 @@ enough for the current primitives; revisit with SF-13 variants.
   Latin American Spanish to `es-MX`.
 - Translations other than English were written during SF-12 and need review
   by native speakers before launch.
-- Brand assets (icon, splash image, fonts) are placeholders until SF-13.
+- The app icon and splash image are still placeholders (brand fonts and
+  colours arrived with SF-13; icon artwork has not been delivered yet).
+- `BottomSheet` is not implemented (see design-system.md).
 - Jest does not compute NativeWind styles (no Metro CSS compilation), so
   component tests assert behaviour and accessibility; token wiring is covered
   by a config test, and visual output was checked on the iOS Simulator.

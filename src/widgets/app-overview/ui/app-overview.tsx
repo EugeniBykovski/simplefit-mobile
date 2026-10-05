@@ -12,7 +12,7 @@ export function AppOverview() {
   return (
     <Screen>
       <View className="gap-2">
-        <Text variant="title">{t("title")}</Text>
+        <Text variant="h1">{t("title")}</Text>
         <Text color="mutedForeground">{t("description")}</Text>
       </View>
       <ApiHealthCard />

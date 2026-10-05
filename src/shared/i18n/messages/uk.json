@@ -54,5 +54,11 @@
     "requestId": "ID запиту: {requestId}",
     "lastChecked": "Остання перевірка: {time}",
     "notChecked": "Ще не перевірено"
+  },
+  "theme": {
+    "title": "Оформлення",
+    "dark": "Темна",
+    "light": "Світла",
+    "system": "Як на пристрої"
   }
 }
