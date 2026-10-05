@@ -472,25 +472,25 @@ correct pronunciation. Tests assert roles, names and states.
 
 ## Git and Jira conventions
 
-Shared with `simplefit-platform`.
+Shared SimpleFit rules: [engineering-standards.md](../engineering-standards.md).
 
 ```
-<type>: <JIRA-ID> - <description>
+<type>: SF-<ticket> - <description>
 
-feat: SF-12 - add mobile platform foundation
-fix: SF-28 - prevent duplicate training request
-chore: SF-12 - bootstrap mobile platform foundation
+feat: SF-16 - add identity domain
+test: SF-16 - cover session rotation
+docs: SF-16 - document authentication architecture
 ```
 
-- Types: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `build`, `ci`,
-  `chore`, `revert`. Jira key `SF-[0-9]+` is mandatory. No scopes; header ≤ 100
-  characters.
+- Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `build`, `ci`,
+  `perf`. Jira key `SF-[0-9]+` is mandatory. No scopes; header ≤ 100
+  characters. Merge commits and GitHub's `Revert "…"` commits are exempt.
 - Enforced by commitlint (custom rule in `scripts/commit-convention.js`) in the
   `commit-msg` hook and for every PR commit in CI.
 - `pre-commit`: lint-staged (ESLint `--fix` + Prettier on staged files only).
-- Branches: `feature/SF-<id>-description`, `fix/SF-<id>-description`,
-  `chore/SF-<id>-description`. PR titles: `SF-12 — Mobile Platform Foundation`.
-- After the SF-12 bootstrap, all work goes through ticket branches and PRs.
+- Branches: `SF-<ticket>-<kebab-description>` (e.g.
+  `SF-16-identity-authentication`). PR titles: `SF-16 — Identity Authentication`.
+- All work goes through ticket branches and PRs; PRs are merged by a human.
 
 ## CI and native builds
 

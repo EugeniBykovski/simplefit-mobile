@@ -9,7 +9,6 @@ describe("validateCommitHeader", () => {
     "docs: SF-12 - document mobile architecture",
     "chore: SF-12 - bootstrap mobile platform foundation",
     "chore: SF-12 - test commit convention",
-    "revert: SF-40 - revert reminder change",
   ])("accepts %s", (header) => {
     expect(validateCommitHeader(header)).toEqual([true, ""]);
   });
@@ -22,6 +21,7 @@ describe("validateCommitHeader", () => {
     ["feat: sf-12 - add mobile foundation", /Jira issue key/],
     ["feat: SF-12 - ", /does not match/],
     ["SF-12 - add mobile foundation", /does not match/],
+    ["revert: SF-40 - revert reminder change", /does not match/],
   ])("rejects %s", (header, message) => {
     const [valid, reason] = validateCommitHeader(header);
     expect(valid).toBe(false);

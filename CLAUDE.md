@@ -4,7 +4,9 @@ Rules for every Claude Code session in this repository. They are
 non-negotiable unless the Jira ticket you are working on explicitly says
 otherwise. If a ticket seems to require breaking one, stop and ask.
 
-Read `docs/architecture/README.md` before structural changes.
+Read `docs/engineering-standards.md` (shared SimpleFit workflow, commits,
+ownership, quality gates, Definition of Done) and `docs/architecture/README.md`
+before structural changes.
 
 ## What this is
 
@@ -104,12 +106,16 @@ role-aware capabilities**; a person can hold several roles, so never model
 ### Git and Jira
 
 26. **A Jira key is required in every commit:**
-    `<type>: SF-<n> - <description>`, e.g. `feat: SF-12 - add mobile platform foundation`.
-    Types: feat, fix, refactor, perf, test, docs, build, ci, chore, revert.
+    `<type>: SF-<ticket> - <description>`, e.g. `feat: SF-16 - add identity domain`.
+    Types: feat, fix, refactor, test, docs, chore, build, ci, perf.
     Never bypass hooks (`--no-verify`).
-27. **Future work uses ticket branches + PRs**: `feature|fix|chore/SF-<id>-description`,
-    PR title `SF-12 — Mobile Platform Foundation`. Never push to `main`
-    directly; never rewrite published history; never merge failing checks.
+27. **Branch per ticket from `main`**: `SF-<ticket>-<kebab-description>`
+    (e.g. `SF-16-identity-authentication`). Never commit or push to `main`,
+    never force-push it, never rewrite pushed history. Run
+    `pnpm install --frozen-lockfile` and `pnpm quality` before pushing; PR title
+    `SF-<ticket> — <Title>`. **Never merge a PR** unless the user explicitly
+    asks. Keep changes to the ticket's scope and finish with the final report
+    described in `docs/engineering-standards.md` §12.
 
 ## Commands
 
