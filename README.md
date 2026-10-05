@@ -90,10 +90,12 @@ Supported locales: `en` (default), `ru`, `pl`, `de`, `uk`, `es`, `es-MX`, `fr`.
 
 ## Conventions
 
-- Commits: `<type>: SF-<n> - <description>`, e.g. `feat: SF-12 - add mobile platform foundation`
+- Shared SimpleFit standards (workflow, ownership, quality gates, Definition of
+  Done): [docs/engineering-standards.md](docs/engineering-standards.md).
+- Branches: `SF-<ticket>-<kebab-description>`, e.g. `SF-16-identity-authentication`.
+- Commits: `<type>: SF-<ticket> - <description>`, e.g. `feat: SF-16 - add identity domain`
   (commitlint, locally and in CI).
-- Branches: `feature/SF-<id>-description`, `fix/SF-<id>-description`,
-  `chore/SF-<id>-description`. PR titles: `SF-12 — Mobile Platform Foundation`.
+- PR titles: `SF-16 — Identity Authentication`; PRs are merged by a human.
 - All user-facing copy goes through i18n; locale, time zone and currency are
   independent.
 
