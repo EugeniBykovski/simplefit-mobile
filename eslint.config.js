@@ -117,6 +117,11 @@ module.exports = defineConfig([
           message:
             "Static inline style: use className. Keep `style` for genuinely dynamic values (disable inline with a reason for third-party components without className).",
         },
+        {
+          selector:
+            "ImportDeclaration[source.value=/^(styled-components(\\/native)?|@emotion\\/(native|react|styled))$/]",
+          message: "CSS-in-JS is not used: style with NativeWind className.",
+        },
       ],
     },
   },

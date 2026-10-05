@@ -1,22 +1,13 @@
-// SimpleFit commit message convention (shared with simplefit-platform):
+// SimpleFit commit message convention (docs/engineering-standards.md §3; same
+// rule in every SimpleFit repository). GitHub's `Revert "…"` and merge commits
+// are skipped by commitlint's default ignores.
 //
 //   <type>: <JIRA-ID> - <description>
 //   feat: SF-12 - add mobile platform foundation
 //
 // Dependency-free so commitlint.config.js and the tests share one source.
 
-const COMMIT_TYPES = [
-  "feat",
-  "fix",
-  "refactor",
-  "perf",
-  "test",
-  "docs",
-  "build",
-  "ci",
-  "chore",
-  "revert",
-];
+const COMMIT_TYPES = ["feat", "fix", "refactor", "perf", "test", "docs", "build", "ci", "chore"];
 
 const JIRA_KEY_PATTERN = /SF-[0-9]+/;
 
