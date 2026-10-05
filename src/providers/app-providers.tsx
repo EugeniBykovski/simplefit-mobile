@@ -6,7 +6,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { makeQueryClient } from "@/shared/api/query-client";
 import { connectOnlineManager, useAppStateFocus } from "@/shared/api/query-lifecycle";
 import { I18nProvider } from "@/shared/i18n/i18n-provider";
-import { ThemeRoot } from "@/shared/styles/theme";
+import { ThemeProvider, ThemeRoot } from "@/shared/styles/theme";
+import { ToastProvider } from "@/shared/ui/toast";
 
 connectOnlineManager();
 
@@ -16,7 +17,9 @@ connectOnlineManager();
  * - SafeAreaProvider: insets for Screen,
  * - QueryClientProvider: the single QueryClient (server state),
  * - I18nProvider: locale, messages, formats, time zone,
- * - ThemeRoot: semantic colour variables for every token className.
+ * - ThemeProvider + ThemeRoot: theme preference (dark default) and the
+ *   semantic colour variables every token className reads,
+ * - ToastProvider: transient feedback above every screen (needs the theme).
  *
  * Add a provider here only for a genuinely app-wide concern.
  */
@@ -30,7 +33,11 @@ export function AppProviders({ children, onReady }: { children: ReactNode; onRea
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <I18nProvider onReady={onReady}>
-            <ThemeRoot>{children}</ThemeRoot>
+            <ThemeProvider>
+              <ThemeRoot>
+                <ToastProvider>{children}</ToastProvider>
+              </ThemeRoot>
+            </ThemeProvider>
           </I18nProvider>
         </QueryClientProvider>
       </SafeAreaProvider>

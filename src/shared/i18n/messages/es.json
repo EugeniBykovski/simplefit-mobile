@@ -54,5 +54,11 @@
     "requestId": "ID de solicitud: {requestId}",
     "lastChecked": "Última comprobación: {time}",
     "notChecked": "Aún no comprobado"
+  },
+  "theme": {
+    "title": "Apariencia",
+    "dark": "Oscuro",
+    "light": "Claro",
+    "system": "Igual que el dispositivo"
   }
 }

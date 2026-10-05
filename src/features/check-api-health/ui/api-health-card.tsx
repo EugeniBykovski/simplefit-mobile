@@ -1,3 +1,4 @@
+import { RefreshCw } from "lucide-react-native";
 import { View } from "react-native";
 import { useFormatter, useTranslations } from "use-intl";
 
@@ -28,7 +29,7 @@ export function ApiHealthCard() {
   return (
     <Card>
       <View className="flex-row flex-wrap items-center justify-between gap-2">
-        <Text variant="heading" className="shrink">
+        <Text variant="h3" className="shrink">
           {t("title")}
         </Text>
         <HealthStatusBadge status={status} />
@@ -61,7 +62,7 @@ export function ApiHealthCard() {
       </Text>
       <Button
         label={actions("checkAgain")}
-        icon="refresh"
+        icon={RefreshCw}
         variant="secondary"
         loading={health.isFetching}
         onPress={() => void health.refetch()}

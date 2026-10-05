@@ -1,3 +1,4 @@
+import { Circle, CircleDot } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 
 import { Icon } from "./icon";
@@ -46,13 +47,11 @@ export function RadioGroup<T extends string>({
             className={`min-h-touch flex-row items-center gap-3 rounded-md px-3 py-2 active:bg-muted ${checked ? "bg-muted" : ""}`}
           >
             <Icon
-              name={checked ? "radio-button-on" : "radio-button-off"}
-              color={checked ? "foreground" : "mutedForeground"}
+              icon={checked ? CircleDot : Circle}
+              color={checked ? "primary" : "mutedForeground"}
             />
             <View className="flex-1">
-              <Text variant="label" className={checked ? "font-bold" : ""}>
-                {option.label}
-              </Text>
+              <Text weight={checked ? "bold" : "medium"}>{option.label}</Text>
               {option.description ? (
                 <Text variant="caption" color="mutedForeground">
                   {option.description}

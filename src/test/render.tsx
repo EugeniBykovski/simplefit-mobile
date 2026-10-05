@@ -6,7 +6,8 @@ import { Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { I18nProvider } from "@/shared/i18n/i18n-provider";
-import { ThemeRoot } from "@/shared/styles/theme";
+import { ThemeProvider, ThemeRoot } from "@/shared/styles/theme";
+import { ToastProvider } from "@/shared/ui/toast";
 import type { Locale } from "@/shared/i18n/locales";
 import { setPreference } from "@/shared/storage/preferences";
 
@@ -19,7 +20,7 @@ type Options = {
 
 /**
  * Renders UI the way the app does: real I18nProvider (messages, fallbacks,
- * formats) and a fresh QueryClient with retries disabled. Resolves once the
+ * formats), ThemeProvider (dark default), ToastProvider and a fresh QueryClient with retries disabled. Resolves once the
  * locale preference has loaded.
  */
 export async function renderWithProviders(ui: ReactElement, options: Options = {}) {
@@ -35,10 +36,14 @@ export async function renderWithProviders(ui: ReactElement, options: Options = {
       <SafeAreaProvider initialMetrics={TEST_METRICS}>
         <QueryClientProvider client={queryClient}>
           <I18nProvider>
-            <ThemeRoot>
-              {children}
-              <Text testID="i18n-ready" />
-            </ThemeRoot>
+            <ThemeProvider>
+              <ThemeRoot>
+                <ToastProvider>
+                  {children}
+                  <Text testID="i18n-ready" />
+                </ToastProvider>
+              </ThemeRoot>
+            </ThemeProvider>
           </I18nProvider>
         </QueryClientProvider>
       </SafeAreaProvider>

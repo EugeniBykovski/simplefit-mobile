@@ -1,21 +1,52 @@
 import { vars } from "nativewind";
 
 /**
- * SimpleFit semantic colour tokens for React Native: FOUNDATION PLACEHOLDERS.
+ * SimpleFit design tokens: "Graphite × Olive" (Visual System 2026,
+ * docs/design/design system.pdf). See docs/design-system.md.
  *
- * This file is the single source of colour VALUES. NAMES match the web
- * contract (background, foreground, surface, muted, primary, secondary,
- * accent, success, warning, danger, border + input, ring; each content colour
- * with a *Foreground pair). SF-13 replaces the values.
+ * Two layers, identical names and values to simplefit-platform:
+ *   1. `rawPalette`: brand primitives. Referenced ONLY in this file.
+ *   2. `palettes`: semantic tokens per theme. Components use them through
+ *      NativeWind classes (bg-surface, text-muted-foreground); ThemeRoot sets
+ *      the CSS variables those classes read. Native props that cannot take a
+ *      className (icon colours, Switch tracks, placeholder text, navigation
+ *      theme) read `useTheme().colors`.
  *
- * How they are consumed:
- * - className (default): Tailwind classes such as `bg-surface` or
- *   `text-muted-foreground` read CSS variables that ThemeRoot sets from these
- *   palettes (tailwind.config.js maps every name).
- * - Native props that cannot take a className (icon `color`,
- *   ActivityIndicator `color`, `placeholderTextColor`, navigation theme) read
- *   the palette through useTheme().
+ * Dark is the default theme (the brand is dark-first).
  */
+export const rawPalette = {
+  graphite950: "#111312",
+  graphite925: "#151816",
+  graphite900: "#181b19",
+  graphite850: "#1f2320",
+  graphite800: "#272b28",
+  graphite700: "#2e332f",
+  bone: "#edefe7",
+  bone50: "#f8f9f4",
+  bone200: "#e3e6db",
+  bone300: "#d2d6c8",
+  bone400: "#c2c7b7",
+  stone500: "#a1a69a",
+  stone600: "#575d52",
+  stone700: "#3f453d",
+  olive200: "#e4eab8",
+  olive300: "#c9d17e",
+  olive400: "#aeb95a",
+  olive600: "#4e5626",
+  olive700: "#3b411c",
+  olive900: "#262815",
+  amber: "#e2a250",
+  amber700: "#7a5216",
+  amberTintDark: "#33281a",
+  amberTintLight: "#f6e7cf",
+  coral: "#df7a5e",
+  coral600: "#b4492e",
+  coral700: "#8f3a24",
+  coralTintDark: "#33201b",
+  coralTintLight: "#f6e0d8",
+  white: "#ffffff",
+} as const;
+
 export type ColorScheme = "light" | "dark";
 
 export type SemanticColors = {
@@ -23,71 +54,113 @@ export type SemanticColors = {
   foreground: string;
   surface: string;
   surfaceForeground: string;
+  surfaceSubtle: string;
+  surfaceElevated: string;
   muted: string;
   mutedForeground: string;
+  border: string;
+  input: string;
+  ring: string;
+  overlay: string;
   primary: string;
   primaryForeground: string;
   secondary: string;
   secondaryForeground: string;
   accent: string;
   accentForeground: string;
+  destructive: string;
+  destructiveForeground: string;
+  destructiveSubtle: string;
+  destructiveSubtleForeground: string;
   success: string;
   successForeground: string;
+  successSubtle: string;
+  successSubtleForeground: string;
   warning: string;
   warningForeground: string;
-  danger: string;
-  dangerForeground: string;
-  border: string;
-  input: string;
-  ring: string;
+  warningSubtle: string;
+  warningSubtleForeground: string;
+  info: string;
+  infoForeground: string;
+  infoSubtle: string;
+  infoSubtleForeground: string;
 };
 
+const p = rawPalette;
+
 export const palettes: Record<ColorScheme, SemanticColors> = {
-  light: {
-    background: "#ffffff",
-    foreground: "#0a0a0a",
-    surface: "#ffffff",
-    surfaceForeground: "#0a0a0a",
-    muted: "#f5f5f5",
-    mutedForeground: "#616161",
-    primary: "#171717",
-    primaryForeground: "#fafafa",
-    secondary: "#f5f5f5",
-    secondaryForeground: "#171717",
-    accent: "#f5f5f5",
-    accentForeground: "#171717",
-    success: "#15803d",
-    successForeground: "#ffffff",
-    warning: "#f59e0b",
-    warningForeground: "#1a1a1a",
-    danger: "#dc2626",
-    dangerForeground: "#ffffff",
-    border: "#e5e5e5",
-    input: "#d4d4d4",
-    ring: "#a3a3a3",
-  },
   dark: {
-    background: "#0a0a0a",
-    foreground: "#fafafa",
-    surface: "#171717",
-    surfaceForeground: "#fafafa",
-    muted: "#262626",
-    mutedForeground: "#a3a3a3",
-    primary: "#e5e5e5",
-    primaryForeground: "#171717",
-    secondary: "#262626",
-    secondaryForeground: "#fafafa",
-    accent: "#262626",
-    accentForeground: "#fafafa",
-    success: "#4ade80",
-    successForeground: "#0a0a0a",
-    warning: "#fbbf24",
-    warningForeground: "#0a0a0a",
-    danger: "#f87171",
-    dangerForeground: "#0a0a0a",
-    border: "#272727",
-    input: "#363636",
-    ring: "#737373",
+    background: p.graphite950,
+    foreground: p.bone,
+    surface: p.graphite900,
+    surfaceForeground: p.bone,
+    surfaceSubtle: p.graphite925,
+    surfaceElevated: p.graphite850,
+    muted: p.graphite850,
+    mutedForeground: p.stone500,
+    border: p.graphite800,
+    input: p.graphite700,
+    ring: p.olive300,
+    // Scrim colour; components apply the opacity (bg-overlay/70).
+    overlay: "#050605",
+    primary: p.olive400,
+    primaryForeground: p.graphite950,
+    secondary: p.bone,
+    secondaryForeground: p.graphite950,
+    accent: p.olive900,
+    accentForeground: p.olive200,
+    destructive: p.coral,
+    destructiveForeground: p.graphite950,
+    destructiveSubtle: p.coralTintDark,
+    destructiveSubtleForeground: p.coral,
+    success: p.olive400,
+    successForeground: p.graphite950,
+    successSubtle: p.olive900,
+    successSubtleForeground: p.olive300,
+    warning: p.amber,
+    warningForeground: p.graphite950,
+    warningSubtle: p.amberTintDark,
+    warningSubtleForeground: p.amber,
+    info: p.bone300,
+    infoForeground: p.graphite950,
+    infoSubtle: p.graphite850,
+    infoSubtleForeground: p.bone200,
+  },
+  light: {
+    background: p.bone,
+    foreground: p.graphite950,
+    surface: p.bone50,
+    surfaceForeground: p.graphite950,
+    surfaceSubtle: p.bone200,
+    surfaceElevated: p.white,
+    muted: p.bone200,
+    mutedForeground: p.stone600,
+    border: p.bone300,
+    input: p.bone400,
+    ring: p.olive600,
+    overlay: p.graphite950,
+    primary: p.olive600,
+    primaryForeground: p.bone,
+    secondary: p.graphite900,
+    secondaryForeground: p.bone,
+    accent: p.olive200,
+    accentForeground: p.olive700,
+    destructive: p.coral600,
+    destructiveForeground: p.white,
+    destructiveSubtle: p.coralTintLight,
+    destructiveSubtleForeground: p.coral700,
+    success: p.olive600,
+    successForeground: p.bone,
+    successSubtle: p.olive200,
+    successSubtleForeground: p.olive700,
+    warning: p.amber,
+    warningForeground: p.graphite950,
+    warningSubtle: p.amberTintLight,
+    warningSubtleForeground: p.amber700,
+    info: p.stone700,
+    infoForeground: p.bone,
+    infoSubtle: p.bone200,
+    infoSubtleForeground: p.graphite700,
   },
 };
 

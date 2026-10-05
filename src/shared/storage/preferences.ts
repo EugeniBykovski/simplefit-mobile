@@ -10,6 +10,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const KEYS = {
   /** Explicitly selected UI locale; absent means "follow the device". */
   locale: "simplefit.preferences.locale",
+  /** "dark" | "light" | "system"; absent means the default (dark). */
+  theme: "simplefit.preferences.theme",
 } as const;
 
 export type PreferenceName = keyof typeof KEYS;

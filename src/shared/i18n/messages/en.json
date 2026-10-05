@@ -54,5 +54,11 @@
     "requestId": "Request ID: {requestId}",
     "lastChecked": "Last checked at {time}",
     "notChecked": "Not checked yet"
+  },
+  "theme": {
+    "title": "Appearance",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "Match device"
   }
 }

@@ -18,14 +18,20 @@ export function RootNavigator() {
           ...base.colors,
           background: colors.background,
           card: colors.background,
+          notification: colors.warning,
           text: colors.foreground,
           border: colors.border,
           primary: colors.primary,
         },
       }}
     >
-      <StatusBar style="auto" />
-      <Stack screenOptions={{ headerBackButtonDisplayMode: "minimal" }}>
+      <StatusBar style={scheme === "dark" ? "light" : "dark"} />
+      <Stack
+        screenOptions={{
+          headerBackButtonDisplayMode: "minimal",
+          headerTitleStyle: { fontFamily: "Manrope_700Bold" },
+        }}
+      >
         <Stack.Screen name="index" options={{ title: t("home"), headerShown: false }} />
         <Stack.Screen name="(app)" options={{ title: t("appShell") }} />
         <Stack.Screen name="+not-found" />
