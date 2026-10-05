@@ -51,9 +51,9 @@ export function RadioGroup<T extends string>({
               color={checked ? "primary" : "mutedForeground"}
             />
             <View className="flex-1">
-              <Text weight={checked ? "bold" : "medium"}>{option.label}</Text>
+              <Text weight={checked ? "extrabold" : "bold"}>{option.label}</Text>
               {option.description ? (
-                <Text variant="caption" color="mutedForeground">
+                <Text variant="caption" color="faintForeground">
                   {option.description}
                 </Text>
               ) : null}

@@ -4,9 +4,9 @@ import { Image, View } from "react-native";
 import { Text } from "./text";
 
 const sizes = {
-  sm: { box: "size-8", text: "caption" },
-  md: { box: "size-11", text: "bodySmall" },
-  lg: { box: "size-16", text: "title" },
+  sm: { box: "size-8", text: "badge" },
+  md: { box: "size-11", text: "title" },
+  lg: { box: "size-16", text: "metricSm" },
 } as const;
 
 /** Initials from a display name ("Ada Lovelace" → "AL"). */
@@ -39,12 +39,12 @@ export function Avatar({
       accessible
       accessibilityRole="image"
       accessibilityLabel={name}
-      className={`items-center justify-center overflow-hidden rounded-full bg-accent ${scale.box}`}
+      className={`items-center justify-center overflow-hidden rounded-full bg-highlight ${scale.box}`}
     >
       {showImage ? (
         <Image source={{ uri: imageUrl }} onError={() => setFailed(true)} className="size-full" />
       ) : (
-        <Text variant={scale.text} weight="bold" color="accentForeground">
+        <Text variant={scale.text} color="highlightForeground">
           {initialsOf(name)}
         </Text>
       )}

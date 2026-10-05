@@ -42,7 +42,7 @@ export function Modal({
         />
         <View
           accessibilityViewIsModal
-          className="w-full max-w-md gap-4 rounded-2xl border border-border bg-surface-elevated p-6"
+          className="w-full max-w-md gap-4 rounded-4xl border border-border bg-surface-elevated p-6"
         >
           <View className="flex-row items-start gap-3">
             <View className="flex-1 gap-1">

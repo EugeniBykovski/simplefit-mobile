@@ -35,10 +35,10 @@ export function Badge({
       accessible
       accessibilityRole="text"
       accessibilityLabel={label}
-      className={`flex-row items-center gap-1 self-start rounded-full px-2.5 py-1 ${tone.container}`}
+      className={`flex-row items-center gap-1 self-start rounded-sm px-[9px] py-1 ${tone.container}`}
     >
       {icon ? <Icon icon={icon} size={12} color={tone.text} /> : null}
-      <Text variant="caption" weight="bold" color={tone.text} className="uppercase tracking-wide">
+      <Text variant="badge" color={tone.text}>
         {label}
       </Text>
     </View>

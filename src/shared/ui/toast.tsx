@@ -95,7 +95,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               toast.description ? `${toast.title}. ${toast.description}` : toast.title
             }
             onPress={dismiss}
-            className={`flex-row items-start gap-3 rounded-lg border p-4 ${tone.container}`}
+            className={`flex-row items-start gap-3 rounded-2xl border p-4 ${tone.container}`}
           >
             <Icon icon={tone.icon} color={tone.text} />
             <View className="flex-1 gap-0.5">
@@ -103,7 +103,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 {toast.title}
               </Text>
               {toast.description ? (
-                <Text variant="bodySmall" color={tone.text}>
+                <Text variant="bodySm" color={tone.text}>
                   {toast.description}
                 </Text>
               ) : null}

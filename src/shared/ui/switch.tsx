@@ -23,7 +23,7 @@ export function Switch({
       className={`min-h-touch flex-row items-center justify-between gap-3 ${disabled ? "opacity-50" : ""}`}
     >
       <Text
-        weight="medium"
+        weight="bold"
         className="flex-1"
         importantForAccessibility="no"
         accessibilityElementsHidden

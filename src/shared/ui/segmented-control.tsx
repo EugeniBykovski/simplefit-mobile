@@ -24,7 +24,7 @@ export function SegmentedControl<T extends string>({
     <View
       accessibilityRole="tablist"
       accessibilityLabel={label}
-      className="flex-row gap-1 rounded-lg border border-border bg-surface-subtle p-1"
+      className="flex-row gap-1 rounded-full border border-border bg-surface p-1"
     >
       {segments.map((segment) => {
         const selected = segment.value === value;
@@ -35,11 +35,11 @@ export function SegmentedControl<T extends string>({
             accessibilityLabel={segment.label}
             accessibilityState={{ selected }}
             onPress={() => onChange(segment.value)}
-            className={`min-h-touch flex-1 items-center justify-center rounded-md px-3 ${selected ? "bg-primary" : "active:bg-muted"}`}
+            className={`min-h-touch flex-1 items-center justify-center rounded-full px-3 ${selected ? "bg-secondary" : "active:bg-muted"}`}
           >
             <Text
-              variant="bodySmall"
-              weight={selected ? "bold" : "medium"}
+              variant="caption"
+              weight={selected ? "extrabold" : "bold"}
               color={selected ? "primaryForeground" : "mutedForeground"}
               numberOfLines={1}
             >

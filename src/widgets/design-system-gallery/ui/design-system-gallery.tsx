@@ -27,18 +27,34 @@ import { useToast } from "@/shared/ui/toast";
 // Developer-facing reference screen (never shipped: the route is __DEV__-only),
 // so its sample copy is intentionally English and not translated.
 
-const typeScale: TextVariant[] = [
-  "display",
-  "h1",
-  "h2",
-  "h3",
-  "title",
-  "body",
-  "bodySmall",
-  "label",
-  "caption",
+const typeScale: [TextVariant, string][] = [
+  ["display", "18:00"],
+  ["h1", "Create your account"],
+  ["h2", "Gym dashboard"],
+  ["h3", "Upgrade to Coach Pro"],
+  ["title", "Next session"],
+  ["metricXl", "€29.99"],
+  ["metricLg", "142"],
+  ["metric", "1h 34m"],
+  ["metricSm", "22 rounds"],
+  ["bodyLg", "Body large · field values"],
+  ["body", "Body · mobile copy"],
+  ["bodySm", "Body small · dense copy"],
+  ["caption", "Caption · Arrive 17:50"],
+  ["micro", "Micro · 2 min ago"],
+  ["badge", "Badge · past due"],
+  ["labelLg", "Label large · week 1"],
+  ["label", "Label · or email"],
 ];
-const buttonVariants: ButtonVariant[] = ["primary", "secondary", "outline", "ghost", "destructive"];
+const buttonVariants: ButtonVariant[] = [
+  "primary",
+  "secondary",
+  "quiet",
+  "outline",
+  "ghost",
+  "destructive",
+  "destructiveSubtle",
+];
 const badgeVariants: BadgeVariant[] = [
   "neutral",
   "primary",
@@ -55,20 +71,60 @@ const swatches: (keyof SemanticColors)[] = [
   "surfaceElevated",
   "muted",
   "border",
+  "borderStrong",
+  "input",
   "primary",
+  "primaryMuted",
   "secondary",
+  "highlight",
   "accent",
+  "accentStrong",
+  "accentBorder",
   "destructive",
+  "destructiveSubtle",
   "success",
   "warning",
+  "warningSubtle",
   "info",
   "ring",
 ];
+// Literal class names so Tailwind generates them.
+const spacing = [
+  ["0.5", "w-0.5"],
+  ["1", "w-1"],
+  ["1.5", "w-1.5"],
+  ["2", "w-2"],
+  ["2.5", "w-2.5"],
+  ["3", "w-3"],
+  ["3.5", "w-3.5"],
+  ["4", "w-4"],
+  ["4.5", "w-4.5"],
+  ["5", "w-5"],
+  ["5.5", "w-5.5"],
+  ["6", "w-6"],
+  ["8", "w-8"],
+  ["10", "w-10"],
+  ["12", "w-12"],
+  ["14", "w-14"],
+  ["16", "w-16"],
+  ["20", "w-20"],
+] as const;
+const radii = [
+  ["xs", "rounded-xs"],
+  ["sm", "rounded-sm"],
+  ["md", "rounded-md"],
+  ["lg", "rounded-lg"],
+  ["xl", "rounded-xl"],
+  ["2xl", "rounded-2xl"],
+  ["3xl", "rounded-3xl"],
+  ["4xl", "rounded-4xl"],
+  ["full", "rounded-full"],
+] as const;
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <View className="gap-3">
-      <Text variant="label" color="mutedForeground">
+      <Text variant="label" color="faintForeground">
         {title}
       </Text>
       {children}
@@ -97,11 +153,28 @@ export function DesignSystemGallery() {
       </Card>
 
       <Section title="Typography">
-        {typeScale.map((variant) => (
-          <Text key={variant} variant={variant}>
-            {variant} · 12:45
-          </Text>
+        {typeScale.map(([variant, sample]) => (
+          <View key={variant} className="gap-0.5">
+            <Text variant="micro" color="faintForeground">
+              {variant}
+            </Text>
+            <Text variant={variant}>{sample}</Text>
+          </View>
         ))}
+        <Text variant="bodySm" color="mutedForeground">
+          Weights:{" "}
+          <Text variant="bodySm" weight="semibold">
+            600 values
+          </Text>{" "}
+          ·{" "}
+          <Text variant="bodySm" weight="bold">
+            700 labels
+          </Text>{" "}
+          ·{" "}
+          <Text variant="bodySm" weight="extrabold">
+            800 emphasis
+          </Text>
+        </Text>
       </Section>
 
       <Section title="Semantic colours">
@@ -119,18 +192,49 @@ export function DesignSystemGallery() {
             </View>
           ))}
         </View>
+        <View className="flex-row flex-wrap gap-x-4 gap-y-1">
+          <Text color="mutedForeground">muted</Text>
+          <Text color="faintForeground">faint</Text>
+          <Text color="highlight">highlight</Text>
+        </View>
         <Text variant="caption" color="mutedForeground">
           {Object.keys(rawPalette).length} raw palette values back these tokens; components use only
           the semantic names.
         </Text>
       </Section>
 
+      <Section title="Spacing">
+        {spacing.map(([step, className]) => (
+          <View key={step} className="flex-row items-center gap-3">
+            <Text variant="caption" color="faintForeground" className="w-10">
+              {step}
+            </Text>
+            <View className={`h-3 rounded-xs bg-primary ${className}`} />
+          </View>
+        ))}
+      </Section>
+
+      <Section title="Radius">
+        <View className="flex-row flex-wrap gap-3">
+          {radii.map(([name, className]) => (
+            <View key={name} className="items-center gap-1">
+              <View className={`size-14 border border-border-strong bg-surface ${className}`} />
+              <Text variant="caption" color="mutedForeground">
+                {name}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </Section>
+
       <Section title="Buttons">
         {buttonVariants.map((variant) => (
           <Button key={variant} label={variant} variant={variant} onPress={() => undefined} />
         ))}
+        <Button label="lg · 56 · main action" size="lg" onPress={() => undefined} />
+        <Button label="md · 50" variant="quiet" onPress={() => undefined} />
         <View className="flex-row flex-wrap gap-2">
-          <Button label="Small" size="sm" variant="outline" onPress={() => undefined} />
+          <Button label="sm · 36" size="sm" variant="quiet" onPress={() => undefined} />
           <Button label="Icon" icon={Plus} variant="secondary" onPress={() => undefined} />
           <Button label="Loading" loading onPress={() => undefined} />
           <Button label="Disabled" disabled onPress={() => undefined} />
@@ -193,7 +297,7 @@ export function DesignSystemGallery() {
       <Section title="Card, loading and icons">
         <Card>
           <View className="flex-row items-center gap-2">
-            <Icon icon={Dumbbell} color="primary" />
+            <Icon icon={Dumbbell} color="highlight" />
             <Text variant="title">Session card</Text>
           </View>
           <Text color="mutedForeground">Cards sit on surface with a 22 pt radius.</Text>
@@ -204,30 +308,33 @@ export function DesignSystemGallery() {
           </View>
           <Spinner label="Loading sessions" />
         </Card>
-        <Card elevated>
-          <Text variant="title">Elevated card</Text>
+        <Card compact elevated>
+          <Text variant="title">Compact elevated card</Text>
+          <Text variant="bodySm" color="mutedForeground">
+            Radius 20 pt, padding 14 × 16.
+          </Text>
         </Card>
       </Section>
 
       <Section title="Overlays and feedback">
-        <Button label="Open modal" variant="outline" onPress={() => setModalOpen(true)} />
+        <Button label="Open modal" variant="quiet" onPress={() => setModalOpen(true)} />
         <View className="flex-row flex-wrap gap-2">
           <Button
             label="Toast"
             size="sm"
-            variant="secondary"
+            variant="quiet"
             onPress={() => toast.show({ title: "Saved" })}
           />
           <Button
             label="Success"
             size="sm"
-            variant="secondary"
+            variant="quiet"
             onPress={() => toast.show({ title: "Round logged", tone: "success" })}
           />
           <Button
             label="Warning"
             size="sm"
-            variant="secondary"
+            variant="quiet"
             onPress={() => toast.show({ title: "Weigh-in tomorrow", tone: "warning" })}
           />
           <Button

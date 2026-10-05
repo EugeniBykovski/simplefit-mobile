@@ -1,4 +1,4 @@
-import { useId, type Ref } from "react";
+import { useId, useState, type Ref } from "react";
 import { TextInput, View, type TextInputProps } from "react-native";
 
 import { useTheme } from "@/shared/styles/theme";
@@ -16,17 +16,35 @@ export type InputProps = Omit<TextInputProps, "style" | "className"> & {
 };
 
 /**
- * Labelled text field for React Hook Form (use with <Controller>). Error state
- * is conveyed by text and border, never colour alone. `multiline` turns it
- * into a text area (see Textarea).
+ * Labelled text field for React Hook Form (use with <Controller>). Canonical
+ * mobile field (docs/design-tokens.json controls.field): 54 pt, radius lg,
+ * Manrope 15/600 on the `surface` well with a hairline border; the focused
+ * field shows the olive border. Label: caption 700, muted. Error state is
+ * conveyed by text and border, never colour alone. `multiline` turns it into a
+ * text area (see Textarea).
  */
-export function Input({ label, description, error, ref, multiline, ...props }: InputProps) {
+export function Input({
+  label,
+  description,
+  error,
+  ref,
+  multiline,
+  onFocus,
+  onBlur,
+  ...props
+}: InputProps) {
   const { colors } = useTheme();
   const labelId = useId();
+  const [focused, setFocused] = useState(false);
+  const border = error
+    ? "border-2 border-destructive"
+    : focused
+      ? "border-[1.5px] border-primary"
+      : "border border-border";
 
   return (
     <View className="gap-1.5">
-      <Text variant="bodySmall" weight="semibold" nativeID={labelId}>
+      <Text variant="caption" weight="bold" color="mutedForeground" nativeID={labelId}>
         {label}
       </Text>
       <TextInput
@@ -36,15 +54,23 @@ export function Input({ label, description, error, ref, multiline, ...props }: I
         accessibilityHint={description}
         accessibilityState={{ disabled: props.editable === false }}
         // Native prop: cannot be expressed as a className.
-        placeholderTextColor={colors.mutedForeground}
+        placeholderTextColor={colors.faintForeground}
         maxFontSizeMultiplier={2}
         multiline={multiline}
         textAlignVertical={multiline ? "top" : "center"}
+        onFocus={(event) => {
+          setFocused(true);
+          onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setFocused(false);
+          onBlur?.(event);
+        }}
         {...props}
-        className={`rounded-md bg-surface-subtle px-3.5 font-sans text-body text-foreground ${multiline ? "min-h-28 py-3" : "min-h-touch py-2.5"} ${error ? "border-2 border-destructive" : "border border-input"} ${props.editable === false ? "opacity-50" : ""}`}
+        className={`rounded-lg bg-surface px-4 font-sans-semibold text-body-lg text-foreground ${multiline ? "min-h-28 py-3.5" : "min-h-field py-3"} ${border} ${props.editable === false ? "opacity-50" : ""}`}
       />
       {description && !error ? (
-        <Text variant="caption" color="mutedForeground">
+        <Text variant="caption" color="faintForeground">
           {description}
         </Text>
       ) : null}
