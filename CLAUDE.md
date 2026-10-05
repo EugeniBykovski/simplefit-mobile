@@ -81,7 +81,15 @@ role-aware capabilities**; a person can hold several roles, so never model
     `className` with semantic token classes (`bg-surface`,
     `text-muted-foreground`, `border-border`), never raw colours, hex values or
     palette names (ESLint enforces it); compose `src/shared/ui` primitives and
-    `<Text variant>` typography; Lucide is the only icon set. Do not create
+    `<Text variant>` typography. Values come from the contract in
+    `docs/design-tokens.json`:
+    - type roles are the only text sizes;
+    - spacing uses only the canonical steps;
+    - radius uses `xs`…`4xl`/`full`;
+    - ESLint rejects Tailwind's default sizes and weights and arbitrary
+      spacing/radius/type values.
+
+    Lucide is the only icon set. Do not create
     `StyleSheet.create` blocks or static inline style objects for ordinary
     styling (ESLint enforces this). `style` is only for Reanimated/gesture
     styles, runtime-calculated values (insets, dynamic dimensions), NativeWind
@@ -90,6 +98,7 @@ role-aware capabilities**; a person can hold several roles, so never model
     inline `eslint-disable-next-line no-restricted-syntax -- <reason>`. No
     CSS-in-JS, no styled-components, no style-constant modules. No web-only
     libraries (shadcn DOM components, Radix) in React Native.
+
 22. Respect safe areas, keyboard and platform conventions (see the screen
     composition section of the architecture doc).
 23. **Design handoff** (`docs/design-handoff.md`). The canonical product
