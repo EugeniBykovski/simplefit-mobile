@@ -15,7 +15,7 @@ import { SegmentedControl } from "./segmented-control";
 import { Skeleton } from "./skeleton";
 import { Spinner } from "./spinner";
 import { Switch } from "./switch";
-import { Text } from "./text";
+import { Text, textFamily } from "./text";
 import { Textarea } from "./textarea";
 import { useToast } from "./toast";
 
@@ -33,6 +33,15 @@ describe("Text", () => {
     expect(screen.getByRole("header", { name: "Heading" })).toBeOnTheScreen();
     expect(screen.queryByRole("header", { name: "Title" })).toBeNull();
     expect(screen.queryByRole("header", { name: "Body" })).toBeNull();
+  });
+
+  it("raises Manrope roles to the requested weight and keeps display and mono families", () => {
+    expect(textFamily("body")).toBe("font-sans");
+    expect(textFamily("caption", "bold")).toBe("font-sans-bold");
+    expect(textFamily("bodySm", "extrabold")).toBe("font-sans-extrabold");
+    expect(textFamily("h1", "extrabold")).toBe("font-display");
+    expect(textFamily("metric")).toBe("font-display-bold");
+    expect(textFamily("label", "bold")).toBe("font-mono");
   });
 });
 
@@ -67,11 +76,31 @@ describe("Button", () => {
     expect(button).not.toBeBusy();
   });
 
-  it("uses the 60 pt gym-mode touch target", async () => {
-    await renderWithProviders(<Button label="Start" size="gym" onPress={jest.fn()} />);
-    expect(screen.getByRole("button", { name: "Start" }).props.className).toContain(
-      "min-h-touch-gym",
-    );
+  // Canonical mobile control sizes (docs/design-tokens.json controls.button.mobile).
+  it.each([
+    ["sm", ["min-h-button-sm", "rounded-full"]],
+    ["md", ["min-h-button-md", "rounded-xl"]],
+    ["lg", ["min-h-button-lg", "rounded-xl"]],
+    ["gym", ["min-h-touch-gym", "rounded-2xl"]],
+  ] as const)("renders the %s size at its canonical height and radius", async (size, classes) => {
+    await renderWithProviders(<Button label="Start" size={size} onPress={jest.fn()} />);
+    const button = screen.getByRole("button", { name: "Start" });
+    for (const name of classes) expect(button.props.className).toContain(name);
+  });
+
+  it("extends the 36 pt small button to a 44 pt touch target", async () => {
+    await renderWithProviders(<Button label="Edit" size="sm" onPress={jest.fn()} />);
+    expect(screen.getByRole("button", { name: "Edit" }).props.hitSlop).toBe(4);
+  });
+
+  it.each([
+    ["quiet", ["bg-surface-elevated", "border-input"]],
+    ["outline", ["border-primary-muted"]],
+    ["destructiveSubtle", ["bg-destructive-subtle", "border-destructive-border"]],
+  ] as const)("renders the %s variant with semantic tokens", async (variant, classes) => {
+    await renderWithProviders(<Button label="Act" variant={variant} onPress={jest.fn()} />);
+    const button = screen.getByRole("button", { name: "Act" });
+    for (const name of classes) expect(button.props.className).toContain(name);
   });
 });
 
