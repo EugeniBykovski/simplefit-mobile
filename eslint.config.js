@@ -13,6 +13,17 @@ const rawColor =
 const rawColorMessage =
   "Use semantic colour tokens (bg-surface, text-muted-foreground, ...), not hex values, arbitrary colours or palette names.";
 
+/**
+ * Design-scale guard (docs/design-handoff.md §8.1, SF-16): design values are
+ * translated through the SF-13 spacing, radius and type scales, never copied
+ * as arbitrary values. Primitives in src/shared/ui own their internal geometry
+ * and are exempt; layout dimensions (w/h/size/inset) may stay arbitrary.
+ */
+const offScale =
+  "\\b(-?[pm][xytrblse]?|gap(-[xy])?|space-[xy]|rounded(-[a-z]{1,2})?|text|leading|tracking|font)-\\[";
+const offScaleMessage =
+  "Off-scale value: use the SF-13 spacing, radius and type scales (docs/design-handoff.md §8.1), not arbitrary values.";
+
 // Utility-first styling selectors, shared by the .ts and .tsx blocks (flat
 // config replaces rule options per block, so the .tsx block repeats them).
 const stylingSelectors = [
@@ -146,6 +157,22 @@ module.exports = defineConfig([
         ...stylingSelectors,
         { selector: `Literal[value=/${rawColor}/]`, message: rawColorMessage },
         { selector: `TemplateElement[value.raw=/${rawColor}/]`, message: rawColorMessage },
+      ],
+    },
+  },
+  {
+    // Product code (everything but the primitives) also keeps to the design
+    // scales. Flat config replaces rule options, so the selectors repeat.
+    files: ["src/**/*.tsx"],
+    ignores: ["**/*.test.tsx", "src/shared/ui/**"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        ...stylingSelectors,
+        { selector: `Literal[value=/${rawColor}/]`, message: rawColorMessage },
+        { selector: `TemplateElement[value.raw=/${rawColor}/]`, message: rawColorMessage },
+        { selector: `Literal[value=/${offScale}/]`, message: offScaleMessage },
+        { selector: `TemplateElement[value.raw=/${offScale}/]`, message: offScaleMessage },
       ],
     },
   },
