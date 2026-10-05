@@ -1,0 +1,58 @@
+{
+  "common": {
+    "tagline": "The operating system and professional network for boxing."
+  },
+  "navigation": {
+    "home": "Home",
+    "appShell": "App"
+  },
+  "actions": {
+    "openTheApp": "Open the app",
+    "checkAgain": "Check again",
+    "backToHome": "Back to home"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Screen not found",
+      "description": "This screen does not exist."
+    }
+  },
+  "home": {
+    "badge": "Mobile platform foundation",
+    "localeTitle": "Language and formats",
+    "currentLanguage": "Current language",
+    "source": {
+      "device": "Following your device settings",
+      "explicit": "Chosen in the app"
+    },
+    "number": "Number",
+    "percent": "Percent",
+    "date": "Date",
+    "time": "Time",
+    "timeZone": "Time zone"
+  },
+  "language": {
+    "title": "Language",
+    "device": "Device language",
+    "deviceHint": "Currently {language}"
+  },
+  "appShell": {
+    "title": "Application shell",
+    "description": "The signed-in SimpleFit experience for fighters, coaches and gyms will be built inside this shell."
+  },
+  "apiHealth": {
+    "title": "API connection",
+    "status": {
+      "checking": "Checking",
+      "online": "Online",
+      "offline": "Offline"
+    },
+    "checking": "Contacting the API…",
+    "online": "The API is reachable and serving requests.",
+    "offline": "The API could not be reached.",
+    "errorCode": "Error <code>{errorCode}</code>.",
+    "requestId": "Request ID: {requestId}",
+    "lastChecked": "Last checked at {time}",
+    "notChecked": "Not checked yet"
+  }
+}

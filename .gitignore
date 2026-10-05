@@ -1,0 +1,52 @@
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Generated native projects (Continuous Native Generation: `expo prebuild`)
+/ios
+/android
+
+# Native signing material: never commit
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.keystore
+*.mobileprovision
+google-services.json
+GoogleService-Info.plist
+
+# Metro
+.metro-health-check*
+
+# testing
+/coverage
+
+# Orval drift-check scratch output (pnpm api:check)
+/src/shared/api/.generated-check/
+
+# env files: only .env.example is committed
+.env
+.env.*
+!.env.example
+
+# logs
+npm-debug.*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+*.pem
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# typescript
+*.tsbuildinfo

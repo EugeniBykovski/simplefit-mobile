@@ -1,0 +1,12 @@
+node_modules/
+.expo/
+dist/
+coverage/
+ios/
+android/
+pnpm-lock.yaml
+expo-env.d.ts
+# Generated artifacts: byte-for-byte output of their generators. Never format by hand.
+openapi/simplefit.api.json
+src/shared/api/generated/
+src/shared/api/.generated-check/

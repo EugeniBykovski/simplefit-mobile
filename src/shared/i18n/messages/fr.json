@@ -1,0 +1,58 @@
+{
+  "common": {
+    "tagline": "Le système d’exploitation et le réseau professionnel de la boxe."
+  },
+  "navigation": {
+    "home": "Accueil",
+    "appShell": "Application"
+  },
+  "actions": {
+    "openTheApp": "Ouvrir l’application",
+    "checkAgain": "Vérifier à nouveau",
+    "backToHome": "Retour à l’accueil"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Écran introuvable",
+      "description": "Cet écran n’existe pas."
+    }
+  },
+  "home": {
+    "badge": "Socle de la plateforme mobile",
+    "localeTitle": "Langue et formats",
+    "currentLanguage": "Langue actuelle",
+    "source": {
+      "device": "Selon les réglages de l’appareil",
+      "explicit": "Choisie dans l’application"
+    },
+    "number": "Nombre",
+    "percent": "Pourcentage",
+    "date": "Date",
+    "time": "Heure",
+    "timeZone": "Fuseau horaire"
+  },
+  "language": {
+    "title": "Langue",
+    "device": "Langue de l’appareil",
+    "deviceHint": "Actuellement : {language}"
+  },
+  "appShell": {
+    "title": "Cadre de l’application",
+    "description": "L’espace connecté de SimpleFit pour les boxeurs, entraîneurs et clubs sera construit dans ce cadre."
+  },
+  "apiHealth": {
+    "title": "Connexion à l’API",
+    "status": {
+      "checking": "Vérification",
+      "online": "En ligne",
+      "offline": "Hors ligne"
+    },
+    "checking": "Connexion à l’API…",
+    "online": "L’API est joignable et traite les requêtes.",
+    "offline": "Impossible de joindre l’API.",
+    "errorCode": "Erreur <code>{errorCode}</code>.",
+    "requestId": "ID de requête : {requestId}",
+    "lastChecked": "Dernière vérification : {time}",
+    "notChecked": "Pas encore vérifié"
+  }
+}

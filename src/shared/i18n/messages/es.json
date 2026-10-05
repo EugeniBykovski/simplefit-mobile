@@ -1,0 +1,58 @@
+{
+  "common": {
+    "tagline": "El sistema operativo y la red profesional del boxeo."
+  },
+  "navigation": {
+    "home": "Inicio",
+    "appShell": "Aplicación"
+  },
+  "actions": {
+    "openTheApp": "Abrir la aplicación",
+    "checkAgain": "Comprobar de nuevo",
+    "backToHome": "Volver al inicio"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Pantalla no encontrada",
+      "description": "Esta pantalla no existe."
+    }
+  },
+  "home": {
+    "badge": "Base de la plataforma móvil",
+    "localeTitle": "Idioma y formatos",
+    "currentLanguage": "Idioma actual",
+    "source": {
+      "device": "Según los ajustes del dispositivo",
+      "explicit": "Elegido en la aplicación"
+    },
+    "number": "Número",
+    "percent": "Porcentaje",
+    "date": "Fecha",
+    "time": "Hora",
+    "timeZone": "Zona horaria"
+  },
+  "language": {
+    "title": "Idioma",
+    "device": "Idioma del dispositivo",
+    "deviceHint": "Actualmente: {language}"
+  },
+  "appShell": {
+    "title": "Estructura de la aplicación",
+    "description": "Aquí se construirá la experiencia de SimpleFit con sesión iniciada para boxeadores, entrenadores y gimnasios."
+  },
+  "apiHealth": {
+    "title": "Conexión con la API",
+    "status": {
+      "checking": "Comprobando",
+      "online": "En línea",
+      "offline": "Sin conexión"
+    },
+    "checking": "Conectando con la API…",
+    "online": "La API está disponible y atiende solicitudes.",
+    "offline": "No se pudo conectar con la API.",
+    "errorCode": "Error <code>{errorCode}</code>.",
+    "requestId": "ID de solicitud: {requestId}",
+    "lastChecked": "Última comprobación: {time}",
+    "notChecked": "Aún no comprobado"
+  }
+}

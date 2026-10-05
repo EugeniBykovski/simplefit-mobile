@@ -1,0 +1,58 @@
+{
+  "common": {
+    "tagline": "System operacyjny i profesjonalna sieć dla boksu."
+  },
+  "navigation": {
+    "home": "Start",
+    "appShell": "Aplikacja"
+  },
+  "actions": {
+    "openTheApp": "Otwórz aplikację",
+    "checkAgain": "Sprawdź ponownie",
+    "backToHome": "Wróć na start"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Nie znaleziono ekranu",
+      "description": "Ten ekran nie istnieje."
+    }
+  },
+  "home": {
+    "badge": "Fundament platformy mobilnej",
+    "localeTitle": "Język i formaty",
+    "currentLanguage": "Bieżący język",
+    "source": {
+      "device": "Zgodnie z ustawieniami urządzenia",
+      "explicit": "Wybrany w aplikacji"
+    },
+    "number": "Liczba",
+    "percent": "Procent",
+    "date": "Data",
+    "time": "Godzina",
+    "timeZone": "Strefa czasowa"
+  },
+  "language": {
+    "title": "Język",
+    "device": "Język urządzenia",
+    "deviceHint": "Obecnie: {language}"
+  },
+  "appShell": {
+    "title": "Powłoka aplikacji",
+    "description": "W tej powłoce powstanie zalogowana część SimpleFit dla zawodników, trenerów i klubów."
+  },
+  "apiHealth": {
+    "title": "Połączenie z API",
+    "status": {
+      "checking": "Sprawdzanie",
+      "online": "Dostępne",
+      "offline": "Niedostępne"
+    },
+    "checking": "Łączenie z API…",
+    "online": "API jest dostępne i obsługuje żądania.",
+    "offline": "Nie udało się połączyć z API.",
+    "errorCode": "Błąd <code>{errorCode}</code>.",
+    "requestId": "ID żądania: {requestId}",
+    "lastChecked": "Ostatnie sprawdzenie: {time}",
+    "notChecked": "Jeszcze nie sprawdzono"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "actions": {
+    "checkAgain": "Verificar de nuevo"
+  },
+  "home": {
+    "source": {
+      "device": "Según la configuración del dispositivo"
+    }
+  },
+  "apiHealth": {
+    "status": {
+      "checking": "Verificando"
+    },
+    "lastChecked": "Última verificación: {time}",
+    "notChecked": "Aún no verificado"
+  }
+}

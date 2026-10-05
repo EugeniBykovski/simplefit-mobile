@@ -1,0 +1,58 @@
+{
+  "common": {
+    "tagline": "Операционная система и профессиональная сеть для бокса."
+  },
+  "navigation": {
+    "home": "Главная",
+    "appShell": "Приложение"
+  },
+  "actions": {
+    "openTheApp": "Открыть приложение",
+    "checkAgain": "Проверить снова",
+    "backToHome": "На главную"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Экран не найден",
+      "description": "Такого экрана не существует."
+    }
+  },
+  "home": {
+    "badge": "Основа мобильной платформы",
+    "localeTitle": "Язык и форматы",
+    "currentLanguage": "Текущий язык",
+    "source": {
+      "device": "По настройкам устройства",
+      "explicit": "Выбран в приложении"
+    },
+    "number": "Число",
+    "percent": "Процент",
+    "date": "Дата",
+    "time": "Время",
+    "timeZone": "Часовой пояс"
+  },
+  "language": {
+    "title": "Язык",
+    "device": "Язык устройства",
+    "deviceHint": "Сейчас: {language}"
+  },
+  "appShell": {
+    "title": "Оболочка приложения",
+    "description": "В этой оболочке будет создана авторизованная часть SimpleFit для боксёров, тренеров и клубов."
+  },
+  "apiHealth": {
+    "title": "Подключение к API",
+    "status": {
+      "checking": "Проверка",
+      "online": "Доступен",
+      "offline": "Недоступен"
+    },
+    "checking": "Подключение к API…",
+    "online": "API доступен и обрабатывает запросы.",
+    "offline": "Не удалось подключиться к API.",
+    "errorCode": "Ошибка <code>{errorCode}</code>.",
+    "requestId": "ID запроса: {requestId}",
+    "lastChecked": "Последняя проверка: {time}",
+    "notChecked": "Ещё не проверено"
+  }
+}

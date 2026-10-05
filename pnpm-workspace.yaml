@@ -1,0 +1,10 @@
+# pnpm settings for this single-package repository.
+
+# Dependency install scripts are denied unless explicitly reviewed here.
+# Both ship prebuilt platform binaries through optionalDependencies, so their
+# postinstall fallbacks are not needed:
+# - esbuild: used by Orval to load its config
+# - unrs-resolver: used by eslint-import-resolver-typescript (eslint-config-expo)
+allowBuilds:
+  esbuild: false
+  unrs-resolver: false

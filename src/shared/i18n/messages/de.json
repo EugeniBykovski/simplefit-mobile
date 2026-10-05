@@ -1,0 +1,58 @@
+{
+  "common": {
+    "tagline": "Das Betriebssystem und professionelle Netzwerk für den Boxsport."
+  },
+  "navigation": {
+    "home": "Start",
+    "appShell": "App"
+  },
+  "actions": {
+    "openTheApp": "Zur App",
+    "checkAgain": "Erneut prüfen",
+    "backToHome": "Zur Startseite"
+  },
+  "errors": {
+    "notFound": {
+      "title": "Bildschirm nicht gefunden",
+      "description": "Dieser Bildschirm existiert nicht."
+    }
+  },
+  "home": {
+    "badge": "Fundament der Mobilplattform",
+    "localeTitle": "Sprache und Formate",
+    "currentLanguage": "Aktuelle Sprache",
+    "source": {
+      "device": "Folgt den Geräteeinstellungen",
+      "explicit": "In der App gewählt"
+    },
+    "number": "Zahl",
+    "percent": "Prozent",
+    "date": "Datum",
+    "time": "Uhrzeit",
+    "timeZone": "Zeitzone"
+  },
+  "language": {
+    "title": "Sprache",
+    "device": "Gerätesprache",
+    "deviceHint": "Derzeit {language}"
+  },
+  "appShell": {
+    "title": "App-Rahmen",
+    "description": "In diesem Rahmen entsteht der angemeldete Bereich von SimpleFit für Boxer, Trainer und Gyms."
+  },
+  "apiHealth": {
+    "title": "API-Verbindung",
+    "status": {
+      "checking": "Wird geprüft",
+      "online": "Online",
+      "offline": "Offline"
+    },
+    "checking": "Verbindung zur API wird hergestellt…",
+    "online": "Die API ist erreichbar und verarbeitet Anfragen.",
+    "offline": "Die API ist nicht erreichbar.",
+    "errorCode": "Fehler <code>{errorCode}</code>.",
+    "requestId": "Anfrage-ID: {requestId}",
+    "lastChecked": "Zuletzt geprüft um {time}",
+    "notChecked": "Noch nicht geprüft"
+  }
+}

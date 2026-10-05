@@ -1,0 +1,10 @@
+{
+  "en": { "name": "English" },
+  "ru": { "name": "Русский" },
+  "pl": { "name": "Polski" },
+  "de": { "name": "Deutsch" },
+  "uk": { "name": "Українська" },
+  "es": { "name": "Español" },
+  "es-MX": { "name": "Español (México)", "fallback": "es" },
+  "fr": { "name": "Français" }
+}
