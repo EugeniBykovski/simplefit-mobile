@@ -1,9 +1,3 @@
-import {
-  GoogleSignin,
-  isErrorWithCode,
-  isSuccessResponse,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Platform, View } from "react-native";
@@ -12,7 +6,12 @@ import { useTranslations } from "use-intl";
 import { startSession } from "@/entities/session";
 import { authenticateWithGoogle } from "@/shared/api/generated/endpoints/auth/auth";
 import { isApiError } from "@/shared/api/http/api-error";
-import { configureGoogleSignIn, googleSignInAvailable } from "@/shared/lib/google-sign-in";
+import {
+  configureGoogleSignIn,
+  googleSignInAvailable,
+  googleSignInModule,
+  type GoogleSignInModule,
+} from "@/shared/lib/google-sign-in";
 import { Button, type ButtonVariant } from "@/shared/ui/button";
 import { Text } from "@/shared/ui/text";
 
@@ -43,15 +42,18 @@ export function GoogleSignInButton({ variant = "primary" }: { variant?: ButtonVa
   }
 
   async function signIn() {
-    if (busy || !configureGoogleSignIn()) return;
+    if (busy) return;
+    // Not caught: a binary without the native module must fail loudly.
+    const google = googleSignInModule();
+    if (!configureGoogleSignIn(google)) return;
     setBusy(true);
     setFailure(undefined);
     try {
       if (Platform.OS === "android") {
-        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        await google.GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
       }
-      const response = await GoogleSignin.signIn();
-      if (!isSuccessResponse(response)) return; // cancelled by the user
+      const response = await google.GoogleSignin.signIn();
+      if (!google.isSuccessResponse(response)) return; // cancelled by the user
       const idToken = response.data.idToken;
       if (idToken === null) throw new Error("Google returned no ID token");
 
@@ -62,7 +64,7 @@ export function GoogleSignInButton({ variant = "primary" }: { variant?: ButtonVa
       await startSession(session);
       router.replace("/");
     } catch (error) {
-      const result = failureOf(error);
+      const result = failureOf(error, google);
       if (result !== undefined) setFailure(result);
     } finally {
       setBusy(false);
@@ -99,7 +101,10 @@ export function GoogleSignInButton({ variant = "primary" }: { variant?: ButtonVa
  * API errors map by code (never message); native errors by status code.
  * Returns undefined for outcomes that are not failures (cancel, in progress).
  */
-function failureOf(error: unknown): Failure | undefined {
+function failureOf(
+  error: unknown,
+  { isErrorWithCode, statusCodes }: GoogleSignInModule,
+): Failure | undefined {
   if (isApiError(error)) {
     if (error.kind !== "http") return "network";
     switch (error.code) {
