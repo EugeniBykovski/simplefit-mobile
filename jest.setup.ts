@@ -39,6 +39,28 @@ jest.mock("@react-native-google-signin/google-signin", () => ({
     typeof error === "object" && error !== null && "code" in error,
 }));
 
+// Native Sign in with Apple and crypto (SF-23). Real Apple is verified manually only.
+jest.mock("expo-apple-authentication", () => ({
+  isAvailableAsync: jest.fn(async () => true),
+  signInAsync: jest.fn(async () => {
+    throw Object.assign(new Error("The user canceled the authorization attempt"), {
+      code: "ERR_REQUEST_CANCELED",
+    });
+  }),
+}));
+
+jest.mock("expo-crypto", () => {
+  const { createHash, randomBytes } = require("node:crypto");
+  return {
+    CryptoDigestAlgorithm: { SHA256: "SHA-256" },
+    CryptoEncoding: { HEX: "hex" },
+    getRandomBytes: jest.fn((count: number) => new Uint8Array(randomBytes(count))),
+    digestStringAsync: jest.fn(async (_algorithm: string, data: string) =>
+      createHash("sha256").update(data).digest("hex"),
+    ),
+  };
+});
+
 jest.mock("expo-localization", () => ({
   getLocales: jest.fn(() => [{ languageTag: "en-US", languageCode: "en" }]),
   getCalendars: jest.fn(() => [{ timeZone: "UTC" }]),
