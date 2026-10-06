@@ -60,5 +60,39 @@
     "dark": "Ciemny",
     "light": "Jasny",
     "system": "Jak na urządzeniu"
+  },
+  "auth": {
+    "welcome": {
+      "title": "Dołącz do bokserskiej społeczności.",
+      "description": "Trenuj, prowadź zawodników, zarządzaj klubem — albo współpracuj z ludźmi, którzy boksują. Jedno konto dla każdej roli.",
+      "haveAccount": "Już trenujesz z nami?",
+      "signIn": "Zaloguj się"
+    },
+    "login": {
+      "title": "Witaj ponownie",
+      "description": "Zaloguj się na swoje jedno konto SimpleFit — wszystkie przestrzenie robocze idą z Tobą.",
+      "newHere": "Pierwszy raz tutaj?",
+      "join": "Dołącz do bokserskiej społeczności"
+    },
+    "google": {
+      "continue": "Kontynuuj z Google",
+      "exchanging": "Logujemy Cię…",
+      "notConfigured": "Logowanie przez Google jest niedostępne w tej wersji aplikacji.",
+      "errors": {
+        "rejected": "Nie udało się zweryfikować logowania przez Google. Spróbuj ponownie.",
+        "rateLimited": "Zbyt wiele prób logowania. Odczekaj kilka minut i spróbuj ponownie.",
+        "unavailable": "Logowanie przez Google jest chwilowo niedostępne. Spróbuj później.",
+        "network": "Brak połączenia z SimpleFit. Sprawdź połączenie i spróbuj ponownie.",
+        "playServices": "Na tym urządzeniu brakuje Usług Google Play lub są nieaktualne.",
+        "generic": "Coś poszło nie tak. Spróbuj ponownie."
+      }
+    },
+    "session": {
+      "checking": "Sprawdzamy sesję",
+      "signedIn": "Jesteś zalogowany.",
+      "signedOut": "Nie jesteś zalogowany.",
+      "signIn": "Zaloguj się",
+      "signOut": "Wyloguj się"
+    }
   }
 }

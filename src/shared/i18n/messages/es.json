@@ -60,5 +60,39 @@
     "dark": "Oscuro",
     "light": "Claro",
     "system": "Igual que el dispositivo"
+  },
+  "auth": {
+    "welcome": {
+      "title": "Únete a la comunidad del boxeo.",
+      "description": "Entrena, dirige a tus boxeadores, gestiona tu gimnasio o colabora con quienes boxean. Una cuenta para cada rol.",
+      "haveAccount": "¿Ya entrenas con nosotros?",
+      "signIn": "Iniciar sesión"
+    },
+    "login": {
+      "title": "Hola de nuevo",
+      "description": "Inicia sesión en tu única cuenta de SimpleFit: todos tus espacios de trabajo te acompañan.",
+      "newHere": "¿Eres nuevo?",
+      "join": "Únete a la comunidad del boxeo"
+    },
+    "google": {
+      "continue": "Continuar con Google",
+      "exchanging": "Iniciando sesión…",
+      "notConfigured": "El inicio de sesión con Google no está disponible en esta versión.",
+      "errors": {
+        "rejected": "No hemos podido verificar tu inicio de sesión con Google. Inténtalo de nuevo.",
+        "rateLimited": "Demasiados intentos de inicio de sesión. Espera unos minutos e inténtalo de nuevo.",
+        "unavailable": "El inicio de sesión con Google no está disponible temporalmente. Inténtalo más tarde.",
+        "network": "No se puede conectar con SimpleFit. Comprueba tu conexión e inténtalo de nuevo.",
+        "playServices": "Los servicios de Google Play faltan o están desactualizados en este dispositivo.",
+        "generic": "Algo ha salido mal. Inténtalo de nuevo."
+      }
+    },
+    "session": {
+      "checking": "Comprobando tu sesión",
+      "signedIn": "Has iniciado sesión.",
+      "signedOut": "No has iniciado sesión.",
+      "signIn": "Iniciar sesión",
+      "signOut": "Cerrar sesión"
+    }
   }
 }

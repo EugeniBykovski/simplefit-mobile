@@ -13,5 +13,20 @@
     },
     "lastChecked": "Última verificación: {time}",
     "notChecked": "Aún no verificado"
+  },
+  "auth": {
+    "welcome": {
+      "description": "Entrena, dirige a tus boxeadores, administra tu gimnasio o colabora con quienes boxean. Una cuenta para cada rol."
+    },
+    "google": {
+      "errors": {
+        "rejected": "No pudimos verificar tu inicio de sesión con Google. Inténtalo de nuevo.",
+        "network": "No se puede conectar con SimpleFit. Verifica tu conexión e inténtalo de nuevo.",
+        "generic": "Algo salió mal. Inténtalo de nuevo."
+      }
+    },
+    "session": {
+      "checking": "Verificando tu sesión"
+    }
   }
 }

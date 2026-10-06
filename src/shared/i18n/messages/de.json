@@ -60,5 +60,39 @@
     "dark": "Dunkel",
     "light": "Hell",
     "system": "Wie auf dem Gerät"
+  },
+  "auth": {
+    "welcome": {
+      "title": "Werde Teil der Boxing-Community.",
+      "description": "Trainiere, coache, führe dein Gym — oder arbeite mit den Menschen zusammen, die boxen. Ein Konto für jede Rolle.",
+      "haveAccount": "Du trainierst schon mit uns?",
+      "signIn": "Anmelden"
+    },
+    "login": {
+      "title": "Willkommen zurück",
+      "description": "Melde dich bei deinem einen SimpleFit-Konto an – jeder Workspace kommt mit.",
+      "newHere": "Neu hier?",
+      "join": "Werde Teil der Boxing-Community"
+    },
+    "google": {
+      "continue": "Weiter mit Google",
+      "exchanging": "Du wirst angemeldet …",
+      "notConfigured": "Die Anmeldung mit Google ist in diesem Build nicht verfügbar.",
+      "errors": {
+        "rejected": "Deine Google-Anmeldung konnte nicht bestätigt werden. Bitte versuche es erneut.",
+        "rateLimited": "Zu viele Anmeldeversuche. Warte ein paar Minuten und versuche es erneut.",
+        "unavailable": "Die Anmeldung mit Google ist vorübergehend nicht verfügbar. Bitte versuche es später erneut.",
+        "network": "SimpleFit ist nicht erreichbar. Prüfe deine Verbindung und versuche es erneut.",
+        "playServices": "Die Google Play-Dienste fehlen auf diesem Gerät oder sind veraltet.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
+      }
+    },
+    "session": {
+      "checking": "Sitzung wird geprüft",
+      "signedIn": "Du bist angemeldet.",
+      "signedOut": "Du bist nicht angemeldet.",
+      "signIn": "Anmelden",
+      "signOut": "Abmelden"
+    }
   }
 }
