@@ -184,6 +184,40 @@ describe("tab navigation", () => {
     }
   });
 
+  it("keeps the tab bar on the screens the design shows inside a tab, with that tab active", async () => {
+    await signIn();
+    for (const [url, tab] of [
+      ["/progress", "Profile"],
+      ["/calendar", "Training"],
+      ["/marketplace", "Community"],
+      ["/coach/sparring", "Requests"],
+      ["/coach/challenge/c-1", "Today"],
+      ["/gym/members/m-1", "Members"],
+      ["/gym/classes/c-1/roster", "Classes"],
+    ] as const) {
+      const result = await renderApp(url);
+      expect(await screen.findByRole("tab", { name: tab, selected: true })).toBeOnTheScreen();
+      expect(result.getPathname()).toBe(url);
+      await result.unmount();
+    }
+  });
+
+  it("returns from a tab section to its tab root", async () => {
+    await signIn();
+    const result = await renderApp("/progress");
+    await screen.findByRole("tab", { name: "Profile", selected: true });
+    await act(async () => router.back());
+    await waitFor(() => expect(result.getPathname()).toBe("/profile"));
+    expect(await screen.findByRole("tab", { name: "Profile", selected: true })).toBeOnTheScreen();
+  });
+
+  it("pushes detail screens above the tabs, without the tab bar", async () => {
+    await signIn();
+    await renderApp("/camp/weight");
+    await screen.findByTestId(placeholderId("mobile.camp.weight"));
+    expect(screen.queryByRole("tab", { name: "Home" })).toBeNull();
+  });
+
   it("goes back from a pushed screen to the tab it was opened from", async () => {
     await signIn();
     const result = await renderApp("/profile");

@@ -11,7 +11,6 @@ export type MobileRoute = (typeof mobileRoutes)[number];
 export type MobileRouteId = MobileRoute["id"];
 export type MobileShell = (typeof mobileShells)[number];
 export type MobileShellId = MobileShell["id"];
-export type MobileNavItem = MobileShell["navItems"][number];
 export type SessionRequirement = MobileRoute["session"];
 export type Capability = keyof typeof mobileCapabilities;
 
@@ -90,27 +89,6 @@ export function matchMobileRoute(pathname: string): MobileRoute | undefined {
 function outranks(rank: number[], other: number[]): boolean {
   const index = rank.findIndex((value, position) => value !== other[position]);
   return index !== -1 && (rank[index] ?? 0) > (other[index] ?? 0);
-}
-
-/**
- * The navigation item of `shell` that owns `routeId`: the item pointing at
- * the route itself, otherwise at its nearest registry ancestor (a coach's
- * fighter detail belongs to Fighters).
- */
-export function navKeyForRoute(
-  shell: MobileShellId,
-  routeId: MobileRouteId | undefined,
-): string | undefined {
-  const items: readonly MobileNavItem[] = mobileShell(shell).navItems;
-  let current = routeId ? routesById.get(routeId) : undefined;
-
-  while (current) {
-    const id = current.id;
-    const owner = items.find((item) => item.route === id);
-    if (owner) return owner.key;
-    current = current.parent ? routesById.get(current.parent) : undefined;
-  }
-  return undefined;
 }
 
 /**

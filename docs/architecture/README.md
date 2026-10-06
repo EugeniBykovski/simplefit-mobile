@@ -131,10 +131,11 @@ tickets.
   path, shell (route group), access and status. `scripts/route-registry.test.js`
   fails when a route file is not in the registry or an implemented route is
   missing.
-- **Routes and shells (SF-33).** All 138 approved mobile routes resolve; the
+- **Routes and shells (SF-33).** All 140 approved mobile routes resolve; the
   structure is in route-architecture §12. Shells are route groups: `(auth)`,
   `(onboarding)`, `(fighter)`, `(coach)`, `(gym)` (each a Stack over its
-  `(tabs)` navigator) and `(shared)` (pushed above the tabs). Every shell
+  `(tabs)` navigator, which holds one stack per tab, `TabStack`) and
+  `(shared)` (pushed above the tabs). Every shell
   layout wraps its stack in `SessionGate` (`features/session-gate`), the
   session guard of route-architecture §9; capability, phase and
   restricted-account rules are registry metadata only until the identity

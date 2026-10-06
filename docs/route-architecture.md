@@ -39,9 +39,9 @@ canonical artifact (https://claude.ai/artifact/JEsBg51MjX8KiHWEro8omY):
 
 | Registry id | Artboard                | Title                                                 | Rows |
 | ----------- | ----------------------- | ----------------------------------------------------- | ---- |
-| `gallery-1` | `GalleryIndex.dc.html`  | route gallery 1 / 3 · onboarding & fighter mobile     | 235  |
+| `gallery-1` | `GalleryIndex.dc.html`  | route gallery 1 / 3 · onboarding & fighter mobile     | 239  |
 | `gallery-2` | `GalleryIndex2.dc.html` | route gallery 2 / 3 · coach & gym mobile, web app     | 122  |
-| `gallery-3` | `GalleryIndex4.dc.html` | route gallery 3 / 3 · partners, admin, site & backend | 117  |
+| `gallery-3` | `GalleryIndex4.dc.html` | route gallery 3 / 3 · partners, admin, site & backend | 118  |
 
 Rules:
 
@@ -56,7 +56,11 @@ Rules:
   disagrees with the Route Gallery, the gallery wins (`D-ROUTE-MAP-BOARDS`).
 - The registry was derived from artifact version `1791271288-f2e9` and
   reconciled with `1791276973-ad1d`, the route-gap design pass that added 11
-  Route Gallery rows (`source.version`).
+  Route Gallery rows, then with `1791311129-8fec` (SF-33), which added 5 rows:
+  the SF-21 email sign-in code (mobile O01c and web WA1b, `/login/code`), the
+  staff-invite email confirmation (OS1b, `/invite/staff/:token/confirm`), the
+  web email-verification link landing (WA4b, `/verify-email`) and the E17
+  sign-in code email (`source.version`).
 
 ## 2. Canonical route model
 
@@ -128,7 +132,7 @@ admin (`/admin`). The native app
 | Platform | Surface      | Owns                                                                                                                                      | Routes |
 | -------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | -----: |
 | web      | `SITE`       | Public website: landing, audience pages, pricing, white label                                                                             |      8 |
-| web      | `AUTH`       | Sign in / sign up, sponsor and admin sign-in                                                                                              |      6 |
+| web      | `AUTH`       | Sign in / sign up, sign-in code, email verification link, sponsor and admin sign-in                                                       |      8 |
 | web      | `ONBOARDING` | Fighter, coach, gym registration (`/app/onboarding/*`), sponsor application (`/partners*`)                                                |      5 |
 | web      | `FIGHTER`    | Fighter web (`/app/home`, `/app/board`, …)                                                                                                |      8 |
 | web      | `COACH`      | Coach web (`/app/coach/*`)                                                                                                                |     14 |
@@ -137,7 +141,7 @@ admin (`/admin`). The native app
 | web      | `SPONSOR`    | Partner portal (`/sponsor/*`)                                                                                                             |      8 |
 | web      | `ADMIN`      | Internal admin (`/admin/*`)                                                                                                               |     39 |
 | web      | `SYSTEM`     | `/app` entry, catch-all not found                                                                                                         |      2 |
-| mobile   | `AUTH`       | Welcome, sign in / up, consent, role choice, invites                                                                                      |     11 |
+| mobile   | `AUTH`       | Welcome, sign in / up, sign-in code, consent, role choice, invites and invite email confirmation                                          |     13 |
 | mobile   | `ONBOARDING` | Registration wizards, staff onboarding, first-run intros                                                                                  |      8 |
 | mobile   | `FIGHTER`    | Fighter app                                                                                                                               |     56 |
 | mobile   | `COACH`      | Coach app                                                                                                                                 |     20 |
@@ -401,13 +405,21 @@ tickets (`/`, `/login`, `/signup`, the `/app` entry, not-found,
 `/dev/design-system`), 133 render the canonical feature placeholder and 1 is
 the `/app/camp` redirect. `production.note` says which.
 
-Counts after SF-33 (mobile): all 7 mobile shells and the 138 approved mobile
+Design version `1791311129-8fec` (reconciled in SF-33) added 2 web and 2
+mobile routes; both clients materialized theirs as placeholders, since no
+client implements the email-code screens yet (SF-21 delivered the API only):
+web 142 routes (135 placeholders), mobile 141 routes. Server outputs: 18.
+
+Counts after SF-33 (mobile): all 7 mobile shells and the 140 approved mobile
 routes are `IMPLEMENTED`; `/sparring/find` stays `DEFERRED` and has no file.
 6 routes are real screens or system routes from earlier tickets (`/`,
-`/welcome`, `/login`, not found, `/dev/design-system`, `/app`) and 132 render
-the canonical feature placeholder; mobile has no `REDIRECT` route. SF-33
-synced the mobile copy of this registry with the SF-32 web statuses; the web
-copy shows the SF-31 mobile statuses until it is synced in turn.
+`/welcome`, `/login`, not found, `/dev/design-system`, `/app`) and 134 render
+the canonical feature placeholder; mobile has no `REDIRECT` route.
+
+Both repositories carry this registry byte for byte, including both
+platforms' statuses: a ticket that changes routes or statuses on one platform
+copies the registry (and this document) to the other repository in the same
+change, and each repository's tests check its own router against it.
 
 A screen's visual fidelity is not tracked here. It is delivered by the feature
 ticket that implements the screen from its artboard.
@@ -500,9 +512,8 @@ src/app/[locale]/
   `src/shared/routes/routes.ts` resolves ids to hrefs (`routeHref`, which
   refuses missing parameters and deferred routes), paths to routes
   (`matchMobileRoute`: at the first differing segment a static segment wins,
-  as in Expo Router) and routes to their owning tab (`navKeyForRoute`, through
-  `parent`). Code links by route id, never by handwritten path. A test fails
-  when the generated module drifts from the registry.
+  as in Expo Router). Code links by route id, never by handwritten path. A
+  test fails when the generated module drifts from the registry.
 - Shells map to route groups with their own `_layout.tsx` (SF-33; groups do
   not change URLs or deep links):
 
@@ -514,25 +525,33 @@ src/app/
 ├── (auth)/_layout.tsx         mobile.auth        Stack, no tabs: welcome, login, signup/*, onboarding/role, join, invite/*
 ├── (onboarding)/_layout.tsx   mobile.onboarding  Stack, no tabs: onboarding/*, welcome/tour, coach/welcome
 ├── (fighter)/_layout.tsx      mobile.fighter     Stack over (tabs)
-│   └── (tabs)/_layout.tsx                        Tabs: home · training · board · community · profile
+│   └── (tabs)/_layout.tsx                        Tabs, one stack per tab: (home) (training) (board) (community) (profile)
 ├── (coach)/_layout.tsx        mobile.coach       Stack over (tabs)
-│   └── (tabs)/_layout.tsx                        Tabs: coach/today · fighters · board · requests (Inbox → /messages)
+│   └── (tabs)/_layout.tsx                        Tabs: (today) (fighters) (board) (requests); Inbox → /messages
 ├── (gym)/_layout.tsx          mobile.gym         Stack over (tabs)
-│   └── (tabs)/_layout.tsx                        Tabs: gym/pulse · classes · check-in · members · staff/on-shift
+│   └── (tabs)/_layout.tsx                        Tabs: (pulse) (classes) (checkin) (members) (staff)
 └── (shared)/_layout.tsx       mobile.shared      Stack pushed above the active role's tabs
 ```
 
-- **Tabs and stacks.** A shell's tab routes (its `navItems` targets in the
-  same shell) live in `(tabs)` and keep their state while the user switches
-  tabs. Every other route of the shell is pushed above the tabs by the
-  shell's stack, and a deep link to such a route keeps the tabs underneath
-  (`initialRouteName: "(tabs)"`). `ShellTabBar` renders the items and targets
-  of `navItems`, the icons and raised centre action of the FighterTabs,
-  CoachTabs and GymTabs components, and labels from i18n; the active tab is
-  the one that owns the current route. An item whose route belongs to another
-  shell (coach Inbox → shared `/messages`) is pushed. The tab bar shows on tab
-  routes; screens the design also draws with a tab bar (`/progress`,
-  `/calendar`, …) adopt it in their feature tickets.
+- **Tabs and stacks.** Every tab is a stack group named after its nav item
+  (`(tabs)/(profile)/_layout.tsx`, `TabStack`) whose root is the item's route
+  and which keeps its state while the user switches tabs. The routes whose
+  artboards show the shell's tab bar live in that tab's stack, so they keep
+  the tab bar and go back to the tab root: fighter Training (`/timer`,
+  `/calendar`), Community (`/discover`, `/friends`, `/following`,
+  `/challenges`, `/marketplace`) and Profile (`/progress`, `/achievements`);
+  coach Today (`/coach/activity`, `/coach/challenge/:challengeId`) and
+  Requests (`/coach/sparring`); gym Classes (`/gym/classes/:classId/roster`)
+  and Members (`/gym/members/:memberId`). Every other route of the shell is
+  pushed above the tabs by the shell's stack, and a deep link to such a route
+  keeps the tabs underneath (`initialRouteName: "(tabs)"`). `ShellTabBar`
+  renders the items and targets of `navItems`, the icons and raised centre
+  action of the FighterTabs, CoachTabs and GymTabs components, and labels from
+  i18n; the active tab is the focused tab group. An item whose route belongs
+  to another shell (coach Inbox → shared `/messages`) is pushed. The design
+  also draws a tab bar on Inbox (`/messages`), but the registry places
+  `/messages` in `mobile.shared`, pushed above the active role's tabs; that
+  shell decision is kept.
 - **Guards attach to route groups, never to a URL prefix.** `/gym/*` and
   `/coach/*` serve both fighters (`/gym/:gymId/store`,
   `/coach/:coachId/services/:serviceId`) and the gym/coach workspace

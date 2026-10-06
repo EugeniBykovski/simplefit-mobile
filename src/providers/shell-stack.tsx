@@ -15,3 +15,17 @@ export const stackScreenOptions = {
 export function ShellStack({ children }: { children?: ReactNode }) {
   return <Stack screenOptions={stackScreenOptions}>{children}</Stack>;
 }
+
+/**
+ * The stack of one tab (`(<shell>)/(tabs)/(<tab>)/_layout.tsx`): the tab's
+ * root route without a header (the tab bar is its navigation) and the
+ * screens the design shows inside that tab, pushed with the tab bar still
+ * visible and a back button to the root.
+ */
+export function TabStack({ root }: { root: string }) {
+  return (
+    <Stack screenOptions={stackScreenOptions}>
+      <Stack.Screen name={root} options={{ headerShown: false }} />
+    </Stack>
+  );
+}

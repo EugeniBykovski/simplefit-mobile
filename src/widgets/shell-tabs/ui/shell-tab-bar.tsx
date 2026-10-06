@@ -1,10 +1,10 @@
-import { usePathname, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 
 import type { Messages } from "@/shared/i18n/messages";
-import { matchMobileRoute, mobileShell, navKeyForRoute, routeHref } from "@/shared/routes/routes";
+import { mobileShell, routeHref } from "@/shared/routes/routes";
 import { Icon } from "@/shared/ui/icon";
 import { Text } from "@/shared/ui/text";
 
@@ -16,19 +16,19 @@ type ShellMessageKey = {
 
 /**
  * The floating tab bar of a role shell (FighterTabs, CoachTabs, GymTabs).
- * Items and targets are the registry's `navItems`; the active item is the
- * one that owns the current route (the route itself or its nearest
- * ancestor). An item whose route lives in another shell (the coach Inbox
+ * Items and targets are the registry's `navItems`. Each tab is a stack
+ * group named after its item key (`(tabs)/(profile)`), so the active item is
+ * the focused tab group: the tab root or any screen the design shows inside
+ * that tab. An item whose route lives in another shell (the coach Inbox
  * opens the shared /messages) is pushed above the tabs.
  */
-export function ShellTabBar({ shell }: { shell: TabShell }) {
+export function ShellTabBar({ shell, focusedTab }: { shell: TabShell; focusedTab?: string }) {
   const t = useTranslations("shells");
   const label = (key: string) => t(`${shell}.${key}` as ShellMessageKey);
   const router = useRouter();
-  const pathname = usePathname();
   const insets = useSafeAreaInsets();
   const config = tabNavigation[shell];
-  const active = navKeyForRoute(config.shell, matchMobileRoute(pathname)?.id);
+  const active = focusedTab?.match(/^\((.+)\)$/)?.[1];
 
   return (
     <View

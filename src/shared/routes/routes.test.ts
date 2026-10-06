@@ -1,12 +1,5 @@
 import { mobileRoutes, mobileShells } from "./mobile-routes";
-import {
-  isTabRoute,
-  matchMobileRoute,
-  mobileGuards,
-  navKeyForRoute,
-  routeHref,
-  signInHref,
-} from "./routes";
+import { isTabRoute, matchMobileRoute, mobileGuards, routeHref, signInHref } from "./routes";
 
 describe("routeHref", () => {
   it("resolves static routes to their canonical path", () => {
@@ -69,30 +62,8 @@ describe("matchMobileRoute", () => {
   });
 });
 
-describe("navKeyForRoute", () => {
-  it("returns the tab that targets the route", () => {
-    expect(navKeyForRoute("mobile.fighter", "mobile.home")).toBe("home");
-    expect(navKeyForRoute("mobile.gym", "mobile.gym.check-in")).toBe("checkin");
-    expect(navKeyForRoute("mobile.coach", "mobile.messages")).toBe("inbox");
-  });
-
-  it("assigns child and detail routes to their nearest ancestor's tab", () => {
-    expect(navKeyForRoute("mobile.coach", "mobile.coach.fighters._fighter-id.note")).toBe(
-      "fighters",
-    );
-    expect(navKeyForRoute("mobile.gym", "mobile.gym.members._member-id")).toBe("members");
-    expect(navKeyForRoute("mobile.gym", "mobile.gym.classes._class-id.roster")).toBe("classes");
-    expect(navKeyForRoute("mobile.fighter", "mobile.board.node.gym._gym-id")).toBe("board");
-    expect(navKeyForRoute("mobile.fighter", "mobile.profile.fighter._fighter-id")).toBe("profile");
-    expect(navKeyForRoute("mobile.coach", "mobile.messages._thread-id")).toBe("inbox");
-  });
-
-  it("has no active tab for routes outside the shell's navigation", () => {
-    expect(navKeyForRoute("mobile.fighter", "mobile.settings")).toBeUndefined();
-    expect(navKeyForRoute("mobile.fighter", undefined)).toBeUndefined();
-  });
-
-  it("only targets routes that exist and need no parameters", () => {
+describe("navigation items", () => {
+  it("only target routes that exist and need no parameters", () => {
     for (const shell of mobileShells) {
       for (const item of shell.navItems) {
         const route = mobileRoutes.find((candidate) => candidate.id === item.route);

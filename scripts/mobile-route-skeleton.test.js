@@ -34,8 +34,43 @@ export default placeholderRoute("${id}");
 
 const approved = routes.filter((route) => route.status !== "DEFERRED");
 const groupOf = (shellId) => shells.get(shellId).production.file.split("/").slice(2, -1).join("/");
-const isTab = (route) =>
-  (shells.get(route.shell).navItems ?? []).some((item) => item.route === route.id);
+/**
+ * Claude Design: routes whose artboards embed the shell's tab bar (FighterTabs,
+ * CoachTabs, GymTabs), by the tab they show active. Each lives in that tab's
+ * stack group, so it keeps the tab bar; every other route of a tab shell is
+ * pushed above the tabs. A tab item's own route is listed first.
+ */
+const TAB_SECTIONS = {
+  "mobile.fighter": {
+    home: ["mobile.home"],
+    training: ["mobile.training", "mobile.timer", "mobile.calendar"],
+    board: ["mobile.board"],
+    community: [
+      "mobile.community",
+      "mobile.discover",
+      "mobile.friends",
+      "mobile.following",
+      "mobile.challenges",
+      "mobile.marketplace",
+    ],
+    profile: ["mobile.profile", "mobile.progress", "mobile.achievements"],
+  },
+  "mobile.coach": {
+    today: ["mobile.coach.today", "mobile.coach.activity", "mobile.coach.challenge._challenge-id"],
+    fighters: ["mobile.coach.fighters"],
+    board: ["mobile.coach.board"],
+    requests: ["mobile.coach.requests", "mobile.coach.sparring"],
+  },
+  "mobile.gym": {
+    pulse: ["mobile.gym.pulse"],
+    classes: ["mobile.gym.classes", "mobile.gym.classes._class-id.roster"],
+    checkin: ["mobile.gym.check-in"],
+    members: ["mobile.gym.members", "mobile.gym.members._member-id"],
+    staff: ["mobile.gym.staff.on-shift"],
+  },
+};
+const tabOf = (route) =>
+  Object.entries(TAB_SECTIONS[route.shell] ?? {}).find(([, ids]) => ids.includes(route.id))?.[0];
 
 /** The layout files that wrap `file`, from the app root inwards. */
 function layoutChain(file) {
@@ -76,8 +111,8 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 5, catchAll: 1, placeholder: 132, deferred: 1 });
-    expect(routes).toHaveLength(139);
+    expect(counts).toEqual({ screen: 5, catchAll: 1, placeholder: 134, deferred: 1 });
+    expect(routes).toHaveLength(141);
   });
 
   it("makes placeholder files exactly the canonical placeholder module for their own route", () => {
@@ -109,10 +144,11 @@ describe("physical router mapping", () => {
     expect(wrong.map((route) => route.id)).toEqual([]);
   });
 
-  it("puts every route in its shell's route group, and only tab routes in (tabs)", () => {
+  it("puts every route in its shell's route group, and tab routes in their tab's stack", () => {
     const wrong = approved.filter((route) => {
       const group = groupOf(route.shell);
-      const expected = isTab(route) ? `${group}/(tabs)` : group;
+      const tab = tabOf(route);
+      const expected = tab ? `${group}/(tabs)/(${tab})` : group;
       const dir = dirname(route.production.file).slice(`${APP}/`.length);
       const groups = dir
         .split("/")
@@ -173,7 +209,7 @@ describe("shells", () => {
     expect(declared.split(", ")).toEqual(groups);
   });
 
-  it("give the tab shells a (tabs) navigator with exactly their own tab routes", () => {
+  it("give the tab shells a (tabs) navigator with one stack per tab, rooted at its item's route", () => {
     for (const [shell, name] of [
       ["mobile.fighter", "fighter"],
       ["mobile.coach", "coach"],
@@ -181,14 +217,33 @@ describe("shells", () => {
     ]) {
       const group = groupOf(shell);
       expect(read(`${APP}/${group}/(tabs)/_layout.tsx`)).toContain(`<ShellTabs shell="${name}" />`);
+      const ownItems = shells
+        .get(shell)
+        .navItems.filter((item) => routes.find((route) => route.id === item.route).shell === shell);
+      expect(ownItems.map((item) => item.key)).toEqual(Object.keys(TAB_SECTIONS[shell]));
+
+      for (const item of ownItems) {
+        const dir = `${APP}/${group}/(tabs)/(${item.key})`;
+        const rootFile = routes.find((route) => route.id === item.route).production.file;
+        expect(TAB_SECTIONS[shell][item.key][0]).toBe(item.route);
+        const layout = read(`${dir}/_layout.tsx`);
+        expect(layout).toContain("<TabStack root={unstable_settings.initialRouteName} />");
+        const root = layout.match(/initialRouteName: "([^"]+)"/)[1];
+        expect(`${dir}/${root}.tsx`).toBe(rootFile);
+      }
+      // Nothing else is in the tab stacks.
       const inTabs = approved
         .filter((route) => route.production.file.startsWith(`${APP}/${group}/(tabs)/`))
         .map((route) => route.id);
-      const ownItems = shells
-        .get(shell)
-        .navItems.map((item) => item.route)
-        .filter((id) => routes.find((route) => route.id === id).shell === shell);
-      expect(inTabs.sort()).toEqual(ownItems.sort());
+      expect(inTabs.sort()).toEqual(Object.values(TAB_SECTIONS[shell]).flat().sort());
+    }
+  });
+
+  it("keep the tab sections inside their own shell", () => {
+    for (const [shell, tabs] of Object.entries(TAB_SECTIONS)) {
+      for (const id of Object.values(tabs).flat()) {
+        expect([id, routes.find((route) => route.id === id)?.shell]).toEqual([id, shell]);
+      }
     }
   });
 });
