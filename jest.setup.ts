@@ -20,6 +20,25 @@ jest.mock("expo-secure-store", () => {
   };
 });
 
+// Native Google Sign-In (SF-22). Real Google is verified manually only.
+jest.mock("@react-native-google-signin/google-signin", () => ({
+  statusCodes: {
+    SIGN_IN_CANCELLED: "SIGN_IN_CANCELLED",
+    IN_PROGRESS: "IN_PROGRESS",
+    PLAY_SERVICES_NOT_AVAILABLE: "PLAY_SERVICES_NOT_AVAILABLE",
+    SIGN_IN_REQUIRED: "SIGN_IN_REQUIRED",
+  },
+  GoogleSignin: {
+    configure: jest.fn(),
+    hasPlayServices: jest.fn(async () => true),
+    signIn: jest.fn(async () => ({ type: "cancelled", data: null })),
+    signOut: jest.fn(async () => null),
+  },
+  isSuccessResponse: (response: { type: string }) => response.type === "success",
+  isErrorWithCode: (error: unknown) =>
+    typeof error === "object" && error !== null && "code" in error,
+}));
+
 jest.mock("expo-localization", () => ({
   getLocales: jest.fn(() => [{ languageTag: "en-US", languageCode: "en" }]),
   getCalendars: jest.fn(() => [{ timeZone: "UTC" }]),
