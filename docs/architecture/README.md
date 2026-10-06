@@ -73,16 +73,16 @@ simplefit-mobile/
 ├── openapi/simplefit.api.json verbatim snapshot of the backend contract
 ├── scripts/                   api-sync, api-check, commit convention
 └── src/
-    ├── app/                   Expo Router routes (thin): _layout, index, (app)/app, +not-found
+    ├── app/                   Expo Router routes (thin): _layout, index, welcome, login, (app)/app, +not-found
     ├── providers/             app layer: global providers, root navigator, startup
-    ├── widgets/               screen compositions (foundation-home, app-overview)
-    ├── features/              user actions (switch-locale, check-api-health)
-    ├── entities/              client representations of domain concepts (system-health)
+    ├── widgets/               screen compositions (foundation-home, app-overview, auth-screens)
+    ├── features/              user actions (sign-in-with-google, sign-out, switch-locale, check-api-health)
+    ├── entities/              client representations of domain concepts (session, system-health)
     ├── shared/
     │   ├── api/               generated client, transport, ApiError, QueryClient, lifecycle
     │   ├── config/            validated env, site identity
     │   ├── i18n/              locale registry, catalogs, resolution, formats, provider
-    │   ├── lib/               form helpers
+    │   ├── lib/               form helpers, native Google Sign-In configuration
     │   ├── storage/           secure-storage, preferences (the only persistence boundary)
     │   ├── styles/            tokens, useTheme
     │   └── ui/                native primitives (Text, Button, Input, Card, Screen, …)
@@ -196,8 +196,49 @@ browser assumptions here: it targets `fetch` with our transport as mutator.
 - no business logic; no Axios (fetch is sufficient).
 
 Extension points, implemented by their tickets: auth header injection in
-`buildHeaders` (token from secure storage), 401 handling/refresh before
-throwing, a client correlation header.
+`buildHeaders`, 401 handling/refresh before throwing, a client correlation
+header. SF-22 adds no authenticated product calls, so the session layer below
+does not hook into the transport yet.
+
+## Session (SF-22)
+
+`entities/session` holds the SimpleFit session (simplefit-api ADR 0010, body
+transport):
+
+- the **refresh token** is persisted only through
+  `@/shared/storage/secure-storage` (`simplefit.session.refresh_token`) and
+  replaced on every rotation; never AsyncStorage;
+- the **access token** stays in memory; launch restores the session with one
+  refresh (concurrent callers share it);
+- a rejected refresh token (401) is deleted; without a network it is kept for
+  the next launch;
+- `signOut()` revokes the session on the API and always deletes it locally;
+  the sign-out feature then signs out of Google on the device.
+
+**Google sign-in** (`features/sign-in-with-google`) uses
+`@react-native-google-signin/google-signin` (Original module):
+`GoogleSignin.signIn()` returns a Google ID token, exchanged once at
+`POST /api/auth/google` and dropped. It is never stored, logged or persisted.
+`configure` gets `webClientId` (the ID token audience on both platforms) and,
+on iOS, `iosClientId`; no scopes, no offline access, no client secret.
+Cancelling is not an error. Both `account: created` and `existing` continue
+to `/` (the `ENTRY` route, route-architecture §9); the app never infers roles.
+
+- **Not in Expo Go**: the module is native. Use a development build
+  (`pnpm ios` / `pnpm android` or EAS `development`).
+- **Android**: Google identifies the app by package name **and the signing
+  certificate's SHA-1**. Each signing key (local `debug.keystore`, EAS
+  credentials, Play App Signing) needs its own Android OAuth client in Google
+  Cloud; a mismatch fails with `DEVELOPER_ERROR`. Its client ID must be in the
+  API's `GOOGLE_OAUTH_CLIENT_IDS` (it is the token's `azp`).
+- **iOS**: `app.config.ts` adds the module's config plugin with the reversed
+  iOS client ID as URL scheme when `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` is set;
+  changing it needs a new native build.
+- **Technical debt**: on Android the Original module uses the legacy Google
+  Sign-In SDK, which Google has deprecated in favour of Credential Manager.
+  A follow-up should move Android to Credential Manager (for example the
+  module's Universal/One Tap API or a Credential Manager module) before
+  Google removes the legacy API.
 
 ## TanStack Query
 
@@ -223,11 +264,11 @@ backend `validation_error` onto the form with
 
 ## Storage policy
 
-| Data                                                              | Where                                         | API                               |
-| ----------------------------------------------------------------- | --------------------------------------------- | --------------------------------- |
-| Sensitive (future auth access/refresh tokens, device credentials) | Keychain / Keystore via **expo-secure-store** | `@/shared/storage/secure-storage` |
-| Non-sensitive preferences (explicit locale today)                 | AsyncStorage (unencrypted)                    | `@/shared/storage/preferences`    |
-| Server data                                                       | TanStack Query (memory)                       | generated hooks                   |
+| Data                                                                  | Where                                         | API                               |
+| --------------------------------------------------------------------- | --------------------------------------------- | --------------------------------- |
+| Sensitive (the session refresh token since SF-22, device credentials) | Keychain / Keystore via **expo-secure-store** | `@/shared/storage/secure-storage` |
+| Non-sensitive preferences (explicit locale today)                     | AsyncStorage (unencrypted)                    | `@/shared/storage/preferences`    |
+| Server data                                                           | TanStack Query (memory)                       | generated hooks                   |
 
 - **SecureStore is not a general database:** small string values only (well
   under 2 KB), no querying, slower than memory. Items are stored
@@ -397,9 +438,12 @@ needs it; keep labels as props (no copy in primitives); add it to the gallery.
 
 ## Environment
 
-| Variable              | Scope            | Purpose                                                                   |
-| --------------------- | ---------------- | ------------------------------------------------------------------------- |
-| `EXPO_PUBLIC_API_URL` | public (bundled) | API base URL, no trailing slash; `https://` required in production builds |
+| Variable                               | Scope                        | Purpose                                                                                                                            |
+| -------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `EXPO_PUBLIC_API_URL`                  | public (bundled)             | API base URL, no trailing slash; `https://` required in production builds                                                          |
+| `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`     | public (bundled)             | Google OAuth Web client ID: the ID token audience (SF-22); without it Google sign-in is unavailable                                |
+| `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`     | public (bundled, build time) | Google OAuth iOS client ID; also the iOS URL scheme (needs a native rebuild)                                                       |
+| `EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID` | reference only               | The Android OAuth client is matched by package + SHA-1; the app does not read it, the API's `GOOGLE_OAUTH_CLIENT_IDS` must list it |
 
 - `EXPO_PUBLIC_*` is **public**: inlined into the bundle and extractable from
   the binary. Never secrets.
@@ -492,7 +536,9 @@ with remote app versioning. It contains **no account-bound values**. Later:
 1. `eas init`: creates the EAS project and writes `extra.eas.projectId`.
 2. `eas credentials`: Apple Team / certificates / provisioning, Android
    keystore (stored by EAS, never in Git).
-3. Set `EXPO_PUBLIC_API_URL` per environment with `eas env` (https).
+3. Set `EXPO_PUBLIC_API_URL` and the `EXPO_PUBLIC_GOOGLE_*_CLIENT_ID`
+   values per environment with `eas env` (https). `eas.json` keeps only the
+   local API URL; client IDs are not committed.
 4. EAS Update: add `expo-updates` and `runtimeVersion` when OTA updates are
    introduced.
 
@@ -527,8 +573,16 @@ set, same as web's `lucide-react`; ISC / MIT; replaces `@expo/vector-icons`),
 `@expo-google-fonts/unbounded|manrope|jetbrains-mono` (SF-13: brand
 typefaces, SIL OFL; imported per weight).
 
+**Added in SF-22:** `@react-native-google-signin/google-signin` 16.1.5 (MIT,
+actively maintained, Expo config plugin, supports SDK 57 and the New
+Architecture). Problem: native Google sign-in that returns a Google ID token.
+Expo has no first-party Google module and the web OAuth flow
+(`expo-auth-session`) would need a redirect flow the API does not offer. Only
+the free Original module is used (no Universal/One Tap licence, no Firebase).
+No install scripts.
+
 **Deferred until a ticket needs them:** FlashList, keyboard-controller,
-expo-image, haptics, auth SDKs (Google/Apple), Stripe, RevenueCat, Sentry,
+expo-image, haptics, Apple sign-in, Stripe, RevenueCat, Sentry,
 PostHog/analytics, Firebase, push notifications, camera/pickers, maps/location,
 WebSockets, rich text, charts/Skia, biometrics, health/wearables, uploads,
 sharing, feature flags, query cache persistence, Maestro/Detox, expo-updates.

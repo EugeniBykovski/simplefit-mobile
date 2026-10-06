@@ -60,5 +60,39 @@
     "dark": "Sombre",
     "light": "Clair",
     "system": "Comme l’appareil"
+  },
+  "auth": {
+    "welcome": {
+      "title": "Rejoignez la communauté de la boxe.",
+      "description": "Entraînez-vous, coachez, gérez votre salle — ou devenez partenaire de ceux qui boxent. Un seul compte pour tous les rôles.",
+      "haveAccount": "Vous vous entraînez déjà avec nous ?",
+      "signIn": "Se connecter"
+    },
+    "login": {
+      "title": "Bon retour",
+      "description": "Connectez-vous à votre compte SimpleFit unique : tous vos espaces de travail vous suivent.",
+      "newHere": "Nouveau ici ?",
+      "join": "Rejoindre la communauté de la boxe"
+    },
+    "google": {
+      "continue": "Continuer avec Google",
+      "exchanging": "Connexion en cours…",
+      "notConfigured": "La connexion avec Google n’est pas disponible dans cette version.",
+      "errors": {
+        "rejected": "Impossible de vérifier votre connexion avec Google. Veuillez réessayer.",
+        "rateLimited": "Trop de tentatives de connexion. Patientez quelques minutes, puis réessayez.",
+        "unavailable": "La connexion avec Google est temporairement indisponible. Veuillez réessayer plus tard.",
+        "network": "Impossible de joindre SimpleFit. Vérifiez votre connexion et réessayez.",
+        "playServices": "Les services Google Play sont absents ou obsolètes sur cet appareil.",
+        "generic": "Une erreur s’est produite. Veuillez réessayer."
+      }
+    },
+    "session": {
+      "checking": "Vérification de votre session",
+      "signedIn": "Vous êtes connecté.",
+      "signedOut": "Vous n’êtes pas connecté.",
+      "signIn": "Se connecter",
+      "signOut": "Se déconnecter"
+    }
   }
 }

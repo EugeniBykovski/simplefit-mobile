@@ -7,6 +7,7 @@ import { useTheme } from "@/shared/styles/theme";
 /** Root stack with themed, translated headers. */
 export function RootNavigator() {
   const t = useTranslations("navigation");
+  const auth = useTranslations("auth");
   const { scheme, colors } = useTheme();
   const base = scheme === "dark" ? DarkTheme : DefaultTheme;
 
@@ -34,6 +35,8 @@ export function RootNavigator() {
       >
         <Stack.Screen name="index" options={{ title: t("home"), headerShown: false }} />
         <Stack.Screen name="(app)" options={{ title: t("appShell") }} />
+        <Stack.Screen name="welcome" options={{ headerShown: false }} />
+        <Stack.Screen name="login" options={{ title: auth("welcome.signIn") }} />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>

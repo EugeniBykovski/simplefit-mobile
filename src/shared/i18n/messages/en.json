@@ -60,5 +60,39 @@
     "dark": "Dark",
     "light": "Light",
     "system": "Match device"
+  },
+  "auth": {
+    "welcome": {
+      "title": "Join the boxing community.",
+      "description": "Train, coach, run your gym — or partner with the people who box. One account for every role.",
+      "haveAccount": "Already training with us?",
+      "signIn": "Sign in"
+    },
+    "login": {
+      "title": "Welcome back",
+      "description": "Sign in to your one SimpleFit account — every workspace comes with you.",
+      "newHere": "New here?",
+      "join": "Join the boxing community"
+    },
+    "google": {
+      "continue": "Continue with Google",
+      "exchanging": "Signing you in…",
+      "notConfigured": "Google sign-in is not available in this build.",
+      "errors": {
+        "rejected": "We couldn't verify your Google sign-in. Please try again.",
+        "rateLimited": "Too many sign-in attempts. Wait a few minutes and try again.",
+        "unavailable": "Google sign-in is temporarily unavailable. Please try again later.",
+        "network": "Can't reach SimpleFit. Check your connection and try again.",
+        "playServices": "Google Play services are missing or out of date on this device.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
+    "session": {
+      "checking": "Checking your session",
+      "signedIn": "You're signed in.",
+      "signedOut": "You're not signed in.",
+      "signIn": "Sign in",
+      "signOut": "Sign out"
+    }
   }
 }

@@ -6,6 +6,26 @@ import localeRegistry from "./src/shared/i18n/locales.json";
 const locales = Object.keys(localeRegistry);
 
 /**
+ * Google Sign-In on iOS returns to the app through the reversed iOS client ID
+ * as a URL scheme (SF-22). Without an iOS client ID the plugin is left out
+ * and the app reports Google sign-in as unavailable on iOS.
+ */
+function googleSignInPlugin(): [string, { iosUrlScheme: string }][] {
+  const iosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID?.trim();
+  if (!iosClientId) return [];
+  const match = /^([0-9]+-[a-z0-9]+)\.apps\.googleusercontent\.com$/.exec(iosClientId);
+  if (!match) {
+    throw new Error("EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID must be a Google OAuth client ID");
+  }
+  return [
+    [
+      "@react-native-google-signin/google-signin",
+      { iosUrlScheme: `com.googleusercontent.apps.${match[1]}` },
+    ],
+  ];
+}
+
+/**
  * Expo app configuration. Identity values are permanent once published:
  * - bundle ID / package `com.simplefit.boxing` (chosen in SF-12),
  * - URL scheme `simplefit` (deep links: simplefit://app).
@@ -49,6 +69,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       },
     ],
+    ...googleSignInPlugin(),
   ],
 
   experiments: {

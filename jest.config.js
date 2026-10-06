@@ -1,5 +1,9 @@
 // Public env for tests (inlined by babel-preset-expo like in the app).
 process.env.EXPO_PUBLIC_API_URL = "http://api.test";
+process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID =
+  "111111111111-webclienttest.apps.googleusercontent.com";
+process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID =
+  "111111111111-iosclienttest.apps.googleusercontent.com";
 
 /** @type {import("jest").Config} */
 module.exports = {

@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { useFormatter, useNow, useTimeZone, useTranslations } from "use-intl";
 
+import { SessionControl } from "@/features/sign-out";
 import { LanguageSelector } from "@/features/switch-locale";
 import { ThemeSelector } from "@/features/switch-theme";
 import { siteConfig } from "@/shared/config/site";
@@ -51,6 +52,8 @@ export function FoundationHome() {
         size="lg"
         onPress={() => router.push("/app")}
       />
+
+      <SessionControl />
 
       <Card>
         <Text variant="h3">{t("localeTitle")}</Text>
