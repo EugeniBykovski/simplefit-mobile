@@ -2,14 +2,15 @@ import { type Href, useRouter } from "expo-router";
 import { Pressable, View } from "react-native";
 import { useTranslations } from "use-intl";
 
+import { AppleSignInButton } from "@/features/sign-in-with-apple";
 import { GoogleSignInButton } from "@/features/sign-in-with-google";
 import { siteConfig } from "@/shared/config/site";
 import { Screen } from "@/shared/ui/screen";
 import { Text } from "@/shared/ui/text";
 
 /**
- * A01 Welcome and O01b Sign in, Google only (SF-22). The designed auth shell
- * with Apple, email and passkeys is built by SF-24.
+ * A01 Welcome and O01b Sign in with Google (SF-22) and Apple (SF-23, iOS
+ * only). The designed auth shell with the email code step is built by SF-24.
  */
 export function WelcomeScreen() {
   const t = useTranslations("auth.welcome");
@@ -24,6 +25,7 @@ export function WelcomeScreen() {
         <Text color="mutedForeground">{t("description")}</Text>
       </View>
       <GoogleSignInButton />
+      <AppleSignInButton />
       <TextLink prompt={t("haveAccount")} label={t("signIn")} href="/login" />
     </Screen>
   );
@@ -41,6 +43,7 @@ export function LoginScreen() {
         </Text>
       </View>
       <GoogleSignInButton variant="quiet" />
+      <AppleSignInButton variant="quiet" />
       <TextLink prompt={t("newHere")} label={t("join")} href="/welcome" />
     </Screen>
   );

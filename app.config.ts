@@ -43,6 +43,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     bundleIdentifier: "com.simplefit.boxing",
     supportsTablet: true,
+    // Sign in with Apple entitlement (SF-23); needs a new native build.
+    usesAppleSignIn: true,
   },
 
   android: {

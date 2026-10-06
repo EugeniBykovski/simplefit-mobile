@@ -25,6 +25,13 @@
         "generic": "Algo salió mal. Inténtalo de nuevo."
       }
     },
+    "apple": {
+      "errors": {
+        "rejected": "No pudimos verificar tu inicio de sesión con Apple. Inténtalo de nuevo.",
+        "network": "No se puede conectar con SimpleFit. Verifica tu conexión e inténtalo de nuevo.",
+        "generic": "Algo salió mal. Inténtalo de nuevo."
+      }
+    },
     "session": {
       "checking": "Verificando tu sesión"
     }

@@ -87,6 +87,17 @@
         "generic": "Algo ha salido mal. Inténtalo de nuevo."
       }
     },
+    "apple": {
+      "continue": "Continuar con Apple",
+      "exchanging": "Iniciando sesión con Apple…",
+      "errors": {
+        "rejected": "No hemos podido verificar tu inicio de sesión con Apple. Inténtalo de nuevo.",
+        "rateLimited": "Demasiados intentos de inicio de sesión. Espera unos minutos e inténtalo de nuevo.",
+        "unavailable": "El inicio de sesión con Apple no está disponible temporalmente. Inténtalo más tarde.",
+        "network": "No se puede conectar con SimpleFit. Comprueba tu conexión e inténtalo de nuevo.",
+        "generic": "Algo ha salido mal. Inténtalo de nuevo."
+      }
+    },
     "session": {
       "checking": "Comprobando tu sesión",
       "signedIn": "Has iniciado sesión.",
