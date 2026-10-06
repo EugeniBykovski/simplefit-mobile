@@ -73,7 +73,7 @@ simplefit-mobile/
 ├── openapi/simplefit.api.json verbatim snapshot of the backend contract
 ├── scripts/                   api-sync, api-check, commit convention
 └── src/
-    ├── app/                   Expo Router routes (thin): _layout, index, welcome, login, (app)/app, +not-found
+    ├── app/                   Expo Router routes (thin): _layout, index, app, +not-found, shell groups (SF-33)
     ├── providers/             app layer: global providers, root navigator, startup
     ├── widgets/               screen compositions (foundation-home, app-overview, auth-screens)
     ├── features/              user actions (sign-in-with-google, sign-out, switch-locale, check-api-health)
@@ -98,13 +98,13 @@ composition such as providers and startup).
 
 ## Layers (FSD-inspired)
 
-| Layer                            | Holds                                             | Example                   |
-| -------------------------------- | ------------------------------------------------- | ------------------------- |
-| app (`src/app`, `src/providers`) | routes, providers, startup, global composition    | `app/(app)/app.tsx`       |
-| widgets                          | substantial screen composition                    | `widgets/foundation-home` |
-| features                         | one user action / use case                        | `features/switch-locale`  |
-| entities                         | domain-oriented client representations + their UI | `entities/system-health`  |
-| shared                           | domain-independent infrastructure and primitives  | `shared/ui/button`        |
+| Layer                            | Holds                                             | Example                     |
+| -------------------------------- | ------------------------------------------------- | --------------------------- |
+| app (`src/app`, `src/providers`) | routes, providers, startup, global composition    | `app/(fighter)/_layout.tsx` |
+| widgets                          | substantial screen composition                    | `widgets/foundation-home`   |
+| features                         | one user action / use case                        | `features/switch-locale`    |
+| entities                         | domain-oriented client representations + their UI | `entities/system-health`    |
+| shared                           | domain-independent infrastructure and primitives  | `shared/ui/button`          |
 
 ```
 app/providers ─► widgets ─► features ─► entities ─► shared
@@ -130,22 +130,30 @@ tickets.
   (`docs/route-registry.json`, contract `docs/route-architecture.md`, SF-31):
   path, shell (route group), access and status. `scripts/route-registry.test.js`
   fails when a route file is not in the registry or an implemented route is
-  missing. Planned groups: `(auth)`, `(onboarding)`, `(fighter)`, `(coach)`,
-  `(gym)`, `(shared)` (SF-33).
-- Current routes: `/` (foundation home), `/app` (future signed-in area, in the
-  `(app)` group), `+not-found` (unknown routes and deep links).
-- Route groups: `(app)` exists now and is where the auth ticket adds its guard.
-  `(auth)` (sign-in flows) and `(modal)` (modal presentations) are created by
-  the tickets that need them.
-- **Typed routes** are on: `router.push("/app")` is type-checked.
+  missing.
+- **Routes and shells (SF-33).** All 138 approved mobile routes resolve; the
+  structure is in route-architecture §12. Shells are route groups: `(auth)`,
+  `(onboarding)`, `(fighter)`, `(coach)`, `(gym)` (each a Stack over its
+  `(tabs)` navigator) and `(shared)` (pushed above the tabs). Every shell
+  layout wraps its stack in `SessionGate` (`features/session-gate`), the
+  session guard of route-architecture §9; capability, phase and
+  restricted-account rules are registry metadata only until the identity
+  tickets. Placeholder routes are `export default placeholderRoute("<id>")`
+  (`widgets/feature-placeholder`); the tab bars are `widgets/shell-tabs`.
+- **Link by route id.** `pnpm routes:generate` generates
+  `src/shared/routes/mobile-routes.ts` from the registry (a test fails when it
+  is stale); resolve every product href with `routeHref("<route id>")` from
+  `@/shared/routes/routes`, never a handwritten path.
+- **Typed routes** are on: hrefs are type-checked.
   `pnpm typecheck` generates the route types headlessly
   (`expo customize tsconfig.json`), so CI checks them without a dev server.
 - **Deep links:** the URL scheme is `simplefit` (`simplefit://app` opens
   `/app`). Universal Links (iOS) and App Links (Android) need an owned domain
   serving `apple-app-site-association` / `assetlinks.json`; when the domain
   exists, add `ios.associatedDomains` and `android.intentFilters` to
-  `app.config.ts`. Unknown links land on `+not-found`. Links into the signed-in
-  area will pass through the `(app)` guard.
+  `app.config.ts`. Route groups never appear in links; unknown links land on
+  `+not-found`, and links into signed-in routes pass through their shell's
+  `SessionGate` (signed-out: `/login?returnTo=…`).
 
 ## API contract and Orval
 
