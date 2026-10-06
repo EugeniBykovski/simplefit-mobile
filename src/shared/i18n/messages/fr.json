@@ -87,6 +87,17 @@
         "generic": "Une erreur s’est produite. Veuillez réessayer."
       }
     },
+    "apple": {
+      "continue": "Continuer avec Apple",
+      "exchanging": "Connexion avec Apple en cours…",
+      "errors": {
+        "rejected": "Impossible de vérifier votre connexion avec Apple. Veuillez réessayer.",
+        "rateLimited": "Trop de tentatives de connexion. Patientez quelques minutes, puis réessayez.",
+        "unavailable": "La connexion avec Apple est temporairement indisponible. Veuillez réessayer plus tard.",
+        "network": "Impossible de joindre SimpleFit. Vérifiez votre connexion et réessayez.",
+        "generic": "Une erreur s’est produite. Veuillez réessayer."
+      }
+    },
     "session": {
       "checking": "Vérification de votre session",
       "signedIn": "Vous êtes connecté.",

@@ -87,6 +87,17 @@
         "generic": "Something went wrong. Please try again."
       }
     },
+    "apple": {
+      "continue": "Continue with Apple",
+      "exchanging": "Signing you in with Apple…",
+      "errors": {
+        "rejected": "We couldn't verify your Apple sign-in. Please try again.",
+        "rateLimited": "Too many sign-in attempts. Wait a few minutes and try again.",
+        "unavailable": "Apple sign-in is temporarily unavailable. Please try again later.",
+        "network": "Can't reach SimpleFit. Check your connection and try again.",
+        "generic": "Something went wrong. Please try again."
+      }
+    },
     "session": {
       "checking": "Checking your session",
       "signedIn": "You're signed in.",
