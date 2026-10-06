@@ -4,10 +4,15 @@ import { useTranslations } from "use-intl";
 
 import { useTheme } from "@/shared/styles/theme";
 
-/** Root stack with themed, translated headers. */
+import { stackScreenOptions } from "./shell-stack";
+
+/**
+ * Root stack (mobile.root) with themed, translated headers. Each registry
+ * shell is a route group with its own layout and stack (route-architecture
+ * §12); groups do not change URLs.
+ */
 export function RootNavigator() {
   const t = useTranslations("navigation");
-  const auth = useTranslations("auth");
   const { scheme, colors } = useTheme();
   const base = scheme === "dark" ? DarkTheme : DefaultTheme;
 
@@ -27,18 +32,17 @@ export function RootNavigator() {
       }}
     >
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />
-      <Stack
-        screenOptions={{
-          headerBackButtonDisplayMode: "minimal",
-          headerTitleStyle: { fontFamily: "Manrope_700Bold" },
-        }}
-      >
+      <Stack screenOptions={stackScreenOptions}>
         <Stack.Screen name="index" options={{ title: t("home"), headerShown: false }} />
-        <Stack.Screen name="(app)" options={{ title: t("appShell") }} />
-        <Stack.Screen name="welcome" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ title: auth("welcome.signIn") }} />
+        <Stack.Screen name="app" options={{ title: t("appShell") }} />
         <Stack.Screen name="+not-found" />
+        {SHELL_GROUPS.map((group) => (
+          <Stack.Screen key={group} name={group} options={{ headerShown: false }} />
+        ))}
       </Stack>
     </ThemeProvider>
   );
 }
+
+/** Shell route groups: each renders its own stack and headers. */
+const SHELL_GROUPS = ["(auth)", "(onboarding)", "(fighter)", "(coach)", "(gym)", "(shared)"];

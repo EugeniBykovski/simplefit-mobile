@@ -5,6 +5,7 @@ import { useTranslations } from "use-intl";
 import { AppleSignInButton } from "@/features/sign-in-with-apple";
 import { GoogleSignInButton } from "@/features/sign-in-with-google";
 import { siteConfig } from "@/shared/config/site";
+import { routeHref } from "@/shared/routes/routes";
 import { Screen } from "@/shared/ui/screen";
 import { Text } from "@/shared/ui/text";
 
@@ -26,7 +27,7 @@ export function WelcomeScreen() {
       </View>
       <GoogleSignInButton />
       <AppleSignInButton />
-      <TextLink prompt={t("haveAccount")} label={t("signIn")} href="/login" />
+      <TextLink prompt={t("haveAccount")} label={t("signIn")} href={routeHref("mobile.login")} />
     </Screen>
   );
 }
@@ -44,7 +45,7 @@ export function LoginScreen() {
       </View>
       <GoogleSignInButton variant="quiet" />
       <AppleSignInButton variant="quiet" />
-      <TextLink prompt={t("newHere")} label={t("join")} href="/welcome" />
+      <TextLink prompt={t("newHere")} label={t("join")} href={routeHref("mobile.welcome")} />
     </Screen>
   );
 }

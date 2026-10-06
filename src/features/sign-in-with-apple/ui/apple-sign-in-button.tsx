@@ -12,6 +12,7 @@ import {
   appleNonce,
   appleSignInAvailable,
 } from "@/shared/lib/apple-sign-in";
+import { mobileGuards, routeHref } from "@/shared/routes/routes";
 import { Button, type ButtonVariant } from "@/shared/ui/button";
 import { Text } from "@/shared/ui/text";
 
@@ -75,7 +76,7 @@ function AppleButton({ variant }: { variant: ButtonVariant }) {
         refresh_token_transport: "body",
       });
       await startSession(session);
-      router.replace("/");
+      router.replace(routeHref(mobileGuards.entry));
     } catch (error) {
       const result = failureOf(error);
       if (result !== undefined) setFailure(result);
