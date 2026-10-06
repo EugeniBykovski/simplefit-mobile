@@ -6,8 +6,10 @@ otherwise. If a ticket seems to require breaking one, stop and ask.
 
 Read `docs/engineering-standards.md` (shared SimpleFit workflow, commits,
 ownership, quality gates, Definition of Done) and `docs/architecture/README.md`
-before structural changes, `docs/design-system.md` before any UI work, and
-`docs/design-handoff.md` before implementing any designed screen.
+before structural changes, `docs/design-system.md` before any UI work,
+`docs/design-handoff.md` before implementing any designed screen, and
+`docs/route-architecture.md` before adding or changing a route: product routes
+come only from `docs/route-registry.json` (SF-31).
 
 ## What this is
 

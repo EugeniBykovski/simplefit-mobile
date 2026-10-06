@@ -126,6 +126,12 @@ tickets.
 
 - Routes live in `src/app`; **route files stay thin**: they render a widget
   and contain no business logic or API calls.
+- **Every product route comes from the canonical route registry**
+  (`docs/route-registry.json`, contract `docs/route-architecture.md`, SF-31):
+  path, shell (route group), access and status. `scripts/route-registry.test.js`
+  fails when a route file is not in the registry or an implemented route is
+  missing. Planned groups: `(auth)`, `(onboarding)`, `(fighter)`, `(coach)`,
+  `(gym)`, `(shared)` (SF-33).
 - Current routes: `/` (foundation home), `/app` (future signed-in area, in the
   `(app)` group), `+not-found` (unknown routes and deep links).
 - Route groups: `(app)` exists now and is where the auth ticket adds its guard.
