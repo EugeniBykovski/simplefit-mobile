@@ -224,8 +224,12 @@ on iOS, `iosClientId`; no scopes, no offline access, no client secret.
 Cancelling is not an error. Both `account: created` and `existing` continue
 to `/` (the `ENTRY` route, route-architecture §9); the app never infers roles.
 
-- **Not in Expo Go**: the module is native. Use a development build
-  (`pnpm ios` / `pnpm android` or EAS `development`).
+- **Not in Expo Go**: the module is native, and Expo Go lacks it
+  (`RNGoogleSignin could not be found`). Use a development build (see
+  [EAS](#eas)). The module is required lazily (`googleSignInModule()`), so a
+  binary without it still starts and only fails, loudly, when Google sign-in
+  is used; Expo Router evaluates every route at startup, so a top-level import
+  used to stop the whole app.
 - **Android**: Google identifies the app by package name **and the signing
   certificate's SHA-1**. Each signing key (local `debug.keystore`, EAS
   credentials, Play App Signing) needs its own Android OAuth client in Google
@@ -529,9 +533,28 @@ commit.
 
 ## EAS
 
-`eas.json` defines `development` (dev client, internal), `preview` (internal,
-`preview` channel) and `production` (auto-increment, `production` channel)
-with remote app versioning. It contains **no account-bound values**. Later:
+`eas.json` defines `development` (dev client, internal),
+`development-simulator` (the same dev client built for the iOS Simulator; no
+signing credentials needed), `preview` (internal, `preview` channel) and
+`production` (auto-increment, `production` channel) with remote app
+versioning. It contains **no account-bound values**.
+
+**Development build on the iOS Simulator** (local `expo run:ios` needs Xcode
+26+, see Known limitations):
+
+```bash
+eas build --profile development-simulator --platform ios   # after native changes
+eas build:run --profile development-simulator --platform ios --latest   # install
+pnpm start                                                  # Metro for the dev client
+```
+
+Rebuild whenever a native dependency, config plugin or build-time
+`EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` changes; JavaScript changes only need Metro.
+The `development` EAS environment must hold `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`
+(it becomes the iOS URL scheme at build time); runtime `EXPO_PUBLIC_*` values
+come from the local `.env*` files that Metro reads.
+
+Later:
 
 1. `eas init`: creates the EAS project and writes `extra.eas.projectId`.
 2. `eas credentials`: Apple Team / certificates / provisioning, Android
@@ -613,8 +636,8 @@ screen needs a sheet (`Modal` until then).
   are shared, configuration syntax differs until NativeWind 5.
 - **iOS native builds need Xcode 26+**: SDK 57's `ExpoModulesJSI` Swift
   package requires Swift tools 6.2. On the bootstrap machine (Xcode 16.4) the
-  local development build failed for this reason; the app was run on the iOS
-  Simulator through Expo Go (SDK 57) instead. EAS Build images for SDK 57 ship
-  Xcode 26.
+  local development build failed for this reason. Expo Go cannot run the app
+  since SF-22 added native modules; use the `development-simulator` EAS
+  profile (EAS Build images for SDK 57 ship Xcode 26).
 - Android was not validated on a device or emulator in SF-12 (no Android SDK
   on the bootstrap machine); CI only bundles the Android JavaScript.

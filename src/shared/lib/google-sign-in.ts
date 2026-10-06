@@ -1,4 +1,4 @@
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import type * as GoogleSignInNative from "@react-native-google-signin/google-signin";
 import { Platform } from "react-native";
 
 import { publicEnv } from "@/shared/config/env";
@@ -16,8 +16,22 @@ import { publicEnv } from "@/shared/config/env";
  *   favour of Credential Manager (documented technical debt).
  * - No scopes beyond the defaults, no offline access, no server auth code and
  *   no client secret. The ID token is never stored or logged.
+ *
+ * The native module is required on first use, never at import time. Expo
+ * Router evaluates every route module at startup, so a top-level import made
+ * the whole app fail to start when the binary lacked the module (Expo Go).
+ * A missing module still fails loudly: the require throws and is not caught.
+ * Development and release binaries must contain it.
  */
+export type GoogleSignInModule = typeof GoogleSignInNative;
+
 let configured = false;
+
+/** The native Google Sign-In module, evaluated on first use (Metro caches it). */
+export function googleSignInModule(): GoogleSignInModule {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- deferred native module evaluation (see above)
+  return require("@react-native-google-signin/google-signin") as GoogleSignInModule;
+}
 
 /** Whether Google sign-in can run on this platform with the bundled configuration. */
 export function googleSignInAvailable(): boolean {
@@ -26,7 +40,7 @@ export function googleSignInAvailable(): boolean {
 }
 
 /** Configures the native module once; returns false when not available. */
-export function configureGoogleSignIn(): boolean {
+export function configureGoogleSignIn({ GoogleSignin }: GoogleSignInModule): boolean {
   if (!googleSignInAvailable()) return false;
   if (!configured) {
     GoogleSignin.configure({
@@ -41,9 +55,11 @@ export function configureGoogleSignIn(): boolean {
 
 /** Clears Google's local sign-in state after a SimpleFit sign-out (best effort). */
 export async function signOutOfGoogle(): Promise<void> {
-  if (!configureGoogleSignIn()) return;
+  if (!googleSignInAvailable()) return;
+  const google = googleSignInModule();
+  configureGoogleSignIn(google);
   try {
-    await GoogleSignin.signOut();
+    await google.GoogleSignin.signOut();
   } catch {
     // Local state only; the SimpleFit session is already revoked.
   }
