@@ -440,6 +440,19 @@ needs it; keep labels as props (no copy in primitives); add it to the gallery.
   histories, rosters, messages). It is compatible with SDK 57 (JS-only on the
   New Architecture) but deferred until the first real list exists.
 
+**Sign in with Apple** (`features/sign-in-with-apple`, SF-23, simplefit-api
+ADR 0014): iOS only, and only when `isAvailableAsync()` is true (hidden on
+Android and elsewhere). Per attempt a raw nonce (32 random bytes, hex) is
+made; Apple receives its lowercase hex SHA-256 and the API the raw value with
+the identity token (`POST /api/auth/apple`, body transport). No scopes, and
+nothing else from the credential (authorization code, user id, name, email)
+leaves the device. `ERR_REQUEST_CANCELED` is silent. Like Google, the native
+modules (`expo-apple-authentication`, `expo-crypto`) are required on first
+use (`shared/lib/apple-sign-in.ts`). The entitlement comes from
+`ios.usesAppleSignIn`, so it needs a new development build; Expo Go cannot
+be used (its tokens have Expo Go's audience). Mobile needs no Apple
+environment variable: the audience is the bundle id.
+
 ## Environment
 
 | Variable                               | Scope                        | Purpose                                                                                                                            |
@@ -596,6 +609,13 @@ set, same as web's `lucide-react`; ISC / MIT; replaces `@expo/vector-icons`),
 `@expo-google-fonts/unbounded|manrope|jetbrains-mono` (SF-13: brand
 typefaces, SIL OFL; imported per weight).
 
+**Added in SF-23:** `expo-apple-authentication` 57.0.2 (MIT, first-party Expo
+SDK 57; AuthenticationServices with the `usesAppleSignIn` entitlement) for
+native Sign in with Apple, and `expo-crypto` 57.0.3 (MIT, first-party) for the
+nonce's random bytes and SHA-256. No install scripts. Apple has no
+alternative native API, and the JS runtime has no secure random source or
+SHA-256 of its own.
+
 **Added in SF-22:** `@react-native-google-signin/google-signin` 16.1.5 (MIT,
 actively maintained, Expo config plugin, supports SDK 57 and the New
 Architecture). Problem: native Google sign-in that returns a Google ID token.
@@ -605,7 +625,7 @@ the free Original module is used (no Universal/One Tap licence, no Firebase).
 No install scripts.
 
 **Deferred until a ticket needs them:** FlashList, keyboard-controller,
-expo-image, haptics, Apple sign-in, Stripe, RevenueCat, Sentry,
+expo-image, haptics, Stripe, RevenueCat, Sentry,
 PostHog/analytics, Firebase, push notifications, camera/pickers, maps/location,
 WebSockets, rich text, charts/Skia, biometrics, health/wearables, uploads,
 sharing, feature flags, query cache persistence, Maestro/Detox, expo-updates.
