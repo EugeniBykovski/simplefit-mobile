@@ -12,6 +12,7 @@ import {
   googleSignInModule,
   type GoogleSignInModule,
 } from "@/shared/lib/google-sign-in";
+import { mobileGuards, routeHref } from "@/shared/routes/routes";
 import { Button, type ButtonVariant } from "@/shared/ui/button";
 import { Text } from "@/shared/ui/text";
 
@@ -62,7 +63,7 @@ export function GoogleSignInButton({ variant = "primary" }: { variant?: ButtonVa
         refresh_token_transport: "body",
       });
       await startSession(session);
-      router.replace("/");
+      router.replace(routeHref(mobileGuards.entry));
     } catch (error) {
       const result = failureOf(error, google);
       if (result !== undefined) setFailure(result);

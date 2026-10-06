@@ -1,3 +1,4 @@
+import { routeHref } from "@/shared/routes/routes";
 import { Stack, useRouter } from "expo-router";
 import { useTranslations } from "use-intl";
 
@@ -19,7 +20,7 @@ export default function NotFoundRoute() {
       <Button
         label={actions("backToHome")}
         variant="secondary"
-        onPress={() => router.replace("/")}
+        onPress={() => router.replace(routeHref("mobile.root"))}
       />
     </Screen>
   );

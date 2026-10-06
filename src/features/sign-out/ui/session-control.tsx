@@ -6,6 +6,7 @@ import { useTranslations } from "use-intl";
 
 import { signOut, useSessionStatus } from "@/entities/session";
 import { signOutOfGoogle } from "@/shared/lib/google-sign-in";
+import { routeHref } from "@/shared/routes/routes";
 import { Button } from "@/shared/ui/button";
 import { Spinner } from "@/shared/ui/spinner";
 import { Text } from "@/shared/ui/text";
@@ -42,7 +43,7 @@ export function SessionControl() {
           label={t("signIn")}
           variant="quiet"
           icon={LogIn}
-          onPress={() => router.push("/welcome")}
+          onPress={() => router.push(routeHref("mobile.welcome"))}
         />
       </View>
     );

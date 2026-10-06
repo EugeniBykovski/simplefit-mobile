@@ -9,6 +9,7 @@ import { ThemeSelector } from "@/features/switch-theme";
 import { siteConfig } from "@/shared/config/site";
 import { useLocaleSettings } from "@/shared/i18n/i18n-provider";
 import { localeName } from "@/shared/i18n/locales";
+import { routeHref } from "@/shared/routes/routes";
 import { Button } from "@/shared/ui/button";
 import { Card } from "@/shared/ui/card";
 import { Screen } from "@/shared/ui/screen";
@@ -50,7 +51,7 @@ export function FoundationHome() {
         label={actions("openTheApp")}
         icon={ArrowRight}
         size="lg"
-        onPress={() => router.push("/app")}
+        onPress={() => router.push(routeHref("mobile.app"))}
       />
 
       <SessionControl />
@@ -95,7 +96,7 @@ export function FoundationHome() {
         // it is intentionally not translated.
         <Pressable
           accessibilityRole="link"
-          onPress={() => router.push("/dev/design-system")}
+          onPress={() => router.push(routeHref("mobile.dev.design-system"))}
           className="min-h-touch items-center justify-center self-center px-3"
         >
           <Text variant="label" color="mutedForeground">

@@ -35,5 +35,14 @@
     "session": {
       "checking": "Verificando tu sesión"
     }
+  },
+  "routes": {
+    "titles": {
+      "mobile/coach/sparring/_sparring-id/video": "Grabación de video",
+      "mobile/progress/video/_video-id": "Revisión de video",
+      "mobile/settings": "Configuración",
+      "mobile/settings/coach": "Configuración del entrenador",
+      "mobile/settings/notifications": "Configuración de notificaciones"
+    }
   }
 }
