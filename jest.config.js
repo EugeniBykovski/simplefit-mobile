@@ -11,9 +11,10 @@ module.exports = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testMatch: ["<rootDir>/src/**/*.test.{ts,tsx}", "<rootDir>/scripts/**/*.test.js"],
   // pnpm stores packages under node_modules/.pnpm; transform React Native,
-  // Expo and ESM-only packages wherever they live.
+  // Expo and ESM-only packages wherever they live (standard-navigation is
+  // Expo Router's ESM-only dependency, needed by the router tests).
   transformIgnorePatterns: [
-    "node_modules/(?!(\\.pnpm|react-native|@react-native|@react-native-community|expo|@expo|expo-modules-core|react-navigation|@react-navigation|use-intl|intl-messageformat|@formatjs|icu-minify|@schummar))",
+    "node_modules/(?!(\\.pnpm|react-native|@react-native|@react-native-community|expo|@expo|expo-modules-core|react-navigation|@react-navigation|use-intl|intl-messageformat|@formatjs|icu-minify|@schummar|standard-navigation))",
   ],
   // Lucide's "react-native" export is .mjs, which Jest does not transform;
   // tests use the package's CommonJS build of the same icons.
