@@ -86,6 +86,12 @@ module.exports = {
       badge: ["10px", "14px"],
       "label-lg": ["11px", "16px"],
       label: ["10px", "14px"],
+      // System-state roles, mobile frame (typography.systemRoles.mobile, SF-34).
+      hero: ["28px", "30px"],
+      wordmark: ["36px", "34px"],
+      numeral: ["112px", "112px"],
+      "numeral-ko": ["92px", "84px"],
+      "label-wide": ["11px", "14px"],
     },
     // Radius scale (docs/design-tokens.json): xs marks, sm badges, md compact
     // controls, lg fields, xl primary CTAs, 2xl compact cards, 3xl cards,
@@ -126,6 +132,11 @@ module.exports = {
         "metric-sm": "-0.54px",
         "label-lg": "1.76px",
         label: "1.4px",
+        hero: "-0.7px",
+        wordmark: "-1.26px",
+        numeral: "-4.48px",
+        "numeral-ko": "-4.6px",
+        "label-wide": "6.82px",
       },
       // Spacing steps the default scale lacks (docs/design-tokens.json spacing).
       spacing: { 4.5: "18px", 5.5: "22px" },

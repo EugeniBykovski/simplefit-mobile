@@ -33,7 +33,16 @@ import { Spinner } from "@/shared/ui/spinner";
  * are not resolved here (the API exposes no such viewer state yet), and the
  * backend authorizes every request.
  */
-export function SessionGate({ shell, children }: { shell: MobileShellId; children: ReactNode }) {
+export function SessionGate({
+  shell,
+  pending: pendingView,
+  children,
+}: {
+  shell: MobileShellId;
+  /** What covers the shell while the session is restored (the layouts pass the LD1 launch screen, SF-34). */
+  pending?: ReactNode;
+  children: ReactNode;
+}) {
   const status = useSessionStatus();
   const pathname = usePathname();
   const params = useGlobalSearchParams();
@@ -61,8 +70,12 @@ export function SessionGate({ shell, children }: { shell: MobileShellId; childre
         {children}
       </View>
       {pending ? (
-        <View className="absolute inset-0 items-center justify-center bg-background">
-          <Spinner label={t("checking")} size="large" />
+        <View className="absolute inset-0 bg-background">
+          {pendingView ?? (
+            <View className="flex-1 items-center justify-center">
+              <Spinner label={t("checking")} size="large" />
+            </View>
+          )}
         </View>
       ) : null}
       {redirect ? <Redirect href={redirect} /> : null}

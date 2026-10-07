@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 
 import { SessionGate } from "@/features/session-gate";
 import { ShellStack } from "@/providers/shell-stack";
+import { LaunchScreen } from "@/widgets/system-states";
 
 // A deep link to a pushed screen keeps the tabs underneath it.
 export const unstable_settings = { initialRouteName: "(tabs)" };
@@ -13,7 +14,7 @@ export const unstable_settings = { initialRouteName: "(tabs)" };
  */
 export default function FighterLayout() {
   return (
-    <SessionGate shell="mobile.fighter">
+    <SessionGate shell="mobile.fighter" pending={<LaunchScreen />}>
       <ShellStack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </ShellStack>

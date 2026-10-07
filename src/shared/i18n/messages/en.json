@@ -12,9 +12,31 @@
     "backToHome": "Back to home"
   },
   "errors": {
-    "notFound": {
-      "title": "Screen not found",
-      "description": "This screen does not exist."
+    "states": {
+      "unexpected": {
+        "tag": "Error",
+        "title": "Something went wrong",
+        "description": "Something went wrong on our side. Nothing you saved is lost.",
+        "action": "Try again"
+      },
+      "offline": {
+        "tag": "Offline",
+        "title": "You’re offline",
+        "description": "Check your connection. We’ll load this page again when you’re back online.",
+        "action": "Try again"
+      },
+      "forbidden": {
+        "tag": "Permission denied",
+        "title": "You don’t have access",
+        "description": "This page belongs to an account or workspace you’re not part of.",
+        "action": "Back home"
+      },
+      "unavailable": {
+        "tag": "Service unavailable",
+        "title": "SimpleFit is taking a breather",
+        "description": "The service is temporarily unavailable. Try again in a few minutes.",
+        "action": "Try again"
+      }
     }
   },
   "home": {
@@ -273,6 +295,58 @@
       "badge": "Planned",
       "description": "This screen is part of the SimpleFit app and arrives with its feature. Nothing here works yet.",
       "route": "Route"
+    }
+  },
+  "system": {
+    "launch": {
+      "label": "Loading SimpleFit",
+      "status": "Taping hands…",
+      "tipLabel": "Corner tip",
+      "tip": "Exhale on every punch — it keeps your core tight and your chin down.",
+      "version": "v{version}"
+    },
+    "notFound": {
+      "refCount": "Ref count",
+      "count": {
+        "kicker": "Error 404 · Round not found",
+        "title": "This page is down for the count.",
+        "description": "The link is old or the page moved. Beat the count before ten and we’ll get you back in the fight.",
+        "beat": "Beat the count",
+        "home": "Back home"
+      },
+      "ko": {
+        "kicker": "Error 404 · Knockout",
+        "title": "KO. This page didn’t get up.",
+        "description": "It may have been deleted or made private. Your rounds, board and payments are safe.",
+        "tag": "KO · Page not found",
+        "corner": "Back to my corner",
+        "again": "Count again"
+      },
+      "saved": {
+        "kicker": "Back on your feet",
+        "title": "Saved by the bell.",
+        "description": "Good reflexes. Pick where to go next — your corner is waiting.",
+        "tag": "Up at {count} · Saved by the bell",
+        "corner": "Back to my corner",
+        "search": "Search"
+      },
+      "words": {
+        "1": "One",
+        "2": "Two",
+        "3": "Three",
+        "4": "Four",
+        "5": "Five",
+        "6": "Six",
+        "7": "Seven",
+        "8": "Eight",
+        "9": "Nine",
+        "10": "Ten"
+      },
+      "errorCode": "Err 404",
+      "back": "Back",
+      "help": "Help",
+      "report": "Report a broken link",
+      "pathNotFound": "{path} · not found"
     }
   }
 }

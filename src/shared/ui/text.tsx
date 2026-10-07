@@ -24,6 +24,12 @@ const variants = {
   badge: { family: "font-sans-extrabold", classes: "text-badge uppercase" },
   labelLg: { family: "font-mono", classes: "text-label-lg uppercase tracking-label-lg" },
   label: { family: "font-mono", classes: "text-label uppercase tracking-label" },
+  // System-state roles (SF-34): launch, 404 and error states only.
+  hero: { family: "font-display", classes: "text-hero tracking-hero" },
+  wordmark: { family: "font-display-bold", classes: "text-wordmark tracking-wordmark" },
+  numeral: { family: "font-display-bold", classes: "text-numeral tracking-numeral" },
+  numeralKo: { family: "font-display-bold", classes: "text-numeral-ko tracking-numeral-ko" },
+  labelWide: { family: "font-mono", classes: "text-label-wide uppercase tracking-label-wide" },
 } as const;
 
 /** Manrope weights of the contract above the role's regular 400. */
@@ -68,7 +74,7 @@ export type TextProps = RNTextProps & {
   weight?: TextWeight;
 };
 
-const headers: readonly TextVariant[] = ["display", "h1", "h2", "h3"];
+const headers: readonly TextVariant[] = ["display", "h1", "h2", "h3", "hero"];
 
 /** Font family class for a role, raised to the requested Manrope weight. */
 export function textFamily(variant: TextVariant, weight?: TextWeight): string {

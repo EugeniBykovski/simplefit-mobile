@@ -3,6 +3,7 @@ import { useTranslations } from "use-intl";
 
 import { SessionGate } from "@/features/session-gate";
 import { ShellStack } from "@/providers/shell-stack";
+import { LaunchScreen } from "@/widgets/system-states";
 
 /**
  * mobile.auth: welcome, sign in and sign up, consent, role choice and invite
@@ -14,7 +15,7 @@ export default function AuthLayout() {
   const auth = useTranslations("auth");
 
   return (
-    <SessionGate shell="mobile.auth">
+    <SessionGate shell="mobile.auth" pending={<LaunchScreen />}>
       <ShellStack>
         <Stack.Screen name="welcome" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ title: auth("welcome.signIn") }} />
