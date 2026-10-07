@@ -147,7 +147,15 @@ purpose: pointer versus touch.
 **Elevation** is semantic: surfaces and borders first; shadows (web:
 `shadow-raised`, `shadow-overlay`, `shadow-modal`) only for floating layers.
 **Motion:** short (150 ms) colour/opacity transitions; no decorative
-animation; reduced motion respected.
+animation in product UI; reduced motion respected. **Exception (SF-34):** the
+approved system states of Claude Design section 35 carry their designed
+motion (logo ring, corner posts, drawn "S", glow, segments, shimmer), built
+with `Animated` and stopped when the system reduces motion.
+
+**System-state typography (SF-34):** `<Text variant>` `hero` (28/30),
+`wordmark` (36/34), `numeral` (112), `numeralKo` (92), `labelWide` (11, 0.62
+em) from `typography.systemRoles.mobile` in `docs/design-tokens.json`; only
+for launch, 404 and error states.
 
 ## Accessibility
 
