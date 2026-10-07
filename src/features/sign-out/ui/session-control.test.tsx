@@ -43,6 +43,14 @@ describe("SessionControl", () => {
       jest
         .fn()
         .mockResolvedValueOnce(restored())
+        .mockResolvedValueOnce(
+          jsonResponse({
+            user: {
+              id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+              created_at: "2026-10-01T10:00:00Z",
+            },
+          }),
+        )
         .mockResolvedValueOnce(new Response(null, { status: 204 })),
     );
 
@@ -50,7 +58,7 @@ describe("SessionControl", () => {
     await userEvent.press(await screen.findByRole("button", { name: "Abmelden" }));
 
     expect(await screen.findByText("Du bist nicht angemeldet.")).toBeOnTheScreen();
-    const [url, init] = fetchMock.mock.calls[1] as [string, RequestInit];
+    const [url, init] = fetchMock.mock.calls[2] as [string, RequestInit];
     expect(url).toBe("http://api.test/api/auth/logout");
     expect(new Headers(init.headers).get("authorization")).toBe("Bearer sfa_restored");
     expect(await getSecureItem(KEY)).toBeNull();

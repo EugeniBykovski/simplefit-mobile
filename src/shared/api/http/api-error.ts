@@ -30,15 +30,31 @@ export class ApiError extends Error {
     readonly details: Record<string, unknown>,
     /** Backend `x-request-id`, for support and log correlation. */
     readonly requestId: string | null,
+    /** Seconds from the `retry-after` header (`rate_limited`), when the API sent one. */
+    readonly retryAfterSeconds: number | null = null,
   ) {
     super(message);
   }
 
   /** Builds an ApiError from a response body that may or may not be the envelope. */
-  static fromResponse(status: number, body: unknown, requestId: string | null): ApiError {
+  static fromResponse(
+    status: number,
+    body: unknown,
+    requestId: string | null,
+    retryAfter: string | null = null,
+  ): ApiError {
+    const retryAfterSeconds = parseRetryAfter(retryAfter);
     if (isErrorResponse(body)) {
       const { code, message, details, request_id } = body.error;
-      return new ApiError("http", status, code, message, details, request_id ?? requestId);
+      return new ApiError(
+        "http",
+        status,
+        code,
+        message,
+        details,
+        request_id ?? requestId,
+        retryAfterSeconds,
+      );
     }
     return new ApiError(
       "http",
@@ -47,6 +63,7 @@ export class ApiError extends Error {
       `Unexpected API response (HTTP ${status})`,
       {},
       requestId,
+      retryAfterSeconds,
     );
   }
 
@@ -87,6 +104,12 @@ export class ApiError extends Error {
       ),
     );
   }
+}
+
+/** The delay-seconds form of `retry-after` (the API never sends an HTTP date). */
+function parseRetryAfter(value: string | null): number | null {
+  if (value === null || !/^\d+$/.test(value.trim())) return null;
+  return Number(value.trim());
 }
 
 export function isApiError(error: unknown): error is ApiError {

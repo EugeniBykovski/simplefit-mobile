@@ -161,6 +161,15 @@ on mono roles) and the product role `brand` (13 px wordmark) are part of the
 contract; `Button` gains the `warning` variant and the 44 pt `system` size
 (the System states sheet's card action).
 
+**Authentication typography and primitives (SF-24):** `<Text variant>`
+`authHero` (31/35 Unbounded 600, A01) and `codeDigit` (24/28 Unbounded 700,
+the code cells) from `typography.authRoles.mobile`; only on the auth screens.
+Primitives added with them: `CodeInput` (Claude Design component
+"AuthCodeInput": one `oneTimeCode` TextInput over six 62 pt cells, states
+typing, filled, error, expired, submitting, success, locked), `Notice`
+(olive, amber, coral and muted status boxes), `BrandLockup` (A01) and
+`TextLinks` / `linkTo` (inline text actions with 44 pt targets).
+
 ## Accessibility
 
 - Every interactive primitive has a role, an accessible name (labels are

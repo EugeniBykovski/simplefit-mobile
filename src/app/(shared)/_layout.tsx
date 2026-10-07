@@ -1,6 +1,6 @@
 import { SessionGate } from "@/features/session-gate";
 import { ShellStack } from "@/providers/shell-stack";
-import { LaunchScreen } from "@/widgets/system-states";
+import { LaunchScreen, SessionFailure } from "@/widgets/system-states";
 
 /**
  * mobile.shared: account-level screens (settings, billing, checkout,
@@ -10,7 +10,7 @@ import { LaunchScreen } from "@/widgets/system-states";
  */
 export default function SharedLayout() {
   return (
-    <SessionGate shell="mobile.shared" pending={<LaunchScreen />}>
+    <SessionGate shell="mobile.shared" pending={<LaunchScreen />} unavailable={<SessionFailure />}>
       <ShellStack />
     </SessionGate>
   );

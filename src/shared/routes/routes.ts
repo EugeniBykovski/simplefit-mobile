@@ -101,12 +101,66 @@ export function isTabRoute(id: MobileRouteId): boolean {
 }
 
 /**
+ * The href of an auth route carrying `returnTo` when it is a valid
+ * destination under the SF-24 policy (`sanitizeReturnTo`); otherwise none.
+ */
+export function withReturnTo(id: MobileRouteId, returnTo: string | undefined): Href {
+  const safe = sanitizeReturnTo(returnTo);
+  return routeHref(id, {}, safe === undefined ? {} : { [mobileGuards.returnToParam]: safe });
+}
+
+/**
  * The sign-in href for a signed-out visitor of `pathname`, carrying the
- * requested path in `returnTo` (route-architecture §9). The sign-in flow
- * (SF-24) validates `returnTo` before it uses it.
+ * requested path in `returnTo` when it is a valid destination
+ * (route-architecture §9).
  */
 export function signInHref(pathname: string): Href {
-  return routeHref(mobileGuards.signIn, {}, { [mobileGuards.returnToParam]: pathname });
+  return withReturnTo(mobileGuards.signIn, pathname);
+}
+
+/**
+ * The `returnTo` policy (SF-24; route-architecture §9), the same as the web
+ * client's. After authentication the user may continue to the screen that
+ * sent them to sign-in, but only to a screen sign-in can actually lead to.
+ * Anything else is dropped silently and the neutral entry is used instead.
+ *
+ * Accepted: an in-app path (`/…`, decoded exactly once by the router) of at
+ * most 2048 characters that resolves to a canonical registry route which is
+ * neither guest-only (no login loop), nor an onboarding or restricted-account
+ * route (those are reached from viewer state only), nor the not-found
+ * catch-all. Only pathname and query are kept; a hash is discarded. Scheme
+ * URLs (`simplefit://…`, `https://…`) are never accepted here: deep links
+ * arrive as router paths.
+ */
+const MAX_LENGTH = 2048;
+const SENTINEL_ORIGIN = "https://return-to.invalid";
+
+const NEVER_RETURN_TO: ReadonlySet<MobileRouteId> = new Set<MobileRouteId>([
+  mobileGuards.notFound,
+  mobileGuards.restrictedAccount.suspended,
+  mobileGuards.restrictedAccount.pendingDeletion,
+]);
+
+// Backslashes (`/\host` is `//host` to URL parsers), whitespace and control characters.
+const UNSAFE = /[\\\s\u0000-\u001f\u007f]/;
+
+export function sanitizeReturnTo(value: unknown): string | undefined {
+  if (typeof value !== "string" || value === "" || value.length > MAX_LENGTH) return undefined;
+  if (!value.startsWith("/") || value.startsWith("//") || UNSAFE.test(value)) return undefined;
+
+  let url: URL;
+  try {
+    url = new URL(value, SENTINEL_ORIGIN);
+  } catch {
+    return undefined;
+  }
+  if (url.origin !== SENTINEL_ORIGIN || url.pathname.startsWith("//")) return undefined;
+
+  const route = matchMobileRoute(url.pathname);
+  if (route === undefined || NEVER_RETURN_TO.has(route.id)) return undefined;
+  if (route.session === "GUEST_ONLY" || route.phase === "ONBOARDING") return undefined;
+
+  return `${url.pathname}${url.search}`;
 }
 
 export { mobileCapabilities, mobileGuards };

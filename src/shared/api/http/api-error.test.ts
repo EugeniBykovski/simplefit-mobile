@@ -26,6 +26,15 @@ describe("ApiError", () => {
     expect(isApiError(error)).toBe(true);
   });
 
+  it("carries the retry-after delay of a rate-limited response, in seconds only", () => {
+    const body = { error: { code: "rate_limited", message: "Too many requests", details: {} } };
+    expect(ApiError.fromResponse(429, body, null, "42").retryAfterSeconds).toBe(42);
+    expect(
+      ApiError.fromResponse(429, body, null, "Wed, 21 Oct 2026 07:28:00 GMT").retryAfterSeconds,
+    ).toBeNull();
+    expect(ApiError.fromResponse(429, body, null).retryAfterSeconds).toBeNull();
+  });
+
   it("normalizes non-envelope bodies with the header request id", () => {
     expect(ApiError.fromResponse(502, "Bad gateway", "edge-1")).toMatchObject({
       kind: "http",
