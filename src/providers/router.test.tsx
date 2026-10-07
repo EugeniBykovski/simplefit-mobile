@@ -5,13 +5,19 @@ import { act, fireEvent, renderRouter, screen, waitFor } from "expo-router/testi
 
 import { startSession } from "@/entities/session";
 import { resetSessionForTests } from "@/entities/session/model/session";
+import { setSecureItem } from "@/shared/storage/secure-storage";
+import { jsonResponse, mockFetch } from "@/test/render";
 import { mobileRoutes } from "@/shared/routes/mobile-routes";
 import type { MobileRoute } from "@/shared/routes/routes";
 
 import registry from "../../docs/route-registry.json";
 
+import { ErrorBoundary } from "../app/_layout";
 import { AppProviders } from "./app-providers";
 import { RootNavigator } from "./root-navigator";
+
+// System-state motion rests static (deterministic renders, no act() noise).
+jest.mock("@/shared/lib/reduced-motion", () => ({ useReducedMotion: () => true }));
 
 /*
  * SF-33: the production Expo Router tree (src/app) resolves the SF-31 mobile
@@ -100,13 +106,17 @@ describe("canonical routes resolve", () => {
 
   it("sends unknown and deferred paths to the not-found screen", async () => {
     await renderApp("/nowhere/at/all");
-    expect(await screen.findByRole("header", { name: "Screen not found" })).toBeOnTheScreen();
+    expect(
+      await screen.findByRole("header", { name: "This page is down for the count." }),
+    ).toBeOnTheScreen();
   });
 
   it("does not build the deferred /sparring/find", async () => {
     await signIn();
     await renderApp("/sparring/find");
-    expect(await screen.findByRole("header", { name: "Screen not found" })).toBeOnTheScreen();
+    expect(
+      await screen.findByRole("header", { name: "This page is down for the count." }),
+    ).toBeOnTheScreen();
   });
 });
 
@@ -244,3 +254,49 @@ function fileOf(route: MobileRoute): string {
   if (!file) throw new Error(`${route.id} has no production file`);
   return file;
 }
+
+describe("system states (SF-34)", () => {
+  it("covers a gated route with the LD1 launch screen while the session is restored, in the same navigator", async () => {
+    await setSecureItem("simplefit.session.refresh_token", "stored-refresh");
+    let respond: (response: Response) => void = () => {};
+    mockFetch(jest.fn(() => new Promise<Response>((resolve) => (respond = resolve))));
+
+    const result = await renderApp("/home");
+    expect(await screen.findByLabelText("Loading SimpleFit")).toBeOnTheScreen();
+    expect(result.getPathname()).toBe("/home");
+
+    await act(async () =>
+      respond(
+        jsonResponse({
+          access_token: "fresh-access",
+          refresh_token: "fresh-refresh",
+          token_type: "Bearer",
+          expires_in: 900,
+          refresh_token_transport: "body",
+        }),
+      ),
+    );
+    expect(await screen.findByTestId(placeholderId("mobile.home"))).toBeOnTheScreen();
+    expect(screen.queryByLabelText("Loading SimpleFit")).toBeNull();
+    expect(result.getPathname()).toBe("/home");
+  });
+
+  it("renders the root error boundary without the error's details", async () => {
+    // React logs caught errors in development; this one is thrown on purpose.
+    const log = jest.spyOn(console, "error").mockImplementation(() => {});
+    function Boom(): never {
+      throw new Error("db password=hunter2");
+    }
+    const result = renderRouter(
+      {
+        appDir: "src/app",
+        overrides: { _layout: { default: TestRootLayout, ErrorBoundary }, boom: Boom },
+      },
+      { initialUrl: "/boom" },
+    );
+    await result;
+    expect(await screen.findByText("Something went wrong")).toBeOnTheScreen();
+    expect(screen.queryByText(/hunter2/)).toBeNull();
+    log.mockRestore();
+  });
+});

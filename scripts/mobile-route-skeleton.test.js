@@ -254,7 +254,9 @@ describe("access composition (session part of SF-31 §6)", () => {
       .filter((route) => route.access.session !== "PUBLIC")
       .filter((route) => {
         const layout = shells.get(route.shell).production.file;
-        return !read(layout).includes(`<SessionGate shell="${route.shell}">`);
+        return !read(layout).includes(
+          `<SessionGate shell="${route.shell}" pending={<LaunchScreen />}>`,
+        );
       });
     expect(wrong.map((route) => route.id)).toEqual([]);
   });

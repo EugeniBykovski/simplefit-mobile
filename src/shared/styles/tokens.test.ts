@@ -99,18 +99,18 @@ describe("design tokens", () => {
 describe("scales", () => {
   const { theme } = tailwindConfig;
 
+  // Product roles plus the mobile system-state roles (SF-34).
+  const roles = { ...spec.typography.roles, ...spec.typography.systemRoles.mobile };
+
   it("replaces the type scale with exactly the contract's roles", () => {
     const expected = Object.fromEntries(
-      Object.entries(spec.typography.roles).map(([role, def]) => [
-        role,
-        [`${def.size}px`, `${def.lineHeight}px`],
-      ]),
+      Object.entries(roles).map(([role, def]) => [role, [`${def.size}px`, `${def.lineHeight}px`]]),
     );
     expect(theme.fontSize).toEqual(expected);
   });
 
   it("converts each role's tracking to px", () => {
-    for (const [role, def] of Object.entries(spec.typography.roles)) {
+    for (const [role, def] of Object.entries(roles)) {
       if (!def.tracking) continue;
       expect(theme.extend.letterSpacing[role]).toBe(`${+(def.size * def.tracking).toFixed(2)}px`);
     }
