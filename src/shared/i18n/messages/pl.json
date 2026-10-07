@@ -85,16 +85,27 @@
   },
   "auth": {
     "welcome": {
-      "title": "Dołącz do bokserskiej społeczności.",
+      "title": "Dołącz do bokserskiej <hl>społeczności.</hl>",
       "description": "Trenuj, prowadź zawodników, zarządzaj klubem — albo współpracuj z ludźmi, którzy boksują. Jedno konto dla każdej roli.",
       "haveAccount": "Już trenujesz z nami?",
-      "signIn": "Zaloguj się"
+      "signIn": "Zaloguj się",
+      "email": "Kontynuuj z e-mailem",
+      "illustration": {
+        "round": "R3",
+        "labelRound": "Runda",
+        "labelCamp": "Obóz",
+        "labelJourney": "Droga"
+      }
     },
     "login": {
       "title": "Witaj ponownie",
       "description": "Zaloguj się na swoje jedno konto SimpleFit — wszystkie przestrzenie robocze idą z Tobą.",
       "newHere": "Pierwszy raz tutaj?",
-      "join": "Dołącz do bokserskiej społeczności"
+      "join": "Dołącz do bokserskiej społeczności",
+      "orEmail": "lub e-mailem",
+      "emailSubmit": "Wyślij mi kod logowania",
+      "emailHint": "Wyślemy Ci 6-cyfrowy kod logowania. Bez hasła.",
+      "back": "Wstecz"
     },
     "google": {
       "continue": "Kontynuuj z Google",
@@ -107,7 +118,8 @@
         "network": "Brak połączenia z SimpleFit. Sprawdź połączenie i spróbuj ponownie.",
         "playServices": "Na tym urządzeniu brakuje Usług Google Play lub są nieaktualne.",
         "generic": "Coś poszło nie tak. Spróbuj ponownie."
-      }
+      },
+      "short": "Google"
     },
     "apple": {
       "continue": "Kontynuuj z Apple",
@@ -118,7 +130,8 @@
         "unavailable": "Logowanie przez Apple jest chwilowo niedostępne. Spróbuj później.",
         "network": "Brak połączenia z SimpleFit. Sprawdź połączenie i spróbuj ponownie.",
         "generic": "Coś poszło nie tak. Spróbuj ponownie."
-      }
+      },
+      "short": "Apple"
     },
     "session": {
       "checking": "Sprawdzamy sesję",
@@ -126,6 +139,76 @@
       "signedOut": "Nie jesteś zalogowany.",
       "signIn": "Zaloguj się",
       "signOut": "Wyloguj się"
+    },
+    "signup": {
+      "title": "Utwórz konto",
+      "description": "Jedno konto do treningu, trenowania i prowadzenia klubu. Dodawaj role w dowolnym momencie.",
+      "hint": "Wyślemy 6-cyfrowy kod, aby potwierdzić ten e-mail.",
+      "noPassword": "Bez hasła do zapamiętania. Wyślemy Ci 6-cyfrowy kod, aby potwierdzić ten adres.",
+      "submit": "Kontynuuj z e-mailem",
+      "or": "lub"
+    },
+    "email": {
+      "label": "E-mail",
+      "errors": {
+        "invalidEmail": "Wpisz poprawny adres e-mail.",
+        "rateLimited": "Zbyt wiele prób. Spróbuj za chwilę.",
+        "generic": "Coś poszło nie tak. Spróbuj ponownie."
+      }
+    },
+    "code": {
+      "label": "6-cyfrowy kod",
+      "didntGetIt": "Nie dotarł?",
+      "resendIn": "Wyślij ponownie za {time}",
+      "sendNewCode": "Wyślij nowy kod",
+      "resendUnavailable": "Ponowne wysłanie na razie niedostępne",
+      "neverShare": "Nigdy nie udostępniaj tego kodu. Pracownicy SimpleFit nigdy o niego nie poproszą.",
+      "openMail": "Otwórz Pocztę",
+      "cta": {
+        "continue": "Dalej",
+        "sendNewCode": "Wyślij nowy kod",
+        "tryAgain": "Spróbuj ponownie"
+      },
+      "signIn": {
+        "eyebrow": "Logowanie",
+        "title": "Wpisz kod logowania",
+        "description": "Jeśli istnieje konto SimpleFit dla <b>{email}</b>, 6-cyfrowy kod logowania jest już w drodze. Wygasa po 10 minutach.",
+        "wrongEmail": "Zły adres? <link>Użyj innego e-maila</link>",
+        "cta": {
+          "submit": "Zaloguj się",
+          "submitting": "Logowanie…"
+        },
+        "notices": {
+          "sent": "Kod wysłany. Wygasa po 10 minutach — sprawdź spam, jeśli go nie widzisz.",
+          "resent": "Wysłaliśmy nowy kod. Wygasa po 10 minutach.",
+          "invalid": "Ten kod jest nieprawidłowy. Sprawdź cyfry i spróbuj ponownie.",
+          "expired": "Ten kod wygasł. Wyślij nowy, aby się zalogować.",
+          "success": "Zalogowano.",
+          "throttled": "Zbyt wiele prób. Spróbuj za chwilę.",
+          "error": "Coś poszło nie tak. Spróbuj ponownie."
+        }
+      },
+      "registration": {
+        "title": "Potwierdź swój e-mail",
+        "description": "Wpisz 6-cyfrowy kod wysłany na <b>{email}</b>",
+        "cta": {
+          "submit": "Potwierdź",
+          "submitting": "Sprawdzanie…"
+        },
+        "preferSignIn": "Wolisz się zalogować? <link>Zaloguj się kodem</link>",
+        "notices": {
+          "resent": "Wysłaliśmy nowy kod. Wygasa po 10 minutach.",
+          "invalid": "Ten kod jest nieprawidłowy. Sprawdź cyfry i spróbuj ponownie.",
+          "expired": "Ten kod wygasł. Wyślij nowy, aby potwierdzić e-mail.",
+          "success": "E-mail potwierdzony na tym urządzeniu.",
+          "verified-elsewhere": "Ten e-mail został potwierdzony na innym urządzeniu. To urządzenie nie jest jeszcze zalogowane — wyślij nowy kod na {email}, aby kontynuować tutaj.",
+          "throttled": "Zbyt wiele prób. Spróbuj za chwilę.",
+          "error": "Coś poszło nie tak. Spróbuj ponownie."
+        },
+        "info": "Kody wygasają po 10 minutach. Możesz też potwierdzić linkiem z tej samej wiadomości — jeśli otworzysz go na innym urządzeniu, to urządzenie poprosi o nowy kod.",
+        "wrongAddress": "Zły adres? <link>Zmień e-mail</link>",
+        "haveAccount": "Masz już konto? <link>Zaloguj się</link>"
+      }
     }
   },
   "routes": {

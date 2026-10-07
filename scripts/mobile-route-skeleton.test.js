@@ -23,6 +23,9 @@ const REAL_SCREENS = [
   "mobile.root",
   "mobile.welcome",
   "mobile.login",
+  "mobile.login.code",
+  "mobile.signup",
+  "mobile.signup.verify",
   "mobile.app",
   "mobile.dev.design-system",
 ];
@@ -111,7 +114,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 5, catchAll: 1, placeholder: 134, deferred: 1 });
+    expect(counts).toEqual({ screen: 8, catchAll: 1, placeholder: 131, deferred: 1 });
     expect(routes).toHaveLength(141);
   });
 
@@ -254,8 +257,11 @@ describe("access composition (session part of SF-31 §6)", () => {
       .filter((route) => route.access.session !== "PUBLIC")
       .filter((route) => {
         const layout = shells.get(route.shell).production.file;
-        return !read(layout).includes(
-          `<SessionGate shell="${route.shell}" pending={<LaunchScreen />}>`,
+        const source = read(layout);
+        return !(
+          source.includes(`<SessionGate`) &&
+          source.includes(`shell="${route.shell}"`) &&
+          source.includes("pending={<LaunchScreen />}")
         );
       });
     expect(wrong.map((route) => route.id)).toEqual([]);
@@ -322,7 +328,9 @@ describe("copy", () => {
 describe("native authentication and app identity (regression)", () => {
   it("keeps Google and Apple sign-in on the welcome and sign-in screens", () => {
     const screens = read("src/widgets/auth-screens/ui/auth-screens.tsx");
-    expect(screens.match(/<GoogleSignInButton/g)).toHaveLength(2);
+    // A01 welcome and O01b / O02 (the compact side-by-side buttons, SF-24).
+    expect(screens.match(/<GoogleSignInButton/g)).toHaveLength(3);
+    // A01 and the shared iOS-only slot of O01b / O02.
     expect(screens.match(/<AppleSignInButton/g)).toHaveLength(2);
   });
 

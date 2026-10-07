@@ -85,16 +85,27 @@
   },
   "auth": {
     "welcome": {
-      "title": "Join the boxing community.",
+      "title": "Join the boxing <hl>community.</hl>",
       "description": "Train, coach, run your gym — or partner with the people who box. One account for every role.",
       "haveAccount": "Already training with us?",
-      "signIn": "Sign in"
+      "signIn": "Sign in",
+      "email": "Continue with Email",
+      "illustration": {
+        "round": "R3",
+        "labelRound": "Round",
+        "labelCamp": "Camp",
+        "labelJourney": "Journey"
+      }
     },
     "login": {
       "title": "Welcome back",
       "description": "Sign in to your one SimpleFit account — every workspace comes with you.",
       "newHere": "New here?",
-      "join": "Join the boxing community"
+      "join": "Join the boxing community",
+      "orEmail": "or email",
+      "emailSubmit": "Email me a sign-in code",
+      "emailHint": "We’ll email you a 6-digit sign-in code. No password needed.",
+      "back": "Back"
     },
     "google": {
       "continue": "Continue with Google",
@@ -107,7 +118,8 @@
         "network": "Can't reach SimpleFit. Check your connection and try again.",
         "playServices": "Google Play services are missing or out of date on this device.",
         "generic": "Something went wrong. Please try again."
-      }
+      },
+      "short": "Google"
     },
     "apple": {
       "continue": "Continue with Apple",
@@ -118,7 +130,8 @@
         "unavailable": "Apple sign-in is temporarily unavailable. Please try again later.",
         "network": "Can't reach SimpleFit. Check your connection and try again.",
         "generic": "Something went wrong. Please try again."
-      }
+      },
+      "short": "Apple"
     },
     "session": {
       "checking": "Checking your session",
@@ -126,6 +139,76 @@
       "signedOut": "You're not signed in.",
       "signIn": "Sign in",
       "signOut": "Sign out"
+    },
+    "signup": {
+      "title": "Create your account",
+      "description": "One account for training, coaching and running a gym. Add roles any time.",
+      "hint": "We’ll send a 6-digit code to verify this email.",
+      "noPassword": "No password to remember. We’ll email you a 6-digit code to verify this address.",
+      "submit": "Continue with email",
+      "or": "or"
+    },
+    "email": {
+      "label": "Email",
+      "errors": {
+        "invalidEmail": "Enter a valid email address.",
+        "rateLimited": "Too many attempts. Try again shortly.",
+        "generic": "Something went wrong. Try again."
+      }
+    },
+    "code": {
+      "label": "6-digit code",
+      "didntGetIt": "Didn’t get it?",
+      "resendIn": "Resend in {time}",
+      "sendNewCode": "Send a new code",
+      "resendUnavailable": "Resend unavailable for now",
+      "neverShare": "Never share this code. SimpleFit staff will never ask you for it.",
+      "openMail": "Open Mail app",
+      "cta": {
+        "continue": "Continue",
+        "sendNewCode": "Send a new code",
+        "tryAgain": "Try again"
+      },
+      "signIn": {
+        "eyebrow": "Sign in",
+        "title": "Enter your sign-in code",
+        "description": "If there’s a SimpleFit account for <b>{email}</b>, a 6-digit sign-in code is on its way. It expires in 10 minutes.",
+        "wrongEmail": "Wrong email? <link>Use a different email</link>",
+        "cta": {
+          "submit": "Sign in",
+          "submitting": "Signing in…"
+        },
+        "notices": {
+          "sent": "Code sent. It expires in 10 minutes — check spam if you don’t see it.",
+          "resent": "We sent a new code. It expires in 10 minutes.",
+          "invalid": "That code isn’t right. Check the digits and try again.",
+          "expired": "This code has expired. Send a new one to sign in.",
+          "success": "You’re signed in.",
+          "throttled": "Too many attempts. Try again shortly.",
+          "error": "Something went wrong. Try again."
+        }
+      },
+      "registration": {
+        "title": "Verify your email",
+        "description": "Enter the 6-digit code we sent to <b>{email}</b>",
+        "cta": {
+          "submit": "Verify",
+          "submitting": "Verifying…"
+        },
+        "preferSignIn": "Prefer to sign in? <link>Sign in with a code</link>",
+        "notices": {
+          "resent": "We sent a new code. It expires in 10 minutes.",
+          "invalid": "That code isn’t right. Check the digits and try again.",
+          "expired": "This code has expired. Send a new one to verify your email.",
+          "success": "Email verified on this device.",
+          "verified-elsewhere": "This email was verified from another device. This device isn’t signed in yet — send a new code to {email} to continue here.",
+          "throttled": "Too many attempts. Try again shortly.",
+          "error": "Something went wrong. Try again."
+        },
+        "info": "Codes expire in 10 minutes. You can also verify with the link in the same email — if you open it on another device, this device will ask for a new code.",
+        "wrongAddress": "Wrong address? <link>Change email</link>",
+        "haveAccount": "Already have an account? <link>Sign in</link>"
+      }
     }
   },
   "routes": {

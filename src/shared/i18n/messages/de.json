@@ -85,16 +85,27 @@
   },
   "auth": {
     "welcome": {
-      "title": "Werde Teil der Boxing-Community.",
+      "title": "Werde Teil der Box-<hl>Community.</hl>",
       "description": "Trainiere, coache, führe dein Gym — oder arbeite mit den Menschen zusammen, die boxen. Ein Konto für jede Rolle.",
       "haveAccount": "Du trainierst schon mit uns?",
-      "signIn": "Anmelden"
+      "signIn": "Anmelden",
+      "email": "Weiter mit E-Mail",
+      "illustration": {
+        "round": "R3",
+        "labelRound": "Runde",
+        "labelCamp": "Camp",
+        "labelJourney": "Weg"
+      }
     },
     "login": {
       "title": "Willkommen zurück",
       "description": "Melde dich bei deinem einen SimpleFit-Konto an – jeder Workspace kommt mit.",
       "newHere": "Neu hier?",
-      "join": "Werde Teil der Boxing-Community"
+      "join": "Werde Teil der Boxing-Community",
+      "orEmail": "oder per E-Mail",
+      "emailSubmit": "Anmeldecode per E-Mail senden",
+      "emailHint": "Wir senden dir einen 6-stelligen Anmeldecode. Kein Passwort nötig.",
+      "back": "Zurück"
     },
     "google": {
       "continue": "Weiter mit Google",
@@ -107,7 +118,8 @@
         "network": "SimpleFit ist nicht erreichbar. Prüfe deine Verbindung und versuche es erneut.",
         "playServices": "Die Google Play-Dienste fehlen auf diesem Gerät oder sind veraltet.",
         "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
-      }
+      },
+      "short": "Google"
     },
     "apple": {
       "continue": "Weiter mit Apple",
@@ -118,7 +130,8 @@
         "unavailable": "Die Anmeldung mit Apple ist vorübergehend nicht verfügbar. Bitte versuche es später erneut.",
         "network": "SimpleFit ist nicht erreichbar. Prüfe deine Verbindung und versuche es erneut.",
         "generic": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
-      }
+      },
+      "short": "Apple"
     },
     "session": {
       "checking": "Sitzung wird geprüft",
@@ -126,6 +139,76 @@
       "signedOut": "Du bist nicht angemeldet.",
       "signIn": "Anmelden",
       "signOut": "Abmelden"
+    },
+    "signup": {
+      "title": "Erstelle dein Konto",
+      "description": "Ein Konto für Training, Coaching und dein Gym. Rollen kannst du jederzeit hinzufügen.",
+      "hint": "Wir senden einen 6-stelligen Code, um diese E-Mail zu bestätigen.",
+      "noPassword": "Kein Passwort zum Merken. Wir senden dir einen 6-stelligen Code, um diese Adresse zu bestätigen.",
+      "submit": "Weiter mit E-Mail",
+      "or": "oder"
+    },
+    "email": {
+      "label": "E-Mail",
+      "errors": {
+        "invalidEmail": "Gib eine gültige E-Mail-Adresse ein.",
+        "rateLimited": "Zu viele Versuche. Versuch es gleich noch einmal.",
+        "generic": "Etwas ist schiefgelaufen. Versuch es noch einmal."
+      }
+    },
+    "code": {
+      "label": "6-stelliger Code",
+      "didntGetIt": "Nicht angekommen?",
+      "resendIn": "Erneut senden in {time}",
+      "sendNewCode": "Neuen Code senden",
+      "resendUnavailable": "Erneutes Senden gerade nicht möglich",
+      "neverShare": "Gib diesen Code niemals weiter. Das SimpleFit-Team fragt nie danach.",
+      "openMail": "Mail-App öffnen",
+      "cta": {
+        "continue": "Weiter",
+        "sendNewCode": "Neuen Code senden",
+        "tryAgain": "Erneut versuchen"
+      },
+      "signIn": {
+        "eyebrow": "Anmelden",
+        "title": "Gib deinen Anmeldecode ein",
+        "description": "Falls es ein SimpleFit-Konto für <b>{email}</b> gibt, ist ein 6-stelliger Anmeldecode unterwegs. Er läuft nach 10 Minuten ab.",
+        "wrongEmail": "Falsche E-Mail? <link>Andere E-Mail verwenden</link>",
+        "cta": {
+          "submit": "Anmelden",
+          "submitting": "Anmeldung läuft…"
+        },
+        "notices": {
+          "sent": "Code gesendet. Er läuft nach 10 Minuten ab — sieh auch im Spam nach.",
+          "resent": "Wir haben einen neuen Code gesendet. Er läuft nach 10 Minuten ab.",
+          "invalid": "Dieser Code stimmt nicht. Prüf die Ziffern und versuch es noch einmal.",
+          "expired": "Dieser Code ist abgelaufen. Fordere einen neuen an, um dich anzumelden.",
+          "success": "Du bist angemeldet.",
+          "throttled": "Zu viele Versuche. Versuch es gleich noch einmal.",
+          "error": "Etwas ist schiefgelaufen. Versuch es noch einmal."
+        }
+      },
+      "registration": {
+        "title": "Bestätige deine E-Mail",
+        "description": "Gib den 6-stelligen Code ein, den wir an <b>{email}</b> gesendet haben",
+        "cta": {
+          "submit": "Bestätigen",
+          "submitting": "Wird geprüft…"
+        },
+        "preferSignIn": "Lieber anmelden? <link>Mit Code anmelden</link>",
+        "notices": {
+          "resent": "Wir haben einen neuen Code gesendet. Er läuft nach 10 Minuten ab.",
+          "invalid": "Dieser Code stimmt nicht. Prüf die Ziffern und versuch es noch einmal.",
+          "expired": "Dieser Code ist abgelaufen. Fordere einen neuen an, um deine E-Mail zu bestätigen.",
+          "success": "E-Mail auf diesem Gerät bestätigt.",
+          "verified-elsewhere": "Diese E-Mail wurde auf einem anderen Gerät bestätigt. Dieses Gerät ist noch nicht angemeldet — sende einen neuen Code an {email}, um hier weiterzumachen.",
+          "throttled": "Zu viele Versuche. Versuch es gleich noch einmal.",
+          "error": "Etwas ist schiefgelaufen. Versuch es noch einmal."
+        },
+        "info": "Codes laufen nach 10 Minuten ab. Du kannst auch über den Link in derselben E-Mail bestätigen — öffnest du ihn auf einem anderen Gerät, fragt dieses Gerät nach einem neuen Code.",
+        "wrongAddress": "Falsche Adresse? <link>E-Mail ändern</link>",
+        "haveAccount": "Schon ein Konto? <link>Anmelden</link>"
+      }
     }
   },
   "routes": {

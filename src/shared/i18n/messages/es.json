@@ -85,16 +85,27 @@
   },
   "auth": {
     "welcome": {
-      "title": "Únete a la comunidad del boxeo.",
+      "title": "Únete a la <hl>comunidad</hl> del boxeo.",
       "description": "Entrena, dirige a tus boxeadores, gestiona tu gimnasio o colabora con quienes boxean. Una cuenta para cada rol.",
       "haveAccount": "¿Ya entrenas con nosotros?",
-      "signIn": "Iniciar sesión"
+      "signIn": "Iniciar sesión",
+      "email": "Continuar con correo",
+      "illustration": {
+        "round": "A3",
+        "labelRound": "Asalto",
+        "labelCamp": "Campamento",
+        "labelJourney": "Camino"
+      }
     },
     "login": {
       "title": "Hola de nuevo",
       "description": "Inicia sesión en tu única cuenta de SimpleFit: todos tus espacios de trabajo te acompañan.",
       "newHere": "¿Eres nuevo?",
-      "join": "Únete a la comunidad del boxeo"
+      "join": "Únete a la comunidad del boxeo",
+      "orEmail": "o con correo",
+      "emailSubmit": "Enviarme un código de acceso",
+      "emailHint": "Te enviaremos un código de acceso de 6 dígitos. Sin contraseña.",
+      "back": "Atrás"
     },
     "google": {
       "continue": "Continuar con Google",
@@ -107,7 +118,8 @@
         "network": "No se puede conectar con SimpleFit. Comprueba tu conexión e inténtalo de nuevo.",
         "playServices": "Los servicios de Google Play faltan o están desactualizados en este dispositivo.",
         "generic": "Algo ha salido mal. Inténtalo de nuevo."
-      }
+      },
+      "short": "Google"
     },
     "apple": {
       "continue": "Continuar con Apple",
@@ -118,7 +130,8 @@
         "unavailable": "El inicio de sesión con Apple no está disponible temporalmente. Inténtalo más tarde.",
         "network": "No se puede conectar con SimpleFit. Comprueba tu conexión e inténtalo de nuevo.",
         "generic": "Algo ha salido mal. Inténtalo de nuevo."
-      }
+      },
+      "short": "Apple"
     },
     "session": {
       "checking": "Comprobando tu sesión",
@@ -126,6 +139,76 @@
       "signedOut": "No has iniciado sesión.",
       "signIn": "Iniciar sesión",
       "signOut": "Cerrar sesión"
+    },
+    "signup": {
+      "title": "Crea tu cuenta",
+      "description": "Una cuenta para entrenar, dirigir y gestionar un gimnasio. Añade roles cuando quieras.",
+      "hint": "Te enviaremos un código de 6 dígitos para verificar este correo.",
+      "noPassword": "Sin contraseñas que recordar. Te enviaremos un código de 6 dígitos para verificar esta dirección.",
+      "submit": "Continuar con correo",
+      "or": "o"
+    },
+    "email": {
+      "label": "Correo electrónico",
+      "errors": {
+        "invalidEmail": "Introduce un correo electrónico válido.",
+        "rateLimited": "Demasiados intentos. Vuelve a intentarlo en un momento.",
+        "generic": "Algo ha salido mal. Inténtalo de nuevo."
+      }
+    },
+    "code": {
+      "label": "Código de 6 dígitos",
+      "didntGetIt": "¿No te ha llegado?",
+      "resendIn": "Reenviar en {time}",
+      "sendNewCode": "Enviar un código nuevo",
+      "resendUnavailable": "Reenvío no disponible por ahora",
+      "neverShare": "No compartas nunca este código. El equipo de SimpleFit nunca te lo pedirá.",
+      "openMail": "Abrir Mail",
+      "cta": {
+        "continue": "Continuar",
+        "sendNewCode": "Enviar un código nuevo",
+        "tryAgain": "Reintentar"
+      },
+      "signIn": {
+        "eyebrow": "Iniciar sesión",
+        "title": "Introduce tu código de acceso",
+        "description": "Si existe una cuenta de SimpleFit para <b>{email}</b>, un código de acceso de 6 dígitos va en camino. Caduca en 10 minutos.",
+        "wrongEmail": "¿Correo equivocado? <link>Usar otro correo</link>",
+        "cta": {
+          "submit": "Iniciar sesión",
+          "submitting": "Iniciando sesión…"
+        },
+        "notices": {
+          "sent": "Código enviado. Caduca en 10 minutos; revisa el spam si no lo ves.",
+          "resent": "Te hemos enviado un código nuevo. Caduca en 10 minutos.",
+          "invalid": "Ese código no es correcto. Revisa los dígitos e inténtalo de nuevo.",
+          "expired": "Este código ha caducado. Envía uno nuevo para iniciar sesión.",
+          "success": "Has iniciado sesión.",
+          "throttled": "Demasiados intentos. Vuelve a intentarlo en un momento.",
+          "error": "Algo ha salido mal. Inténtalo de nuevo."
+        }
+      },
+      "registration": {
+        "title": "Verifica tu correo",
+        "description": "Introduce el código de 6 dígitos que enviamos a <b>{email}</b>",
+        "cta": {
+          "submit": "Verificar",
+          "submitting": "Verificando…"
+        },
+        "preferSignIn": "¿Prefieres iniciar sesión? <link>Inicia sesión con un código</link>",
+        "notices": {
+          "resent": "Te hemos enviado un código nuevo. Caduca en 10 minutos.",
+          "invalid": "Ese código no es correcto. Revisa los dígitos e inténtalo de nuevo.",
+          "expired": "Este código ha caducado. Envía uno nuevo para verificar tu correo.",
+          "success": "Correo verificado en este dispositivo.",
+          "verified-elsewhere": "Este correo se verificó desde otro dispositivo. Este dispositivo aún no ha iniciado sesión: envía un código nuevo a {email} para continuar aquí.",
+          "throttled": "Demasiados intentos. Vuelve a intentarlo en un momento.",
+          "error": "Algo ha salido mal. Inténtalo de nuevo."
+        },
+        "info": "Los códigos caducan en 10 minutos. También puedes verificar con el enlace del mismo correo: si lo abres en otro dispositivo, este dispositivo te pedirá un código nuevo.",
+        "wrongAddress": "¿Dirección equivocada? <link>Cambiar correo</link>",
+        "haveAccount": "¿Ya tienes cuenta? <link>Inicia sesión</link>"
+      }
     }
   },
   "routes": {

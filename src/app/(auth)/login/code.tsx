@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { SignInCodeScreen } from "@/widgets/auth-screens";
 
-export default placeholderRoute("mobile.login.code");
+export default function SignInCodeRoute() {
+  return <SignInCodeScreen />;
+}
