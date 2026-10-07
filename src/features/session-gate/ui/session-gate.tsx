@@ -3,16 +3,17 @@ import type { ReactNode } from "react";
 import { View } from "react-native";
 import { useTranslations } from "use-intl";
 
-import { useSessionStatus } from "@/entities/session";
+import { useSession, type Session } from "@/entities/session";
 import {
   matchMobileRoute,
   mobileGuards,
-  routeHref,
   signInHref,
   type MobileRoute,
   type MobileShellId,
 } from "@/shared/routes/routes";
 import { Spinner } from "@/shared/ui/spinner";
+
+import { resolveEntry } from "../model/entry";
 
 /**
  * Session guard of a shell layout (route-architecture §9, rules 2 and 3).
@@ -21,8 +22,16 @@ import { Spinner } from "@/shared/ui/spinner";
  *
  * - PUBLIC: rendered for everyone;
  * - AUTHENTICATED: waits for the session restore, then sends signed-out
- *   visitors to the sign-in route with `returnTo`;
- * - GUEST_ONLY: sends signed-in users to the entry route.
+ *   visitors to the sign-in route with `returnTo` (when the screen is a valid
+ *   destination);
+ * - GUEST_ONLY: sends an authenticated viewer into the application: the
+ *   screen's valid `returnTo`, otherwise the entry `/` (`resolveEntry`). This
+ *   is the one place authentication navigates; the sign-in methods only
+ *   complete the session.
+ *
+ * While the session cannot be confirmed (network or server failure,
+ * `unavailable`) a gated screen shows the layout's `unavailable` view, which
+ * retries; a transient failure never counts as a sign-out.
  *
  * One shell can mix all three (welcome, consent and invite links share the
  * auth shell), so the rule comes from the route, never from the group or a
@@ -36,25 +45,27 @@ import { Spinner } from "@/shared/ui/spinner";
 export function SessionGate({
   shell,
   pending: pendingView,
+  unavailable: unavailableView,
   children,
 }: {
   shell: MobileShellId;
   /** What covers the shell while the session is restored (the layouts pass the LD1 launch screen, SF-34). */
   pending?: ReactNode;
+  /** What covers a gated screen while the session cannot be confirmed (the layouts pass SessionFailure, SF-24). */
+  unavailable?: ReactNode;
   children: ReactNode;
 }) {
-  const status = useSessionStatus();
+  const session = useSession();
+  const { status } = session;
   const pathname = usePathname();
   const params = useGlobalSearchParams();
   const t = useTranslations("auth.session");
   const route = matchMobileRoute(pathname);
 
-  const redirect = redirectFor(route, shell, status, pathname, params);
-  const pending =
-    route !== undefined &&
-    route.shell === shell &&
-    route.session !== "PUBLIC" &&
-    status === "loading";
+  const redirect = redirectFor(route, shell, session, pathname, params);
+  const gated = route !== undefined && route.shell === shell && route.session !== "PUBLIC";
+  const pending = gated && status === "loading";
+  const unavailable = gated && status === "unavailable" && unavailableView !== undefined;
 
   // The shell's navigator stays mounted while the session is checked:
   // replacing it with the pending view and back makes Expo Router rebuild the
@@ -64,8 +75,8 @@ export function SessionGate({
     <View className="flex-1">
       <View
         className="flex-1"
-        accessibilityElementsHidden={pending}
-        importantForAccessibility={pending ? "no-hide-descendants" : "auto"}
+        accessibilityElementsHidden={pending || unavailable}
+        importantForAccessibility={pending || unavailable ? "no-hide-descendants" : "auto"}
       >
         {children}
       </View>
@@ -78,6 +89,9 @@ export function SessionGate({
           )}
         </View>
       ) : null}
+      {unavailable ? (
+        <View className="absolute inset-0 bg-background">{unavailableView}</View>
+      ) : null}
       {redirect ? <Redirect href={redirect} /> : null}
     </View>
   );
@@ -87,7 +101,7 @@ export function SessionGate({
 function redirectFor(
   route: MobileRoute | undefined,
   shell: MobileShellId,
-  status: ReturnType<typeof useSessionStatus>,
+  { status, viewer }: Session,
   pathname: string,
   params: Record<string, string | string[] | undefined>,
 ): Href | undefined {
@@ -95,8 +109,8 @@ function redirectFor(
   if (route.session === "AUTHENTICATED" && status === "anonymous") {
     return signInHref(requestedPath(route, pathname, params));
   }
-  if (route.session === "GUEST_ONLY" && status === "authenticated") {
-    return routeHref(mobileGuards.entry);
+  if (route.session === "GUEST_ONLY" && status === "authenticated" && viewer !== undefined) {
+    return resolveEntry(viewer, params[mobileGuards.returnToParam]);
   }
   return undefined;
 }

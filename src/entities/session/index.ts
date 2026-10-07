@@ -1,8 +1,13 @@
 export {
+  callWithSession,
+  completeAuthentication,
   refresh,
   restoreSession,
+  SessionUnavailableError,
   signOut,
-  startSession,
+  useSession,
   useSessionStatus,
+  type Session,
   type SessionStatus,
+  type Viewer,
 } from "./model/session";

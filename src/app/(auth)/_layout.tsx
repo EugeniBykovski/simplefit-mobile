@@ -1,9 +1,8 @@
 import { Stack } from "expo-router";
-import { useTranslations } from "use-intl";
 
 import { SessionGate } from "@/features/session-gate";
 import { ShellStack } from "@/providers/shell-stack";
-import { LaunchScreen } from "@/widgets/system-states";
+import { LaunchScreen, SessionFailure } from "@/widgets/system-states";
 
 /**
  * mobile.auth: welcome, sign in and sign up, consent, role choice and invite
@@ -12,13 +11,15 @@ import { LaunchScreen } from "@/widgets/system-states";
  * choice) access; SessionGate applies each route's own rule.
  */
 export default function AuthLayout() {
-  const auth = useTranslations("auth");
-
   return (
-    <SessionGate shell="mobile.auth" pending={<LaunchScreen />}>
+    <SessionGate shell="mobile.auth" pending={<LaunchScreen />} unavailable={<SessionFailure />}>
       <ShellStack>
+        {/* The designed auth screens draw their own back button (SF-24). */}
         <Stack.Screen name="welcome" options={{ headerShown: false }} />
-        <Stack.Screen name="login" options={{ title: auth("welcome.signIn") }} />
+        <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="login/code" options={{ headerShown: false }} />
+        <Stack.Screen name="signup/index" options={{ headerShown: false }} />
+        <Stack.Screen name="signup/verify" options={{ headerShown: false }} />
       </ShellStack>
     </SessionGate>
   );

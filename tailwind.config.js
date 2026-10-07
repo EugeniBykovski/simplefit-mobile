@@ -94,6 +94,9 @@ module.exports = {
       "numeral-ko": ["92px", "84px"],
       "label-wide": ["11px", "14px"],
       "count-word": ["12px", "16px"],
+      // Authentication roles, mobile frame (typography.authRoles.mobile, SF-24).
+      "auth-hero": ["31px", "35px"],
+      "code-digit": ["24px", "28px"],
     },
     // Radius scale (docs/design-tokens.json): xs marks, sm badges, md compact
     // controls, lg fields, xl primary CTAs, 2xl compact cards, 3xl cards,
@@ -142,6 +145,7 @@ module.exports = {
         "numeral-ko": "-4.6px",
         "label-wide": "6.82px",
         "count-word": "3.6px",
+        "auth-hero": "-0.93px",
       },
       // Spacing steps the default scale lacks (docs/design-tokens.json spacing).
       spacing: { 4.5: "18px", 5.5: "22px" },

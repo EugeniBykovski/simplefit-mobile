@@ -46,6 +46,21 @@ async function pressContinue() {
   await userEvent.press(screen.getByRole("button", { name: "Continue with Google" }));
 }
 
+/** The provider exchange answers with `exchange`; `GET /api/me` with the viewer (SF-24 pipeline). */
+const providerThenViewer = (exchange: Response) =>
+  jest.fn((url: string) =>
+    Promise.resolve(
+      url.endsWith("/api/me")
+        ? jsonResponse({
+            user: {
+              id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+              created_at: "2026-10-01T10:00:00Z",
+            },
+          })
+        : exchange,
+    ),
+  );
+
 describe("GoogleSignInButton", () => {
   beforeEach(() => {
     resetGoogleSignInForTests();
@@ -54,9 +69,9 @@ describe("GoogleSignInButton", () => {
   });
 
   it.each(["created", "existing"] as const)(
-    "exchanges the ID token for a body session and enters the app (%s account)",
+    "exchanges the ID token for a body session and completes the shared session pipeline (%s account)",
     async (account) => {
-      const fetchMock = mockFetch(jest.fn().mockResolvedValue(session(account)));
+      const fetchMock = mockFetch(providerThenViewer(session(account)));
       const log = jest.spyOn(console, "log");
 
       await renderWithProviders(<GoogleSignInButton />);
@@ -74,7 +89,11 @@ describe("GoogleSignInButton", () => {
         id_token: ID_TOKEN,
         refresh_token_transport: "body",
       });
-      expect(mockReplace).toHaveBeenCalledWith("/");
+      // The shared pipeline resolved the viewer; navigation belongs to the gate.
+      expect(fetchMock.mock.calls.map(([called]) => String(called))).toContain(
+        "http://api.test/api/me",
+      );
+      expect(mockReplace).not.toHaveBeenCalled();
 
       // Only the SimpleFit refresh token is persisted, in SecureStore.
       const secure = jest.requireMock<{ __store: Map<string, string> }>(
@@ -171,7 +190,7 @@ describe("GoogleSignInButton", () => {
   it("checks Google Play services on Android", async () => {
     const os = Platform.OS;
     Platform.OS = "android";
-    mockFetch(jest.fn().mockResolvedValue(session("existing")));
+    mockFetch(providerThenViewer(session("existing")));
 
     try {
       await renderWithProviders(<GoogleSignInButton />);

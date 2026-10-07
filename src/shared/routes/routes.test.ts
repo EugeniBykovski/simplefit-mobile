@@ -1,5 +1,13 @@
 import { mobileRoutes, mobileShells } from "./mobile-routes";
-import { isTabRoute, matchMobileRoute, mobileGuards, routeHref, signInHref } from "./routes";
+import {
+  isTabRoute,
+  matchMobileRoute,
+  mobileGuards,
+  routeHref,
+  sanitizeReturnTo,
+  signInHref,
+  withReturnTo,
+} from "./routes";
 
 describe("routeHref", () => {
   it("resolves static routes to their canonical path", () => {
@@ -90,5 +98,54 @@ describe("signInHref", () => {
     expect(signInHref("/camp/weight?tab=week")).toBe(
       "/login?returnTo=%2Fcamp%2Fweight%3Ftab%3Dweek",
     );
+  });
+});
+
+describe("sanitizeReturnTo (SF-24 policy, same as web)", () => {
+  it.each([
+    ["/camp/weight?tab=week", "/camp/weight?tab=week"],
+    ["/workspaces", "/workspaces"],
+    ["/camp/weight#top", "/camp/weight"],
+    ["/", "/"],
+  ])("keeps %s as %s", (input, expected) => {
+    expect(sanitizeReturnTo(input)).toBe(expected);
+  });
+
+  it.each([
+    ["absolute URL", "https://evil.example/camp"],
+    ["app scheme", "simplefit://camp/weight"],
+    ["protocol-relative", "//evil.example"],
+    ["backslash host", "/\\evil.example"],
+    ["javascript:", "javascript:alert(1)"],
+    ["relative", "camp/weight"],
+    ["leading space", " /camp/weight"],
+    ["newline", "/camp\n"],
+    ["NUL", "/camp\u0000"],
+    ["encoded slashes are no route", "/%2F%2Fevil.example"],
+    ["unknown", "/definitely-not-a-route"],
+    ["too long", `/camp?q=${"a".repeat(2100)}`],
+    ["welcome", "/welcome"],
+    ["sign-in", "/login"],
+    ["sign-in code", "/login/code"],
+    ["sign-up verify", "/signup/verify"],
+    ["dot segments into sign-in", "/camp/../login"],
+    ["consent (onboarding)", "/signup/consent"],
+    ["role (onboarding)", "/onboarding/role"],
+    ["suspended", "/account/suspended"],
+    ["pending deletion", "/account/pending-deletion"],
+  ])("rejects %s", (_name, input) => {
+    expect(sanitizeReturnTo(input)).toBeUndefined();
+  });
+
+  it.each([undefined, null, 1, ["/camp"]])("rejects non-string %p", (input) => {
+    expect(sanitizeReturnTo(input)).toBeUndefined();
+  });
+
+  it("carries only a valid returnTo between auth routes", () => {
+    expect(withReturnTo("mobile.login.code", "/camp/weight")).toBe(
+      "/login/code?returnTo=%2Fcamp%2Fweight",
+    );
+    expect(withReturnTo("mobile.login.code", "//evil.example")).toBe("/login/code");
+    expect(signInHref("/onboarding/role")).toBe("/login");
   });
 });

@@ -59,6 +59,21 @@ async function pressContinue() {
   await userEvent.press(await screen.findByRole("button", { name: "Continue with Apple" }));
 }
 
+/** The provider exchange answers with `exchange`; `GET /api/me` with the viewer (SF-24 pipeline). */
+const providerThenViewer = (exchange: Response) =>
+  jest.fn((url: string) =>
+    Promise.resolve(
+      url.endsWith("/api/me")
+        ? jsonResponse({
+            user: {
+              id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+              created_at: "2026-10-01T10:00:00Z",
+            },
+          })
+        : exchange,
+    ),
+  );
+
 describe("AppleSignInButton", () => {
   beforeEach(() => {
     available.mockResolvedValue(true);
@@ -66,15 +81,20 @@ describe("AppleSignInButton", () => {
   });
 
   it.each(["created", "existing"] as const)(
-    "sends only the identity token and raw nonce, then enters the app (%s account)",
+    "sends only the identity token and raw nonce, then completes the shared session pipeline (%s account)",
     async (account) => {
-      const fetchMock = mockFetch(jest.fn().mockResolvedValue(session(account)));
+      const fetchMock = mockFetch(providerThenViewer(session(account)));
       const log = jest.spyOn(console, "log");
 
       await renderButton();
       await pressContinue();
 
-      await waitFor(() => expect(mockReplace).toHaveBeenCalledWith("/"));
+      await waitFor(() =>
+        expect(fetchMock.mock.calls.map(([called]) => String(called))).toContain(
+          "http://api.test/api/me",
+        ),
+      );
+      expect(mockReplace).not.toHaveBeenCalled();
       const [options] = signIn.mock.calls[0] as [{ requestedScopes: unknown[]; nonce: string }];
       expect(options.requestedScopes).toEqual([]);
 

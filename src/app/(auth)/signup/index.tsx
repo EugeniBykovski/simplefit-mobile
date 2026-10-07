@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { SignUpScreen } from "@/widgets/auth-screens";
 
-export default placeholderRoute("mobile.signup");
+export default function SignUpRoute() {
+  return <SignUpScreen />;
+}

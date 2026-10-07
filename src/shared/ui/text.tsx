@@ -35,6 +35,9 @@ const variants = {
     classes: "text-label-wide uppercase tracking-label-wide",
   },
   countWord: { family: "font-mono", classes: "text-count-word uppercase tracking-count-word" },
+  // Authentication roles (SF-24): A01 hero and the code-entry digits only.
+  authHero: { family: "font-display", classes: "text-auth-hero tracking-auth-hero" },
+  codeDigit: { family: "font-display-bold", classes: "text-code-digit" },
 } as const;
 
 /** Manrope weights of the contract above the role's regular 400. */
@@ -79,7 +82,7 @@ export type TextProps = RNTextProps & {
   weight?: TextWeight;
 };
 
-const headers: readonly TextVariant[] = ["display", "h1", "h2", "h3", "hero"];
+const headers: readonly TextVariant[] = ["display", "h1", "h2", "h3", "hero", "authHero"];
 
 /** Font family class for a role, raised to the requested Manrope weight. */
 export function textFamily(variant: TextVariant, weight?: TextWeight): string {

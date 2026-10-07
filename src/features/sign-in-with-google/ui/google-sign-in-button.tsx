@@ -1,9 +1,8 @@
-import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Platform, View } from "react-native";
 import { useTranslations } from "use-intl";
 
-import { startSession } from "@/entities/session";
+import { completeAuthentication } from "@/entities/session";
 import { authenticateWithGoogle } from "@/shared/api/generated/endpoints/auth/auth";
 import { isApiError } from "@/shared/api/http/api-error";
 import {
@@ -12,7 +11,6 @@ import {
   googleSignInModule,
   type GoogleSignInModule,
 } from "@/shared/lib/google-sign-in";
-import { mobileGuards, routeHref } from "@/shared/routes/routes";
 import { Button, type ButtonVariant } from "@/shared/ui/button";
 import { Text } from "@/shared/ui/text";
 
@@ -24,13 +22,21 @@ type Failure = "rejected" | "rateLimited" | "unavailable" | "network" | "playSer
  * The native Google Sign-In sheet returns a Google ID token, which is
  * exchanged once at `POST /api/auth/google` (body transport) for a SimpleFit
  * session and then dropped: never stored, logged or sent anywhere else.
- * Cancelling the sheet is not an error. Both a new and an existing account
- * continue to `/`, the ENTRY route that resolves the destination
- * (route-architecture §9); no role is inferred here.
+ * Cancelling the sheet is not an error. The session goes through
+ * `completeAuthentication`, the pipeline shared with Apple and the email code
+ * (SF-24); the guest-only gate then enters the application (a valid
+ * `returnTo`, otherwise `/`). A new and an existing account are treated
+ * alike; no role is inferred here.
  */
-export function GoogleSignInButton({ variant = "primary" }: { variant?: ButtonVariant }) {
+export function GoogleSignInButton({
+  variant = "primary",
+  compact = false,
+}: {
+  variant?: ButtonVariant;
+  /** O01b / O02: the 50 pt side-by-side button labelled "Google". */
+  compact?: boolean;
+}) {
   const t = useTranslations("auth.google");
-  const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState<Failure | undefined>();
 
@@ -62,8 +68,8 @@ export function GoogleSignInButton({ variant = "primary" }: { variant?: ButtonVa
         id_token: idToken,
         refresh_token_transport: "body",
       });
-      await startSession(session);
-      router.replace(routeHref(mobileGuards.entry));
+      // The shared pipeline (SF-24): the guest-only gate then enters the app.
+      if ((await completeAuthentication(session)) === "anonymous") setFailure("generic");
     } catch (error) {
       const result = failureOf(error, google);
       if (result !== undefined) setFailure(result);
@@ -75,9 +81,9 @@ export function GoogleSignInButton({ variant = "primary" }: { variant?: ButtonVa
   return (
     <View className="gap-3">
       <Button
-        label={t("continue")}
+        label={compact ? t("short") : t("continue")}
         variant={variant}
-        size="lg"
+        size={compact ? "md" : "lg"}
         loading={busy}
         accessibilityHint={busy ? t("exchanging") : undefined}
         onPress={() => void signIn()}

@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { VerifyEmailScreen } from "@/widgets/auth-screens";
 
-export default placeholderRoute("mobile.signup.verify");
+export default function VerifyEmailRoute() {
+  return <VerifyEmailScreen />;
+}

@@ -33,7 +33,11 @@ describe("mobile system states", () => {
       (file) => file.endsWith("_layout.tsx") && code(file).includes("<SessionGate"),
     );
     expect(layouts).toHaveLength(6);
-    for (const file of layouts) expect(code(file)).toContain("pending={<LaunchScreen />}");
+    for (const file of layouts) {
+      expect(code(file)).toContain("pending={<LaunchScreen />}");
+      // SF-24: a network or server failure shows the retryable failure state, never a sign-out.
+      expect(code(file)).toContain("unavailable={<SessionFailure />}");
+    }
   });
 
   it("LD2 is not wired to any boundary until home loads real data", () => {

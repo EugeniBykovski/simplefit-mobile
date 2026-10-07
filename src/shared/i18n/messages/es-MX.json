@@ -34,6 +34,33 @@
     },
     "session": {
       "checking": "Verificando tu sesión"
+    },
+    "email": {
+      "errors": {
+        "invalidEmail": "Ingresa un correo electrónico válido.",
+        "rateLimited": "Demasiados intentos. Vuelve a intentarlo en un momento.",
+        "generic": "Algo salió mal. Inténtalo de nuevo."
+      }
+    },
+    "code": {
+      "didntGetIt": "¿No te llegó?",
+      "signIn": {
+        "title": "Ingresa tu código de acceso",
+        "notices": {
+          "resent": "Te enviamos un código nuevo. Caduca en 10 minutos.",
+          "error": "Algo salió mal. Inténtalo de nuevo."
+        }
+      },
+      "registration": {
+        "description": "Ingresa el código de 6 dígitos que enviamos a <b>{email}</b>",
+        "notices": {
+          "resent": "Te enviamos un código nuevo. Caduca en 10 minutos.",
+          "error": "Algo salió mal. Inténtalo de nuevo."
+        }
+      }
+    },
+    "signup": {
+      "description": "Una cuenta para entrenar, dirigir y administrar un gimnasio. Agrega roles cuando quieras."
     }
   },
   "routes": {

@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import { router } from "expo-router";
 import { act, fireEvent, renderRouter, screen, waitFor } from "expo-router/testing-library";
 
-import { startSession } from "@/entities/session";
+import { completeAuthentication } from "@/entities/session";
+import { pending } from "@/features/email-auth/model/pending";
 import { resetSessionForTests } from "@/entities/session/model/session";
 import { setSecureItem } from "@/shared/storage/secure-storage";
 import { jsonResponse, mockFetch } from "@/test/render";
@@ -48,8 +49,20 @@ async function renderApp(url: string) {
   };
 }
 
+/** A signed-in viewer, through the same pipeline every sign-in method uses (SF-24). */
 async function signIn() {
-  await startSession({ access_token: "test-access", refresh_token: "test-refresh" });
+  mockFetch(
+    jest.fn().mockResolvedValue(
+      jsonResponse({
+        user: { id: "8a6e0804-2bd0-4672-b79d-d97027f9071b", created_at: "2026-10-01T10:00:00Z" },
+      }),
+    ),
+  );
+  await completeAuthentication({
+    access_token: "test-access",
+    access_token_expires_at: "2099-01-01T00:00:00Z",
+    refresh_token: "test-refresh",
+  });
 }
 
 /** A representative URL: every parameter gets a sample opaque id. */
@@ -76,6 +89,17 @@ describe("canonical routes resolve", () => {
     "%s renders its own screen at its canonical path",
     async (_id, route) => {
       if (route.session === "AUTHENTICATED") await signIn();
+      // The code screens need the pending email flow of the step before them (SF-24).
+      if (route.id === "mobile.login.code") {
+        pending.set("signIn", { email: "fighter@example.com", resendAt: Date.now() + 60_000 });
+      }
+      if (route.id === "mobile.signup.verify") {
+        pending.set("registration", {
+          email: "fighter@example.com",
+          registrationToken: "sfg_test",
+          resendAt: Date.now() + 60_000,
+        });
+      }
       const url = sampleUrl(route);
       const result = await renderApp(url);
 
@@ -125,7 +149,7 @@ describe("session access (UX only)", () => {
     const result = await renderApp("/camp/weight");
     await waitFor(() => expect(result.getPathname()).toBe("/login"));
     expect(result.getSearchParams()).toEqual({ returnTo: "/camp/weight" });
-    expect(await screen.findByRole("button", { name: "Continue with Google" })).toBeOnTheScreen();
+    expect(await screen.findByRole("button", { name: "Google" })).toBeOnTheScreen();
   });
 
   it("keeps the requested query in returnTo, without the route's own parameters", async () => {
@@ -138,6 +162,35 @@ describe("session access (UX only)", () => {
     await signIn();
     const result = await renderApp("/welcome");
     await waitFor(() => expect(result.getPathname()).toBe("/"));
+  });
+
+  it("enters a valid returnTo once the viewer is authenticated (SF-24)", async () => {
+    await signIn();
+    const result = await renderApp("/login?returnTo=%2Fcamp%2Fweight");
+    await waitFor(() => expect(result.getPathname()).toBe("/camp/weight"));
+  });
+
+  it.each(["//evil.example", "/onboarding/role", "/login", "simplefit://camp"])(
+    "ignores the unsafe returnTo %s and enters /",
+    async (returnTo) => {
+      await signIn();
+      const result = await renderApp(`/login?returnTo=${encodeURIComponent(returnTo)}`);
+      await waitFor(() => expect(result.getPathname()).toBe("/"));
+    },
+  );
+
+  it("does not add returnTo for a screen sign-in cannot lead to (onboarding)", async () => {
+    const result = await renderApp("/onboarding/role");
+    await waitFor(() => expect(result.getPathname()).toBe("/login"));
+    expect(result.getSearchParams()).toEqual({});
+  });
+
+  it("shows the retryable failure state, not sign-in, when the restore fails offline", async () => {
+    await setSecureItem("simplefit.session.refresh_token", "stored-refresh");
+    mockFetch(jest.fn().mockRejectedValue(new TypeError("Network request failed")));
+    const result = await renderApp("/camp/weight");
+    expect(await screen.findByRole("button", { name: "Try again" })).toBeOnTheScreen();
+    expect(result.getPathname()).toBe("/camp/weight");
   });
 
   it("lets everyone open public routes in gated shells", async () => {
@@ -259,7 +312,22 @@ describe("system states (SF-34)", () => {
   it("covers a gated route with the LD1 launch screen while the session is restored, in the same navigator", async () => {
     await setSecureItem("simplefit.session.refresh_token", "stored-refresh");
     let respond: (response: Response) => void = () => {};
-    mockFetch(jest.fn(() => new Promise<Response>((resolve) => (respond = resolve))));
+    // The refresh waits for the test; GET /api/me then resolves the viewer (SF-24).
+    mockFetch(
+      jest
+        .fn()
+        .mockImplementationOnce(() => new Promise<Response>((resolve) => (respond = resolve)))
+        .mockImplementation(() =>
+          Promise.resolve(
+            jsonResponse({
+              user: {
+                id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                created_at: "2026-10-01T10:00:00Z",
+              },
+            }),
+          ),
+        ),
+    );
 
     const result = await renderApp("/home");
     expect(await screen.findByLabelText("Loading SimpleFit")).toBeOnTheScreen();
@@ -269,6 +337,7 @@ describe("system states (SF-34)", () => {
       respond(
         jsonResponse({
           access_token: "fresh-access",
+          access_token_expires_at: "2099-01-01T00:00:00Z",
           refresh_token: "fresh-refresh",
           token_type: "Bearer",
           expires_in: 900,

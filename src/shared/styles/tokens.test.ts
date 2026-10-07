@@ -99,8 +99,12 @@ describe("design tokens", () => {
 describe("scales", () => {
   const { theme } = tailwindConfig;
 
-  // Product roles plus the mobile system-state roles (SF-34).
-  const roles = { ...spec.typography.roles, ...spec.typography.systemRoles.mobile };
+  // Product roles plus the mobile system-state (SF-34) and authentication (SF-24) roles.
+  const roles = {
+    ...spec.typography.roles,
+    ...spec.typography.systemRoles.mobile,
+    ...spec.typography.authRoles.mobile,
+  };
 
   it("replaces the type scale with exactly the contract's roles", () => {
     const expected = Object.fromEntries(

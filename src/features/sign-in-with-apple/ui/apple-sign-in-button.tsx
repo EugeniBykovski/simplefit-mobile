@@ -1,9 +1,8 @@
-import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { useTranslations } from "use-intl";
 
-import { startSession } from "@/entities/session";
+import { completeAuthentication } from "@/entities/session";
 import { authenticateWithApple } from "@/shared/api/generated/endpoints/auth/auth";
 import { isApiError } from "@/shared/api/http/api-error";
 import {
@@ -12,7 +11,6 @@ import {
   appleNonce,
   appleSignInAvailable,
 } from "@/shared/lib/apple-sign-in";
-import { mobileGuards, routeHref } from "@/shared/routes/routes";
 import { Button, type ButtonVariant } from "@/shared/ui/button";
 import { Text } from "@/shared/ui/text";
 
@@ -27,10 +25,18 @@ type Failure = "rejected" | "rateLimited" | "unavailable" | "network" | "generic
  * exchanged once at `POST /api/auth/apple` (body transport) for a SimpleFit
  * session and then dropped. No scopes are requested and nothing but the
  * token and nonce is sent (no authorization code, name, email or user id).
- * Cancelling is silent. Both a new and an existing account continue to `/`,
- * the ENTRY route (route-architecture §9), like Google.
+ * Cancelling is silent. The session goes through `completeAuthentication`,
+ * the pipeline shared with Google and the email code (SF-24); the guest-only
+ * gate then enters the application. No role is inferred here.
  */
-export function AppleSignInButton({ variant = "secondary" }: { variant?: ButtonVariant }) {
+export function AppleSignInButton({
+  variant = "secondary",
+  compact = false,
+}: {
+  variant?: ButtonVariant;
+  /** O01b / O02: the 50 pt side-by-side button labelled "Apple". */
+  compact?: boolean;
+}) {
   const [available, setAvailable] = useState(false);
 
   useEffect(() => {
@@ -43,12 +49,11 @@ export function AppleSignInButton({ variant = "secondary" }: { variant?: ButtonV
     };
   }, []);
 
-  return available ? <AppleButton variant={variant} /> : null;
+  return available ? <AppleButton variant={variant} compact={compact} /> : null;
 }
 
-function AppleButton({ variant }: { variant: ButtonVariant }) {
+function AppleButton({ variant, compact }: { variant: ButtonVariant; compact: boolean }) {
   const t = useTranslations("auth.apple");
-  const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState<Failure | undefined>();
   // Guards against a second press before React re-renders the busy state.
@@ -75,8 +80,8 @@ function AppleButton({ variant }: { variant: ButtonVariant }) {
         nonce: nonce.raw,
         refresh_token_transport: "body",
       });
-      await startSession(session);
-      router.replace(routeHref(mobileGuards.entry));
+      // The shared pipeline (SF-24): the guest-only gate then enters the app.
+      if ((await completeAuthentication(session)) === "anonymous") setFailure("generic");
     } catch (error) {
       const result = failureOf(error);
       if (result !== undefined) setFailure(result);
@@ -89,9 +94,9 @@ function AppleButton({ variant }: { variant: ButtonVariant }) {
   return (
     <View className="gap-3">
       <Button
-        label={t("continue")}
+        label={compact ? t("short") : t("continue")}
         variant={variant}
-        size="lg"
+        size={compact ? "md" : "lg"}
         loading={busy}
         accessibilityHint={busy ? t("exchanging") : undefined}
         onPress={() => void signIn()}
