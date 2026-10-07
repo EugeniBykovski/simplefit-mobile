@@ -12,9 +12,31 @@
     "backToHome": "Retour à l’accueil"
   },
   "errors": {
-    "notFound": {
-      "title": "Écran introuvable",
-      "description": "Cet écran n’existe pas."
+    "states": {
+      "unexpected": {
+        "tag": "Erreur",
+        "title": "Un problème est survenu",
+        "description": "Un problème est survenu de notre côté. Rien de ce que vous avez enregistré n’est perdu.",
+        "action": "Réessayer"
+      },
+      "offline": {
+        "tag": "Hors ligne",
+        "title": "Vous êtes hors ligne",
+        "description": "Vérifiez votre connexion. Nous rechargerons cette page dès votre retour en ligne.",
+        "action": "Réessayer"
+      },
+      "forbidden": {
+        "tag": "Accès refusé",
+        "title": "Vous n’avez pas accès",
+        "description": "Cette page appartient à un compte ou un espace de travail dont vous ne faites pas partie.",
+        "action": "Retour à l’accueil"
+      },
+      "unavailable": {
+        "tag": "Service indisponible",
+        "title": "SimpleFit reprend son souffle",
+        "description": "Le service est temporairement indisponible. Réessayez dans quelques minutes.",
+        "action": "Réessayer"
+      }
     }
   },
   "home": {
@@ -273,6 +295,58 @@
       "badge": "Prévu",
       "description": "Cet écran fait partie de l’application SimpleFit et arrivera avec sa fonctionnalité. Rien n’y fonctionne encore.",
       "route": "Route"
+    }
+  },
+  "system": {
+    "launch": {
+      "label": "Chargement de SimpleFit",
+      "status": "On bande les mains…",
+      "tipLabel": "Conseil du coin",
+      "tip": "Expirez à chaque coup : le gainage reste ferme et le menton baissé.",
+      "version": "v{version}"
+    },
+    "notFound": {
+      "refCount": "Compte de l’arbitre",
+      "count": {
+        "kicker": "Erreur 404 · Round introuvable",
+        "title": "Cette page est au tapis.",
+        "description": "Le lien est ancien ou la page a bougé. Relevez-vous avant dix et on vous remet dans le combat.",
+        "beat": "Se relever avant dix",
+        "home": "Retour à l’accueil"
+      },
+      "ko": {
+        "kicker": "Erreur 404 · K.-O.",
+        "title": "K.-O. Cette page ne s’est pas relevée.",
+        "description": "Elle a peut-être été supprimée ou rendue privée. Vos rounds, votre tableau et vos paiements sont en sécurité.",
+        "tag": "K.-O. · Page introuvable",
+        "corner": "Retour à mon coin",
+        "again": "Recompter"
+      },
+      "saved": {
+        "kicker": "De nouveau debout",
+        "title": "Sauvé par le gong.",
+        "description": "Bons réflexes. Choisissez la suite : votre coin vous attend.",
+        "tag": "Debout à {count} · Sauvé par le gong",
+        "corner": "Retour à mon coin",
+        "search": "Rechercher"
+      },
+      "words": {
+        "1": "Un",
+        "2": "Deux",
+        "3": "Trois",
+        "4": "Quatre",
+        "5": "Cinq",
+        "6": "Six",
+        "7": "Sept",
+        "8": "Huit",
+        "9": "Neuf",
+        "10": "Dix"
+      },
+      "errorCode": "Erreur 404",
+      "back": "Retour",
+      "help": "Aide",
+      "report": "Signaler un lien cassé",
+      "pathNotFound": "{path} · introuvable"
     }
   }
 }

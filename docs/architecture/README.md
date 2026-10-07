@@ -209,6 +209,32 @@ Extension points, implemented by their tickets: auth header injection in
 header. SF-22 adds no authenticated product calls, so the session layer below
 does not hook into the transport yet.
 
+## System states (SF-34)
+
+Production loading, not-found and error states (`widgets/system-states`,
+Claude Design section 35), each owned by a real boundary:
+
+| State                       | Boundary                                                    | Real trigger                                        |
+| --------------------------- | ----------------------------------------------------------- | --------------------------------------------------- |
+| LD1 launch (`LaunchScreen`) | `SessionGate`'s `pending` cover in every gated shell layout | the session restore on a gated route (cold start)   |
+| ER1 404 (`NotFoundState`)   | `src/app/+not-found.tsx`                                    | an unknown or deferred path, an unrecognised link   |
+| Failure (`FailureView`)     | the root layout's `ErrorBoundary` (with its own providers)  | a render error; `failureFor` reads only kind/status |
+
+- Fonts and the locale preference stay on the native splash (background
+  colour only; a splash image would be a native build input). LD1 covers a
+  gated shell's navigator while the session is restored; the navigator stays
+  mounted under it (the SF-33 rule), and nothing waits a minimum time.
+- Progress is indeterminate; the footer shows only the real app version.
+- **LD2 (home loading) is not wired.** Home has no data owner yet, so only
+  its primitives exist (`Skeleton` `motion="shimmer"` / `tone="accent"`,
+  `LoadingBar`, `LoadingPill`); the home feature ticket composes them when
+  home loads real data.
+- ER1's actions are registry routes only: home is the entry `/` (never
+  fighter-only `/home`), help and "Report a broken link" open
+  `/settings/help`, search opens `/search`; the referee count is local state.
+- Failure states never render an error's message or details; a 401 is a
+  return to sign-in with `returnTo`, not a screen.
+
 ## Session (SF-22)
 
 `entities/session` holds the SimpleFit session (simplefit-api ADR 0010, body
@@ -444,7 +470,10 @@ needs it; keep labels as props (no copy in primitives); add it to the gallery.
 - react-native-gesture-handler, Reanimated 4 and worklets are installed and
   configured at the root (babel-preset-expo handles the worklets plugin), so
   sheets, swipes and gesture-driven training controls need no root changes.
-  No decorative animation in SF-12.
+  No decorative animation in product UI. The SF-34 system states animate
+  with React Native's `Animated` (`shared/lib/loop.ts`, native driver for
+  transforms and opacity) and rest static when the system reduces motion
+  (`shared/lib/reduced-motion.ts`).
 - **FlashList (2.x)** is the planned standard for large lists (feeds,
   histories, rosters, messages). It is compatible with SDK 57 (JS-only on the
   New Architecture) but deferred until the first real list exists.

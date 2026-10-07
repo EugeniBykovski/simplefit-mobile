@@ -19,6 +19,8 @@ module.exports = {
   // Lucide's "react-native" export is .mjs, which Jest does not transform;
   // tests use the package's CommonJS build of the same icons.
   moduleNameMapper: {
+    // NativeWind's global stylesheet is compiled by Metro, not Jest.
+    "\\.css$": "<rootDir>/src/test/style-stub.js",
     "^lucide-react-native$":
       "<rootDir>/node_modules/lucide-react-native/dist/cjs/lucide-react-native.js",
   },

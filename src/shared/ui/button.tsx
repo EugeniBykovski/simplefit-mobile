@@ -7,8 +7,15 @@ import { Icon, type LucideIcon } from "./icon";
 import { Text, type TextColor } from "./text";
 
 export type ButtonVariant =
-  "primary" | "secondary" | "quiet" | "outline" | "ghost" | "destructive" | "destructiveSubtle";
-export type ButtonSize = "sm" | "md" | "lg" | "gym";
+  | "primary"
+  | "secondary"
+  | "quiet"
+  | "outline"
+  | "ghost"
+  | "destructive"
+  | "destructiveSubtle"
+  | "warning";
+export type ButtonSize = "sm" | "md" | "lg" | "gym" | "system";
 
 export type ButtonProps = {
   /** Visible text and accessible name. */
@@ -46,6 +53,8 @@ const variants: Record<
     container: "bg-destructive-subtle border-destructive-border",
     text: "destructiveSubtleForeground",
   },
+  // Amber action of warning-tone system states (Claude Design "System states" sheet, SF-34).
+  warning: { container: "bg-warning border-warning", text: "warningForeground" },
 };
 
 /*
@@ -59,10 +68,12 @@ const sizes: Record<ButtonSize, { container: string; textVariant: "bodySm" | "bo
     md: { container: "min-h-button-md rounded-xl px-4.5", textVariant: "body" },
     lg: { container: "min-h-button-lg rounded-xl px-4.5", textVariant: "bodyLg" },
     gym: { container: "min-h-touch-gym rounded-2xl px-6", textVariant: "bodyLg" },
+    // The 44 pt action of the system-state cards (SF-34).
+    system: { container: "min-h-button-system rounded-md px-4", textVariant: "bodySm" },
   };
 
 /** Extra touch area so every button reaches the 44 pt minimum target. */
-const hitSlop: Record<ButtonSize, number> = { sm: 4, md: 0, lg: 0, gym: 0 };
+const hitSlop: Record<ButtonSize, number> = { sm: 4, md: 0, lg: 0, gym: 0, system: 0 };
 
 export function Button({
   label,

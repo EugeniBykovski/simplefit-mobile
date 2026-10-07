@@ -81,6 +81,7 @@ describe("Button", () => {
     ["sm", ["min-h-button-sm", "rounded-full"]],
     ["md", ["min-h-button-md", "rounded-xl"]],
     ["lg", ["min-h-button-lg", "rounded-xl"]],
+    ["system", ["min-h-button-system", "rounded-md"]],
     ["gym", ["min-h-touch-gym", "rounded-2xl"]],
   ] as const)("renders the %s size at its canonical height and radius", async (size, classes) => {
     await renderWithProviders(<Button label="Start" size={size} onPress={jest.fn()} />);

@@ -1,27 +1,13 @@
-import { routeHref } from "@/shared/routes/routes";
-import { Stack, useRouter } from "expo-router";
-import { useTranslations } from "use-intl";
+import { Stack } from "expo-router";
 
-import { Button } from "@/shared/ui/button";
-import { Screen } from "@/shared/ui/screen";
-import { Text } from "@/shared/ui/text";
+import { NotFoundState } from "@/widgets/system-states";
 
-/** Unknown routes, including unrecognised deep links. */
+/** ER1 · unknown routes, unrecognised deep links and deferred paths (SF-34). */
 export default function NotFoundRoute() {
-  const t = useTranslations("errors.notFound");
-  const actions = useTranslations("actions");
-  const router = useRouter();
-
   return (
-    <Screen>
-      <Stack.Screen options={{ title: t("title") }} />
-      <Text variant="h2">{t("title")}</Text>
-      <Text color="mutedForeground">{t("description")}</Text>
-      <Button
-        label={actions("backToHome")}
-        variant="secondary"
-        onPress={() => router.replace(routeHref("mobile.root"))}
-      />
-    </Screen>
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <NotFoundState />
+    </>
   );
 }

@@ -1,6 +1,7 @@
 // Per-weight entry points: the package roots require every weight, which
 // would bundle ~5 MB of unused font files.
 import { JetBrainsMono_400Regular } from "@expo-google-fonts/jetbrains-mono/400Regular";
+import { JetBrainsMono_600SemiBold } from "@expo-google-fonts/jetbrains-mono/600SemiBold";
 import { Manrope_400Regular } from "@expo-google-fonts/manrope/400Regular";
 import { Manrope_600SemiBold } from "@expo-google-fonts/manrope/600SemiBold";
 import { Manrope_700Bold } from "@expo-google-fonts/manrope/700Bold";
@@ -23,6 +24,7 @@ export const appFonts = {
   Manrope_700Bold,
   Manrope_800ExtraBold,
   JetBrainsMono_400Regular,
+  JetBrainsMono_600SemiBold,
 };
 
 /**

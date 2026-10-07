@@ -12,9 +12,31 @@
     "backToHome": "Volver al inicio"
   },
   "errors": {
-    "notFound": {
-      "title": "Pantalla no encontrada",
-      "description": "Esta pantalla no existe."
+    "states": {
+      "unexpected": {
+        "tag": "Error",
+        "title": "Algo salió mal",
+        "description": "Algo salió mal por nuestra parte. No se ha perdido nada de lo que guardaste.",
+        "action": "Reintentar"
+      },
+      "offline": {
+        "tag": "Sin conexión",
+        "title": "No tienes conexión",
+        "description": "Comprueba tu conexión. Volveremos a cargar esta página cuando vuelvas a estar en línea.",
+        "action": "Reintentar"
+      },
+      "forbidden": {
+        "tag": "Acceso denegado",
+        "title": "No tienes acceso",
+        "description": "Esta página pertenece a una cuenta o espacio de trabajo del que no formas parte.",
+        "action": "Volver al inicio"
+      },
+      "unavailable": {
+        "tag": "Servicio no disponible",
+        "title": "SimpleFit se toma un respiro",
+        "description": "El servicio no está disponible temporalmente. Vuelve a intentarlo en unos minutos.",
+        "action": "Reintentar"
+      }
     }
   },
   "home": {
@@ -273,6 +295,58 @@
       "badge": "Previsto",
       "description": "Esta pantalla forma parte de la app SimpleFit y llegará con su función. Aquí todavía no funciona nada.",
       "route": "Ruta"
+    }
+  },
+  "system": {
+    "launch": {
+      "label": "Cargando SimpleFit",
+      "status": "Vendando las manos…",
+      "tipLabel": "Consejo de la esquina",
+      "tip": "Exhala en cada golpe: mantiene el abdomen firme y la barbilla abajo.",
+      "version": "v{version}"
+    },
+    "notFound": {
+      "refCount": "Cuenta del árbitro",
+      "count": {
+        "kicker": "Error 404 · Asalto no encontrado",
+        "title": "Esta página está en la lona.",
+        "description": "El enlace es antiguo o la página se ha movido. Levántate antes de diez y volverás al combate.",
+        "beat": "Levántate antes de diez",
+        "home": "Volver al inicio"
+      },
+      "ko": {
+        "kicker": "Error 404 · Nocaut",
+        "title": "KO. Esta página no se levantó.",
+        "description": "Puede que se haya eliminado o hecho privada. Tus asaltos, tu tablero y tus pagos están a salvo.",
+        "tag": "KO · Página no encontrada",
+        "corner": "Volver a mi esquina",
+        "again": "Contar de nuevo"
+      },
+      "saved": {
+        "kicker": "De nuevo en pie",
+        "title": "Salvado por la campana.",
+        "description": "Buenos reflejos. Elige adónde ir: tu esquina te espera.",
+        "tag": "En pie a los {count} · Salvado por la campana",
+        "corner": "Volver a mi esquina",
+        "search": "Buscar"
+      },
+      "words": {
+        "1": "Uno",
+        "2": "Dos",
+        "3": "Tres",
+        "4": "Cuatro",
+        "5": "Cinco",
+        "6": "Seis",
+        "7": "Siete",
+        "8": "Ocho",
+        "9": "Nueve",
+        "10": "Diez"
+      },
+      "errorCode": "Error 404",
+      "back": "Atrás",
+      "help": "Ayuda",
+      "report": "Informar de un enlace roto",
+      "pathNotFound": "{path} · no encontrado"
     }
   }
 }

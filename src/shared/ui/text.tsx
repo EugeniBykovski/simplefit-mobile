@@ -12,6 +12,7 @@ const variants = {
   h2: { family: "font-display", classes: "text-h2 tracking-h2" },
   h3: { family: "font-display", classes: "text-h3 tracking-h3" },
   title: { family: "font-display", classes: "text-title" },
+  brand: { family: "font-display", classes: "text-brand tracking-brand" },
   metricXl: { family: "font-display-bold", classes: "text-metric-xl tracking-metric-xl" },
   metricLg: { family: "font-display-bold", classes: "text-metric-lg tracking-metric-lg" },
   metric: { family: "font-display-bold", classes: "text-metric tracking-metric" },
@@ -24,6 +25,16 @@ const variants = {
   badge: { family: "font-sans-extrabold", classes: "text-badge uppercase" },
   labelLg: { family: "font-mono", classes: "text-label-lg uppercase tracking-label-lg" },
   label: { family: "font-mono", classes: "text-label uppercase tracking-label" },
+  // System-state roles (SF-34): launch, 404 and error states only.
+  hero: { family: "font-display", classes: "text-hero tracking-hero" },
+  wordmark: { family: "font-display-bold", classes: "text-wordmark tracking-wordmark" },
+  numeral: { family: "font-display-bold", classes: "text-numeral tracking-numeral" },
+  numeralKo: { family: "font-display-bold", classes: "text-numeral-ko tracking-numeral-ko" },
+  labelWide: {
+    family: "font-mono-semibold",
+    classes: "text-label-wide uppercase tracking-label-wide",
+  },
+  countWord: { family: "font-mono", classes: "text-count-word uppercase tracking-count-word" },
 } as const;
 
 /** Manrope weights of the contract above the role's regular 400. */
@@ -68,11 +79,12 @@ export type TextProps = RNTextProps & {
   weight?: TextWeight;
 };
 
-const headers: readonly TextVariant[] = ["display", "h1", "h2", "h3"];
+const headers: readonly TextVariant[] = ["display", "h1", "h2", "h3", "hero"];
 
 /** Font family class for a role, raised to the requested Manrope weight. */
 export function textFamily(variant: TextVariant, weight?: TextWeight): string {
   const { family } = variants[variant];
+  if (weight === "semibold" && family === "font-mono") return "font-mono-semibold";
   return weight && family.startsWith("font-sans") ? weights[weight] : family;
 }
 
