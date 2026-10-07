@@ -74,6 +74,7 @@ module.exports = {
       h2: ["22px", "26px"],
       h3: ["19px", "24px"],
       title: ["15px", "20px"],
+      brand: ["13px", "16px"],
       "metric-xl": ["30px", "34px"],
       "metric-lg": ["26px", "30px"],
       metric: ["22px", "26px"],
@@ -92,6 +93,7 @@ module.exports = {
       numeral: ["112px", "112px"],
       "numeral-ko": ["92px", "84px"],
       "label-wide": ["11px", "14px"],
+      "count-word": ["12px", "16px"],
     },
     // Radius scale (docs/design-tokens.json): xs marks, sm badges, md compact
     // controls, lg fields, xl primary CTAs, 2xl compact cards, 3xl cards,
@@ -118,6 +120,7 @@ module.exports = {
         "sans-bold": ["Manrope_700Bold"],
         "sans-extrabold": ["Manrope_800ExtraBold"],
         mono: ["JetBrainsMono_400Regular"],
+        "mono-semibold": ["JetBrainsMono_600SemiBold"],
         system: platformSelect({ ios: "System", android: "sans-serif", default: "System" }),
       },
       // Letter spacing per role, in px (React Native has no em): size × tracking.
@@ -126,6 +129,7 @@ module.exports = {
         h1: "-0.52px",
         h2: "-0.44px",
         h3: "-0.19px",
+        brand: "-0.13px",
         "metric-xl": "-0.9px",
         "metric-lg": "-0.78px",
         metric: "-0.66px",
@@ -137,6 +141,7 @@ module.exports = {
         numeral: "-4.48px",
         "numeral-ko": "-4.6px",
         "label-wide": "6.82px",
+        "count-word": "3.6px",
       },
       // Spacing steps the default scale lacks (docs/design-tokens.json spacing).
       spacing: { 4.5: "18px", 5.5: "22px" },
@@ -148,6 +153,8 @@ module.exports = {
         "button-sm": "36px",
         "button-md": "50px",
         "button-lg": "56px",
+        // System-state card action (SF-34).
+        "button-system": "44px",
         field: "54px",
       },
       minWidth: { touch: "44px", "touch-gym": "60px" },

@@ -34,7 +34,7 @@ const TONES: Record<
     tag: "warning",
     iconWrap: "bg-warning-subtle",
     iconColor: "warning",
-    action: "primary",
+    action: "warning",
   },
   forbidden: {
     icon: Lock,
@@ -42,7 +42,7 @@ const TONES: Record<
     tag: "warning",
     iconWrap: "bg-warning-subtle",
     iconColor: "warning",
-    action: "primary",
+    action: "warning",
   },
   unavailable: {
     icon: ServerOff,
@@ -50,7 +50,7 @@ const TONES: Record<
     tag: "faintForeground",
     iconWrap: "bg-muted",
     iconColor: "mutedForeground",
-    action: "quiet",
+    action: "primary",
   },
 };
 
@@ -91,9 +91,10 @@ export function ErrorState({
         </Text>
       </View>
       {retry ? (
-        <Button variant={tone.action} label={t(`${kind}.action`)} onPress={retry} />
+        <Button size="system" variant={tone.action} label={t(`${kind}.action`)} onPress={retry} />
       ) : (
         <Button
+          size="system"
           variant={tone.action}
           label={kind === "forbidden" ? t("forbidden.action") : actions("backToHome")}
           onPress={onHome}

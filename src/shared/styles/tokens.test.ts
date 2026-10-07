@@ -139,6 +139,7 @@ describe("scales", () => {
       "button-sm": `${button.sm.height}px`,
       "button-md": `${button.md.height}px`,
       "button-lg": `${button.lg.height}px`,
+      "button-system": `${button.system.height}px`,
       field: `${spec.controls.field.mobile.height}px`,
     });
   });

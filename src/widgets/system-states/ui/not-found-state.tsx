@@ -215,7 +215,7 @@ function RefereeCount({ phase, count }: { phase: RefereePhase; count: number }) 
       <View className="items-center gap-2.5">
         <Text variant="numeralKo">404</Text>
         <View className="rounded-sm bg-destructive-subtle px-2.5 py-1.5">
-          <Text variant="labelLg" color="destructiveSubtleForeground">
+          <Text variant="labelLg" weight="semibold" color="destructiveSubtleForeground">
             {t("ko.tag")}
           </Text>
         </View>
@@ -230,7 +230,7 @@ function RefereeCount({ phase, count }: { phase: RefereePhase; count: number }) 
         {t("refCount")}
       </Text>
       <Text variant="numeral">{String(count)}</Text>
-      <Text variant="labelLg" color="highlight">
+      <Text variant="countWord" color="highlight">
         {t(`words.${count}` as "words.1")}
       </Text>
       {ticks}

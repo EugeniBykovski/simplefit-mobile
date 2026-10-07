@@ -153,9 +153,13 @@ motion (logo ring, corner posts, drawn "S", glow, segments, shimmer), built
 with `Animated` and stopped when the system reduces motion.
 
 **System-state typography (SF-34):** `<Text variant>` `hero` (28/30),
-`wordmark` (36/34), `numeral` (112), `numeralKo` (92), `labelWide` (11, 0.62
-em) from `typography.systemRoles.mobile` in `docs/design-tokens.json`; only
-for launch, 404 and error states.
+`wordmark` (36/34), `numeral` (112), `numeralKo` (92), `labelWide` (11 mono
+600, 0.62 em), `countWord` (12 mono, 0.3 em) from
+`typography.systemRoles.mobile` in `docs/design-tokens.json`; only for launch,
+404 and error states. Mono 600 (`JetBrainsMono_600SemiBold`, `weight="semibold"`
+on mono roles) and the product role `brand` (13 px wordmark) are part of the
+contract; `Button` gains the `warning` variant and the 44 pt `system` size
+(the System states sheet's card action).
 
 ## Accessibility
 
