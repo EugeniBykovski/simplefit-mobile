@@ -20,6 +20,7 @@ import { useTheme } from "@/shared/styles/theme";
 import { BrandLockup } from "@/shared/ui/brand-mark";
 import { Button } from "@/shared/ui/button";
 import { Icon } from "@/shared/ui/icon";
+import { Input } from "@/shared/ui/input";
 import { Notice } from "@/shared/ui/notice";
 import { Text } from "@/shared/ui/text";
 import { linkTo, TextLinks } from "@/shared/ui/text-link";
@@ -290,27 +291,40 @@ export function SignUpScreen() {
   const returnTo = useReturnTo();
 
   return (
-    <AuthFrame
-      back={withReturnTo("mobile.welcome", returnTo)}
-      actions={
-        <>
-          <Divider label={t("or")} />
-          <View className="flex-row gap-2.5">
-            <AppleSlot />
-            <View className="flex-1">
-              <GoogleSignInButton variant="quiet" compact />
-            </View>
-          </View>
-        </>
+    <RegistrationEmailForm
+      returnTo={returnTo}
+      submitLabel={t("submit")}
+      hint={t("hint")}
+      leadingFields={
+        // O02 draws Full name above Email. Presentation only: the
+        // registration API owns the address only (SF-25 owns the profile).
+        <Input label={t("fullName")} editable={false} presentational />
       }
+      layout={({ fields, submit }) => (
+        <AuthFrame
+          back={withReturnTo("mobile.welcome", returnTo)}
+          actions={
+            <>
+              {submit}
+              <Divider label={t("or")} />
+              <View className="flex-row gap-2.5">
+                <AppleSlot />
+                <View className="flex-1">
+                  <GoogleSignInButton variant="quiet" compact />
+                </View>
+              </View>
+            </>
+          }
+        >
+          <Heading title={t("title")} description={t("description")} />
+          {fields}
+        </AuthFrame>
+      )}
     >
-      <Heading title={t("title")} description={t("description")} />
-      <RegistrationEmailForm returnTo={returnTo} submitLabel={t("submit")} hint={t("hint")}>
-        <Notice tone="olive" icon={Mail}>
-          {t("noPassword")}
-        </Notice>
-      </RegistrationEmailForm>
-    </AuthFrame>
+      <Notice tone="olive" icon={Mail}>
+        {t("noPassword")}
+      </Notice>
+    </RegistrationEmailForm>
   );
 }
 

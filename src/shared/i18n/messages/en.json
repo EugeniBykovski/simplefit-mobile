@@ -146,7 +146,8 @@
       "hint": "We’ll send a 6-digit code to verify this email.",
       "noPassword": "No password to remember. We’ll email you a 6-digit code to verify this address.",
       "submit": "Continue with email",
-      "or": "or"
+      "or": "or",
+      "fullName": "Full name"
     },
     "email": {
       "label": "Email",

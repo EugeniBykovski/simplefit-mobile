@@ -159,9 +159,11 @@ describe("O02 create account", () => {
     mockParams.current = { returnTo: "/workspaces" };
     await renderWithProviders(<SignUpScreen />);
 
-    // No full name: the registration API owns the address only (SF-25 adds profile data).
-    expect(screen.getAllByLabelText("Email")).toHaveLength(1);
-    expect(screen.queryByLabelText(/name/i)).toBeNull();
+    // O02 draws Full name above Email: presentation only, never editable or sent
+    // (the registration API owns the address only; SF-25 adds profile data).
+    const fullName = screen.getByLabelText("Full name");
+    expect(fullName).toBeDisabled();
+    expect(fullName.props.editable).toBe(false);
     await userEvent.type(screen.getByLabelText("Email"), EMAIL);
     await userEvent.press(screen.getByRole("button", { name: "Continue with email" }));
 

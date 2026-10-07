@@ -22,6 +22,13 @@ type Props = {
   hint: string;
   /** Content between the field and the button (O02 "No password" note). */
   children?: ReactNode;
+  /** Fields shown before the email field (O02's presentational Full name). */
+  leadingFields?: ReactNode;
+  /**
+   * Places the fields and the submit button in the screen (O02 pins the
+   * button in its bottom action stack). Default: one column.
+   */
+  layout?: (parts: { fields: ReactNode; submit: ReactNode }) => ReactNode;
 };
 
 // A shape check for UX only; the API validates and normalizes the address.
@@ -33,7 +40,16 @@ const looksLikeEmail = (value: string) => /^[^\s@]+@[^\s@]+$/.test(value);
  * code screen: whether an account exists is never revealed (the API sends
  * decoy responses).
  */
-export function EmailRequestForm({ request, next, returnTo, submitLabel, hint, children }: Props) {
+export function EmailRequestForm({
+  request,
+  next,
+  returnTo,
+  submitLabel,
+  hint,
+  children,
+  leadingFields,
+  layout,
+}: Props) {
   const t = useTranslations("auth.email");
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -59,8 +75,9 @@ export function EmailRequestForm({ request, next, returnTo, submitLabel, hint, c
     }
   }
 
-  return (
+  const fields = (
     <View className="gap-4">
+      {leadingFields}
       <Input
         label={t("label")}
         value={email}
@@ -79,13 +96,23 @@ export function EmailRequestForm({ request, next, returnTo, submitLabel, hint, c
         onSubmitEditing={() => void submit()}
       />
       {children}
-      <Button
-        label={submitLabel}
-        icon={Mail}
-        size="lg"
-        loading={busy}
-        onPress={() => void submit()}
-      />
+    </View>
+  );
+  const submitButton = (
+    <Button
+      label={submitLabel}
+      icon={Mail}
+      size="lg"
+      loading={busy}
+      onPress={() => void submit()}
+    />
+  );
+
+  if (layout) return layout({ fields, submit: submitButton });
+  return (
+    <View className="gap-4">
+      {fields}
+      {submitButton}
     </View>
   );
 }

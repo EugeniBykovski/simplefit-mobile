@@ -146,7 +146,8 @@
       "hint": "Wyślemy 6-cyfrowy kod, aby potwierdzić ten e-mail.",
       "noPassword": "Bez hasła do zapamiętania. Wyślemy Ci 6-cyfrowy kod, aby potwierdzić ten adres.",
       "submit": "Kontynuuj z e-mailem",
-      "or": "lub"
+      "or": "lub",
+      "fullName": "Imię i nazwisko"
     },
     "email": {
       "label": "E-mail",

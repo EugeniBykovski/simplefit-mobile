@@ -146,7 +146,8 @@
       "hint": "Te enviaremos un código de 6 dígitos para verificar este correo.",
       "noPassword": "Sin contraseñas que recordar. Te enviaremos un código de 6 dígitos para verificar esta dirección.",
       "submit": "Continuar con correo",
-      "or": "o"
+      "or": "o",
+      "fullName": "Nombre completo"
     },
     "email": {
       "label": "Correo electrónico",

@@ -13,6 +13,12 @@ export type InputProps = Omit<TextInputProps, "style" | "className"> & {
   /** Validation message; announced to assistive technology when it appears. */
   error?: string | undefined;
   ref?: Ref<TextInput>;
+  /**
+   * A non-editable field that keeps the designed look instead of the dimmed
+   * disabled one (SF-24: designed controls whose behaviour belongs to a later
+   * domain). Assistive technology still reports it as disabled.
+   */
+  presentational?: boolean;
 };
 
 /**
@@ -29,6 +35,7 @@ export function Input({
   error,
   ref,
   multiline,
+  presentational = false,
   onFocus,
   onBlur,
   ...props
@@ -67,7 +74,7 @@ export function Input({
           onBlur?.(event);
         }}
         {...props}
-        className={`rounded-lg bg-surface px-4 font-sans-semibold text-body-lg text-foreground ${multiline ? "min-h-28 py-3.5" : "min-h-field py-3"} ${border} ${props.editable === false ? "opacity-50" : ""}`}
+        className={`rounded-lg bg-surface px-4 font-sans-semibold text-body-lg text-foreground ${multiline ? "min-h-28 py-3.5" : "min-h-field py-3"} ${border} ${props.editable === false && !presentational ? "opacity-50" : ""}`}
       />
       {description && !error ? (
         <Text variant="caption" color="faintForeground">

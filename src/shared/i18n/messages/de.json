@@ -146,7 +146,8 @@
       "hint": "Wir senden einen 6-stelligen Code, um diese E-Mail zu bestätigen.",
       "noPassword": "Kein Passwort zum Merken. Wir senden dir einen 6-stelligen Code, um diese Adresse zu bestätigen.",
       "submit": "Weiter mit E-Mail",
-      "or": "oder"
+      "or": "oder",
+      "fullName": "Vollständiger Name"
     },
     "email": {
       "label": "E-Mail",
