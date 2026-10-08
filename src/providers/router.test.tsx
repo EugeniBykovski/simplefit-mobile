@@ -444,14 +444,28 @@ describe("entry resolution (SF-45)", () => {
     await waitFor(() => expect(result.getPathname()).toBe("/home"));
   });
 
-  it("the sponsor application has no mobile surface: /workspaces continues on the web", async () => {
+  it("intent=sponsor: O05, no Sponsor capability, no workspace created or shown", async () => {
     await signIn({
       ...ROLE_SELECTION,
       destination: "sponsor_application",
       reason: "sponsor_intent",
     });
     const result = await renderApp("/?intent=sponsor");
-    await waitFor(() => expect(result.getPathname()).toBe("/workspaces"));
+    await waitFor(() => expect(result.getPathname()).toBe("/onboarding/role"));
+    expect(result.getSearchParams()).toEqual({ intent: "sponsor" });
+    expect(await screen.findByTestId(placeholderId("mobile.onboarding.role"))).toBeOnTheScreen();
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(result.getPathname()).toBe("/onboarding/role");
+    expect(screen.queryByTestId(placeholderId("mobile.workspaces"))).toBeNull();
+
+    // Routing only read: the viewer and the entry, never a workspace, and nothing was written.
+    const calls = (global.fetch as jest.Mock).mock.calls as [string, RequestInit?][];
+    const requests = calls.map(
+      ([url, init]) => `${init?.method ?? "GET"} ${new URL(url).pathname}`,
+    );
+    expect(requests.every((request) => /^GET \/api\/(me|v1\/me\/entry)$/.test(request))).toBe(true);
+    expect(requests).toContain("GET /api/v1/me/entry");
+    expect(calls.some(([url]) => /workspace/i.test(url))).toBe(false);
   });
 
   it("role onboarding opened before account registration goes to O04 first", async () => {

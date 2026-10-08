@@ -33,9 +33,26 @@ describe("destinationRoute", () => {
     expect(routeHref(destinationRoute("gym_onboarding"))).toBe("/onboarding/gym");
   });
 
-  it("sends the sponsor application, which has no mobile surface, to the registry fallback", () => {
-    expect(mobileGuards.entryDestinations.sponsor_application).toBeNull();
-    expect(destinationRoute("sponsor_application")).toBe(mobileGuards.defaultDestinationFallback);
+  it("opens O05 for the sponsor application, never the workspace chooser", () => {
+    expect(routeHref(destinationRoute("sponsor_application"))).toBe("/onboarding/role");
+    expect(destinationRoute("sponsor_application")).not.toBe(mobileGuards.workspaceChooser);
+    expect(destinationRoute("sponsor_application")).not.toBe(
+      mobileGuards.defaultDestinationFallback,
+    );
+  });
+
+  it("a sponsor intent keeps no capability and carries only the intent to O05", () => {
+    const sponsor = entry({
+      destination: "sponsor_application",
+      reason: "sponsor_intent",
+      intent: "sponsor",
+    });
+    expect(sponsor.capabilities).toEqual([]);
+    expect(entryHref(sponsor, { intent: "sponsor" })).toBe("/onboarding/role?intent=sponsor");
+    // A capability-gated returnTo stays unreachable: the intent grants nothing.
+    expect(String(entryHref(sponsor, { intent: "sponsor", returnTo: "/camp/weight" }))).toBe(
+      "/onboarding/role?returnTo=%2Fcamp%2Fweight&intent=sponsor",
+    );
   });
 });
 

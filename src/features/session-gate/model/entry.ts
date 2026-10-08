@@ -30,12 +30,12 @@ export type Entry = EntryResponseEntry;
 
 /**
  * The canonical mobile route of a semantic destination
- * (`guards.entryDestinations`). A destination without a mobile surface (the
- * sponsor application) uses `guards.defaultDestinationFallback`
- * (`/workspaces`, where sponsors continue on the web, D-MOBILE-SPONSOR-ADMIN).
+ * (`guards.entryDestinations`). Mobile has no sponsor surface: the sponsor
+ * application opens O05, whose Sponsor / Brand choice continues to the web
+ * partner application; never the workspace chooser.
  */
 export function destinationRoute(destination: EntryResponseEntryDestination): MobileRouteId {
-  return mobileGuards.entryDestinations[destination] ?? mobileGuards.defaultDestinationFallback;
+  return mobileGuards.entryDestinations[destination];
 }
 
 /**

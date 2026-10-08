@@ -2099,7 +2099,7 @@ export const mobileGuards = {
     fighter_home: "mobile.home",
     coach_onboarding: "mobile.onboarding.coach",
     gym_onboarding: "mobile.onboarding.gym",
-    sponsor_application: null,
+    sponsor_application: "mobile.onboarding.role",
   },
 } as const;
 
