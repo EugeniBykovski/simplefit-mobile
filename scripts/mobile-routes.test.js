@@ -108,6 +108,12 @@ describe("generated mobile routes", () => {
         pendingDeletion: guards.restrictedAccount.pendingDeletion.mobile,
       },
       returnToParam: guards.returnToParam,
+      intentParam: guards.intentParam,
+      entryDestinations: Object.fromEntries(
+        Object.entries(guards.entryDestinations)
+          .filter(([key]) => !key.startsWith("$"))
+          .map(([destination, target]) => [destination, target.mobile]),
+      ),
     });
     for (const [name, capability] of Object.entries(registry.capabilities)) {
       expect(mobileCapabilities[name]).toEqual({

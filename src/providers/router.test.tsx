@@ -10,6 +10,7 @@ import { setSecureItem } from "@/shared/storage/secure-storage";
 import { jsonResponse, mockFetch } from "@/test/render";
 import { mobileRoutes } from "@/shared/routes/mobile-routes";
 import type { MobileRoute } from "@/shared/routes/routes";
+import type { EntryResponseEntry } from "@/shared/api/generated/model";
 
 import registry from "../../docs/route-registry.json";
 
@@ -49,13 +50,51 @@ async function renderApp(url: string) {
   };
 }
 
-/** A signed-in viewer, through the same pipeline every sign-in method uses (SF-24). */
-async function signIn() {
+type Entry = EntryResponseEntry;
+
+/** A registered user without role state: the backend's role selection (SF-45). */
+const ROLE_SELECTION: Entry = {
+  destination: "role_selection",
+  reason: "no_role_started",
+  mandatory: false,
+  intent: null,
+  account_registration: "complete",
+  fighter_profile: "not_started",
+  capabilities: [],
+};
+const FIGHTER_HOME: Entry = {
+  ...ROLE_SELECTION,
+  destination: "fighter_home",
+  reason: "fighter_onboarding_completed",
+  fighter_profile: "completed",
+  capabilities: ["FIGHTER"],
+};
+const ACCOUNT_REGISTRATION: Entry = {
+  ...ROLE_SELECTION,
+  destination: "account_registration",
+  reason: "account_registration_incomplete",
+  mandatory: true,
+  account_registration: "not_started",
+};
+
+/**
+ * A signed-in viewer, through the same pipeline every sign-in method uses
+ * (SF-24); the API resolves the entry (`GET /api/v1/me/entry`, SF-45) as
+ * `entry`.
+ */
+async function signIn(entry: Entry = ROLE_SELECTION) {
   mockFetch(
-    jest.fn().mockResolvedValue(
-      jsonResponse({
-        user: { id: "8a6e0804-2bd0-4672-b79d-d97027f9071b", created_at: "2026-10-01T10:00:00Z" },
-      }),
+    jest.fn((url: string) =>
+      Promise.resolve(
+        url.includes("/api/v1/me/entry")
+          ? jsonResponse({ entry: { ...entry, intent: new URL(url).searchParams.get("intent") } })
+          : jsonResponse({
+              user: {
+                id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                created_at: "2026-10-01T10:00:00Z",
+              },
+            }),
+      ),
     ),
   );
   await completeAuthentication({
@@ -164,18 +203,19 @@ describe("session access (UX only)", () => {
     await waitFor(() => expect(result.getPathname()).toBe("/"));
   });
 
-  it("enters a valid returnTo once the viewer is authenticated (SF-24)", async () => {
-    await signIn();
+  it("enters a valid returnTo the backend state allows once the viewer is authenticated (SF-24, SF-45)", async () => {
+    await signIn(FIGHTER_HOME);
     const result = await renderApp("/login?returnTo=%2Fcamp%2Fweight");
     await waitFor(() => expect(result.getPathname()).toBe("/camp/weight"));
   });
 
   it.each(["//evil.example", "/onboarding/role", "/login", "simplefit://camp"])(
-    "ignores the unsafe returnTo %s and enters /",
+    "ignores the unsafe returnTo %s and enters the resolved destination",
     async (returnTo) => {
       await signIn();
       const result = await renderApp(`/login?returnTo=${encodeURIComponent(returnTo)}`);
-      await waitFor(() => expect(result.getPathname()).toBe("/"));
+      await waitFor(() => expect(result.getPathname()).toBe("/onboarding/role"));
+      expect(result.getSearchParams()).toEqual({});
     },
   );
 
@@ -367,5 +407,79 @@ describe("system states (SF-34)", () => {
     expect(await screen.findByText("Something went wrong")).toBeOnTheScreen();
     expect(screen.queryByText(/hunter2/)).toBeNull();
     log.mockRestore();
+  });
+});
+
+describe("entry resolution (SF-45)", () => {
+  it("a new user from any sign-in method without intent goes to O04, never Fighter", async () => {
+    await signIn(ACCOUNT_REGISTRATION);
+    const result = await renderApp("/login");
+    await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
+    expect(result.getSearchParams()).toEqual({});
+  });
+
+  it("carries an explicit intent from a deep link through sign-in to O04", async () => {
+    await signIn({ ...ACCOUNT_REGISTRATION });
+    const result = await renderApp("/signup?intent=fighter");
+    await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
+    expect(result.getSearchParams()).toEqual({ intent: "fighter" });
+  });
+
+  it("drops an intent outside the allow-list", async () => {
+    await signIn(ACCOUNT_REGISTRATION);
+    const result = await renderApp("/signup?intent=admin");
+    await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
+    expect(result.getSearchParams()).toEqual({});
+  });
+
+  it("without an intent (lost with the process) a registered user chooses at O05", async () => {
+    await signIn(ROLE_SELECTION);
+    const result = await renderApp("/");
+    await waitFor(() => expect(result.getPathname()).toBe("/onboarding/role"));
+  });
+
+  it("a completed fighter enters Fighter home", async () => {
+    await signIn(FIGHTER_HOME);
+    const result = await renderApp("/");
+    await waitFor(() => expect(result.getPathname()).toBe("/home"));
+  });
+
+  it("intent=sponsor: O05, no Sponsor capability, no workspace created or shown", async () => {
+    await signIn({
+      ...ROLE_SELECTION,
+      destination: "sponsor_application",
+      reason: "sponsor_intent",
+    });
+    const result = await renderApp("/?intent=sponsor");
+    await waitFor(() => expect(result.getPathname()).toBe("/onboarding/role"));
+    expect(result.getSearchParams()).toEqual({ intent: "sponsor" });
+    expect(await screen.findByTestId(placeholderId("mobile.onboarding.role"))).toBeOnTheScreen();
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(result.getPathname()).toBe("/onboarding/role");
+    expect(screen.queryByTestId(placeholderId("mobile.workspaces"))).toBeNull();
+
+    // Routing only read: the viewer and the entry, never a workspace, and nothing was written.
+    const calls = (global.fetch as jest.Mock).mock.calls as [string, RequestInit?][];
+    const requests = calls.map(
+      ([url, init]) => `${init?.method ?? "GET"} ${new URL(url).pathname}`,
+    );
+    expect(requests.every((request) => /^GET \/api\/(me|v1\/me\/entry)$/.test(request))).toBe(true);
+    expect(requests).toContain("GET /api/v1/me/entry");
+    expect(calls.some(([url]) => /workspace/i.test(url))).toBe(false);
+  });
+
+  it("role onboarding opened before account registration goes to O04 first", async () => {
+    await signIn(ACCOUNT_REGISTRATION);
+    const result = await renderApp("/onboarding/fighter?intent=fighter");
+    await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
+    expect(result.getSearchParams()).toEqual({ intent: "fighter" });
+  });
+
+  it("role onboarding needs no capability once account registration is complete", async () => {
+    await signIn(ROLE_SELECTION);
+    const result = await renderApp("/onboarding/coach");
+    expect(await screen.findByTestId(placeholderId("mobile.onboarding.coach"))).toBeOnTheScreen();
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(result.getPathname()).toBe("/onboarding/coach");
   });
 });

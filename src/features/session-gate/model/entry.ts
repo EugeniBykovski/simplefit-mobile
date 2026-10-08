@@ -1,23 +1,92 @@
 import type { Href } from "expo-router";
 
-import type { Viewer } from "@/entities/session";
-import { mobileGuards, routeHref, sanitizeReturnTo } from "@/shared/routes/routes";
+import { callWithSession } from "@/entities/session";
+import { resolveMyEntry } from "@/shared/api/generated/endpoints/entry/entry";
+import type {
+  EntryResponseEntry,
+  EntryResponseEntryDestination,
+  ResolveMyEntryParams,
+} from "@/shared/api/generated/model";
+import { continuationQuery, type Continuation } from "@/shared/routes/continuation";
+import {
+  matchMobileRoute,
+  mobileGuards,
+  mobileRoute,
+  routeHref,
+  sanitizeReturnTo,
+  type MobileRouteId,
+} from "@/shared/routes/routes";
 
 /**
- * Application entry (SF-24), the same rule as the web client's: where an
- * authenticated viewer goes after sign-in, sign-up or a restored session on a
- * guest-only screen. Pure.
- *
- * 1. A valid `returnTo` (see `sanitizeReturnTo`), consumed once: the
- *    destination replaces the auth screen.
- * 2. Otherwise the neutral canonical entry, `/` (`guards.entry`).
- *
- * The API exposes only the viewer's id today, so nothing is inferred about
- * roles, profiles, workspaces, onboarding, consent or account state. Later
- * tickets add viewer-driven branches here once `GET /api/me` carries that
- * state; the sign-in flows do not change.
+ * Application entry (SF-45; simplefit-api ADR 0017), the same contract as
+ * the web client's. Where an authenticated user goes is decided by the
+ * backend (`GET /api/v1/me/entry`) from current state: account registration,
+ * then the explicit intent, then role state. This module only maps the
+ * semantic destination to a registry route and applies the client-side
+ * `returnTo` path policy; it never re-derives registration, onboarding or
+ * capability state.
  */
-export function resolveEntry(viewer: Viewer, returnTo: unknown): Href {
-  const target = sanitizeReturnTo(Array.isArray(returnTo) ? undefined : returnTo);
-  return target === undefined ? routeHref(mobileGuards.entry) : (target as Href);
+export type Entry = EntryResponseEntry;
+
+/**
+ * The canonical mobile route of a semantic destination
+ * (`guards.entryDestinations`). Mobile has no sponsor surface: the sponsor
+ * application opens O05, whose Sponsor / Brand choice continues to the web
+ * partner application; never the workspace chooser.
+ */
+export function destinationRoute(destination: EntryResponseEntryDestination): MobileRouteId {
+  return mobileGuards.entryDestinations[destination];
+}
+
+/**
+ * A safe `returnTo` the user can open now: not the entry itself and not
+ * behind a capability the backend does not report. Capabilities are a
+ * routing projection; the API still authorizes every request.
+ */
+function usableReturnTo(returnTo: string | undefined, entry: Entry): string | undefined {
+  const safe = sanitizeReturnTo(returnTo);
+  if (safe === undefined) return undefined;
+  const route = matchMobileRoute(safe.split("?")[0] ?? safe);
+  if (route === undefined || route.id === mobileGuards.entry) return undefined;
+  const held: readonly string[] = entry.capabilities;
+  if (route.capability !== null && !held.includes(route.capability)) return undefined;
+  return safe;
+}
+
+/**
+ * The href for a resolved entry and the continuation the user carries:
+ *
+ * 1. A mandatory destination (account registration, unfinished Fighter
+ *    onboarding) always wins.
+ * 2. An explicit intent leads to its journey, unless that journey is already
+ *    complete (`fighter_home`).
+ * 3. Otherwise a usable `returnTo` wins over the derived destination.
+ * 4. Otherwise the destination.
+ *
+ * Onboarding routes keep the continuation in their params, so it is resolved
+ * again once the step completes.
+ */
+export function entryHref(entry: Entry, continuation: Continuation = {}): Href {
+  const target = destinationRoute(entry.destination);
+  const intentDriven = continuation.intent !== undefined && entry.destination !== "fighter_home";
+
+  if (!entry.mandatory && !intentDriven) {
+    const returnTo = usableReturnTo(continuation.returnTo, entry);
+    if (returnTo !== undefined) return returnTo as Href;
+  }
+
+  const carries = mobileRoute(target).phase === "ONBOARDING";
+  return routeHref(target, {}, carries ? continuationQuery(continuation) : {});
+}
+
+/** The resolver request for a continuation: only its validated intent is sent. */
+export function entryParams(continuation: Continuation): ResolveMyEntryParams | undefined {
+  return continuation.intent === undefined ? undefined : { intent: continuation.intent };
+}
+
+/** Resolves the entry of the signed-in user (refreshing the session once on 401). */
+export async function fetchEntry(continuation: Continuation, signal?: AbortSignal): Promise<Entry> {
+  const params = entryParams(continuation);
+  const { entry } = await callWithSession((init) => resolveMyEntry(params, { ...init, signal }));
+  return entry;
 }

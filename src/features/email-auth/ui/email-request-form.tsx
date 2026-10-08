@@ -4,7 +4,8 @@ import { useState, type ReactNode } from "react";
 import { View } from "react-native";
 import { useTranslations } from "use-intl";
 
-import { withReturnTo, type MobileRouteId } from "@/shared/routes/routes";
+import { withContinuation, type Continuation } from "@/shared/routes/continuation";
+import type { MobileRouteId } from "@/shared/routes/routes";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 
@@ -17,7 +18,7 @@ type Props = {
   request: (email: string) => Promise<unknown>;
   /** The code screen (`/login/code`, `/signup/verify`). */
   next: MobileRouteId;
-  returnTo?: string;
+  continuation?: Continuation;
   submitLabel: string;
   hint: string;
   /** Content between the field and the button (O02 "No password" note). */
@@ -43,7 +44,7 @@ const looksLikeEmail = (value: string) => /^[^\s@]+@[^\s@]+$/.test(value);
 export function EmailRequestForm({
   request,
   next,
-  returnTo,
+  continuation,
   submitLabel,
   hint,
   children,
@@ -67,7 +68,7 @@ export function EmailRequestForm({
     setFailure(undefined);
     try {
       await request(address);
-      router.push(withReturnTo(next, returnTo));
+      router.push(withContinuation(next, continuation));
     } catch (error) {
       setFailure(requestFailureOf(error));
     } finally {

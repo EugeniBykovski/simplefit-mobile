@@ -15,7 +15,7 @@ import {
 } from "@/features/email-auth";
 import { AppleSignInButton } from "@/features/sign-in-with-apple";
 import { GoogleSignInButton } from "@/features/sign-in-with-google";
-import { mobileGuards, sanitizeReturnTo, withReturnTo } from "@/shared/routes/routes";
+import { continuationOf, withContinuation, type Continuation } from "@/shared/routes/continuation";
 import { useTheme } from "@/shared/styles/theme";
 import { BrandLockup } from "@/shared/ui/brand-mark";
 import { Button } from "@/shared/ui/button";
@@ -29,17 +29,18 @@ import { linkTo, TextLinks } from "@/shared/ui/text-link";
  * The mobile.auth screens (Claude Design onboarding page, 390 × 844): A01
  * Welcome, O01b Sign in, O01c Sign-in code, O02 Create account, O03 Verify
  * email. Every sign-in method ends in the shared session pipeline; the
- * auth shell's SessionGate then enters the application (a valid `returnTo`,
- * otherwise `/`). Deferred until their domain exists (SF-25 and the
+ * auth shell's SessionGate then enters the application through the backend
+ * entry resolution, carrying `returnTo` and `intent` (SF-45). Deferred until their domain exists (SF-25 and the
  * recovery/invite tickets): O02 full name, O01b "Recover account", A01
  * invite and brands links, and the consent / role / workspace destinations.
  */
 
-/** The valid `returnTo` of the current auth screen (SF-24 policy), carried between steps. */
-function useReturnTo(): string | undefined {
-  const params = useLocalSearchParams<{ returnTo?: string | string[] }>();
-  const value = params[mobileGuards.returnToParam];
-  return sanitizeReturnTo(Array.isArray(value) ? undefined : value);
+/**
+ * The valid continuation of the current auth screen (`returnTo` under the
+ * SF-24 policy and the allow-listed `intent`, SF-45), carried between steps.
+ */
+function useContinuation(): Continuation {
+  return continuationOf(useLocalSearchParams());
 }
 
 /**
@@ -183,7 +184,7 @@ function WelcomeRings() {
 export function WelcomeScreen() {
   const t = useTranslations("auth.welcome");
   const router = useRouter();
-  const returnTo = useReturnTo();
+  const continuation = useContinuation();
 
   return (
     <AuthFrame
@@ -197,11 +198,11 @@ export function WelcomeScreen() {
             icon={Mail}
             variant="quiet"
             size="lg"
-            onPress={() => router.push(withReturnTo("mobile.signup", returnTo))}
+            onPress={() => router.push(withContinuation("mobile.signup", continuation))}
           />
           <TextLinks color="faintForeground" center>
             {`${t("haveAccount")} `}
-            {linkTo(() => router.push(withReturnTo("mobile.login", returnTo)))(t("signIn"))}
+            {linkTo(() => router.push(withContinuation("mobile.login", continuation)))(t("signIn"))}
           </TextLinks>
         </>
       }
@@ -230,15 +231,17 @@ export function WelcomeScreen() {
 export function LoginScreen() {
   const t = useTranslations("auth.login");
   const router = useRouter();
-  const returnTo = useReturnTo();
+  const continuation = useContinuation();
 
   return (
     <AuthFrame
-      back={withReturnTo("mobile.welcome", returnTo)}
+      back={withContinuation("mobile.welcome", continuation)}
       actions={
         <TextLinks center>
           {`${t("newHere")} `}
-          {linkTo(() => router.replace(withReturnTo("mobile.welcome", returnTo)))(t("join"))}
+          {linkTo(() => router.replace(withContinuation("mobile.welcome", continuation)))(
+            t("join"),
+          )}
         </TextLinks>
       }
     >
@@ -250,7 +253,11 @@ export function LoginScreen() {
         <AppleSlot />
       </View>
       <Divider label={t("orEmail")} />
-      <SignInEmailForm returnTo={returnTo} submitLabel={t("emailSubmit")} hint={t("emailHint")} />
+      <SignInEmailForm
+        continuation={continuation}
+        submitLabel={t("emailSubmit")}
+        hint={t("emailHint")}
+      />
     </AuthFrame>
   );
 }
@@ -276,11 +283,11 @@ const codeLayout =
 
 /** O01c "Enter your sign-in code" (email_sign_in). */
 export function SignInCodeScreen() {
-  const returnTo = useReturnTo();
+  const continuation = useContinuation();
   return (
     <SignInCodeStep
-      returnTo={returnTo}
-      layout={codeLayout(withReturnTo("mobile.login", returnTo))}
+      continuation={continuation}
+      layout={codeLayout(withContinuation("mobile.login", continuation))}
     />
   );
 }
@@ -288,11 +295,11 @@ export function SignInCodeScreen() {
 /** O02 "Create your account": email only (the registration API owns the address only). */
 export function SignUpScreen() {
   const t = useTranslations("auth.signup");
-  const returnTo = useReturnTo();
+  const continuation = useContinuation();
 
   return (
     <RegistrationEmailForm
-      returnTo={returnTo}
+      continuation={continuation}
       submitLabel={t("submit")}
       hint={t("hint")}
       leadingFields={
@@ -302,7 +309,7 @@ export function SignUpScreen() {
       }
       layout={({ fields, submit }) => (
         <AuthFrame
-          back={withReturnTo("mobile.welcome", returnTo)}
+          back={withContinuation("mobile.welcome", continuation)}
           actions={
             <>
               {submit}
@@ -330,11 +337,11 @@ export function SignUpScreen() {
 
 /** O03 "Verify your email" (email_verification). */
 export function VerifyEmailScreen() {
-  const returnTo = useReturnTo();
+  const continuation = useContinuation();
   return (
     <RegistrationCodeStep
-      returnTo={returnTo}
-      layout={codeLayout(withReturnTo("mobile.signup", returnTo))}
+      continuation={continuation}
+      layout={codeLayout(withContinuation("mobile.signup", continuation))}
     />
   );
 }
