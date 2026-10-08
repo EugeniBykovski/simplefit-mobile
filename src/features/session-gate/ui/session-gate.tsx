@@ -4,16 +4,16 @@ import { View } from "react-native";
 import { useTranslations } from "use-intl";
 
 import { useSession, type Session } from "@/entities/session";
+import { continuationOf, continuationQuery } from "@/shared/routes/continuation";
 import {
   matchMobileRoute,
   mobileGuards,
+  routeHref,
   signInHref,
   type MobileRoute,
   type MobileShellId,
 } from "@/shared/routes/routes";
 import { Spinner } from "@/shared/ui/spinner";
-
-import { resolveEntry } from "../model/entry";
 
 /**
  * Session guard of a shell layout (route-architecture §9, rules 2 and 3).
@@ -24,10 +24,11 @@ import { resolveEntry } from "../model/entry";
  * - AUTHENTICATED: waits for the session restore, then sends signed-out
  *   visitors to the sign-in route with `returnTo` (when the screen is a valid
  *   destination);
- * - GUEST_ONLY: sends an authenticated viewer into the application: the
- *   screen's valid `returnTo`, otherwise the entry `/` (`resolveEntry`). This
- *   is the one place authentication navigates; the sign-in methods only
- *   complete the session.
+ * - GUEST_ONLY: sends an authenticated viewer into the application through
+ *   the entry `/`, which resolves the destination with the backend (SF-45),
+ *   carrying the screen's continuation (`returnTo`, `intent`). This is the
+ *   one place authentication navigates, for every method (email code,
+ *   Google, Apple); the sign-in methods only complete the session.
  *
  * While the session cannot be confirmed (network or server failure,
  * `unavailable`) a gated screen shows the layout's `unavailable` view, which
@@ -110,7 +111,7 @@ function redirectFor(
     return signInHref(requestedPath(route, pathname, params));
   }
   if (route.session === "GUEST_ONLY" && status === "authenticated" && viewer !== undefined) {
-    return resolveEntry(viewer, params[mobileGuards.returnToParam]);
+    return routeHref(mobileGuards.entry, {}, continuationQuery(continuationOf(params)));
   }
   return undefined;
 }

@@ -1,8 +1,11 @@
-import { SessionGate } from "@/features/session-gate";
+import { OnboardingGate, SessionGate } from "@/features/session-gate";
 import { ShellStack } from "@/providers/shell-stack";
-import { LaunchScreen, SessionFailure } from "@/widgets/system-states";
+import { EntryFailure, LaunchScreen, SessionFailure } from "@/widgets/system-states";
 
-/** mobile.onboarding: registration wizards and first-run intros, without a tab bar. */
+/**
+ * mobile.onboarding: registration wizards and first-run intros, without a tab
+ * bar. Role onboarding comes after account registration (SF-45).
+ */
 export default function OnboardingLayout() {
   return (
     <SessionGate
@@ -10,7 +13,9 @@ export default function OnboardingLayout() {
       pending={<LaunchScreen />}
       unavailable={<SessionFailure />}
     >
-      <ShellStack />
+      <OnboardingGate pending={<LaunchScreen />} failure={<EntryFailure />}>
+        <ShellStack />
+      </OnboardingGate>
     </SessionGate>
   );
 }

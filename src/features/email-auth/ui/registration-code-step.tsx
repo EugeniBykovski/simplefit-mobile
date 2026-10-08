@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AppState, View } from "react-native";
 import { useTranslations } from "use-intl";
 
-import { withReturnTo } from "@/shared/routes/routes";
+import { withContinuation, type Continuation } from "@/shared/routes/continuation";
 import { Button } from "@/shared/ui/button";
 import { CODE_LENGTH, CodeInput } from "@/shared/ui/code-input";
 import { Icon } from "@/shared/ui/icon";
@@ -31,24 +31,24 @@ import type { CodeStepLayout } from "./sign-in-code-step";
  * it goes back to the email step.
  */
 export function RegistrationCodeStep({
-  returnTo,
+  continuation,
   layout,
 }: {
-  returnTo?: string;
+  continuation?: Continuation;
   layout: CodeStepLayout;
 }) {
   const flow = pending.get("registration");
-  if (!flow) return <Redirect href={withReturnTo("mobile.signup", returnTo)} />;
-  return <RegistrationCodeForm flow={flow} returnTo={returnTo} layout={layout} />;
+  if (!flow) return <Redirect href={withContinuation("mobile.signup", continuation)} />;
+  return <RegistrationCodeForm flow={flow} continuation={continuation} layout={layout} />;
 }
 
 export function RegistrationCodeForm({
   flow,
-  returnTo,
+  continuation,
   layout,
 }: {
   flow: PendingRegistration;
-  returnTo?: string;
+  continuation?: Continuation;
   layout: CodeStepLayout;
 }) {
   const t = useTranslations("auth.code.registration");
@@ -98,7 +98,7 @@ export function RegistrationCodeForm({
     setHandOffFailure(undefined);
     try {
       await handOffToSignIn(flow.email);
-      router.replace(withReturnTo("mobile.login.code", returnTo));
+      router.replace(withContinuation("mobile.login.code", continuation));
     } catch (error) {
       setHandOffFailure(requestFailureOf(error));
       // Only on failure: on success this screen is replaced by the sign-in code.
@@ -116,7 +116,7 @@ export function RegistrationCodeForm({
     else if (cta.action === "handoff") void handOff();
   }
 
-  const signIn = linkTo(() => router.replace(withReturnTo("mobile.login", returnTo)));
+  const signIn = linkTo(() => router.replace(withContinuation("mobile.login", continuation)));
 
   const body = (
     <View className="gap-4">
@@ -166,7 +166,7 @@ export function RegistrationCodeForm({
         <View>
           <TextLinks>
             {t.rich("wrongAddress", {
-              link: linkTo(() => router.replace(withReturnTo("mobile.signup", returnTo))),
+              link: linkTo(() => router.replace(withContinuation("mobile.signup", continuation))),
             })}
           </TextLinks>
           <TextLinks>{t.rich("haveAccount", { link: signIn })}</TextLinks>

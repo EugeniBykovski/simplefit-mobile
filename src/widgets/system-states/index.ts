@@ -2,6 +2,7 @@ export { failureFor, isRetryable, type FailureKind } from "./model/failure";
 export { initialRefereeState, refereeReducer, type RefereePhase } from "./model/referee-count";
 export { BrandLoader } from "./ui/brand-loader";
 export { CornerTip } from "./ui/corner-tip";
+export { EntryFailure } from "./ui/entry-failure";
 export { ErrorState } from "./ui/error-state";
 export { FailureView } from "./ui/failure-view";
 export { LaunchScreen } from "./ui/launch-screen";

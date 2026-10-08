@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { View } from "react-native";
 import { useTranslations } from "use-intl";
 
-import { withReturnTo } from "@/shared/routes/routes";
+import { withContinuation, type Continuation } from "@/shared/routes/continuation";
 import { Button } from "@/shared/ui/button";
 import { CODE_LENGTH, CodeInput } from "@/shared/ui/code-input";
 import { Icon } from "@/shared/ui/icon";
@@ -27,24 +27,24 @@ export type CodeStepLayout = (parts: { body: ReactNode; actions: ReactNode }) =>
  * `layout` places the body and the bottom actions in the screen frame.
  */
 export function SignInCodeStep({
-  returnTo,
+  continuation,
   layout,
 }: {
-  returnTo?: string;
+  continuation?: Continuation;
   layout: CodeStepLayout;
 }) {
   const flow = pending.get("signIn");
-  if (!flow) return <Redirect href={withReturnTo("mobile.login", returnTo)} />;
-  return <SignInCodeForm flow={flow} returnTo={returnTo} layout={layout} />;
+  if (!flow) return <Redirect href={withContinuation("mobile.login", continuation)} />;
+  return <SignInCodeForm flow={flow} continuation={continuation} layout={layout} />;
 }
 
 export function SignInCodeForm({
   flow,
-  returnTo,
+  continuation,
   layout,
 }: {
   flow: PendingSignIn;
-  returnTo?: string;
+  continuation?: Continuation;
   layout: CodeStepLayout;
 }) {
   const t = useTranslations("auth.code.signIn");
@@ -108,7 +108,7 @@ export function SignInCodeForm({
       {!final && (
         <TextLinks>
           {t.rich("wrongEmail", {
-            link: linkTo(() => router.replace(withReturnTo("mobile.login", returnTo))),
+            link: linkTo(() => router.replace(withContinuation("mobile.login", continuation))),
           })}
         </TextLinks>
       )}

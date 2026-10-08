@@ -24,9 +24,9 @@ type Failure = "rejected" | "rateLimited" | "unavailable" | "network" | "playSer
  * session and then dropped: never stored, logged or sent anywhere else.
  * Cancelling the sheet is not an error. The session goes through
  * `completeAuthentication`, the pipeline shared with Apple and the email code
- * (SF-24); the guest-only gate then enters the application (a valid
- * `returnTo`, otherwise `/`). A new and an existing account are treated
- * alike; no role is inferred here.
+ * (SF-24); the guest-only gate then enters the application through the
+ * backend entry resolution (SF-45). A new and an existing account are
+ * treated alike; no role is inferred here, and Google never means Fighter.
  */
 export function GoogleSignInButton({
   variant = "primary",
