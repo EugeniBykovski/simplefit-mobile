@@ -13,10 +13,12 @@ const semanticColors = [
   "surface-foreground",
   "surface-subtle",
   "surface-elevated",
+  "surface-sunken",
   "muted",
   "muted-foreground",
   "faint-foreground",
   "border",
+  "border-subtle",
   "border-strong",
   "input",
   "ring",
@@ -99,13 +101,14 @@ module.exports = {
       "code-digit": ["24px", "28px"],
     },
     // Radius scale (docs/design-tokens.json): xs marks, sm badges, md compact
-    // controls, lg fields, xl primary CTAs, 2xl compact cards, 3xl cards,
+    // controls, md-lg 40–46 px controls (SF-42), lg fields, xl primary CTAs, 2xl compact cards, 3xl cards,
     // 4xl sheets and dialogs; full for pills and circles.
     borderRadius: {
       none: "0px",
       xs: "6px",
       sm: "9px",
       md: "12px",
+      "md-lg": "14px",
       lg: "16px",
       xl: "18px",
       "2xl": "20px",
@@ -148,7 +151,7 @@ module.exports = {
         "auth-hero": "-0.93px",
       },
       // Spacing steps the default scale lacks (docs/design-tokens.json spacing).
-      spacing: { 4.5: "18px", 5.5: "22px" },
+      spacing: { 4.5: "18px", 5.5: "22px", 6.5: "26px" },
       // Control heights (docs/design-tokens.json controls) and touch targets:
       // 44 pt minimum (Apple HIG), 60 pt gym mode.
       minHeight: {
