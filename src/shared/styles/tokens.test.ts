@@ -106,6 +106,19 @@ describe("scales", () => {
     ...spec.typography.authRoles.mobile,
   };
 
+  it("leaves out the web-only Fighter onboarding roles (SF-38)", () => {
+    // typography.onboardingRoles has web values only: the mobile Fighter registration
+    // has its own artboards, so no onboarding role reaches the mobile type scale.
+    expect(spec.typography.onboardingRoles).not.toHaveProperty("mobile");
+    for (const role of Object.keys(spec.typography.onboardingRoles.web)) {
+      expect(theme.fontSize).not.toHaveProperty(role);
+    }
+    for (const def of Object.values(spec.typography.onboardingRoles.web)) {
+      const family = def.family as keyof typeof spec.typography.weights;
+      expect(spec.typography.weights[family]).toContain(def.weight);
+    }
+  });
+
   it("replaces the type scale with exactly the contract's roles", () => {
     const expected = Object.fromEntries(
       Object.entries(roles).map(([role, def]) => [role, [`${def.size}px`, `${def.lineHeight}px`]]),
