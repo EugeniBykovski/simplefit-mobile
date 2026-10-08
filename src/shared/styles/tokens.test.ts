@@ -129,7 +129,7 @@ describe("scales", () => {
 
   it("has every spacing step at its canonical size (1 step = 4 px at 16 px per rem)", () => {
     // Steps outside the Tailwind default scale are added in px.
-    expect(theme.extend.spacing).toEqual({ 4.5: "18px", 5.5: "22px" });
+    expect(theme.extend.spacing).toEqual({ 4.5: "18px", 5.5: "22px", 6.5: "26px" });
     // Metro renders 1 rem = 16 pt so the default steps keep their px value.
     const metro = readFileSync(join(__dirname, "../../../metro.config.js"), "utf8");
     expect(metro).toMatch(/inlineRem:\s*16\b/);

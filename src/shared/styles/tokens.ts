@@ -19,6 +19,7 @@ import { vars } from "nativewind";
  */
 export const rawPalette = {
   graphite950: "#111312",
+  graphite975: "#0d0e0d",
   graphite925: "#151816",
   graphite900: "#181b19",
   graphite850: "#1f2320",
@@ -71,10 +72,12 @@ export type SemanticColors = {
   surfaceForeground: string;
   surfaceSubtle: string;
   surfaceElevated: string;
+  surfaceSunken: string;
   muted: string;
   mutedForeground: string;
   faintForeground: string;
   border: string;
+  borderSubtle: string;
   borderStrong: string;
   input: string;
   ring: string;
@@ -123,10 +126,12 @@ export const palettes: Record<ColorScheme, SemanticColors> = {
     surfaceForeground: p.bone,
     surfaceSubtle: p.graphite925,
     surfaceElevated: p.graphite850,
+    surfaceSunken: p.graphite975,
     muted: p.graphite850,
     mutedForeground: p.stone500,
     faintForeground: p.stone550,
     border: p.graphite800,
+    borderSubtle: p.graphite850,
     borderStrong: p.graphite600,
     input: p.graphite700,
     ring: p.olive300,
@@ -172,10 +177,12 @@ export const palettes: Record<ColorScheme, SemanticColors> = {
     surfaceForeground: p.graphite950,
     surfaceSubtle: p.bone200,
     surfaceElevated: p.white,
+    surfaceSunken: p.bone200,
     muted: p.bone200,
     mutedForeground: p.stone600,
     faintForeground: p.stone650,
     border: p.bone300,
+    borderSubtle: p.bone200,
     borderStrong: p.bone400,
     input: p.bone400,
     ring: p.olive600,
