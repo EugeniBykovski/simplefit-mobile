@@ -1216,7 +1216,7 @@ export const mobileRoutes = [
     nav: "WIZARD",
     status: "IMPLEMENTED",
     session: "AUTHENTICATED",
-    capability: "COACH",
+    capability: null,
     phase: "ONBOARDING",
     restrictedAccount: false,
   },
@@ -1230,7 +1230,7 @@ export const mobileRoutes = [
     nav: "WIZARD",
     status: "IMPLEMENTED",
     session: "AUTHENTICATED",
-    capability: "FIGHTER",
+    capability: null,
     phase: "ONBOARDING",
     restrictedAccount: false,
   },
@@ -1244,7 +1244,7 @@ export const mobileRoutes = [
     nav: "STANDALONE",
     status: "IMPLEMENTED",
     session: "AUTHENTICATED",
-    capability: "GYM_WORKSPACE",
+    capability: null,
     phase: "ONBOARDING",
     restrictedAccount: false,
   },
@@ -2091,6 +2091,16 @@ export const mobileGuards = {
     pendingDeletion: "mobile.account.pending-deletion",
   },
   returnToParam: "returnTo",
+  intentParam: "intent",
+  entryDestinations: {
+    account_registration: "mobile.signup.consent",
+    role_selection: "mobile.onboarding.role",
+    fighter_onboarding: "mobile.onboarding.fighter",
+    fighter_home: "mobile.home",
+    coach_onboarding: "mobile.onboarding.coach",
+    gym_onboarding: "mobile.onboarding.gym",
+    sponsor_application: null,
+  },
 } as const;
 
 export const mobileCapabilities = {

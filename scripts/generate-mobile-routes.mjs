@@ -69,6 +69,12 @@ export async function renderMobileRoutes(registry) {
       pendingDeletion: guards.restrictedAccount.pendingDeletion[PLATFORM],
     },
     returnToParam: guards.returnToParam,
+    intentParam: guards.intentParam,
+    entryDestinations: Object.fromEntries(
+      Object.entries(guards.entryDestinations)
+        .filter(([key]) => !key.startsWith("$"))
+        .map(([destination, target]) => [destination, target[PLATFORM]]),
+    ),
   };
 
   const capabilities = Object.fromEntries(
