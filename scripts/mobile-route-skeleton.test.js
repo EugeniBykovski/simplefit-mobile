@@ -29,6 +29,8 @@ const REAL_SCREENS = [
   // SF-37: O04 Basics & consent and O05 Choose your role.
   "mobile.signup.consent",
   "mobile.onboarding.role",
+  // SF-39: OF1–OF11 Fighter registration.
+  "mobile.onboarding.fighter",
   "mobile.app",
   "mobile.dev.design-system",
 ];
@@ -117,7 +119,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 10, catchAll: 1, placeholder: 129, deferred: 1 });
+    expect(counts).toEqual({ screen: 11, catchAll: 1, placeholder: 128, deferred: 1 });
     expect(routes).toHaveLength(141);
   });
 

@@ -197,12 +197,24 @@ Other SF-17 decisions:
   health notice global and O02 cannot store a name. O05 draws Fighter
   preselected; production picks nothing by default (SF-45). Both keep the
   artboards' layout; their invite links wait for the invite domain (A03).
-- **SF-40 web first-run tour (decision, no token change):** FRW2 draws a
-  bone coach-mark card on the dark page. Production builds it from the light
+- **SF-40 web first-run tour (decision, no token change):** FRW2 (nine steps
+  and a completion state since design `1791543685-48be`) draws a bone
+  coach-mark card on the dark page. Production builds it from the light
   theme's semantic tokens (`background`, `foreground`, `muted-foreground`,
   `highlight`, `secondary`), scoped to the card, so it stays a theme-correct
   inverse surface without new tokens. The card's 3 px arrow radius has no
   step within tolerance; the arrow tip is square.
+- **SF-39 mobile Fighter registration (decision, no token change):** OF5–OF10
+  draw gym search, membership plans, coach invites, privacy toggles, friend
+  suggestions and notification switches; none of those domains exists, so
+  each step keeps its heading, line, progress and Skip and shows one muted
+  notice saying what the step will do, recording nothing (OF8 adds the one
+  real fact: body weight is never public). OF1 draws no date of birth (O04
+  owns it) and its avatar waits for media upload. OF11 draws a first class,
+  requests and a weekly plan; production shows the saved profile only, with
+  no back button (completion is final). OF4's privacy note drops "and a
+  coach you approve" (no coach access exists). The OF11 28 px heading uses
+  `h1` (26 px, within tolerance).
 - **Hero type** larger than `display` (40–58 px on a handful of landing and hero artboards)
   is **DEFERRED** to the public-website ticket, which decides whether a
   `display-lg` role is needed.

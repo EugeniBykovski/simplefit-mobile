@@ -1,3 +1,5 @@
+import { Stack } from "expo-router";
+
 import { OnboardingGate, SessionGate } from "@/features/session-gate";
 import { ShellStack } from "@/providers/shell-stack";
 import { EntryFailure, LaunchScreen, SessionFailure } from "@/widgets/system-states";
@@ -14,7 +16,10 @@ export default function OnboardingLayout() {
       unavailable={<SessionFailure />}
     >
       <OnboardingGate pending={<LaunchScreen />} failure={<EntryFailure />}>
-        <ShellStack />
+        <ShellStack>
+          {/* The Fighter registration draws its own back button and progress (SF-39). */}
+          <Stack.Screen name="onboarding/fighter" options={{ headerShown: false }} />
+        </ShellStack>
       </OnboardingGate>
     </SessionGate>
   );

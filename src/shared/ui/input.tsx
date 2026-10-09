@@ -19,6 +19,8 @@ export type InputProps = Omit<TextInputProps, "style" | "className"> & {
    * domain). Assistive technology still reports it as disabled.
    */
   presentational?: boolean;
+  /** A unit shown at the end of a single-line field (e.g. "kg"); read with the hint. */
+  unit?: string | undefined;
 };
 
 /**
@@ -36,6 +38,7 @@ export function Input({
   ref,
   multiline,
   presentational = false,
+  unit,
   onFocus,
   onBlur,
   ...props
@@ -54,28 +57,40 @@ export function Input({
       <Text variant="caption" weight="bold" color="mutedForeground" nativeID={labelId}>
         {label}
       </Text>
-      <TextInput
-        ref={ref}
-        accessibilityLabel={label}
-        accessibilityLabelledBy={labelId}
-        accessibilityHint={description}
-        accessibilityState={{ disabled: props.editable === false }}
-        // Native prop: cannot be expressed as a className.
-        placeholderTextColor={colors.faintForeground}
-        maxFontSizeMultiplier={2}
-        multiline={multiline}
-        textAlignVertical={multiline ? "top" : "center"}
-        onFocus={(event) => {
-          setFocused(true);
-          onFocus?.(event);
-        }}
-        onBlur={(event) => {
-          setFocused(false);
-          onBlur?.(event);
-        }}
-        {...props}
-        className={`rounded-lg bg-surface px-4 font-sans-semibold text-body-lg text-foreground ${multiline ? "min-h-28 py-3.5" : "min-h-field py-3"} ${border} ${props.editable === false && !presentational ? "opacity-50" : ""}`}
-      />
+      <View>
+        <TextInput
+          ref={ref}
+          accessibilityLabel={label}
+          accessibilityLabelledBy={labelId}
+          accessibilityHint={[unit, description].filter(Boolean).join(". ") || undefined}
+          accessibilityState={{ disabled: props.editable === false }}
+          // Native prop: cannot be expressed as a className.
+          placeholderTextColor={colors.faintForeground}
+          maxFontSizeMultiplier={2}
+          multiline={multiline}
+          textAlignVertical={multiline ? "top" : "center"}
+          onFocus={(event) => {
+            setFocused(true);
+            onFocus?.(event);
+          }}
+          onBlur={(event) => {
+            setFocused(false);
+            onBlur?.(event);
+          }}
+          {...props}
+          className={`rounded-lg bg-surface px-4 font-sans-semibold text-body-lg text-foreground ${multiline ? "min-h-28 py-3.5" : "min-h-field py-3"} ${unit ? "pr-12" : ""} ${border} ${props.editable === false && !presentational ? "opacity-50" : ""}`}
+        />
+        {unit && !multiline ? (
+          <View
+            pointerEvents="none"
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            className="absolute inset-y-0 right-4 justify-center"
+          >
+            <Text color="faintForeground">{unit}</Text>
+          </View>
+        ) : null}
+      </View>
       {description && !error ? (
         <Text variant="caption" color="faintForeground">
           {description}

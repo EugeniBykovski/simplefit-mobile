@@ -15,12 +15,10 @@ import { Notice } from "@/shared/ui/notice";
 import { Spinner } from "@/shared/ui/spinner";
 import { Text } from "@/shared/ui/text";
 
+import { datePattern, isoFromMasked, maskDate, maskedFromIso } from "@/shared/lib/date-input";
+
 import {
   clientErrors,
-  datePattern,
-  isoFromMasked,
-  maskDate,
-  maskedFromIso,
   patchFrom,
   rejectionOf,
   valuesFrom,

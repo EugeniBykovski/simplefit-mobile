@@ -28,7 +28,8 @@
     "bundle:check": "expo export --platform ios --platform android --output-dir dist --clear",
     "quality": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm api:check && pnpm expo:check && pnpm config:check && pnpm expo:doctor && pnpm bundle:check",
     "prepare": "husky",
-    "routes:generate": "node scripts/generate-mobile-routes.mjs"
+    "routes:generate": "node scripts/generate-mobile-routes.mjs",
+    "countries:generate": "node scripts/generate-countries.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/jetbrains-mono": "0.4.1",
