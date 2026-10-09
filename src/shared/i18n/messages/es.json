@@ -710,5 +710,144 @@
       "missing": "Aún faltan datos obligatorios: {section}.",
       "goTo": "Ir a {section}"
     }
+  },
+  "firstRunIntro": {
+    "brand": "Bienvenida · Peleador",
+    "skip": "Omitir intro",
+    "next": "Siguiente",
+    "finish": "Vamos",
+    "progress": "Intro {step} de {total}",
+    "loading": "Cargando",
+    "saveFailed": "No pudimos guardarlo. Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "board": {
+      "label": "Tu Live Board",
+      "title": "Tu vida en el boxeo, en un mapa",
+      "body": "Cada gimnasio, compañero y sesión se conectan aquí con el tiempo. Es privado hasta que decidas compartirlo.",
+      "art": {
+        "you": "Tú",
+        "gym": "Tu gimnasio",
+        "gymNote": "Visitas",
+        "partner": "Compañero",
+        "partnerNote": "Entrenamos juntos",
+        "roadwork": "Compañero de carrera",
+        "roadworkNote": "Carreras",
+        "technical": "Técnica",
+        "technicalNote": "Asaltos",
+        "sparring": "Sparring",
+        "sparringNote": "Compartido",
+        "fight": "Pelea",
+        "fightNote": "Campamento",
+        "private": "Privado · solo tú",
+        "description": "Un Live Board de ejemplo: tú en el centro, conectado a un gimnasio, compañeros y sesiones."
+      }
+    },
+    "timer": {
+      "label": "Entrena",
+      "title": "Asaltos, no repeticiones",
+      "body": "El temporizador de boxeo lleva tus asaltos y descansos — y registra cada asalto en tu diario. Sin escribir entre asaltos.",
+      "art": {
+        "round": "Asalto 3 / 6",
+        "time": "02:14",
+        "rest": "Luego 1:00 de descanso",
+        "log": "Cada asalto llega a tu diario",
+        "badge": "Auto",
+        "description": "Un temporizador de ejemplo: asalto 3 de 6, quedan dos minutos catorce, luego descanso."
+      }
+    },
+    "coach": {
+      "label": "Tu esquina",
+      "title": "Tu entrenador y tu gimnasio, en tu bolsillo",
+      "body": "Reservas, programas y mensajes en un solo lugar. Entrenar con tu entrenador siempre es gratis.",
+      "art": {
+        "coach": "Tu entrenador",
+        "coachInitials": "E",
+        "coachNote": "Te envía un plan de entrenamiento",
+        "new": "Nuevo",
+        "classLabel": "Clase · reservada",
+        "classTime": "18:00",
+        "className": "Una clase en tu gimnasio",
+        "partner": "Compañero",
+        "partnerInitials": "C",
+        "partnerNote": "Mensajes en un solo lugar",
+        "private": "El peso, las notas de dolor y las del entrenador son privados por defecto.",
+        "description": "Un ejemplo de tu esquina: un plan de tu entrenador, una clase reservada y un mensaje de un compañero."
+      }
+    }
+  },
+  "fighterHome": {
+    "identity": "Peleador",
+    "notifications": "Notificaciones",
+    "help": "Ayuda y recorrido",
+    "dateLine": "{date} · Día {day}",
+    "greeting": "Bienvenido, {name}.",
+    "greetingLine": "Preparemos tu esquina.",
+    "loading": "Cargando tu inicio",
+    "loadFailed": "No pudimos cargar tu inicio. Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "checklist": {
+      "label": "Para empezar",
+      "title": "Primeros pasos",
+      "progress": "{done} de {total} hechos",
+      "notAvailable": "Aún no disponible",
+      "steps": {
+        "gym": "Únete a tu gimnasio",
+        "classes": "Reserva tu primera clase",
+        "timer": "Prueba el temporizador de asaltos",
+        "training": "Registra tu primer entrenamiento",
+        "partners": "Añade un compañero de entrenamiento"
+      }
+    },
+    "board": {
+      "label": "Tu Live Board",
+      "empty": "Vacío",
+      "title": "Tu primera sesión será el primer nodo",
+      "body": "Gimnasios, compañeros y peleas se conectan con el tiempo.",
+      "tour": "Haz el recorrido de 1 minuto →",
+      "tourLabel": "Haz el recorrido de 1 minuto"
+    },
+    "tour": {
+      "label": "Recorrido · {step} de {total}",
+      "doneLabel": "Recorrido completo",
+      "end": "Terminar",
+      "back": "Atrás",
+      "next": "Siguiente",
+      "finish": "Listo",
+      "close": "Volver a mi lista",
+      "steps": {
+        "checklist": {
+          "title": "Empieza aquí",
+          "body": "Aquí están tus primeros pasos. Cada uno se marca solo cuando lo completas."
+        },
+        "board": {
+          "title": "Este es tu Live Board",
+          "body": "Gimnasios, personas y sesiones, conectados con el tiempo. Solo tú lo ves hasta que compartas una tarjeta."
+        },
+        "training": {
+          "title": "Entrena y registra",
+          "body": "El temporizador de asaltos, el plan de tu entrenador y cada sesión que registres. Crea una sesión compartida para entrenar juntos."
+        },
+        "community": {
+          "title": "Tu gente",
+          "body": "Entrenamientos de amigos, la comunidad de tu gimnasio y retos — solo lo que cada persona decide compartir."
+        },
+        "profile": {
+          "title": "Perfil y ajustes",
+          "body": "Récord, progreso, campamentos y pases del gimnasio. También privacidad, exportación de datos y espacios de trabajo."
+        },
+        "notifications": {
+          "title": "Solo lo importante",
+          "body": "Recordatorios de clases, notas del entrenador y actividad de amigos. Lo menos importante llega en un resumen por la noche."
+        },
+        "identity": {
+          "title": "Tus roles",
+          "body": "Este eres tú como peleador. Si también entrenas a otros o diriges un gimnasio, cambiarás aquí — sin volver a iniciar sesión."
+        },
+        "done": {
+          "title": "Ya sabes moverte",
+          "body": "Repite el recorrido cuando quieras desde Ayuda (?)."
+        }
+      }
+    }
   }
 }

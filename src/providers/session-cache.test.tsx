@@ -1,4 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
+import { CancelledError, QueryClient } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react-native";
 
 import { completeAuthentication, signOut } from "@/entities/session";
@@ -57,5 +57,34 @@ describe("session-scoped query cache (SF-26)", () => {
     signedInAs("user-b");
     await act(() => completeAuthentication(TOKENS));
     await waitFor(() => expect(client.getQueryData(PROFILE_KEY)).toBeUndefined());
+  });
+
+  it("drops a late answer for the previous user instead of showing it to the next (SF-41)", async () => {
+    // No garbage-collection timer: nothing outlives the test.
+    const client = new QueryClient({ defaultOptions: { queries: { gcTime: Infinity } } });
+    signedInAs("user-a");
+    await completeAuthentication(TOKENS);
+    await renderHook(() => useSessionScopedCache(client));
+
+    let answerForA: (value: unknown) => void = () => {};
+    const key = ["/api/v1/me/first-run"];
+    const forA = client
+      .fetchQuery({
+        queryKey: key,
+        queryFn: () => new Promise((resolve) => (answerForA = resolve)),
+      })
+      .then(
+        () => "stored",
+        (error: unknown) => error,
+      );
+
+    signedInAs("user-b");
+    await act(() => completeAuthentication(TOKENS));
+    // User A's request is cancelled with the cache; its answer has nowhere to land.
+    expect(await forA).toBeInstanceOf(CancelledError);
+    expect(client.getQueryCache().find({ queryKey: key })).toBeUndefined();
+
+    await act(async () => answerForA({ experiences: [{ status: "completed" }] }));
+    expect(client.getQueryData(key)).toBeUndefined();
   });
 });

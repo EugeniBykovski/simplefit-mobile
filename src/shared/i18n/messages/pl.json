@@ -710,5 +710,144 @@
       "missing": "Brakuje wymaganych danych: {section}.",
       "goTo": "Przejdź: {section}"
     }
+  },
+  "firstRunIntro": {
+    "brand": "Witaj · Zawodnik",
+    "skip": "Pomiń wstęp",
+    "next": "Dalej",
+    "finish": "Zaczynamy",
+    "progress": "Wstęp {step} z {total}",
+    "loading": "Wczytywanie",
+    "saveFailed": "Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie",
+    "board": {
+      "label": "Twój Live Board",
+      "title": "Twoje bokserskie życie na mapie",
+      "body": "Każdy klub, partner i trening z czasem łączą się tutaj. Widzisz to tylko Ty, dopóki nie zdecydujesz się udostępnić.",
+      "art": {
+        "you": "Ty",
+        "gym": "Twój klub",
+        "gymNote": "Wizyty",
+        "partner": "Partner treningowy",
+        "partnerNote": "Wspólne treningi",
+        "roadwork": "Partner do biegania",
+        "roadworkNote": "Biegi",
+        "technical": "Technika",
+        "technicalNote": "Rundy",
+        "sparring": "Sparing",
+        "sparringNote": "Wspólny",
+        "fight": "Walka",
+        "fightNote": "Obóz",
+        "private": "Prywatne · tylko Ty",
+        "description": "Przykładowy Live Board: Ty w środku, połączony z klubem, partnerami i treningami."
+      }
+    },
+    "timer": {
+      "label": "Trening",
+      "title": "Rundy, nie powtórzenia",
+      "body": "Timer bokserski prowadzi rundy i przerwy — i zapisuje każdą rundę w dzienniku. Bez wpisywania między rundami.",
+      "art": {
+        "round": "Runda 3 / 6",
+        "time": "02:14",
+        "rest": "Potem przerwa 1:00",
+        "log": "Każda runda trafia do dziennika",
+        "badge": "Auto",
+        "description": "Przykładowy timer: runda 3 z 6, zostały dwie minuty czternaście sekund, potem przerwa."
+      }
+    },
+    "coach": {
+      "label": "Twój narożnik",
+      "title": "Trener i klub w Twojej kieszeni",
+      "body": "Zapisy, programy i wiadomości w jednym miejscu. Trening z trenerem jest dla Ciebie zawsze darmowy.",
+      "art": {
+        "coach": "Twój trener",
+        "coachInitials": "T",
+        "coachNote": "Wysyła Ci plan treningowy",
+        "new": "Nowe",
+        "classLabel": "Zajęcia · zapisano",
+        "classTime": "18:00",
+        "className": "Zajęcia w Twoim klubie",
+        "partner": "Partner treningowy",
+        "partnerInitials": "P",
+        "partnerNote": "Wiadomości w jednym miejscu",
+        "private": "Waga, notatki o bólu i notatki trenera są domyślnie prywatne.",
+        "description": "Przykład Twojego narożnika: plan od trenera, zapis na zajęcia i wiadomość od partnera."
+      }
+    }
+  },
+  "fighterHome": {
+    "identity": "Zawodnik",
+    "notifications": "Powiadomienia",
+    "help": "Pomoc i przewodnik",
+    "dateLine": "{date} · Dzień {day}",
+    "greeting": "Witaj, {name}.",
+    "greetingLine": "Urządźmy Twój narożnik.",
+    "loading": "Wczytujemy start",
+    "loadFailed": "Nie udało się wczytać startu. Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie",
+    "checklist": {
+      "label": "Na start",
+      "title": "Pierwsze kroki",
+      "progress": "Zrobione {done} z {total}",
+      "notAvailable": "Jeszcze niedostępne",
+      "steps": {
+        "gym": "Dołącz do swojego klubu",
+        "classes": "Zapisz się na pierwsze zajęcia",
+        "timer": "Wypróbuj timer rund",
+        "training": "Zapisz pierwszy trening",
+        "partners": "Dodaj partnera treningowego"
+      }
+    },
+    "board": {
+      "label": "Twój Live Board",
+      "empty": "Pusto",
+      "title": "Pierwszy trening stworzy pierwszy węzeł",
+      "body": "Kluby, partnerzy i walki łączą się z czasem.",
+      "tour": "Przewodnik w minutę →",
+      "tourLabel": "Przewodnik w minutę"
+    },
+    "tour": {
+      "label": "Przewodnik · {step} z {total}",
+      "doneLabel": "Przewodnik ukończony",
+      "end": "Zakończ",
+      "back": "Wstecz",
+      "next": "Dalej",
+      "finish": "Gotowe",
+      "close": "Wróć do listy",
+      "steps": {
+        "checklist": {
+          "title": "Zacznij tutaj",
+          "body": "Tu są Twoje pierwsze kroki. Każdy odhaczy się sam, gdy go wykonasz."
+        },
+        "board": {
+          "title": "To Twój Live Board",
+          "body": "Kluby, ludzie i treningi połączone z czasem. Widzisz go tylko Ty, dopóki nie udostępnisz karty."
+        },
+        "training": {
+          "title": "Trenuj i zapisuj",
+          "body": "Timer rund, plan trenera i każdy zapisany trening. Utwórz wspólny trening, by ćwiczyć razem."
+        },
+        "community": {
+          "title": "Twoi ludzie",
+          "body": "Treningi znajomych, społeczność klubu i wyzwania — tylko to, co ludzie zdecydują się udostępnić."
+        },
+        "profile": {
+          "title": "Profil i ustawienia",
+          "body": "Rekord, postępy, obozy i karnety. Tu też prywatność, eksport danych i przestrzenie robocze."
+        },
+        "notifications": {
+          "title": "Tylko to, co ważne",
+          "body": "Przypomnienia o zajęciach, notatki trenera i aktywność znajomych. Mniej ważne alerty trafiają do jednego wieczornego podsumowania."
+        },
+        "identity": {
+          "title": "Twoje role",
+          "body": "To Ty jako zawodnik. Jeśli też trenujesz innych lub prowadzisz klub, przełączysz się tutaj — bez ponownego logowania."
+        },
+        "done": {
+          "title": "Już wiesz, gdzie co jest",
+          "body": "Przewodnik możesz powtórzyć w każdej chwili w Pomocy (?)."
+        }
+      }
+    }
   }
 }

@@ -710,5 +710,144 @@
       "missing": "Some required details are still missing: {section}.",
       "goTo": "Go to {section}"
     }
+  },
+  "firstRunIntro": {
+    "brand": "Welcome · Fighter",
+    "skip": "Skip intro",
+    "next": "Next",
+    "finish": "Let’s go",
+    "progress": "Intro {step} of {total}",
+    "loading": "Loading",
+    "saveFailed": "We couldn’t save that. Check your connection and try again.",
+    "retry": "Try again",
+    "board": {
+      "label": "Your Live Board",
+      "title": "Your boxing life, mapped",
+      "body": "Every gym, partner and session connects here over time. It stays private until you choose to share it.",
+      "art": {
+        "you": "You",
+        "gym": "Your gym",
+        "gymNote": "Visits",
+        "partner": "Training partner",
+        "partnerNote": "Trained together",
+        "roadwork": "Roadwork partner",
+        "roadworkNote": "Runs",
+        "technical": "Technical",
+        "technicalNote": "Rounds",
+        "sparring": "Sparring",
+        "sparringNote": "Shared",
+        "fight": "Fight",
+        "fightNote": "Camp",
+        "private": "Private · only you",
+        "description": "An example Live Board: you in the middle, connected to a gym, partners and sessions."
+      }
+    },
+    "timer": {
+      "label": "Train",
+      "title": "Rounds, not reps",
+      "body": "The boxing timer runs your rounds and rest — and logs every round to your journal. No typing between rounds.",
+      "art": {
+        "round": "Round 3 / 6",
+        "time": "02:14",
+        "rest": "Rest 1:00 next",
+        "log": "Every round lands in your journal",
+        "badge": "Auto",
+        "description": "An example round timer: round 3 of 6, two minutes fourteen left, rest next."
+      }
+    },
+    "coach": {
+      "label": "Your corner",
+      "title": "Your coach and gym, in your pocket",
+      "body": "Bookings, programs and messages in one place. Training with your coach is always free.",
+      "art": {
+        "coach": "Your coach",
+        "coachInitials": "C",
+        "coachNote": "Sends you a training plan",
+        "new": "New",
+        "classLabel": "Class · booked",
+        "classTime": "18:00",
+        "className": "A class at your gym",
+        "partner": "Training partner",
+        "partnerInitials": "P",
+        "partnerNote": "Messages in one place",
+        "private": "Weight, pain notes and coach notes stay private by default.",
+        "description": "An example of your corner: a plan from your coach, a booked class and a message from a partner."
+      }
+    }
+  },
+  "fighterHome": {
+    "identity": "Fighter",
+    "notifications": "Notifications",
+    "help": "Help and tour",
+    "dateLine": "{date} · Day {day}",
+    "greeting": "Welcome in, {name}.",
+    "greetingLine": "Let’s set up your corner.",
+    "loading": "Loading your home",
+    "loadFailed": "We couldn’t load your home. Check your connection and try again.",
+    "retry": "Try again",
+    "checklist": {
+      "label": "Get started",
+      "title": "First steps",
+      "progress": "{done} of {total} done",
+      "notAvailable": "Not available yet",
+      "steps": {
+        "gym": "Join your gym",
+        "classes": "Book your first class",
+        "timer": "Try the round timer",
+        "training": "Log your first training",
+        "partners": "Add a training partner"
+      }
+    },
+    "board": {
+      "label": "Your Live Board",
+      "empty": "Empty",
+      "title": "Your first session makes the first node",
+      "body": "Gyms, partners and fights connect over time.",
+      "tour": "Take the 1-minute tour →",
+      "tourLabel": "Take the 1-minute tour"
+    },
+    "tour": {
+      "label": "Tour · {step} of {total}",
+      "doneLabel": "Tour complete",
+      "end": "End tour",
+      "back": "Back",
+      "next": "Next",
+      "finish": "Finish",
+      "close": "Back to my checklist",
+      "steps": {
+        "checklist": {
+          "title": "Start here",
+          "body": "Your first steps live here. Each one ticks on its own once you’ve done it."
+        },
+        "board": {
+          "title": "This is your Live Board",
+          "body": "Gyms, people and sessions, connected over time. Only you see it until you share a card."
+        },
+        "training": {
+          "title": "Train and log",
+          "body": "The round timer, your coach’s plan and every session you log. Create a shared session to train together."
+        },
+        "community": {
+          "title": "Your people",
+          "body": "Friends’ trainings, your gym’s community and challenges — only what people choose to share."
+        },
+        "profile": {
+          "title": "Profile and settings",
+          "body": "Record, progress, fight camps and gym passes. Privacy, data export and workspaces live here too."
+        },
+        "notifications": {
+          "title": "Only what matters",
+          "body": "Class reminders, coach notes and friend activity. Low-priority alerts are bundled into one evening digest."
+        },
+        "identity": {
+          "title": "Your roles",
+          "body": "This is you, as a Fighter. If you also coach or run a gym, you’ll switch here — no second sign-in."
+        },
+        "done": {
+          "title": "You know your way around",
+          "body": "Replay the tour any time from Help (?)."
+        }
+      }
+    }
   }
 }

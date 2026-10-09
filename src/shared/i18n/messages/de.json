@@ -710,5 +710,144 @@
       "missing": "Es fehlen noch Pflichtangaben: {section}.",
       "goTo": "Zu {section}"
     }
+  },
+  "firstRunIntro": {
+    "brand": "Willkommen · Fighter",
+    "skip": "Intro überspringen",
+    "next": "Weiter",
+    "finish": "Los geht’s",
+    "progress": "Intro {step} von {total}",
+    "loading": "Wird geladen",
+    "saveFailed": "Das konnten wir nicht speichern. Prüfe deine Verbindung und versuche es erneut.",
+    "retry": "Erneut versuchen",
+    "board": {
+      "label": "Dein Live Board",
+      "title": "Dein Boxleben auf einer Karte",
+      "body": "Jedes Gym, jeder Partner und jede Einheit verbindet sich hier mit der Zeit. Privat, bis du es teilen willst.",
+      "art": {
+        "you": "Du",
+        "gym": "Dein Gym",
+        "gymNote": "Besuche",
+        "partner": "Trainingspartner",
+        "partnerNote": "Gemeinsam trainiert",
+        "roadwork": "Laufpartner",
+        "roadworkNote": "Läufe",
+        "technical": "Technik",
+        "technicalNote": "Runden",
+        "sparring": "Sparring",
+        "sparringNote": "Geteilt",
+        "fight": "Kampf",
+        "fightNote": "Camp",
+        "private": "Privat · nur du",
+        "description": "Ein Beispiel-Live-Board: du in der Mitte, verbunden mit Gym, Partnern und Einheiten."
+      }
+    },
+    "timer": {
+      "label": "Training",
+      "title": "Runden statt Wiederholungen",
+      "body": "Der Box-Timer läuft durch Runden und Pausen — und trägt jede Runde in dein Journal ein. Kein Tippen zwischen den Runden.",
+      "art": {
+        "round": "Runde 3 / 6",
+        "time": "02:14",
+        "rest": "Danach 1:00 Pause",
+        "log": "Jede Runde landet in deinem Journal",
+        "badge": "Auto",
+        "description": "Ein Beispiel-Timer: Runde 3 von 6, noch zwei Minuten vierzehn, danach Pause."
+      }
+    },
+    "coach": {
+      "label": "Deine Ecke",
+      "title": "Coach und Gym in deiner Tasche",
+      "body": "Buchungen, Programme und Nachrichten an einem Ort. Training mit deinem Coach ist immer kostenlos.",
+      "art": {
+        "coach": "Dein Coach",
+        "coachInitials": "C",
+        "coachNote": "Schickt dir einen Trainingsplan",
+        "new": "Neu",
+        "classLabel": "Kurs · gebucht",
+        "classTime": "18:00",
+        "className": "Ein Kurs in deinem Gym",
+        "partner": "Trainingspartner",
+        "partnerInitials": "P",
+        "partnerNote": "Nachrichten an einem Ort",
+        "private": "Gewicht, Schmerznotizen und Coach-Notizen bleiben standardmäßig privat.",
+        "description": "Ein Beispiel deiner Ecke: ein Plan vom Coach, ein gebuchter Kurs und eine Nachricht von einem Partner."
+      }
+    }
+  },
+  "fighterHome": {
+    "identity": "Fighter",
+    "notifications": "Benachrichtigungen",
+    "help": "Hilfe und Tour",
+    "dateLine": "{date} · Tag {day}",
+    "greeting": "Willkommen, {name}.",
+    "greetingLine": "Lass uns deine Ecke einrichten.",
+    "loading": "Start wird geladen",
+    "loadFailed": "Dein Start konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
+    "retry": "Erneut versuchen",
+    "checklist": {
+      "label": "Erste Schritte",
+      "title": "Los geht’s",
+      "progress": "{done} von {total} erledigt",
+      "notAvailable": "Noch nicht verfügbar",
+      "steps": {
+        "gym": "Tritt deinem Gym bei",
+        "classes": "Buche deinen ersten Kurs",
+        "timer": "Probiere den Runden-Timer",
+        "training": "Trage dein erstes Training ein",
+        "partners": "Füge einen Trainingspartner hinzu"
+      }
+    },
+    "board": {
+      "label": "Dein Live Board",
+      "empty": "Leer",
+      "title": "Deine erste Einheit wird der erste Knoten",
+      "body": "Gyms, Partner und Kämpfe verbinden sich mit der Zeit.",
+      "tour": "1-Minuten-Tour starten →",
+      "tourLabel": "1-Minuten-Tour starten"
+    },
+    "tour": {
+      "label": "Tour · {step} von {total}",
+      "doneLabel": "Tour abgeschlossen",
+      "end": "Tour beenden",
+      "back": "Zurück",
+      "next": "Weiter",
+      "finish": "Fertig",
+      "close": "Zurück zur Checkliste",
+      "steps": {
+        "checklist": {
+          "title": "Hier beginnst du",
+          "body": "Hier liegen deine ersten Schritte. Jeder hakt sich von selbst ab, sobald du ihn erledigt hast."
+        },
+        "board": {
+          "title": "Das ist dein Live Board",
+          "body": "Gyms, Menschen und Einheiten, verbunden mit der Zeit. Nur du siehst es, bis du eine Karte teilst."
+        },
+        "training": {
+          "title": "Trainieren und eintragen",
+          "body": "Der Runden-Timer, der Plan deines Coachs und jede eingetragene Einheit. Erstelle eine geteilte Einheit, um gemeinsam zu trainieren."
+        },
+        "community": {
+          "title": "Deine Leute",
+          "body": "Trainings von Freunden, die Community deines Gyms und Challenges — nur, was andere teilen möchten."
+        },
+        "profile": {
+          "title": "Profil und Einstellungen",
+          "body": "Bilanz, Fortschritt, Fight Camps und Gym-Pässe. Auch Privatsphäre, Datenexport und Arbeitsbereiche."
+        },
+        "notifications": {
+          "title": "Nur das Wichtige",
+          "body": "Kurs-Erinnerungen, Coach-Notizen und Aktivitäten von Freunden. Weniger Wichtiges kommt gebündelt in einer Abend-Übersicht."
+        },
+        "identity": {
+          "title": "Deine Rollen",
+          "body": "Das bist du als Fighter. Wenn du auch coachst oder ein Gym führst, wechselst du hier — ohne zweite Anmeldung."
+        },
+        "done": {
+          "title": "Du kennst dich jetzt aus",
+          "body": "Die Tour kannst du jederzeit über Hilfe (?) wiederholen."
+        }
+      }
+    }
   }
 }
