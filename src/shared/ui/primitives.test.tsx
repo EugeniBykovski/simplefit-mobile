@@ -120,6 +120,14 @@ describe("Input and Textarea", () => {
     expect(onChangeText).toHaveBeenLastCalledWith("Ali");
   });
 
+  it("shows a unit inside the field and reads it with the hint", async () => {
+    await renderWithProviders(<Input label="Weight" unit="kg" description="Optional" />);
+    expect(screen.getByLabelText("Weight")).toHaveProp("accessibilityHint", "kg. Optional");
+    // Visible, but not a separate element for assistive technology.
+    expect(screen.queryByText("kg")).toBeNull();
+    expect(screen.getByText("kg", { includeHiddenElements: true })).toBeOnTheScreen();
+  });
+
   it("renders a multiline text area", async () => {
     await renderWithProviders(<Textarea label="Notes" />);
     expect(screen.getByLabelText("Notes")).toHaveProp("multiline", true);

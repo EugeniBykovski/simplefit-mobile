@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { FighterOnboardingScreen } from "@/widgets/fighter-onboarding";
 
-export default placeholderRoute("mobile.onboarding.fighter");
+export default function FighterOnboardingRoute() {
+  return <FighterOnboardingScreen />;
+}

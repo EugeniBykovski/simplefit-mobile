@@ -110,6 +110,35 @@ const NOT_STARTED = {
  * (SF-24); the API resolves the entry (`GET /api/v1/me/entry`, SF-45) as
  * `entry`.
  */
+/** SF-25: the profile before the first save (every field empty). */
+const FIGHTER_NOT_STARTED = {
+  display_name: null,
+  username: null,
+  country_code: null,
+  city: null,
+  experience_level: null,
+  amateur_bout_count: null,
+  stance: null,
+  goals: [],
+  next_fight_on: null,
+  next_fight_name: null,
+  weight_class: null,
+  current_weight_kg: null,
+  height_cm: null,
+  onboarding: {
+    status: "not_started",
+    completed_at: null,
+    missing_requirements: [
+      "display_name",
+      "username",
+      "country_code",
+      "city",
+      "experience_level",
+      "stance",
+    ],
+  },
+};
+
 async function signIn(entry: Entry = ROLE_SELECTION) {
   mockFetch(
     jest.fn((url: string) =>
@@ -118,12 +147,14 @@ async function signIn(entry: Entry = ROLE_SELECTION) {
           ? jsonResponse({ entry: { ...entry, intent: new URL(url).searchParams.get("intent") } })
           : url.includes("/api/v1/me/account-profile")
             ? jsonResponse({ account_profile: NOT_STARTED })
-            : jsonResponse({
-                user: {
-                  id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                  created_at: "2026-10-01T10:00:00Z",
-                },
-              }),
+            : url.includes("/api/v1/me/fighter-profile")
+              ? jsonResponse({ fighter_profile: FIGHTER_NOT_STARTED })
+              : jsonResponse({
+                  user: {
+                    id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                    created_at: "2026-10-01T10:00:00Z",
+                  },
+                }),
       ),
     ),
   );
@@ -528,6 +559,17 @@ describe("entry resolution (SF-45)", () => {
     const result = await renderApp("/onboarding/fighter?intent=fighter");
     await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
     expect(result.getSearchParams()).toEqual({ intent: "fighter" });
+  });
+
+  it("Fighter onboarding is the real registration (SF-39), starting at OF1 with the intent kept", async () => {
+    await signIn(ROLE_SELECTION);
+    const result = await renderApp("/onboarding/fighter?intent=fighter");
+    expect(await screen.findByRole("header", { name: "Your fighter profile" })).toBeOnTheScreen();
+    expect(screen.queryByTestId(placeholderId("mobile.onboarding.fighter"))).toBeNull();
+    await waitFor(() =>
+      expect(result.getSearchParams()).toEqual({ intent: "fighter", step: "account" }),
+    );
+    expect(result.getPathname()).toBe("/onboarding/fighter");
   });
 
   it("role onboarding needs no capability once account registration is complete", async () => {

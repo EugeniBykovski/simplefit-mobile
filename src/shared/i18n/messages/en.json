@@ -507,5 +507,208 @@
       "report": "Report a broken link",
       "pathNotFound": "{path} · not found"
     }
+  },
+  "fighterOnboarding": {
+    "stepLabel": "Step {step} of {total} · {section}",
+    "progress": "Step {step} of {total}",
+    "sections": {
+      "account": "Account",
+      "experience": "Boxing profile",
+      "goals": "Goals",
+      "weight": "Weight class",
+      "gym": "Gym",
+      "membership": "Membership",
+      "coach": "Coach",
+      "privacy": "Privacy",
+      "friends": "Friends",
+      "notifications": "Notifications",
+      "complete": "Done"
+    },
+    "titles": {
+      "account": "Your fighter profile",
+      "experience": "Your boxing experience",
+      "goals": "What are you training for?",
+      "weight": "Approximate weight class",
+      "gym": "Where do you train?",
+      "membership": "Gym membership",
+      "coach": "Do you have a coach?",
+      "privacy": "Your privacy",
+      "friends": "Train with people you know",
+      "notifications": "What should we tell you?",
+      "complete": "Your boxing journey starts here."
+    },
+    "descriptions": {
+      "account": "How teammates and coaches find you.",
+      "experience": "Coaches use this to plan and to pair sparring safely.",
+      "goals": "Pick any. Home and your weekly plan follow your goals.",
+      "weight": "Used to suggest sparring partners and plan camps.",
+      "gym": "Connecting a gym will let you book classes and check in with your phone.",
+      "membership": "Joining, choosing a membership and booking a trial will happen here.",
+      "coach": "Working with a coach is always free for fighters.",
+      "privacy": "Safe defaults. You'll be able to change them per post or in Settings.",
+      "friends": "Friends are mutual. Following is one-way.",
+      "notifications": "Training first. Social stays grouped and quiet.",
+      "complete": "Your fighter profile is saved."
+    },
+    "back": "Back",
+    "skip": "Skip",
+    "skipStep": "Skip {section}",
+    "continue": "Continue",
+    "finish": "Finish",
+    "loading": "Loading your profile",
+    "loadFailed": "We couldn't load your profile. Check your connection and try again.",
+    "retry": "Try again",
+    "letters": {
+      "day": "D",
+      "month": "M",
+      "year": "Y"
+    },
+    "account": {
+      "name": "Name",
+      "username": "Username",
+      "usernameHint": "3–30 letters, digits or _. Your @handle.",
+      "country": "Country",
+      "city": "City"
+    },
+    "country": {
+      "placeholder": "Choose",
+      "none": "Not chosen",
+      "hint": "Opens the list of countries",
+      "title": "Country",
+      "close": "Close",
+      "search": "Search countries",
+      "empty": "No country matches."
+    },
+    "experience": {
+      "levels": {
+        "new_to_boxing": {
+          "title": "New to Boxing",
+          "body": "Never trained before"
+        },
+        "recreational": {
+          "title": "Recreational",
+          "body": "Classes and bag work for fun"
+        },
+        "amateur": {
+          "title": "Amateur",
+          "body": "Regular training, light sparring"
+        },
+        "competitive_amateur": {
+          "title": "Competitive Amateur",
+          "body": "Competing in amateur events"
+        },
+        "professional": {
+          "title": "Professional",
+          "body": "Licensed pro record"
+        }
+      },
+      "bouts": "Amateur bouts",
+      "boutsHint": "Optional · your amateur record",
+      "stance": "Stance",
+      "stances": {
+        "orthodox": "Orthodox",
+        "southpaw": "Southpaw",
+        "switch": "Switch"
+      }
+    },
+    "goals": {
+      "items": {
+        "fitness": {
+          "title": "Fitness",
+          "body": "Stay sharp, sweat, have fun"
+        },
+        "learn_boxing": {
+          "title": "Learn Boxing",
+          "body": "Fundamentals with a coach"
+        },
+        "improve_technique": {
+          "title": "Improve Technique",
+          "body": "Sharper, smarter boxing"
+        },
+        "competition": {
+          "title": "Competition",
+          "body": "Amateur bouts and tournaments"
+        },
+        "fight_preparation": {
+          "title": "Fight Preparation",
+          "body": "A fight date to peak for"
+        }
+      },
+      "nextFight": "Next fight · optional",
+      "nextFightDate": "Date",
+      "nextFightName": "Event"
+    },
+    "weight": {
+      "classLabel": "Weight class · kg",
+      "classes": {
+        "minus_63_5": "−63.5",
+        "minus_67": "−67",
+        "minus_71": "−71",
+        "minus_75": "−75",
+        "minus_80": "−80",
+        "minus_86": "−86",
+        "plus_86": "+86",
+        "not_sure": "Not sure"
+      },
+      "weight": "Current weight · optional",
+      "height": "Height · optional",
+      "kg": "kg",
+      "cm": "cm",
+      "private": "<b>Weight is private.</b> Only you see it. Never on cards, feeds, leaderboards or sponsor analytics."
+    },
+    "info": {
+      "gym": {
+        "body": "Gyms aren't on SimpleFit yet. Once they are, you'll find yours here, join by invite or scan its QR code. Nothing is linked to your profile now."
+      },
+      "membership": {
+        "body": "There's no gym to join yet, so no membership is chosen and no join request is sent."
+      },
+      "coach": {
+        "body": "Coaches arrive later. You'll join yours by invite or find one nearby; nothing is requested now."
+      },
+      "privacy": {
+        "body": "Privacy settings arrive with Settings. Until then your fighter profile isn't published anywhere.",
+        "neverPublic": "Never public · never shown to sponsors",
+        "weight": "Weight & weigh-ins",
+        "never": "Never"
+      },
+      "friends": {
+        "body": "Friends arrive with Community. No one is added or invited now."
+      },
+      "notifications": {
+        "body": "Notification settings arrive later. Nothing is turned on and your phone isn't asked for anything now."
+      }
+    },
+    "complete": {
+      "label": "Fighter profile",
+      "experience": "Experience",
+      "stance": "Stance",
+      "weightClass": "Weight class",
+      "from": "From",
+      "cta": "Go to SimpleFit"
+    },
+    "errors": {
+      "required": {
+        "display_name": "Enter your name.",
+        "username": "Choose a username.",
+        "country_code": "Choose your country.",
+        "city": "Enter your city.",
+        "experience_level": "Choose your experience.",
+        "stance": "Choose your stance."
+      },
+      "usernameFormat": "Use 3–30 letters, digits or _, starting and ending with a letter or digit.",
+      "usernameTaken": "That username is taken.",
+      "weightPrecision": "Use at most one decimal, for example 73.8.",
+      "wholeNumber": "Use a whole number.",
+      "tooLong": "That's too long.",
+      "outOfRange": "That value is out of range.",
+      "invalidChoice": "Choose one of the options.",
+      "invalidDate": "Enter a real date.",
+      "invalid": "Check this field.",
+      "saveFailed": "We couldn't save that. Check your connection and try again.",
+      "completeFailed": "We couldn't finish your registration. Check your connection and try again.",
+      "missing": "Some required details are still missing: {section}.",
+      "goTo": "Go to {section}"
+    }
   }
 }

@@ -507,5 +507,208 @@
       "report": "Zgłoś niedziałający link",
       "pathNotFound": "{path} · nie znaleziono"
     }
+  },
+  "fighterOnboarding": {
+    "stepLabel": "Krok {step} z {total} · {section}",
+    "progress": "Krok {step} z {total}",
+    "sections": {
+      "account": "Konto",
+      "experience": "Profil bokserski",
+      "goals": "Cele",
+      "weight": "Kategoria wagowa",
+      "gym": "Klub",
+      "membership": "Karnet",
+      "coach": "Trener",
+      "privacy": "Prywatność",
+      "friends": "Znajomi",
+      "notifications": "Powiadomienia",
+      "complete": "Gotowe"
+    },
+    "titles": {
+      "account": "Twój profil zawodnika",
+      "experience": "Twoje doświadczenie bokserskie",
+      "goals": "Do czego trenujesz?",
+      "weight": "Przybliżona kategoria wagowa",
+      "gym": "Gdzie trenujesz?",
+      "membership": "Karnet do klubu",
+      "coach": "Masz trenera?",
+      "privacy": "Twoja prywatność",
+      "friends": "Trenuj ze znajomymi",
+      "notifications": "O czym mamy Ci mówić?",
+      "complete": "Tu zaczyna się Twoja bokserska droga."
+    },
+    "descriptions": {
+      "account": "Tak znajdą Cię partnerzy i trenerzy.",
+      "experience": "Trenerzy używają tego do planowania i bezpiecznego doboru sparingów.",
+      "goals": "Wybierz dowolne. Start i plan tygodnia dopasują się do celów.",
+      "weight": "Pomaga proponować partnerów do sparingu i planować obozy.",
+      "gym": "Po połączeniu klubu zapiszesz się na zajęcia i zameldujesz telefonem.",
+      "membership": "Tu będzie można dołączyć do klubu, wybrać karnet i zapisać się na trening próbny.",
+      "coach": "Praca z trenerem jest dla zawodników zawsze darmowa.",
+      "privacy": "Bezpieczne ustawienia domyślne. Zmienisz je dla każdego wpisu lub w ustawieniach.",
+      "friends": "Znajomość jest obustronna. Obserwowanie — jednostronne.",
+      "notifications": "Najpierw trening. Sprawy społecznościowe zgrupowane i ciche.",
+      "complete": "Twój profil zawodnika jest zapisany."
+    },
+    "back": "Wstecz",
+    "skip": "Pomiń",
+    "skipStep": "Pomiń: {section}",
+    "continue": "Dalej",
+    "finish": "Zakończ",
+    "loading": "Wczytujemy profil",
+    "loadFailed": "Nie udało się wczytać profilu. Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie",
+    "letters": {
+      "day": "D",
+      "month": "M",
+      "year": "R"
+    },
+    "account": {
+      "name": "Imię",
+      "username": "Nazwa użytkownika",
+      "usernameHint": "3–30 liter, cyfr lub _. Twój @nick.",
+      "country": "Kraj",
+      "city": "Miasto"
+    },
+    "country": {
+      "placeholder": "Wybierz",
+      "none": "Nie wybrano",
+      "hint": "Otwiera listę krajów",
+      "title": "Kraj",
+      "close": "Zamknij",
+      "search": "Szukaj kraju",
+      "empty": "Brak pasujących krajów."
+    },
+    "experience": {
+      "levels": {
+        "new_to_boxing": {
+          "title": "Początkujący",
+          "body": "Jeszcze nie trenowałem"
+        },
+        "recreational": {
+          "title": "Rekreacyjnie",
+          "body": "Zajęcia i worek dla przyjemności"
+        },
+        "amateur": {
+          "title": "Amator",
+          "body": "Regularne treningi, lekkie sparingi"
+        },
+        "competitive_amateur": {
+          "title": "Amator startujący",
+          "body": "Startuję w zawodach amatorskich"
+        },
+        "professional": {
+          "title": "Zawodowiec",
+          "body": "Licencjonowany rekord zawodowy"
+        }
+      },
+      "bouts": "Walki amatorskie",
+      "boutsHint": "Opcjonalnie · Twój rekord amatorski",
+      "stance": "Pozycja",
+      "stances": {
+        "orthodox": "Klasyczna",
+        "southpaw": "Odwrotna",
+        "switch": "Zmienna"
+      }
+    },
+    "goals": {
+      "items": {
+        "fitness": {
+          "title": "Kondycja",
+          "body": "Forma, pot i dobra zabawa"
+        },
+        "learn_boxing": {
+          "title": "Nauka boksu",
+          "body": "Podstawy z trenerem"
+        },
+        "improve_technique": {
+          "title": "Lepsza technika",
+          "body": "Ostrzejszy, mądrzejszy boks"
+        },
+        "competition": {
+          "title": "Zawody",
+          "body": "Walki amatorskie i turnieje"
+        },
+        "fight_preparation": {
+          "title": "Przygotowanie do walki",
+          "body": "Data walki, na którą szczyt formy"
+        }
+      },
+      "nextFight": "Następna walka · opcjonalnie",
+      "nextFightDate": "Data",
+      "nextFightName": "Wydarzenie"
+    },
+    "weight": {
+      "classLabel": "Kategoria wagowa · kg",
+      "classes": {
+        "minus_63_5": "−63.5",
+        "minus_67": "−67",
+        "minus_71": "−71",
+        "minus_75": "−75",
+        "minus_80": "−80",
+        "minus_86": "−86",
+        "plus_86": "+86",
+        "not_sure": "Nie wiem"
+      },
+      "weight": "Obecna waga · opcjonalnie",
+      "height": "Wzrost · opcjonalnie",
+      "kg": "kg",
+      "cm": "cm",
+      "private": "<b>Waga jest prywatna.</b> Widzisz ją tylko Ty. Nigdy na kartach, w kanałach, rankingach ani analityce sponsorów."
+    },
+    "info": {
+      "gym": {
+        "body": "Klubów jeszcze nie ma w SimpleFit. Gdy się pojawią, znajdziesz tu swój, dołączysz z zaproszenia albo zeskanujesz jego kod QR. Teraz nic nie jest łączone z profilem."
+      },
+      "membership": {
+        "body": "Nie ma jeszcze klubu, do którego można dołączyć, więc nie wybierasz karnetu i nie wysyłasz prośby."
+      },
+      "coach": {
+        "body": "Trenerzy pojawią się później. Dołączysz do swojego z zaproszenia albo znajdziesz trenera w pobliżu; teraz o nic nie prosimy."
+      },
+      "privacy": {
+        "body": "Ustawienia prywatności pojawią się razem z ustawieniami. Do tego czasu Twój profil zawodnika nie jest nigdzie publikowany.",
+        "neverPublic": "Nigdy publicznie · nigdy dla sponsorów",
+        "weight": "Waga i ważenia",
+        "never": "Nigdy"
+      },
+      "friends": {
+        "body": "Znajomi pojawią się wraz ze społecznością. Teraz nikt nie jest dodawany ani zapraszany."
+      },
+      "notifications": {
+        "body": "Ustawienia powiadomień pojawią się później. Teraz nic nie jest włączane, a telefon o nic nie pyta."
+      }
+    },
+    "complete": {
+      "label": "Profil zawodnika",
+      "experience": "Doświadczenie",
+      "stance": "Pozycja",
+      "weightClass": "Kategoria wagowa",
+      "from": "Skąd",
+      "cta": "Przejdź do SimpleFit"
+    },
+    "errors": {
+      "required": {
+        "display_name": "Wpisz imię.",
+        "username": "Wybierz nazwę użytkownika.",
+        "country_code": "Wybierz kraj.",
+        "city": "Wpisz miasto.",
+        "experience_level": "Wybierz doświadczenie.",
+        "stance": "Wybierz pozycję."
+      },
+      "usernameFormat": "3–30 liter, cyfr lub _, na początku i na końcu litera lub cyfra.",
+      "usernameTaken": "Ta nazwa użytkownika jest zajęta.",
+      "weightPrecision": "Najwyżej jedna cyfra po przecinku, np. 73,8.",
+      "wholeNumber": "Wpisz liczbę całkowitą.",
+      "tooLong": "Za długie.",
+      "outOfRange": "Wartość poza zakresem.",
+      "invalidChoice": "Wybierz jedną z opcji.",
+      "invalidDate": "Wpisz prawdziwą datę.",
+      "invalid": "Sprawdź to pole.",
+      "saveFailed": "Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie.",
+      "completeFailed": "Nie udało się dokończyć rejestracji. Sprawdź połączenie i spróbuj ponownie.",
+      "missing": "Brakuje wymaganych danych: {section}.",
+      "goTo": "Przejdź: {section}"
+    }
   }
 }

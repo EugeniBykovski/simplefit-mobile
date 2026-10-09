@@ -507,5 +507,208 @@
       "report": "Signaler un lien cassé",
       "pathNotFound": "{path} · introuvable"
     }
+  },
+  "fighterOnboarding": {
+    "stepLabel": "Étape {step} sur {total} · {section}",
+    "progress": "Étape {step} sur {total}",
+    "sections": {
+      "account": "Compte",
+      "experience": "Profil de boxe",
+      "goals": "Objectifs",
+      "weight": "Catégorie de poids",
+      "gym": "Salle",
+      "membership": "Abonnement",
+      "coach": "Coach",
+      "privacy": "Confidentialité",
+      "friends": "Amis",
+      "notifications": "Notifications",
+      "complete": "Terminé"
+    },
+    "titles": {
+      "account": "Ton profil de boxeur",
+      "experience": "Ton expérience en boxe",
+      "goals": "Pour quoi t’entraînes-tu ?",
+      "weight": "Catégorie de poids approximative",
+      "gym": "Où t’entraînes-tu ?",
+      "membership": "Abonnement à la salle",
+      "coach": "As-tu un coach ?",
+      "privacy": "Ta confidentialité",
+      "friends": "Entraîne-toi avec des gens que tu connais",
+      "notifications": "De quoi te prévenir ?",
+      "complete": "Ton parcours de boxeur commence ici."
+    },
+    "descriptions": {
+      "account": "C’est ainsi que partenaires et coachs te trouvent.",
+      "experience": "Les coachs s’en servent pour planifier et associer les sparrings en sécurité.",
+      "goals": "Choisis-en autant que tu veux. L’accueil et ton plan de la semaine suivent tes objectifs.",
+      "weight": "Sert à suggérer des partenaires de sparring et à planifier les camps.",
+      "gym": "Relier une salle te permettra de réserver des cours et de pointer avec ton téléphone.",
+      "membership": "C’est ici que tu rejoindras une salle, choisiras un abonnement et réserveras un cours d’essai.",
+      "coach": "S’entraîner avec un coach est toujours gratuit pour les boxeurs.",
+      "privacy": "Des réglages sûrs par défaut. Tu pourras les changer par publication ou dans les Réglages.",
+      "friends": "L’amitié est réciproque. Suivre est à sens unique.",
+      "notifications": "L’entraînement d’abord. Le social reste groupé et discret.",
+      "complete": "Ton profil de boxeur est enregistré."
+    },
+    "back": "Retour",
+    "skip": "Passer",
+    "skipStep": "Passer : {section}",
+    "continue": "Continuer",
+    "finish": "Terminer",
+    "loading": "Chargement de ton profil",
+    "loadFailed": "Impossible de charger ton profil. Vérifie ta connexion et réessaie.",
+    "retry": "Réessayer",
+    "letters": {
+      "day": "J",
+      "month": "M",
+      "year": "A"
+    },
+    "account": {
+      "name": "Nom",
+      "username": "Nom d’utilisateur",
+      "usernameHint": "3–30 lettres, chiffres ou _. Ton @pseudo.",
+      "country": "Pays",
+      "city": "Ville"
+    },
+    "country": {
+      "placeholder": "Choisir",
+      "none": "Non choisi",
+      "hint": "Ouvre la liste des pays",
+      "title": "Pays",
+      "close": "Fermer",
+      "search": "Rechercher un pays",
+      "empty": "Aucun pays ne correspond."
+    },
+    "experience": {
+      "levels": {
+        "new_to_boxing": {
+          "title": "Débutant",
+          "body": "Jamais entraîné"
+        },
+        "recreational": {
+          "title": "Loisir",
+          "body": "Cours et sac pour le plaisir"
+        },
+        "amateur": {
+          "title": "Amateur",
+          "body": "Entraînement régulier, sparring léger"
+        },
+        "competitive_amateur": {
+          "title": "Amateur en compétition",
+          "body": "Je dispute des compétitions amateurs"
+        },
+        "professional": {
+          "title": "Professionnel",
+          "body": "Palmarès pro sous licence"
+        }
+      },
+      "bouts": "Combats amateurs",
+      "boutsHint": "Facultatif · ton palmarès amateur",
+      "stance": "Garde",
+      "stances": {
+        "orthodox": "Orthodoxe",
+        "southpaw": "Fausse garde",
+        "switch": "Alternée"
+      }
+    },
+    "goals": {
+      "items": {
+        "fitness": {
+          "title": "Forme",
+          "body": "Rester affûté, transpirer, s’amuser"
+        },
+        "learn_boxing": {
+          "title": "Apprendre la boxe",
+          "body": "Les bases avec un coach"
+        },
+        "improve_technique": {
+          "title": "Améliorer la technique",
+          "body": "Une boxe plus fine et plus intelligente"
+        },
+        "competition": {
+          "title": "Compétition",
+          "body": "Combats et tournois amateurs"
+        },
+        "fight_preparation": {
+          "title": "Préparation au combat",
+          "body": "Une date de combat pour être au top"
+        }
+      },
+      "nextFight": "Prochain combat · facultatif",
+      "nextFightDate": "Date",
+      "nextFightName": "Événement"
+    },
+    "weight": {
+      "classLabel": "Catégorie de poids · kg",
+      "classes": {
+        "minus_63_5": "−63.5",
+        "minus_67": "−67",
+        "minus_71": "−71",
+        "minus_75": "−75",
+        "minus_80": "−80",
+        "minus_86": "−86",
+        "plus_86": "+86",
+        "not_sure": "Je ne sais pas"
+      },
+      "weight": "Poids actuel · facultatif",
+      "height": "Taille · facultatif",
+      "kg": "kg",
+      "cm": "cm",
+      "private": "<b>Ton poids est privé.</b> Toi seul le vois. Jamais sur les cartes, les fils, les classements ni les analyses des sponsors."
+    },
+    "info": {
+      "gym": {
+        "body": "Les salles ne sont pas encore sur SimpleFit. Quand elles y seront, tu trouveras la tienne ici, la rejoindras par invitation ou scanneras son code QR. Rien n’est relié à ton profil pour l’instant."
+      },
+      "membership": {
+        "body": "Il n’y a pas encore de salle à rejoindre : aucun abonnement n’est choisi et aucune demande n’est envoyée."
+      },
+      "coach": {
+        "body": "Les coachs arrivent plus tard. Tu rejoindras le tien par invitation ou en trouveras un près de chez toi ; rien n’est demandé maintenant."
+      },
+      "privacy": {
+        "body": "Les réglages de confidentialité arrivent avec les Réglages. D’ici là, ton profil de boxeur n’est publié nulle part.",
+        "neverPublic": "Jamais public · jamais montré aux sponsors",
+        "weight": "Poids et pesées",
+        "never": "Jamais"
+      },
+      "friends": {
+        "body": "Les amis arrivent avec la Communauté. Personne n’est ajouté ni invité maintenant."
+      },
+      "notifications": {
+        "body": "Les réglages de notifications arrivent plus tard. Rien n’est activé et rien n’est demandé à ton téléphone maintenant."
+      }
+    },
+    "complete": {
+      "label": "Profil de boxeur",
+      "experience": "Expérience",
+      "stance": "Garde",
+      "weightClass": "Catégorie de poids",
+      "from": "De",
+      "cta": "Aller sur SimpleFit"
+    },
+    "errors": {
+      "required": {
+        "display_name": "Saisis ton nom.",
+        "username": "Choisis un nom d’utilisateur.",
+        "country_code": "Choisis ton pays.",
+        "city": "Saisis ta ville.",
+        "experience_level": "Choisis ton expérience.",
+        "stance": "Choisis ta garde."
+      },
+      "usernameFormat": "3–30 lettres, chiffres ou _, commençant et finissant par une lettre ou un chiffre.",
+      "usernameTaken": "Ce nom d’utilisateur est déjà pris.",
+      "weightPrecision": "Une décimale au maximum, par exemple 73,8.",
+      "wholeNumber": "Saisis un nombre entier.",
+      "tooLong": "C’est trop long.",
+      "outOfRange": "Valeur hors limites.",
+      "invalidChoice": "Choisis l’une des options.",
+      "invalidDate": "Saisis une date réelle.",
+      "invalid": "Vérifie ce champ.",
+      "saveFailed": "Impossible d’enregistrer. Vérifie ta connexion et réessaie.",
+      "completeFailed": "Impossible de terminer ton inscription. Vérifie ta connexion et réessaie.",
+      "missing": "Il manque encore des informations obligatoires : {section}.",
+      "goTo": "Aller à : {section}"
+    }
   }
 }
