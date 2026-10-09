@@ -60,6 +60,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         backgroundColor: "#ffffff",
         dark: { backgroundColor: "#0a0a0a" },
+        // The Android splash theme needs a logo drawable even without artwork
+        // (none is designed yet): an empty one keeps the colour-only splash.
+        android: { drawable: { icon: "./assets/splash/splashscreen-logo-empty.xml" } },
       },
     ],
     [
