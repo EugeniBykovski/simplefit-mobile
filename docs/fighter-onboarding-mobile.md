@@ -128,5 +128,14 @@ second decision matrix and no wizard state:
   Fighter home; values checked in the database (`73.8`, `2027-03-14`);
   unrounded `73.85` rejected with `invalid_format`; a cold restart resumed at
   the earliest missing step and, once completed, opened Fighter home.
+- SF-26 smoke (iOS dev build, iPhone 14, local Phoenix + PostgreSQL, no
+  mocks): email sign-up → O04 → O05 Fighter → OF1–OF2; cold restarts resumed
+  at OF3 (nothing optional saved), OF4 (after OF3), OF5 (after OF4) and OF5
+  again after stopping at OF9; `?step=complete` while incomplete opened the
+  resume step; Finish → one `complete-onboarding` → OF11 → SF-45 → Fighter
+  home; the old OF11 link and a cold restart opened Fighter home; a session
+  revoked on the server returned to sign-in (refresh 401) and signing in
+  again opened Fighter home. Database: one user, one Fighter profile,
+  `completed_at` unchanged, no first-run outcome created.
 - Not verified: Android on a device or emulator (none here), VoiceOver /
   TalkBack passes.
