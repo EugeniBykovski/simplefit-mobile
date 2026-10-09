@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { RoleChoiceScreen } from "@/widgets/auth-screens";
 
-export default placeholderRoute("mobile.onboarding.role");
+export default function RoleChoiceRoute() {
+  return <RoleChoiceScreen />;
+}

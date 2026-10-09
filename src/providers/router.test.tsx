@@ -77,6 +77,34 @@ const ACCOUNT_REGISTRATION: Entry = {
   account_registration: "not_started",
 };
 
+/** Account registration before its first save (SF-44), for O04. */
+const NOT_STARTED = {
+  registration: {
+    status: "not_started",
+    completed_at: null,
+    missing_requirements: ["full_name", "date_of_birth", "terms", "privacy"],
+  },
+  full_name: null,
+  date_of_birth: null,
+  consents: {
+    terms: {
+      accepted: false,
+      accepted_version: null,
+      accepted_at: null,
+      current_version: "terms-v1",
+      current: false,
+    },
+    privacy: {
+      accepted: false,
+      accepted_version: null,
+      accepted_at: null,
+      current_version: "privacy-v1",
+      current: false,
+    },
+  },
+  product_news: { subscribed: false, updated_at: null },
+};
+
 /**
  * A signed-in viewer, through the same pipeline every sign-in method uses
  * (SF-24); the API resolves the entry (`GET /api/v1/me/entry`, SF-45) as
@@ -88,12 +116,14 @@ async function signIn(entry: Entry = ROLE_SELECTION) {
       Promise.resolve(
         url.includes("/api/v1/me/entry")
           ? jsonResponse({ entry: { ...entry, intent: new URL(url).searchParams.get("intent") } })
-          : jsonResponse({
-              user: {
-                id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                created_at: "2026-10-01T10:00:00Z",
-              },
-            }),
+          : url.includes("/api/v1/me/account-profile")
+            ? jsonResponse({ account_profile: NOT_STARTED })
+            : jsonResponse({
+                user: {
+                  id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                  created_at: "2026-10-01T10:00:00Z",
+                },
+              }),
       ),
     ),
   );
@@ -127,7 +157,9 @@ describe("canonical routes resolve", () => {
   it.each(routable.map((route) => [route.id, route] as const))(
     "%s renders its own screen at its canonical path",
     async (_id, route) => {
-      if (route.session === "AUTHENTICATED") await signIn();
+      // O04 shows only while account registration is incomplete (SF-37).
+      if (route.session === "AUTHENTICATED")
+        await signIn(route.id === "mobile.signup.consent" ? ACCOUNT_REGISTRATION : ROLE_SELECTION);
       // The code screens need the pending email flow of the step before them (SF-24).
       if (route.id === "mobile.login.code") {
         pending.set("signIn", { email: "fighter@example.com", resendAt: Date.now() + 60_000 });
@@ -453,7 +485,11 @@ describe("entry resolution (SF-45)", () => {
     const result = await renderApp("/?intent=sponsor");
     await waitFor(() => expect(result.getPathname()).toBe("/onboarding/role"));
     expect(result.getSearchParams()).toEqual({ intent: "sponsor" });
-    expect(await screen.findByTestId(placeholderId("mobile.onboarding.role"))).toBeOnTheScreen();
+    // O05, with the Sponsor / Brand journey the intent asked for preselected.
+    expect(
+      await screen.findByRole("header", { name: "How will you use SimpleFit?" }),
+    ).toBeOnTheScreen();
+    expect(screen.getByRole("radio", { name: "Sponsor / Brand" })).toBeChecked();
     await act(async () => jest.runOnlyPendingTimers());
     expect(result.getPathname()).toBe("/onboarding/role");
     expect(screen.queryByTestId(placeholderId("mobile.workspaces"))).toBeNull();
@@ -466,6 +502,25 @@ describe("entry resolution (SF-45)", () => {
     expect(requests.every((request) => /^GET \/api\/(me|v1\/me\/entry)$/.test(request))).toBe(true);
     expect(requests).toContain("GET /api/v1/me/entry");
     expect(calls.some(([url]) => /workspace/i.test(url))).toBe(false);
+  });
+
+  it("O04 continues to the resolved entry once registration is complete (any client)", async () => {
+    await signIn(ROLE_SELECTION);
+    const result = await renderApp("/signup/consent");
+    await waitFor(() => expect(result.getPathname()).toBe("/onboarding/role"));
+  });
+
+  it("O05 shows only for role selection: a completed Fighter continues home", async () => {
+    await signIn(FIGHTER_HOME);
+    const result = await renderApp("/onboarding/role");
+    await waitFor(() => expect(result.getPathname()).toBe("/home"));
+  });
+
+  it("O05 before account registration goes to O04, keeping the intent", async () => {
+    await signIn(ACCOUNT_REGISTRATION);
+    const result = await renderApp("/onboarding/role?intent=coach");
+    await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
+    expect(result.getSearchParams()).toEqual({ intent: "coach" });
   });
 
   it("role onboarding opened before account registration goes to O04 first", async () => {

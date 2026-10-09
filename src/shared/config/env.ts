@@ -19,12 +19,19 @@ export type PublicEnv = {
   googleWebClientId?: string | undefined;
   /** Google OAuth iOS client ID; required for Google sign-in on iOS. */
   googleIosClientId?: string | undefined;
+  /**
+   * The web app's origin, without trailing slash (SF-37): the Sponsor / Brand
+   * choice on O05 continues to the web partner application there. Without
+   * it that hand-off is reported as unavailable.
+   */
+  webUrl?: string | undefined;
 };
 
 type PublicEnvSource = {
   EXPO_PUBLIC_API_URL?: string | undefined;
   EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID?: string | undefined;
   EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID?: string | undefined;
+  EXPO_PUBLIC_WEB_URL?: string | undefined;
 };
 
 /** A Google OAuth client ID (public, but validated so a typo fails loudly). */
@@ -59,6 +66,22 @@ export function parsePublicEnv(
       .transform((url) => url.replace(/\/+$/, "")),
     EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: googleClientId("EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID"),
     EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: googleClientId("EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID"),
+    EXPO_PUBLIC_WEB_URL: z
+      .string()
+      .trim()
+      .transform((value) => (value === "" ? undefined : value))
+      .pipe(
+        z
+          .url({
+            protocol: production ? /^https$/ : /^https?$/,
+            error: production
+              ? "EXPO_PUBLIC_WEB_URL must be an https URL in production builds"
+              : "EXPO_PUBLIC_WEB_URL must be an http(s) URL (see .env.example)",
+          })
+          .transform((url) => url.replace(/\/+$/, ""))
+          .optional(),
+      )
+      .optional(),
   });
 
   const result = schema.safeParse(source);
@@ -69,6 +92,7 @@ export function parsePublicEnv(
     apiUrl: result.data.EXPO_PUBLIC_API_URL,
     googleWebClientId: result.data.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
     googleIosClientId: result.data.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+    webUrl: result.data.EXPO_PUBLIC_WEB_URL,
   };
 }
 
@@ -77,6 +101,7 @@ export const publicEnv: PublicEnv = parsePublicEnv(
     EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL,
     EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
     EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+    EXPO_PUBLIC_WEB_URL: process.env.EXPO_PUBLIC_WEB_URL,
   },
   { production: !__DEV__ },
 );

@@ -26,6 +26,9 @@ const REAL_SCREENS = [
   "mobile.login.code",
   "mobile.signup",
   "mobile.signup.verify",
+  // SF-37: O04 Basics & consent and O05 Choose your role.
+  "mobile.signup.consent",
+  "mobile.onboarding.role",
   "mobile.app",
   "mobile.dev.design-system",
 ];
@@ -114,7 +117,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 8, catchAll: 1, placeholder: 131, deferred: 1 });
+    expect(counts).toEqual({ screen: 10, catchAll: 1, placeholder: 129, deferred: 1 });
     expect(routes).toHaveLength(141);
   });
 
@@ -280,7 +283,12 @@ describe("access composition (session part of SF-31 §6)", () => {
   });
 
   it("implements no capability, phase or role check in the router", () => {
-    const code = (path) => read(path).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
+    // Comments and string literals are not checks: a route name such as
+    // "onboarding/role" names a screen, it does not test a role.
+    const code = (path) =>
+      read(path)
+        .replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "")
+        .replace(/"[^"\n]*"/g, '""');
     const sources = [...shells.values()].map((shell) => code(shell.production.file)).join("\n");
     const gate = code("src/features/session-gate/ui/session-gate.tsx");
     for (const source of [sources, gate]) {

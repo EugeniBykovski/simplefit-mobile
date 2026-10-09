@@ -104,6 +104,24 @@ export class ApiError extends Error {
       ),
     );
   }
+
+  /**
+   * Machine-readable field codes (`required`, `too_young`, …) when this is a
+   * `validation_error`, otherwise an empty object. Branch on these, never on
+   * the messages.
+   */
+  get fieldCodes(): FieldErrors {
+    if (this.code !== "validation_error") return {};
+    const codes = this.details.field_codes;
+    if (typeof codes !== "object" || codes === null) return {};
+
+    return Object.fromEntries(
+      Object.entries(codes).filter(
+        (entry): entry is [string, string[]] =>
+          Array.isArray(entry[1]) && entry[1].every((code) => typeof code === "string"),
+      ),
+    );
+  }
 }
 
 /** The delay-seconds form of `retry-after` (the API never sends an HTTP date). */

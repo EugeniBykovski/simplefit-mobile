@@ -210,6 +210,81 @@
         "wrongAddress": "Wrong address? <link>Change email</link>",
         "haveAccount": "Already have an account? <link>Sign in</link>"
       }
+    },
+    "basics": {
+      "title": "A few basics",
+      "description": "We need these before you train with us. They belong to your account, whatever roles you take on.",
+      "fullName": "Full name",
+      "dateOfBirth": "Date of birth",
+      "letters": {
+        "day": "D",
+        "month": "M",
+        "year": "Y"
+      },
+      "dateHint": "You must be 16 or older to create an account on your own.",
+      "dateLocked": "Your date of birth can't be changed here.",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "required": "Required",
+      "privacyNote": "Required · how we handle your data",
+      "news": "Product news by email",
+      "newsNote": "Optional · max 2 per month",
+      "legalPending": "The Terms of Service and Privacy Policy are being finalised and will be published before launch.",
+      "submit": "Agree and continue",
+      "loading": "Loading your details",
+      "loadFailed": "We couldn't load your details. Check your connection and try again.",
+      "retry": "Try again",
+      "saveFailed": "We couldn't save that. Check your connection and try again.",
+      "completeFailed": "We couldn't finish your registration. Check your connection and try again.",
+      "errors": {
+        "fullNameRequired": "Enter your full name.",
+        "tooLong": "Use 200 characters or fewer.",
+        "dateOfBirthRequired": "Enter your date of birth.",
+        "invalidDate": "Enter a real date that isn't in the future.",
+        "tooYoung": "You must be 16 or older to create an account.",
+        "immutable": "Your date of birth can't be changed.",
+        "terms": "Accept the Terms of Service to continue.",
+        "privacy": "Accept the Privacy Policy to continue.",
+        "invalid": "Check this field."
+      }
+    },
+    "role": {
+      "title": "How will you use SimpleFit?",
+      "description": "Pick one to start. Add more roles later — it's always one account.",
+      "groupLabel": "Where to start",
+      "journeys": {
+        "fighter": {
+          "title": "Fighter",
+          "body": "Train, track progress and connect.",
+          "cta": "Continue as Fighter"
+        },
+        "coach": {
+          "title": "Coach",
+          "body": "Manage fighters, programs and fight camps.",
+          "cta": "Continue as Coach"
+        },
+        "gym": {
+          "title": "Gym / Club",
+          "body": "Manage members, coaches and your boxing business.",
+          "cta": "Continue as Gym / Club"
+        },
+        "sponsor": {
+          "title": "Sponsor / Brand",
+          "body": "Partner with the boxing community.",
+          "cta": "Continue as Sponsor / Brand"
+        }
+      },
+      "continue": "Continue",
+      "opening": "Opening…",
+      "hint": "Choose one to continue. Nothing is created until you start that setup.",
+      "failure": {
+        "body": "We couldn't open that setup. Check your connection and try again.",
+        "unexpected": "This version of SimpleFit can't open it yet. Update the app and try again."
+      },
+      "sponsor": {
+        "unavailable": "The partner application is on the SimpleFit website, which this build can't open.",
+        "failed": "We couldn't open the partner application. Try again."
+      }
     }
   },
   "routes": {

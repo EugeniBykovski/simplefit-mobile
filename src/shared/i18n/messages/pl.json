@@ -210,6 +210,81 @@
         "wrongAddress": "Zły adres? <link>Zmień e-mail</link>",
         "haveAccount": "Masz już konto? <link>Zaloguj się</link>"
       }
+    },
+    "basics": {
+      "title": "Kilka podstaw",
+      "description": "Potrzebujemy ich, zanim zaczniesz trenować. Należą do twojego konta, niezależnie od ról.",
+      "fullName": "Imię i nazwisko",
+      "dateOfBirth": "Data urodzenia",
+      "letters": {
+        "day": "D",
+        "month": "M",
+        "year": "R"
+      },
+      "dateHint": "Samodzielnie konto można założyć od 16. roku życia.",
+      "dateLocked": "Daty urodzenia nie można tu zmienić.",
+      "terms": "Regulamin",
+      "privacy": "Polityka prywatności",
+      "required": "Wymagane",
+      "privacyNote": "Wymagane · jak przetwarzamy dane",
+      "news": "Nowości produktu e-mailem",
+      "newsNote": "Opcjonalnie · maks. 2 razy w miesiącu",
+      "legalPending": "Regulamin i polityka prywatności są finalizowane i zostaną opublikowane przed startem.",
+      "submit": "Akceptuję i dalej",
+      "loading": "Wczytujemy twoje dane",
+      "loadFailed": "Nie udało się wczytać danych. Sprawdź połączenie i spróbuj ponownie.",
+      "retry": "Spróbuj ponownie",
+      "saveFailed": "Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie.",
+      "completeFailed": "Nie udało się dokończyć rejestracji. Sprawdź połączenie i spróbuj ponownie.",
+      "errors": {
+        "fullNameRequired": "Wpisz imię i nazwisko.",
+        "tooLong": "Maksymalnie 200 znaków.",
+        "dateOfBirthRequired": "Wpisz datę urodzenia.",
+        "invalidDate": "Wpisz prawdziwą datę, nie z przyszłości.",
+        "tooYoung": "Aby założyć konto, musisz mieć co najmniej 16 lat.",
+        "immutable": "Daty urodzenia nie można zmienić.",
+        "terms": "Zaakceptuj regulamin, aby kontynuować.",
+        "privacy": "Zaakceptuj politykę prywatności, aby kontynuować.",
+        "invalid": "Sprawdź to pole."
+      }
+    },
+    "role": {
+      "title": "Jak będziesz korzystać z SimpleFit?",
+      "description": "Wybierz, od czego zacząć. Kolejne role dodasz później — to zawsze jedno konto.",
+      "groupLabel": "Od czego zacząć",
+      "journeys": {
+        "fighter": {
+          "title": "Zawodnik",
+          "body": "Trenuj, śledź postępy i nawiązuj kontakty.",
+          "cta": "Dalej jako zawodnik"
+        },
+        "coach": {
+          "title": "Trener",
+          "body": "Zawodnicy, programy i obozy walki.",
+          "cta": "Dalej jako trener"
+        },
+        "gym": {
+          "title": "Klub / sala",
+          "body": "Członkowie, trenerzy i twój biznes bokserski.",
+          "cta": "Dalej jako klub / sala"
+        },
+        "sponsor": {
+          "title": "Sponsor / marka",
+          "body": "Współpraca ze społecznością bokserską.",
+          "cta": "Dalej jako sponsor / marka"
+        }
+      },
+      "continue": "Dalej",
+      "opening": "Otwieramy…",
+      "hint": "Wybierz jedną opcję, aby kontynuować. Nic nie powstaje, dopóki nie zaczniesz konfiguracji.",
+      "failure": {
+        "body": "Nie udało się otworzyć konfiguracji. Sprawdź połączenie i spróbuj ponownie.",
+        "unexpected": "Ta wersja SimpleFit nie potrafi tego jeszcze otworzyć. Zaktualizuj aplikację i spróbuj ponownie."
+      },
+      "sponsor": {
+        "unavailable": "Wniosek partnera jest na stronie SimpleFit, której ta wersja nie może otworzyć.",
+        "failed": "Nie udało się otworzyć wniosku partnera. Spróbuj ponownie."
+      }
     }
   },
   "routes": {

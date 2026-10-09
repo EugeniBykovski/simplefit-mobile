@@ -210,6 +210,81 @@
         "wrongAddress": "Mauvaise adresse ? <link>Modifier l’e-mail</link>",
         "haveAccount": "Déjà un compte ? <link>Se connecter</link>"
       }
+    },
+    "basics": {
+      "title": "Quelques bases",
+      "description": "Il nous les faut avant que tu t’entraînes avec nous. Elles appartiennent à ton compte, quels que soient tes rôles.",
+      "fullName": "Nom complet",
+      "dateOfBirth": "Date de naissance",
+      "letters": {
+        "day": "J",
+        "month": "M",
+        "year": "A"
+      },
+      "dateHint": "Tu dois avoir 16 ans ou plus pour créer un compte seul.",
+      "dateLocked": "Ta date de naissance ne peut pas être modifiée ici.",
+      "terms": "Conditions d’utilisation",
+      "privacy": "Politique de confidentialité",
+      "required": "Obligatoire",
+      "privacyNote": "Obligatoire · comment nous traitons tes données",
+      "news": "Nouveautés du produit par e-mail",
+      "newsNote": "Facultatif · 2 par mois au maximum",
+      "legalPending": "Les Conditions d’utilisation et la Politique de confidentialité sont en cours de finalisation et seront publiées avant le lancement.",
+      "submit": "Accepter et continuer",
+      "loading": "Chargement de tes informations",
+      "loadFailed": "Impossible de charger tes informations. Vérifie ta connexion et réessaie.",
+      "retry": "Réessayer",
+      "saveFailed": "Impossible d’enregistrer. Vérifie ta connexion et réessaie.",
+      "completeFailed": "Impossible de terminer ton inscription. Vérifie ta connexion et réessaie.",
+      "errors": {
+        "fullNameRequired": "Saisis ton nom complet.",
+        "tooLong": "200 caractères au maximum.",
+        "dateOfBirthRequired": "Saisis ta date de naissance.",
+        "invalidDate": "Saisis une date réelle qui n’est pas dans le futur.",
+        "tooYoung": "Tu dois avoir 16 ans ou plus pour créer un compte.",
+        "immutable": "Ta date de naissance ne peut pas être modifiée.",
+        "terms": "Accepte les Conditions d’utilisation pour continuer.",
+        "privacy": "Accepte la Politique de confidentialité pour continuer.",
+        "invalid": "Vérifie ce champ."
+      }
+    },
+    "role": {
+      "title": "Comment utiliseras-tu SimpleFit ?",
+      "description": "Choisis par où commencer. Ajoute d’autres rôles plus tard — c’est toujours un seul compte.",
+      "groupLabel": "Par où commencer",
+      "journeys": {
+        "fighter": {
+          "title": "Boxeur",
+          "body": "Entraîne-toi, suis tes progrès et connecte-toi.",
+          "cta": "Continuer en tant que boxeur"
+        },
+        "coach": {
+          "title": "Coach",
+          "body": "Gère tes boxeurs, programmes et camps.",
+          "cta": "Continuer en tant que coach"
+        },
+        "gym": {
+          "title": "Salle / club",
+          "body": "Gère membres, coachs et ton activité de boxe.",
+          "cta": "Continuer en tant que salle / club"
+        },
+        "sponsor": {
+          "title": "Sponsor / marque",
+          "body": "Deviens partenaire de la communauté de la boxe.",
+          "cta": "Continuer en tant que sponsor / marque"
+        }
+      },
+      "continue": "Continuer",
+      "opening": "Ouverture…",
+      "hint": "Choisis une option pour continuer. Rien n’est créé avant que tu commences cette configuration.",
+      "failure": {
+        "body": "Impossible d’ouvrir cette configuration. Vérifie ta connexion et réessaie.",
+        "unexpected": "Cette version de SimpleFit ne peut pas encore l’ouvrir. Mets l’app à jour et réessaie."
+      },
+      "sponsor": {
+        "unavailable": "La candidature partenaire est sur le site SimpleFit, que cette version ne peut pas ouvrir.",
+        "failed": "Impossible d’ouvrir la candidature partenaire. Réessaie."
+      }
     }
   },
   "routes": {
