@@ -210,6 +210,81 @@
         "wrongAddress": "¿Dirección equivocada? <link>Cambiar correo</link>",
         "haveAccount": "¿Ya tienes cuenta? <link>Inicia sesión</link>"
       }
+    },
+    "basics": {
+      "title": "Unos datos básicos",
+      "description": "Los necesitamos antes de que entrenes con nosotros. Son de tu cuenta, tengas el rol que tengas.",
+      "fullName": "Nombre completo",
+      "dateOfBirth": "Fecha de nacimiento",
+      "letters": {
+        "day": "D",
+        "month": "M",
+        "year": "A"
+      },
+      "dateHint": "Debes tener 16 años o más para crear una cuenta por tu cuenta.",
+      "dateLocked": "Tu fecha de nacimiento no se puede cambiar aquí.",
+      "terms": "Términos del servicio",
+      "privacy": "Política de privacidad",
+      "required": "Obligatorio",
+      "privacyNote": "Obligatorio · cómo tratamos tus datos",
+      "news": "Novedades del producto por correo",
+      "newsNote": "Opcional · máx. 2 al mes",
+      "legalPending": "Los Términos del servicio y la Política de privacidad se están finalizando y se publicarán antes del lanzamiento.",
+      "submit": "Aceptar y continuar",
+      "loading": "Cargando tus datos",
+      "loadFailed": "No pudimos cargar tus datos. Revisa tu conexión e inténtalo de nuevo.",
+      "retry": "Reintentar",
+      "saveFailed": "No pudimos guardarlo. Revisa tu conexión e inténtalo de nuevo.",
+      "completeFailed": "No pudimos terminar tu registro. Revisa tu conexión e inténtalo de nuevo.",
+      "errors": {
+        "fullNameRequired": "Escribe tu nombre completo.",
+        "tooLong": "Usa 200 caracteres o menos.",
+        "dateOfBirthRequired": "Escribe tu fecha de nacimiento.",
+        "invalidDate": "Escribe una fecha real que no sea futura.",
+        "tooYoung": "Debes tener 16 años o más para crear una cuenta.",
+        "immutable": "Tu fecha de nacimiento no se puede cambiar.",
+        "terms": "Acepta los Términos del servicio para continuar.",
+        "privacy": "Acepta la Política de privacidad para continuar.",
+        "invalid": "Revisa este campo."
+      }
+    },
+    "role": {
+      "title": "¿Cómo usarás SimpleFit?",
+      "description": "Elige uno para empezar. Añade más roles después: siempre es una sola cuenta.",
+      "groupLabel": "Por dónde empezar",
+      "journeys": {
+        "fighter": {
+          "title": "Peleador",
+          "body": "Entrena, sigue tu progreso y conecta.",
+          "cta": "Continuar como peleador"
+        },
+        "coach": {
+          "title": "Entrenador",
+          "body": "Gestiona peleadores, programas y campamentos.",
+          "cta": "Continuar como entrenador"
+        },
+        "gym": {
+          "title": "Gimnasio / club",
+          "body": "Gestiona miembros, entrenadores y tu negocio de boxeo.",
+          "cta": "Continuar como gimnasio / club"
+        },
+        "sponsor": {
+          "title": "Patrocinador / marca",
+          "body": "Colabora con la comunidad del boxeo.",
+          "cta": "Continuar como patrocinador / marca"
+        }
+      },
+      "continue": "Continuar",
+      "opening": "Abriendo…",
+      "hint": "Elige una opción para continuar. No se crea nada hasta que empieces esa configuración.",
+      "failure": {
+        "body": "No pudimos abrir esa configuración. Revisa tu conexión e inténtalo de nuevo.",
+        "unexpected": "Esta versión de SimpleFit aún no puede abrirlo. Actualiza la app e inténtalo de nuevo."
+      },
+      "sponsor": {
+        "unavailable": "La solicitud de socio está en el sitio web de SimpleFit, que esta versión no puede abrir.",
+        "failed": "No pudimos abrir la solicitud de socio. Inténtalo de nuevo."
+      }
     }
   },
   "routes": {

@@ -1,6 +1,16 @@
+import * as Linking from "expo-linking";
 import { useLocalSearchParams, useRouter, type Href } from "expo-router";
-import { ChevronLeft, Mail } from "lucide-react-native";
-import type { ReactNode } from "react";
+import {
+  ChevronLeft,
+  CircleAlert,
+  HandFist,
+  House,
+  Mail,
+  Star,
+  UserCheck,
+  type LucideIcon,
+} from "lucide-react-native";
+import { useCallback, useState, type ReactNode } from "react";
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle, Text as SvgText } from "react-native-svg";
@@ -13,9 +23,17 @@ import {
   SignInEmailForm,
   type CodeStepLayout,
 } from "@/features/email-auth";
+import { AccountBasicsForm } from "@/features/account-registration";
+import { useEntryChoice } from "@/features/session-gate";
 import { AppleSignInButton } from "@/features/sign-in-with-apple";
 import { GoogleSignInButton } from "@/features/sign-in-with-google";
-import { continuationOf, withContinuation, type Continuation } from "@/shared/routes/continuation";
+import { publicEnv } from "@/shared/config/env";
+import {
+  continuationOf,
+  withContinuation,
+  type Continuation,
+  type EntryIntent,
+} from "@/shared/routes/continuation";
 import { useTheme } from "@/shared/styles/theme";
 import { BrandLockup } from "@/shared/ui/brand-mark";
 import { Button } from "@/shared/ui/button";
@@ -28,11 +46,11 @@ import { linkTo, TextLinks } from "@/shared/ui/text-link";
 /*
  * The mobile.auth screens (Claude Design onboarding page, 390 × 844): A01
  * Welcome, O01b Sign in, O01c Sign-in code, O02 Create account, O03 Verify
- * email. Every sign-in method ends in the shared session pipeline; the
+ * email, O04 Basics & consent and O05 Choose your role (SF-37). Every sign-in method ends in the shared session pipeline; the
  * auth shell's SessionGate then enters the application through the backend
  * entry resolution, carrying `returnTo` and `intent` (SF-45). Deferred until their domain exists (SF-25 and the
  * recovery/invite tickets): O02 full name, O01b "Recover account", A01
- * invite and brands links, and the consent / role / workspace destinations.
+ * invite and brands links, and the workspace destinations (A03, A04).
  */
 
 /**
@@ -343,5 +361,165 @@ export function VerifyEmailScreen() {
       continuation={continuation}
       layout={codeLayout(withContinuation("mobile.signup", continuation))}
     />
+  );
+}
+
+/** O04 "A few basics": SF-44 account registration (`mobile.signup.consent`). */
+export function ConsentScreen() {
+  return (
+    <AccountBasicsForm
+      layout={({ body, actions }) => <AuthFrame actions={actions}>{body}</AuthFrame>}
+    />
+  );
+}
+
+const JOURNEYS: readonly { intent: EntryIntent; icon: LucideIcon }[] = [
+  { intent: "fighter", icon: HandFist },
+  { intent: "coach", icon: UserCheck },
+  { intent: "gym", icon: House },
+  { intent: "sponsor", icon: Star },
+];
+
+/**
+ * O05 "How will you use SimpleFit?" (`mobile.onboarding.role`), on the SF-45
+ * entry resolver, as the web WA6: one choice of four journeys and nothing
+ * picked by default (an explicit `intent=sponsor`, whose application starts
+ * here, preselects Sponsor). Continue asks the resolver again with the
+ * chosen intent and goes where it answers; nothing is stored or created.
+ *
+ * The Sponsor / Brand application is on the web (mobile has no sponsor
+ * surface): the choice opens the web partner application. The artboard's
+ * invite links wait for the invite domain (A03).
+ */
+export function RoleChoiceScreen() {
+  const t = useTranslations("auth.role");
+  const continuation = useContinuation();
+  const [picked, setPicked] = useState<EntryIntent | undefined>(
+    continuation.intent === "sponsor" ? "sponsor" : undefined,
+  );
+  const [handoff, setHandoff] = useState<"unavailable" | "failed">();
+
+  const openSponsor = useCallback(async () => {
+    if (publicEnv.webUrl === undefined) {
+      setHandoff("unavailable");
+      return;
+    }
+    try {
+      await Linking.openURL(`${publicEnv.webUrl}/partners/apply`);
+      setHandoff(undefined);
+    } catch {
+      setHandoff("failed");
+    }
+  }, []);
+
+  const { state, choose } = useEntryChoice(continuation, openSponsor);
+  const busy = state.status === "resolving";
+  const failed = state.status === "failed" ? state : undefined;
+
+  return (
+    <AuthFrame
+      actions={
+        <Button
+          label={
+            busy ? t("opening") : picked === undefined ? t("continue") : t(`journeys.${picked}.cta`)
+          }
+          size="lg"
+          disabled={picked === undefined}
+          loading={busy}
+          accessibilityHint={picked === undefined ? t("hint") : undefined}
+          onPress={() => {
+            setHandoff(undefined);
+            if (picked !== undefined) void choose(picked);
+          }}
+        />
+      }
+    >
+      <View className="gap-2">
+        <Text variant="h1" accessibilityRole="header">
+          {t("title")}
+        </Text>
+        <Text color="mutedForeground">{t("description")}</Text>
+      </View>
+      <View accessibilityRole="radiogroup" accessibilityLabel={t("groupLabel")} className="gap-2.5">
+        {JOURNEYS.map(({ intent, icon }) => (
+          <JourneyCard
+            key={intent}
+            icon={icon}
+            title={t(`journeys.${intent}.title`)}
+            body={t(`journeys.${intent}.body`)}
+            checked={picked === intent}
+            disabled={busy}
+            onPress={() => setPicked(intent)}
+          />
+        ))}
+      </View>
+      {picked === undefined && (
+        <Text variant="caption" color="faintForeground">
+          {t("hint")}
+        </Text>
+      )}
+      {failed !== undefined && (
+        <Notice tone="amber" icon={CircleAlert}>
+          {failed.reason === "unexpected" ? t("failure.unexpected") : t("failure.body")}
+        </Notice>
+      )}
+      {handoff !== undefined && (
+        <Notice tone="amber" icon={CircleAlert}>
+          {t(`sponsor.${handoff}`)}
+        </Notice>
+      )}
+    </AuthFrame>
+  );
+}
+
+/** One O05 journey: the 42 pt icon tile, title and line, and the radio ring. */
+function JourneyCard({
+  icon,
+  title,
+  body,
+  checked,
+  disabled,
+  onPress,
+}: {
+  icon: LucideIcon;
+  title: string;
+  body: string;
+  checked: boolean;
+  disabled: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      accessibilityRole="radio"
+      accessibilityLabel={title}
+      accessibilityHint={body}
+      accessibilityState={{ checked, disabled }}
+      disabled={disabled}
+      onPress={onPress}
+      className={`flex-row items-center gap-3 rounded-2xl px-4 py-3.5 ${checked ? "border-[1.5px] border-highlight bg-accent" : "border border-border bg-surface"}`}
+    >
+      <View
+        className={`size-10.5 items-center justify-center rounded-md-lg ${checked ? "bg-accent-strong" : "bg-muted"}`}
+      >
+        <Icon icon={icon} size={20} color={checked ? "accentForeground" : "mutedForeground"} />
+      </View>
+      <View className="flex-1 gap-1">
+        <Text
+          variant="bodyLg"
+          weight="extrabold"
+          color={checked ? "accentForeground" : "foreground"}
+        >
+          {title}
+        </Text>
+        <Text variant="caption" color={checked ? "accentMutedForeground" : "mutedForeground"}>
+          {body}
+        </Text>
+      </View>
+      <View
+        className={`size-5.5 items-center justify-center rounded-full border-2 ${checked ? "border-highlight" : "border-border-strong"}`}
+      >
+        {checked ? <View className="size-2.5 rounded-full bg-highlight" /> : null}
+      </View>
+    </Pressable>
   );
 }

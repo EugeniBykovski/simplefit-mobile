@@ -26,6 +26,24 @@ describe("ApiError", () => {
     expect(isApiError(error)).toBe(true);
   });
 
+  it("exposes a validation error's field codes, and none for other errors", () => {
+    const body = {
+      error: {
+        code: "validation_error",
+        message: "Request validation failed",
+        details: {
+          fields: { date_of_birth: ["is too young"] },
+          field_codes: { date_of_birth: ["too_young"], bad: [1] },
+        },
+      },
+    };
+    expect(ApiError.fromResponse(422, body, null).fieldCodes).toEqual({
+      date_of_birth: ["too_young"],
+    });
+    const other = { error: { code: "conflict", message: "Conflict", details: {} } };
+    expect(ApiError.fromResponse(409, other, null).fieldCodes).toEqual({});
+  });
+
   it("carries the retry-after delay of a rate-limited response, in seconds only", () => {
     const body = { error: { code: "rate_limited", message: "Too many requests", details: {} } };
     expect(ApiError.fromResponse(429, body, null, "42").retryAfterSeconds).toBe(42);

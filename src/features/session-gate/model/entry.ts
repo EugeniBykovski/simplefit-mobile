@@ -29,6 +29,17 @@ import {
 export type Entry = EntryResponseEntry;
 
 /**
+ * Whether this client maps `destination`: a newer API may resolve to a
+ * destination an older client does not know. Such an entry is a controlled
+ * failure, never a guessed fallback.
+ */
+export function knowsDestination(
+  destination: string,
+): destination is EntryResponseEntryDestination {
+  return Object.hasOwn(mobileGuards.entryDestinations, destination);
+}
+
+/**
  * The canonical mobile route of a semantic destination
  * (`guards.entryDestinations`). Mobile has no sponsor surface: the sponsor
  * application opens O05, whose Sponsor / Brand choice continues to the web

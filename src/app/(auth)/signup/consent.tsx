@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { ConsentScreen } from "@/widgets/auth-screens";
 
-export default placeholderRoute("mobile.signup.consent");
+export default function ConsentRoute() {
+  return <ConsentScreen />;
+}

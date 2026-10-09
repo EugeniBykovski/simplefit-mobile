@@ -210,6 +210,81 @@
         "wrongAddress": "Falsche Adresse? <link>E-Mail ändern</link>",
         "haveAccount": "Schon ein Konto? <link>Anmelden</link>"
       }
+    },
+    "basics": {
+      "title": "Ein paar Grundlagen",
+      "description": "Die brauchen wir, bevor du bei uns trainierst. Sie gehören zu deinem Konto, egal welche Rollen du übernimmst.",
+      "fullName": "Vollständiger Name",
+      "dateOfBirth": "Geburtsdatum",
+      "letters": {
+        "day": "T",
+        "month": "M",
+        "year": "J"
+      },
+      "dateHint": "Ein eigenes Konto kannst du ab 16 Jahren erstellen.",
+      "dateLocked": "Dein Geburtsdatum kann hier nicht geändert werden.",
+      "terms": "Nutzungsbedingungen",
+      "privacy": "Datenschutzerklärung",
+      "required": "Erforderlich",
+      "privacyNote": "Erforderlich · wie wir deine Daten verarbeiten",
+      "news": "Produktneuigkeiten per E-Mail",
+      "newsNote": "Optional · höchstens 2 pro Monat",
+      "legalPending": "Die Nutzungsbedingungen und die Datenschutzerklärung werden fertiggestellt und vor dem Start veröffentlicht.",
+      "submit": "Zustimmen und weiter",
+      "loading": "Deine Angaben werden geladen",
+      "loadFailed": "Deine Angaben konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
+      "retry": "Erneut versuchen",
+      "saveFailed": "Das konnten wir nicht speichern. Prüfe deine Verbindung und versuche es erneut.",
+      "completeFailed": "Wir konnten deine Registrierung nicht abschließen. Prüfe deine Verbindung und versuche es erneut.",
+      "errors": {
+        "fullNameRequired": "Gib deinen vollständigen Namen ein.",
+        "tooLong": "Höchstens 200 Zeichen.",
+        "dateOfBirthRequired": "Gib dein Geburtsdatum ein.",
+        "invalidDate": "Gib ein echtes Datum ein, das nicht in der Zukunft liegt.",
+        "tooYoung": "Für ein Konto musst du mindestens 16 Jahre alt sein.",
+        "immutable": "Dein Geburtsdatum kann nicht geändert werden.",
+        "terms": "Akzeptiere die Nutzungsbedingungen, um fortzufahren.",
+        "privacy": "Akzeptiere die Datenschutzerklärung, um fortzufahren.",
+        "invalid": "Prüfe dieses Feld."
+      }
+    },
+    "role": {
+      "title": "Wie wirst du SimpleFit nutzen?",
+      "description": "Wähle, womit du anfängst. Weitere Rollen fügst du später hinzu – es bleibt immer ein Konto.",
+      "groupLabel": "Womit anfangen",
+      "journeys": {
+        "fighter": {
+          "title": "Fighter",
+          "body": "Trainieren, Fortschritt verfolgen, vernetzen.",
+          "cta": "Weiter als Fighter"
+        },
+        "coach": {
+          "title": "Coach",
+          "body": "Fighter, Programme und Fight Camps verwalten.",
+          "cta": "Weiter als Coach"
+        },
+        "gym": {
+          "title": "Gym / Club",
+          "body": "Mitglieder, Coaches und dein Boxgeschäft verwalten.",
+          "cta": "Weiter als Gym / Club"
+        },
+        "sponsor": {
+          "title": "Sponsor / Marke",
+          "body": "Mit der Box-Community zusammenarbeiten.",
+          "cta": "Weiter als Sponsor / Marke"
+        }
+      },
+      "continue": "Weiter",
+      "opening": "Wird geöffnet…",
+      "hint": "Wähle eine Option, um fortzufahren. Es wird nichts angelegt, bis du mit der Einrichtung beginnst.",
+      "failure": {
+        "body": "Die Einrichtung konnte nicht geöffnet werden. Prüfe deine Verbindung und versuche es erneut.",
+        "unexpected": "Diese Version von SimpleFit kann das noch nicht öffnen. Aktualisiere die App und versuche es erneut."
+      },
+      "sponsor": {
+        "unavailable": "Die Partnerbewerbung liegt auf der SimpleFit-Website, die dieser Build nicht öffnen kann.",
+        "failed": "Die Partnerbewerbung konnte nicht geöffnet werden. Versuche es erneut."
+      }
     }
   },
   "routes": {

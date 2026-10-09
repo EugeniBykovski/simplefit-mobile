@@ -63,4 +63,24 @@ describe("parsePublicEnv", () => {
       ),
     ).toThrow(/EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID/);
   });
+
+  it("takes an optional web URL for the Sponsor hand-off, https in production", () => {
+    const base = { EXPO_PUBLIC_API_URL: "https://api.simplefit.test" };
+    expect(parsePublicEnv(base, { production: true }).webUrl).toBeUndefined();
+    expect(
+      parsePublicEnv(
+        { ...base, EXPO_PUBLIC_WEB_URL: " https://simplefit.test/ " },
+        { production: true },
+      ).webUrl,
+    ).toBe("https://simplefit.test");
+    expect(
+      parsePublicEnv({ ...base, EXPO_PUBLIC_WEB_URL: "" }, { production: true }).webUrl,
+    ).toBeUndefined();
+    expect(() =>
+      parsePublicEnv(
+        { ...base, EXPO_PUBLIC_WEB_URL: "http://simplefit.test" },
+        { production: true },
+      ),
+    ).toThrow(/EXPO_PUBLIC_WEB_URL/);
+  });
 });
