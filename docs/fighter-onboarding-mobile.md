@@ -30,10 +30,9 @@ table), `shared/lib/date-input` (dates typed in the locale's order).
 ## Rules
 
 - **The backend decides.** `?step=` is navigation only. The step shown is
-  derived from the profile: the earliest step with a missing requirement,
-  otherwise OF3 Goals (SF-25 keeps no wizard cursor). A link to a later step,
-  `complete` or anything unknown resolves to that step, so no link skips a
-  required one. Nothing is kept on the device.
+  derived from the profile (the resume policy below). A link to a later
+  step, `complete` or anything unknown resolves to that step, so no link
+  skips a required one. Nothing is kept on the device.
 - **Saving.** Continue on OF1–OF4 checks the step (UX only), sends only the
   fields changed there (`PATCH`, empty clears to `null`) and moves on once
   the backend kept them. The backend's stable codes become messages
@@ -63,6 +62,50 @@ table), `shared/lib/date-input` (dates typed in the locale's order).
   up); OF1's return key walks Name → Username → City; dragging the page
   dismisses the number pads.
 
+## Integration and lifecycle (SF-26)
+
+The journey runs on the SF-45 resolver and the existing gates; SF-26 adds no
+second decision matrix and no wizard state:
+
+- **Entry.** Signed in → `GET /api/v1/me/entry` (root `EntryRedirect`) →
+  `account_registration` → O04, whatever the intent or link
+  (`OnboardingGate`); `fighter_onboarding` → this route; `fighter_home` → the
+  Fighter app; no intent and no Fighter state → O05 (never Fighter by
+  default). Nothing is created before the first OF1 save.
+- **Resume policy** (`resumeStep`, backend data only): the earliest step with
+  a missing requirement (OF1, then OF2); otherwise the step after the
+  furthest optional step with saved data: OF5 once any OF4 field is saved,
+  OF4 once any OF3 field is saved, otherwise OF3. OF5–OF10 record nothing, so
+  a person who stopped at OF7 or OF9 resumes at OF5: the last screen visited
+  is never claimed. From any resume step the flow reaches Finish (OF10), the
+  only completion action; a profile with every requirement saved can always
+  finish. SF-25 has no wizard cursor, and none is added.
+- **Completed elsewhere.** A profile completed on another client leaves the
+  route for the entry (Fighter home), including on `?step=complete`; OF11 is
+  shown only in the session whose Finish the backend confirmed. A cached
+  profile is never used to decide a step before a fresh read after mount.
+- **Completion.** Finish calls `completeFighterOnboarding` once at a time
+  (the action is busy while it runs). If the server completed but the answer
+  was lost, the person sees a retry; finishing again is safe (idempotent,
+  `completed_at` kept), and a refetch alone leads to Fighter home. "Go to
+  SimpleFit" (and Android Back on OF11) asks the entry again; an entry
+  failure shows the retry screen and never undoes completion.
+- **Edits and other clients.** Unsaved edits are kept over refetches (app
+  foreground, reconnect); untouched fields take the newer server value; a
+  save sends only the fields changed here. The same field edited on two
+  clients is last-write-wins: SF-25 has no version or ETag, so no conflict
+  is detected.
+- **Session.** Token refresh, rotation and revocation are SF-20/SF-24's
+  (`callWithSession`); a revoked session returns to sign-in, after which the
+  route resumes from the backend (unsaved edits are lost). The query cache
+  is cleared when the session ends or another user signs in on the device
+  (`providers/session-cache.ts`).
+- **Navigation.** Steps share one screen (`setParams`): the header's Back
+  and Android Back walk the steps; iOS swipe-back is enabled only on OF1,
+  where Back leaves the flow too.
+- **After completion.** Fighter home is still the SF-33 placeholder: the
+  Mobile First-Run (SF-41) attaches there. Nothing marks a first run.
+
 ## Verification
 
 - Unit: `features/fighter-onboarding/model/model.test.ts` (resume policy,
@@ -73,6 +116,11 @@ table), `shared/lib/date-input` (dates typed in the locale's order).
   account registration, completed elsewhere, load failure, Back to O05);
   `providers/router.test.tsx` (the real route tree renders OF1, keeping the
   intent).
+- SF-26: resume cases in `model.test.ts`; lifecycle in the screen test
+  (resume after saved data, completed on another client, unsaved edit over
+  another client's change, lost completion answer, Android Back on OF11);
+  entry scenarios A–C in `router.test.tsx` (new Fighter → OF1, partial →
+  OF2, completed + old link → Fighter home); `providers/session-cache.test.tsx`.
 - iOS development build (EAS simulator build, unchanged native code) on
   iPhone 14 (390 × 844), iPhone 13 mini (375 × 812) and iPhone 15 Plus
   (430 × 932), iOS 18.5, against a local Phoenix and PostgreSQL (no mocks):

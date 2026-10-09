@@ -1,4 +1,4 @@
-import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
+import { Redirect, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { ChevronLeft, CircleAlert } from "lucide-react-native";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import {
@@ -80,7 +80,10 @@ export function FighterOnboardingScreen() {
   const t = useTranslations("fighterOnboarding");
   const query = useFighterProfile();
 
-  if (query.data === undefined) {
+  // A profile cached from an earlier visit may be outdated (completed or
+  // edited on another client): no step is decided before a fresh read.
+  const settling = !query.isFetchedAfterMount && query.isFetching;
+  if (query.data === undefined || settling) {
     // No step is known before the profile arrives: no header, label or progress.
     return (
       <View className="flex-1 justify-center gap-3 bg-background px-5">
@@ -152,15 +155,17 @@ function Flow({ profile: queried }: { profile: FighterProfile }) {
     else router.replace(withContinuation("mobile.onboarding.role", continuationOf(params)));
   }, [go, params, router, step]);
 
-  // Android's back button walks the steps like the header's Back.
+  // Android's back button walks the steps like the header's Back; on OF11
+  // (completion is final) it continues to the entry, like the action.
   useEffect(() => {
     const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
-      if (step === "account" || step === "complete") return false;
-      back();
+      if (step === "account") return false;
+      if (step === "complete") router.replace("/");
+      else back();
       return true;
     });
     return () => subscription.remove();
-  }, [back, step]);
+  }, [back, router, step]);
 
   const change = useCallback(<K extends FighterField>(field: K, value: FighterValues[K]) => {
     setEdits((current) => ({ ...current, [field]: value }));
@@ -251,60 +256,65 @@ function Flow({ profile: queried }: { profile: FighterProfile }) {
   const isFinal = step === FINAL_STEP;
 
   return (
-    <StepFrame
-      step={step}
-      busy={busy}
-      onBack={step === "complete" ? undefined : back}
-      onSkip={definition?.skippable ? () => void advance(true) : undefined}
-      actions={
-        step === "complete" ? (
-          <Button label={t("complete.cta")} size="lg" onPress={() => router.replace("/")} />
-        ) : (
-          <Button
-            label={isFinal ? t("finish") : t("continue")}
-            size="lg"
-            loading={busy}
-            onPress={() => void advance(false)}
+    <>
+      {/* The steps share one screen: iOS swipe-back would leave the whole flow,
+          so it is offered only on OF1, where Back leaves it too. */}
+      <Stack.Screen options={{ gestureEnabled: step === "account" }} />
+      <StepFrame
+        step={step}
+        busy={busy}
+        onBack={step === "complete" ? undefined : back}
+        onSkip={definition?.skippable ? () => void advance(true) : undefined}
+        actions={
+          step === "complete" ? (
+            <Button label={t("complete.cta")} size="lg" onPress={() => router.replace("/")} />
+          ) : (
+            <Button
+              label={isFinal ? t("finish") : t("continue")}
+              size="lg"
+              loading={busy}
+              onPress={() => void advance(false)}
+            />
+          )
+        }
+      >
+        {step === "account" && (
+          <AccountStep values={values} errors={errors} disabled={busy} onChange={change} />
+        )}
+        {step === "experience" && (
+          <ExperienceStep values={values} errors={errors} disabled={busy} onChange={change} />
+        )}
+        {step === "goals" && (
+          <GoalsStep
+            values={values}
+            errors={errors}
+            disabled={busy}
+            onChange={change}
+            dateText={dateText}
+            onDateText={setDateText}
           />
-        )
-      }
-    >
-      {step === "account" && (
-        <AccountStep values={values} errors={errors} disabled={busy} onChange={change} />
-      )}
-      {step === "experience" && (
-        <ExperienceStep values={values} errors={errors} disabled={busy} onChange={change} />
-      )}
-      {step === "goals" && (
-        <GoalsStep
-          values={values}
-          errors={errors}
-          disabled={busy}
-          onChange={change}
-          dateText={dateText}
-          onDateText={setDateText}
-        />
-      )}
-      {step === "weight" && (
-        <WeightStep values={values} errors={errors} disabled={busy} onChange={change} />
-      )}
-      {definition?.kind === "info" && <InfoStep id={step as InfoStepId} />}
-      {step === "complete" && <CompleteStep profile={profile} />}
-      {problem !== undefined && (
-        <Notice tone="coral" icon={CircleAlert}>
-          {problem.kind === "missing"
-            ? t("errors.missing", { section: t(`sections.${problem.step}`) })
-            : t(problem.kind === "save" ? "errors.saveFailed" : "errors.completeFailed")}
-        </Notice>
-      )}
-      {problem?.kind === "missing" && (
-        <Button
-          label={t("errors.goTo", { section: t(`sections.${problem.step}`) })}
-          variant="quiet"
-          onPress={() => go(problem.step)}
-        />
-      )}
-    </StepFrame>
+        )}
+        {step === "weight" && (
+          <WeightStep values={values} errors={errors} disabled={busy} onChange={change} />
+        )}
+        {definition?.kind === "info" && <InfoStep id={step as InfoStepId} />}
+        {step === "complete" && <CompleteStep profile={profile} />}
+        {problem !== undefined && (
+          <Notice tone="coral" icon={CircleAlert}>
+            {problem.kind === "missing"
+              ? t("errors.missing", { section: t(`sections.${problem.step}`) })
+              : t(problem.kind === "save" ? "errors.saveFailed" : "errors.completeFailed")}
+          </Notice>
+        )}
+        {problem?.kind === "missing" && (
+          <Button
+            label={t("errors.goTo", { section: t(`sections.${problem.step}`) })}
+            variant="quiet"
+            onPress={() => go(problem.step)}
+          />
+        )}
+      </StepFrame>
+    </>
   );
 }
 

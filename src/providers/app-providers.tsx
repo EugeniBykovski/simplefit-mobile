@@ -9,6 +9,8 @@ import { I18nProvider } from "@/shared/i18n/i18n-provider";
 import { ThemeProvider, ThemeRoot } from "@/shared/styles/theme";
 import { ToastProvider } from "@/shared/ui/toast";
 
+import { useSessionScopedCache } from "./session-cache";
+
 connectOnlineManager();
 
 /**
@@ -26,6 +28,7 @@ connectOnlineManager();
 export function AppProviders({ children, onReady }: { children: ReactNode; onReady?: () => void }) {
   const [queryClient] = useState(makeQueryClient);
   useAppStateFocus();
+  useSessionScopedCache(queryClient);
 
   return (
     // eslint-disable-next-line no-restricted-syntax -- third-party root view without className support

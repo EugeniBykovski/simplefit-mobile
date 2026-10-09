@@ -55,10 +55,21 @@ describe("steps", () => {
     expect(STEP_IDS).toHaveLength(11);
   });
 
-  it("resume at the earliest step with a missing requirement, else at Goals", () => {
+  it("resumes from backend data only: a missing requirement first, then after the furthest saved step", () => {
+    // 1. New Fighter, or OF1 partly saved: OF1.
     expect(resumeStep(profile({}, ALL))).toBe("account");
-    expect(resumeStep(profile({}, ["stance"]))).toBe("experience");
+    expect(resumeStep(profile({ display_name: "Alex" }, ALL.slice(1)))).toBe("account");
+    // 2. OF1 saved, OF2 not (or only partly): OF2, even with later data from another client.
+    expect(resumeStep(profile({ weight_class: "minus_71" }, ["stance"]))).toBe("experience");
+    // 3. Everything required saved, nothing optional: OF3.
     expect(resumeStep(profile({}, []))).toBe("goals");
+    // 4. OF3 data saved: OF4. Any OF4 field saved: OF5.
+    expect(resumeStep(profile({ goals: ["fitness"] }, []))).toBe("weight");
+    expect(resumeStep(profile({ next_fight_name: "Cup" }, []))).toBe("weight");
+    expect(resumeStep(profile({ height_cm: 178 }, []))).toBe("gym");
+    expect(resumeStep(profile({ goals: ["fitness"], current_weight_kg: 73.8 }, []))).toBe("gym");
+    // 5. Stopped at OF7 or OF9: nothing records those visits, so OF5 at the latest.
+    expect(resumeStep(profile({ weight_class: "not_sure" }, []))).toBe("gym");
   });
 
   it("never lets a link skip a required step, fake completion or restart a completed profile", () => {
