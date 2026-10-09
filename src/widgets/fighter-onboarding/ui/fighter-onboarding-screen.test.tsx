@@ -1,4 +1,5 @@
-import { screen, userEvent, waitFor } from "@testing-library/react-native";
+import { act, screen, userEvent, waitFor } from "@testing-library/react-native";
+import { BackHandler } from "react-native";
 import type React from "react";
 
 import { completeAuthentication } from "@/entities/session";
@@ -40,6 +41,7 @@ jest.mock("expo-router", () => ({
       },
       () => mockParams.current,
     ),
+  Stack: { Screen: () => null },
   Redirect: ({ href }: { href: string }) => {
     mockRedirects.push(href);
     return null;
@@ -97,7 +99,10 @@ const COMPLETE = "/api/v1/me/fighter-profile/complete-onboarding";
  * A fake SF-25 backend: GET returns the stored fields, PATCH merges the body
  * (or answers with `reject`), complete-onboarding checks the requirements.
  */
-function backend(initial: Profile = {}, options: { reject?: () => Response } = {}) {
+function backend(
+  initial: Profile = {},
+  options: { reject?: () => Response; loseCompletionResponse?: boolean } = {},
+) {
   let stored: Profile = { ...initial };
   let completed = false;
   const fetchMock = mockFetch(
@@ -119,6 +124,11 @@ function backend(initial: Profile = {}, options: { reject?: () => Response } = {
             validation(Object.fromEntries(missing.map((field) => [field, ["required"]]))),
           );
         completed = true;
+        // The server completed; the answer never reaches the app.
+        if (options.loseCompletionResponse === true) {
+          options.loseCompletionResponse = false;
+          return Promise.reject(new TypeError("Network request failed"));
+        }
         return Promise.resolve(jsonResponse(profile(stored, true)));
       }
       throw new Error(`unexpected request ${method} ${pathname}`);
@@ -126,6 +136,14 @@ function backend(initial: Profile = {}, options: { reject?: () => Response } = {
   );
   return {
     fetchMock,
+    /** Another client (the web app, another device) saves fields. */
+    editElsewhere: (fields: Profile) => {
+      stored = { ...stored, ...fields };
+    },
+    /** Another client completes onboarding. */
+    completeElsewhere: () => {
+      completed = true;
+    },
     writes: () =>
       (fetchMock.mock.calls as [string, RequestInit?][])
         .filter(([, init]) => (init?.method ?? "GET") !== "GET")
@@ -418,5 +436,89 @@ describe("Fighter registration (OF1–OF11)", () => {
     await screen.findByLabelText("Name");
     await press("Back");
     expect(mockRouter.replace).toHaveBeenCalledWith("/onboarding/role?intent=fighter");
+  });
+});
+
+describe("Fighter onboarding lifecycle (SF-26)", () => {
+  it("resumes after the furthest step with saved data, never claiming a deferred step", async () => {
+    backend({ ...COMPLETE_FIELDS, goals: ["fitness"], weight_class: "minus_71" });
+    await renderWithProviders(<FighterOnboardingScreen />);
+    expect(await heading("Where do you train?")).toBeOnTheScreen();
+    await waitFor(() => expect(mockParams.current.step).toBe("gym"));
+  });
+
+  it("leaves for the entry when another client completes onboarding meanwhile", async () => {
+    const api = backend(COMPLETE_FIELDS);
+    const { queryClient } = await renderWithProviders(<FighterOnboardingScreen />);
+    await heading("What are you training for?");
+    api.completeElsewhere();
+    // The app returns to the foreground: the profile is read again.
+    await act(() => queryClient.refetchQueries());
+    await waitFor(() => expect(mockRedirects).toContain("/"));
+    expect(api.writes()).toEqual([]);
+  });
+
+  it("keeps an unsaved edit over another client's refetched change, and saves only the edit", async () => {
+    const api = backend({
+      display_name: "Alex",
+      username: "alex",
+      country_code: "PL",
+      city: "Kraków",
+    });
+    mockParams.current = { step: "account" };
+    const { queryClient } = await renderWithProviders(<FighterOnboardingScreen />);
+    await screen.findByDisplayValue("Kraków");
+    await user.clear(screen.getByLabelText("Name"));
+    await user.type(screen.getByLabelText("Name"), "Alex Rivera");
+    api.editElsewhere({ city: "Gdańsk" });
+    await act(() => queryClient.refetchQueries());
+
+    expect(await screen.findByDisplayValue("Gdańsk")).toBeOnTheScreen();
+    expect(screen.getByLabelText("Name")).toHaveDisplayValue("Alex Rivera");
+    await press("Continue");
+    await heading("Your boxing experience");
+    expect(api.writes()).toEqual([
+      { call: `PATCH ${PROFILE}`, body: { display_name: "Alex Rivera" } },
+    ]);
+  });
+
+  it("recovers when completion succeeded but its answer was lost: retrying is safe", async () => {
+    const api = backend(COMPLETE_FIELDS, { loseCompletionResponse: true });
+    mockParams.current = { step: "notifications" };
+    await renderWithProviders(<FighterOnboardingScreen />);
+    await heading("What should we tell you?");
+    await press("Finish");
+    expect(await screen.findByText(/couldn't finish your registration/)).toBeOnTheScreen();
+    expect(screen.queryByRole("header", { name: "Your boxing journey starts here." })).toBeNull();
+
+    // Finish again: the backend's completion is idempotent and now answers.
+    await press("Finish");
+    expect(await heading("Your boxing journey starts here.")).toBeOnTheScreen();
+    expect(api.writes().filter((write) => write.call === `POST ${COMPLETE}`)).toHaveLength(2);
+  });
+
+  it("sends Android Back on OF11 to the entry instead of back into the finished flow", async () => {
+    type BackHandlerListener = Parameters<typeof BackHandler.addEventListener>[1];
+    const handlers: BackHandlerListener[] = [];
+    const spy = jest
+      .spyOn(BackHandler, "addEventListener")
+      .mockImplementation((_event, handler) => {
+        handlers.push(handler);
+        return { remove: () => handlers.splice(handlers.indexOf(handler), 1) };
+      });
+    backend(COMPLETE_FIELDS);
+    mockParams.current = { step: "notifications" };
+    await renderWithProviders(<FighterOnboardingScreen />);
+    await heading("What should we tell you?");
+    await press("Finish");
+    await heading("Your boxing journey starts here.");
+
+    let handled: boolean | null | undefined;
+    act(() => {
+      handled = handlers.at(-1)?.({} as Parameters<BackHandlerListener>[0]);
+    });
+    expect(handled).toBe(true);
+    expect(mockRouter.replace).toHaveBeenCalledWith("/");
+    spy.mockRestore();
   });
 });

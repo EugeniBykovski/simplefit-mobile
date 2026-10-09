@@ -69,6 +69,12 @@ const FIGHTER_HOME: Entry = {
   fighter_profile: "completed",
   capabilities: ["FIGHTER"],
 };
+const FIGHTER_ONBOARDING: Entry = {
+  ...ROLE_SELECTION,
+  destination: "fighter_onboarding",
+  reason: "fighter_onboarding_not_started",
+  mandatory: true,
+};
 const ACCOUNT_REGISTRATION: Entry = {
   ...ROLE_SELECTION,
   destination: "account_registration",
@@ -139,7 +145,7 @@ const FIGHTER_NOT_STARTED = {
   },
 };
 
-async function signIn(entry: Entry = ROLE_SELECTION) {
+async function signIn(entry: Entry = ROLE_SELECTION, fighter: object = FIGHTER_NOT_STARTED) {
   mockFetch(
     jest.fn((url: string) =>
       Promise.resolve(
@@ -148,7 +154,7 @@ async function signIn(entry: Entry = ROLE_SELECTION) {
           : url.includes("/api/v1/me/account-profile")
             ? jsonResponse({ account_profile: NOT_STARTED })
             : url.includes("/api/v1/me/fighter-profile")
-              ? jsonResponse({ fighter_profile: FIGHTER_NOT_STARTED })
+              ? jsonResponse({ fighter_profile: fighter })
               : jsonResponse({
                   user: {
                     id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
@@ -570,6 +576,49 @@ describe("entry resolution (SF-45)", () => {
       expect(result.getSearchParams()).toEqual({ intent: "fighter", step: "account" }),
     );
     expect(result.getPathname()).toBe("/onboarding/fighter");
+  });
+
+  it("A: a new Fighter resolved to Fighter onboarding starts at OF1, nothing created on the way", async () => {
+    await signIn(FIGHTER_ONBOARDING);
+    const result = await renderApp("/?intent=fighter");
+    expect(await screen.findByRole("header", { name: "Your fighter profile" })).toBeOnTheScreen();
+    expect(result.getPathname()).toBe("/onboarding/fighter");
+    const writes = (jest.mocked(global.fetch).mock.calls as [string, RequestInit?][]).filter(
+      ([, init]) => (init?.method ?? "GET") !== "GET",
+    );
+    expect(writes).toEqual([]);
+  });
+
+  it("B: a partly registered Fighter resumes at the earliest missing step (OF2)", async () => {
+    await signIn(FIGHTER_ONBOARDING, {
+      ...FIGHTER_NOT_STARTED,
+      display_name: "Alex",
+      username: "alex",
+      country_code: "PL",
+      city: "Kraków",
+      onboarding: {
+        status: "in_progress",
+        completed_at: null,
+        missing_requirements: ["experience_level", "stance"],
+      },
+    });
+    const result = await renderApp("/onboarding/fighter?step=notifications");
+    expect(await screen.findByRole("header", { name: "Your boxing experience" })).toBeOnTheScreen();
+    await waitFor(() => expect(result.getSearchParams()).toEqual({ step: "experience" }));
+  });
+
+  it("C: a completed Fighter opening an old onboarding link enters Fighter home, never OF11", async () => {
+    await signIn(FIGHTER_HOME, {
+      ...FIGHTER_NOT_STARTED,
+      onboarding: {
+        status: "completed",
+        completed_at: "2026-10-09T10:00:00Z",
+        missing_requirements: [],
+      },
+    });
+    const result = await renderApp("/onboarding/fighter?step=complete");
+    await waitFor(() => expect(result.getPathname()).toBe("/home"));
+    expect(screen.queryByRole("header", { name: "Your boxing journey starts here." })).toBeNull();
   });
 
   it("role onboarding needs no capability once account registration is complete", async () => {

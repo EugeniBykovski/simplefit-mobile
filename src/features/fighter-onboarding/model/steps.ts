@@ -91,16 +91,27 @@ export const REQUIREMENT_STEP: Record<Requirement, FormStepId> = {
 };
 
 /**
- * Resume policy: the earliest step with a missing requirement; when none is
- * missing (a profile begun here or on the web), OF3 Goals, the first step
- * after the required ones. SF-25 stores no wizard cursor, so this is derived
- * from backend data alone.
+ * Resume policy (SF-26), derived from the backend profile alone: SF-25 keeps
+ * no wizard cursor, and OF5–OF10 record nothing, so the last screen visited
+ * cannot be known and is never claimed.
+ *
+ * 1. The earliest step with a missing requirement (OF1, then OF2): nothing
+ *    required is ever skipped.
+ * 2. Otherwise the step after the furthest optional step with saved data:
+ *    OF5 once any OF4 field is saved, OF4 once any OF3 field is saved,
+ *    otherwise OF3. The person continues from there to Finish (OF10), the
+ *    only completion action; a visit to OF5–OF10 leaves no trace, so a
+ *    return after one starts at OF5 at the latest.
  */
-export function resumeStep(profile: FighterProfile): FormStepId {
+export function resumeStep(profile: FighterProfile): StepId {
   const missing = profile.onboarding.missing_requirements;
   if (missing.some((requirement) => REQUIREMENT_STEP[requirement] === "account")) return "account";
   if (missing.some((requirement) => REQUIREMENT_STEP[requirement] === "experience"))
     return "experience";
+  const has = (value: unknown) =>
+    Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined;
+  if ([profile.weight_class, profile.current_weight_kg, profile.height_cm].some(has)) return "gym";
+  if ([profile.goals, profile.next_fight_on, profile.next_fight_name].some(has)) return "weight";
   return "goals";
 }
 
