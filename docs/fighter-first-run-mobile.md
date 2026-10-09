@@ -76,5 +76,18 @@ OF11 → SF-45 fighter_home → /home
   user dropped), `providers/router.test.tsx` (real route tree: pending →
   introduction, completed / dismissed → home, web tour does not count,
   unavailable → O04).
+- iOS dev build (EAS simulator build, unchanged native code), local Phoenix
+  - PostgreSQL, no mocks. Account A on iPhone 14 (390 × 844): sign-up → O04 →
+    O05 → OF1–OF11 → SF-45 → FR1–FR3 → "Let’s go" → one `completed` row →
+    Fighter home; the FR5 tour (7 steps + done) on the real header, checklist
+    and tabs; a cold restart opened the home, no introduction. Account B (web
+    tour recorded `completed` first): the mobile introduction still showed;
+    "Skip intro" → `dismissed` → B's own home (nothing of A), and a restart
+    kept it. Database: 2 users, 2 profiles, 3 outcomes (one per user and
+    experience). B's home and the tour also checked on iPhone 15 Plus
+    (430 × 932).
+- Not verified: 375 × 812 (the automated sign-in did not complete there),
+  Android (no emulator), VoiceOver / TalkBack, a real Google or Apple
+  sign-in.
 - Backend: `first_run_test.exs`, `first_run_controller_test.exs` (mobile
   availability, independence from the web tour, first outcome kept).

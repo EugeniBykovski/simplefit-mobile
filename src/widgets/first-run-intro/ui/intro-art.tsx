@@ -29,6 +29,8 @@ import { Text } from "@/shared/ui/text";
 
 const CANVAS_WIDTH = 348;
 const CANVAS_HEIGHT = 360;
+/** FR3's partner card: the artboard's 230 pt less the taller class card's growth. */
+const PARTNER_CARD_TOP = 218;
 
 /** The illustration card: 360 pt tall, radius 4xl, measured so positions follow its width. */
 function ArtCard({
@@ -195,7 +197,7 @@ export function BoardArt() {
           <At x={x(214)} y={162} width={x(130)}>
             <NodeCaption title={t("gym")} note={t("gymNote")} />
           </At>
-          <At x={x(22)} y={34} width={x(140)}>
+          <At x={x(22)} y={42} width={x(140)}>
             <NodeCaption title={t("partner")} note={t("partnerNote")} />
           </At>
           <At x={x(196)} y={34} width={x(130)} align="right">
@@ -340,7 +342,11 @@ export function CornerArt() {
             </View>
             <Icon icon={QrCode} size={30} color="primaryForeground" />
           </View>
-          <View className="absolute inset-x-5 top-56 flex-row items-center gap-2.5 rounded-2xl border border-input bg-background px-3.5 py-3">
+          <View
+            className="absolute inset-x-5 flex-row items-center gap-2.5 rounded-2xl border border-input bg-background px-3.5 py-3"
+            // Between the class card and the privacy note (no spacing step fits).
+            style={{ top: PARTNER_CARD_TOP }}
+          >
             <View className="size-8 items-center justify-center rounded-full bg-input">
               <Text variant="micro" weight="bold" className="font-display-bold">
                 {t("partnerInitials")}
