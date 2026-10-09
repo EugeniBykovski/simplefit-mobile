@@ -31,6 +31,9 @@ const REAL_SCREENS = [
   "mobile.onboarding.role",
   // SF-39: OF1–OF11 Fighter registration.
   "mobile.onboarding.fighter",
+  // SF-41: FR1–FR3 Fighter introduction and the Fighter home (FR4, FR5).
+  "mobile.welcome.tour",
+  "mobile.home",
   "mobile.app",
   "mobile.dev.design-system",
 ];
@@ -119,7 +122,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 11, catchAll: 1, placeholder: 128, deferred: 1 });
+    expect(counts).toEqual({ screen: 13, catchAll: 1, placeholder: 126, deferred: 1 });
     expect(routes).toHaveLength(141);
   });
 

@@ -710,5 +710,144 @@
       "missing": "Il manque encore des informations obligatoires : {section}.",
       "goTo": "Aller à : {section}"
     }
+  },
+  "firstRunIntro": {
+    "brand": "Bienvenue · Boxeur",
+    "skip": "Passer l’intro",
+    "next": "Suivant",
+    "finish": "C’est parti",
+    "progress": "Intro {step} sur {total}",
+    "loading": "Chargement",
+    "saveFailed": "Impossible d’enregistrer. Vérifie ta connexion et réessaie.",
+    "retry": "Réessayer",
+    "board": {
+      "label": "Ton Live Board",
+      "title": "Ta vie de boxeur, en carte",
+      "body": "Chaque salle, partenaire et séance s’y relient avec le temps. Tout reste privé jusqu’à ce que tu choisisses de partager.",
+      "art": {
+        "you": "Toi",
+        "gym": "Ta salle",
+        "gymNote": "Visites",
+        "partner": "Partenaire",
+        "partnerNote": "Entraînés ensemble",
+        "roadwork": "Partenaire de course",
+        "roadworkNote": "Sorties",
+        "technical": "Technique",
+        "technicalNote": "Rounds",
+        "sparring": "Sparring",
+        "sparringNote": "Partagé",
+        "fight": "Combat",
+        "fightNote": "Camp",
+        "private": "Privé · toi seul",
+        "description": "Un exemple de Live Board : toi au centre, relié à une salle, des partenaires et des séances."
+      }
+    },
+    "timer": {
+      "label": "Entraînement",
+      "title": "Des rounds, pas des répétitions",
+      "body": "Le minuteur de boxe gère tes rounds et tes pauses — et note chaque round dans ton journal. Rien à saisir entre les rounds.",
+      "art": {
+        "round": "Round 3 / 6",
+        "time": "02:14",
+        "rest": "Puis 1:00 de pause",
+        "log": "Chaque round arrive dans ton journal",
+        "badge": "Auto",
+        "description": "Un exemple de minuteur : round 3 sur 6, encore deux minutes quatorze, puis la pause."
+      }
+    },
+    "coach": {
+      "label": "Ton coin",
+      "title": "Ton coach et ta salle, dans ta poche",
+      "body": "Réservations, programmes et messages au même endroit. S’entraîner avec ton coach est toujours gratuit.",
+      "art": {
+        "coach": "Ton coach",
+        "coachInitials": "C",
+        "coachNote": "T’envoie un plan d’entraînement",
+        "new": "Nouveau",
+        "classLabel": "Cours · réservé",
+        "classTime": "18:00",
+        "className": "Un cours dans ta salle",
+        "partner": "Partenaire",
+        "partnerInitials": "P",
+        "partnerNote": "Les messages au même endroit",
+        "private": "Le poids, les notes de douleur et les notes du coach restent privés par défaut.",
+        "description": "Un exemple de ton coin : un plan de ton coach, un cours réservé et un message d’un partenaire."
+      }
+    }
+  },
+  "fighterHome": {
+    "identity": "Boxeur",
+    "notifications": "Notifications",
+    "help": "Aide et visite",
+    "dateLine": "{date} · Jour {day}",
+    "greeting": "Bienvenue, {name}.",
+    "greetingLine": "Installons ton coin.",
+    "loading": "Chargement de ton accueil",
+    "loadFailed": "Impossible de charger ton accueil. Vérifie ta connexion et réessaie.",
+    "retry": "Réessayer",
+    "checklist": {
+      "label": "Pour commencer",
+      "title": "Premiers pas",
+      "progress": "{done} sur {total} faits",
+      "notAvailable": "Pas encore disponible",
+      "steps": {
+        "gym": "Rejoins ta salle",
+        "classes": "Réserve ton premier cours",
+        "timer": "Essaie le minuteur de rounds",
+        "training": "Note ton premier entraînement",
+        "partners": "Ajoute un partenaire d’entraînement"
+      }
+    },
+    "board": {
+      "label": "Ton Live Board",
+      "empty": "Vide",
+      "title": "Ta première séance crée le premier nœud",
+      "body": "Salles, partenaires et combats se relient avec le temps.",
+      "tour": "Faire la visite d’une minute →",
+      "tourLabel": "Faire la visite d’une minute"
+    },
+    "tour": {
+      "label": "Visite · {step} sur {total}",
+      "doneLabel": "Visite terminée",
+      "end": "Terminer",
+      "back": "Retour",
+      "next": "Suivant",
+      "finish": "Terminé",
+      "close": "Retour à ma liste",
+      "steps": {
+        "checklist": {
+          "title": "Commence ici",
+          "body": "Tes premiers pas sont ici. Chacun se coche tout seul une fois fait."
+        },
+        "board": {
+          "title": "Voici ton Live Board",
+          "body": "Salles, personnes et séances, reliées avec le temps. Toi seul le vois jusqu’à ce que tu partages une carte."
+        },
+        "training": {
+          "title": "S’entraîner et noter",
+          "body": "Le minuteur de rounds, le plan de ton coach et chaque séance notée. Crée une séance partagée pour t’entraîner à plusieurs."
+        },
+        "community": {
+          "title": "Tes proches",
+          "body": "Les entraînements de tes amis, la communauté de ta salle et les défis — seulement ce que chacun choisit de partager."
+        },
+        "profile": {
+          "title": "Profil et réglages",
+          "body": "Palmarès, progrès, camps et abonnements. La confidentialité, l’export des données et les espaces de travail sont ici aussi."
+        },
+        "notifications": {
+          "title": "Seulement l’essentiel",
+          "body": "Rappels de cours, notes du coach et activité des amis. Le reste arrive regroupé dans un résumé du soir."
+        },
+        "identity": {
+          "title": "Tes rôles",
+          "body": "C’est toi, en tant que boxeur. Si tu entraînes aussi ou gères une salle, tu basculeras ici — sans nouvelle connexion."
+        },
+        "done": {
+          "title": "Tu t’y retrouves",
+          "body": "Refais la visite quand tu veux depuis Aide (?)."
+        }
+      }
+    }
   }
 }

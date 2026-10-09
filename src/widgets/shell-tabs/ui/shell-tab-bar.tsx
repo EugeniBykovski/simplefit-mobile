@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import type { LucideIcon } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
@@ -6,6 +7,7 @@ import { useTranslations } from "use-intl";
 import type { Messages } from "@/shared/i18n/messages";
 import { mobileShell, routeHref } from "@/shared/routes/routes";
 import { Icon } from "@/shared/ui/icon";
+import { useSpotlightTarget } from "@/shared/ui/spotlight";
 import { Text } from "@/shared/ui/text";
 
 import { tabNavigation, type TabShell } from "../model/navigation";
@@ -42,40 +44,67 @@ export function ShellTabBar({ shell, focusedTab }: { shell: TabShell; focusedTab
         className="flex-row items-center justify-between rounded-full border border-border-strong bg-surface-elevated px-2 py-2.5"
       >
         {mobileShell(config.shell).navItems.map((item) => {
-          const selected = item.key === active;
           const icon = config.icons[item.key];
           if (!icon) throw new Error(`No tab icon for ${config.shell}#${item.key}`);
-          const center = item.key === config.center;
-
           return (
-            <Pressable
+            <TabItem
               key={item.key}
-              accessibilityRole="tab"
-              accessibilityLabel={label(item.key)}
-              accessibilityState={{ selected }}
+              id={item.key}
+              label={label(item.key)}
+              icon={icon}
+              selected={item.key === active}
+              center={item.key === config.center}
               onPress={() => router.navigate(routeHref(item.route))}
-              className={
-                center
-                  ? `h-14 w-14 items-center justify-center rounded-full ${selected ? "bg-highlight" : "bg-primary"}`
-                  : selected
-                    ? "h-12 flex-row items-center gap-1.5 rounded-full bg-primary px-3"
-                    : "h-12 w-12 items-center justify-center rounded-full"
-              }
-            >
-              <Icon
-                icon={icon}
-                size={center ? 24 : selected ? 20 : 22}
-                color={center || selected ? "primaryForeground" : "mutedForeground"}
-              />
-              {selected && !center ? (
-                <Text variant="bodySm" weight="extrabold" color="primaryForeground">
-                  {label(item.key)}
-                </Text>
-              ) : null}
-            </Pressable>
+            />
           );
         })}
       </View>
     </View>
+  );
+}
+
+/** One tab button; a spotlight target named `tab:<key>` (SF-41 tours point at it). */
+function TabItem({
+  id,
+  label,
+  icon,
+  selected,
+  center,
+  onPress,
+}: {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  selected: boolean;
+  center: boolean;
+  onPress: () => void;
+}) {
+  const target = useSpotlightTarget(`tab:${id}`);
+  return (
+    <Pressable
+      ref={target}
+      accessibilityRole="tab"
+      accessibilityLabel={label}
+      accessibilityState={{ selected }}
+      onPress={onPress}
+      className={
+        center
+          ? `h-14 w-14 items-center justify-center rounded-full ${selected ? "bg-highlight" : "bg-primary"}`
+          : selected
+            ? "h-12 flex-row items-center gap-1.5 rounded-full bg-primary px-3"
+            : "h-12 w-12 items-center justify-center rounded-full"
+      }
+    >
+      <Icon
+        icon={icon}
+        size={center ? 24 : selected ? 20 : 22}
+        color={center || selected ? "primaryForeground" : "mutedForeground"}
+      />
+      {selected && !center ? (
+        <Text variant="bodySm" weight="extrabold" color="primaryForeground">
+          {label}
+        </Text>
+      ) : null}
+    </Pressable>
   );
 }

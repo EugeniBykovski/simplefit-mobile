@@ -116,6 +116,28 @@ const NOT_STARTED = {
  * (SF-24); the API resolves the entry (`GET /api/v1/me/entry`, SF-45) as
  * `entry`.
  */
+/** SF-25: a completed Fighter profile (SF-41 first-run tests). */
+const FIGHTER_COMPLETED = {
+  display_name: "Alex Rivera",
+  username: "alex",
+  country_code: "PL",
+  city: "Kraków",
+  experience_level: "amateur",
+  amateur_bout_count: null,
+  stance: "orthodox",
+  goals: [],
+  next_fight_on: null,
+  next_fight_name: null,
+  weight_class: null,
+  current_weight_kg: null,
+  height_cm: null,
+  onboarding: {
+    status: "completed",
+    completed_at: "2026-10-09T10:00:00Z",
+    missing_requirements: [],
+  },
+};
+
 /** SF-25: the profile before the first save (every field empty). */
 const FIGHTER_NOT_STARTED = {
   display_name: null,
@@ -145,7 +167,19 @@ const FIGHTER_NOT_STARTED = {
   },
 };
 
-async function signIn(entry: Entry = ROLE_SELECTION, fighter: object = FIGHTER_NOT_STARTED) {
+/** SF-40/SF-41 first-run experiences as the backend lists them. */
+const firstRun = (mobile: string, web = "pending") => ({
+  experiences: [
+    { experience: "fighter_web_tour", status: web, recorded_at: null },
+    { experience: "fighter_mobile_first_run", status: mobile, recorded_at: null },
+  ],
+});
+
+async function signIn(
+  entry: Entry = ROLE_SELECTION,
+  fighter: object = FIGHTER_NOT_STARTED,
+  mobileFirstRun = "completed",
+) {
   mockFetch(
     jest.fn((url: string) =>
       Promise.resolve(
@@ -155,12 +189,14 @@ async function signIn(entry: Entry = ROLE_SELECTION, fighter: object = FIGHTER_N
             ? jsonResponse({ account_profile: NOT_STARTED })
             : url.includes("/api/v1/me/fighter-profile")
               ? jsonResponse({ fighter_profile: fighter })
-              : jsonResponse({
-                  user: {
-                    id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                    created_at: "2026-10-01T10:00:00Z",
-                  },
-                }),
+              : url.includes("/api/v1/me/first-run")
+                ? jsonResponse(firstRun(mobileFirstRun))
+                : jsonResponse({
+                    user: {
+                      id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                      created_at: "2026-10-01T10:00:00Z",
+                    },
+                  }),
       ),
     ),
   );
@@ -194,8 +230,11 @@ describe("canonical routes resolve", () => {
   it.each(routable.map((route) => [route.id, route] as const))(
     "%s renders its own screen at its canonical path",
     async (_id, route) => {
-      // O04 shows only while account registration is incomplete (SF-37).
-      if (route.session === "AUTHENTICATED")
+      // O04 shows only while account registration is incomplete (SF-37); the
+      // Fighter introduction only while its first run is pending (SF-41).
+      if (route.id === "mobile.welcome.tour")
+        await signIn(FIGHTER_HOME, FIGHTER_COMPLETED, "pending");
+      else if (route.session === "AUTHENTICATED")
         await signIn(route.id === "mobile.signup.consent" ? ACCOUNT_REGISTRATION : ROLE_SELECTION);
       // The code screens need the pending email flow of the step before them (SF-24).
       if (route.id === "mobile.login.code") {
@@ -438,9 +477,9 @@ describe("system states (SF-34)", () => {
         ),
     );
 
-    const result = await renderApp("/home");
+    const result = await renderApp("/training");
     expect(await screen.findByLabelText("Loading SimpleFit")).toBeOnTheScreen();
-    expect(result.getPathname()).toBe("/home");
+    expect(result.getPathname()).toBe("/training");
 
     await act(async () =>
       respond(
@@ -454,9 +493,9 @@ describe("system states (SF-34)", () => {
         }),
       ),
     );
-    expect(await screen.findByTestId(placeholderId("mobile.home"))).toBeOnTheScreen();
+    expect(await screen.findByTestId(placeholderId("mobile.training"))).toBeOnTheScreen();
     expect(screen.queryByLabelText("Loading SimpleFit")).toBeNull();
-    expect(result.getPathname()).toBe("/home");
+    expect(result.getPathname()).toBe("/training");
   });
 
   it("renders the root error boundary without the error's details", async () => {
@@ -619,6 +658,37 @@ describe("entry resolution (SF-45)", () => {
     const result = await renderApp("/onboarding/fighter?step=complete");
     await waitFor(() => expect(result.getPathname()).toBe("/home"));
     expect(screen.queryByRole("header", { name: "Your boxing journey starts here." })).toBeNull();
+  });
+
+  it("SF-41: a completed Fighter with a pending mobile first run sees the introduction first", async () => {
+    await signIn(FIGHTER_HOME, FIGHTER_COMPLETED, "pending");
+    const result = await renderApp("/");
+    expect(
+      await screen.findByRole("header", { name: "Your boxing life, mapped" }),
+    ).toBeOnTheScreen();
+    expect(result.getPathname()).toBe("/welcome/tour");
+  });
+
+  it("SF-41: a finished or skipped introduction is never shown again; the Fighter home is", async () => {
+    for (const status of ["completed", "dismissed"]) {
+      await signIn(FIGHTER_HOME, FIGHTER_COMPLETED, status);
+      const result = await renderApp("/welcome/tour");
+      await waitFor(() => expect(result.getPathname()).toBe("/home"));
+      expect(await screen.findByRole("header", { name: /Welcome in, Alex/ })).toBeOnTheScreen();
+      await result.unmount();
+    }
+  });
+
+  it("SF-41: the web tour finished does not count for the mobile introduction", async () => {
+    await signIn(FIGHTER_HOME, FIGHTER_COMPLETED, "pending");
+    const result = await renderApp("/home");
+    await waitFor(() => expect(result.getPathname()).toBe("/welcome/tour"));
+  });
+
+  it("SF-41: without a completed Fighter onboarding the home and the introduction go to the entry", async () => {
+    await signIn(ACCOUNT_REGISTRATION, FIGHTER_NOT_STARTED, "unavailable");
+    const result = await renderApp("/welcome/tour");
+    await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
   });
 
   it("role onboarding needs no capability once account registration is complete", async () => {

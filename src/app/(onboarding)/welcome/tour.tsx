@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { FirstRunIntroScreen } from "@/widgets/first-run-intro";
 
-export default placeholderRoute("mobile.welcome.tour");
+export default function FirstRunIntroRoute() {
+  return <FirstRunIntroScreen />;
+}
