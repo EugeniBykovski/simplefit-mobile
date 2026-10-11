@@ -1,5 +1,6 @@
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { screen, userEvent } from "@testing-library/react-native";
+import { TurboModuleRegistry } from "react-native";
 
 // The session is per app launch; tests start from a fresh launch.
 import { resetSessionForTests } from "@/entities/session/model/session";
@@ -38,6 +39,10 @@ describe("SessionControl", () => {
   });
 
   it("signs out: revokes the session, clears SecureStore and signs out of Google", async () => {
+    // A development or release binary registers the Google native module.
+    jest
+      .spyOn(TurboModuleRegistry, "get")
+      .mockImplementation((name) => (name === "RNGoogleSignin" ? ({} as never) : null));
     await setSecureItem(KEY, REFRESH);
     const fetchMock = mockFetch(
       jest

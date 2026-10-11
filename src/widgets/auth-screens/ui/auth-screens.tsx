@@ -5,6 +5,7 @@ import {
   CircleAlert,
   HandFist,
   House,
+  LogOut,
   Mail,
   Star,
   UserCheck,
@@ -23,10 +24,12 @@ import {
   SignInEmailForm,
   type CodeStepLayout,
 } from "@/features/email-auth";
+import { useSession } from "@/entities/session";
 import { AccountBasicsForm } from "@/features/account-registration";
 import { useEntryChoice } from "@/features/session-gate";
 import { AppleSignInButton } from "@/features/sign-in-with-apple";
 import { GoogleSignInButton } from "@/features/sign-in-with-google";
+import { SignOutButton } from "@/features/sign-out";
 import { publicEnv } from "@/shared/config/env";
 import {
   continuationOf,
@@ -68,11 +71,14 @@ function useContinuation(): Continuation {
  */
 function AuthFrame({
   back,
+  headerAction,
   children,
   actions,
   gutter = "px-5",
 }: {
   back?: Href;
+  /** Right end of the header row (the signed-in setup screens' Sign out, SF-28). */
+  headerAction?: ReactNode;
   children: ReactNode;
   actions?: ReactNode;
   gutter?: "px-5" | "px-6";
@@ -92,15 +98,22 @@ function AuthFrame({
         // Runtime inset: the artboards' 58 pt top is the status bar plus 11 pt.
         style={{ paddingTop: insets.top + 11 }}
       >
-        {back !== undefined && (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("back")}
-            onPress={() => (router.canGoBack() ? router.back() : router.replace(back))}
-            className="size-11 items-center justify-center rounded-full border border-border bg-surface"
-          >
-            <Icon icon={ChevronLeft} />
-          </Pressable>
+        {(back !== undefined || headerAction !== undefined) && (
+          <View className="flex-row items-center justify-between gap-3">
+            {back !== undefined ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={t("back")}
+                onPress={() => (router.canGoBack() ? router.back() : router.replace(back))}
+                className="size-11 items-center justify-center rounded-full border border-border bg-surface"
+              >
+                <Icon icon={ChevronLeft} />
+              </Pressable>
+            ) : (
+              <View />
+            )}
+            {headerAction}
+          </View>
         )}
         {children}
       </ScrollView>
@@ -114,6 +127,27 @@ function AuthFrame({
         </View>
       )}
     </KeyboardAvoidingView>
+  );
+}
+
+/**
+ * Why the welcome or sign-in screen is shown, when a session ended in this
+ * launch (SF-28): the API rejected it (`expired`), or the user signed out.
+ * "Signed out on this device" stays true even when the logout could not reach
+ * the API, so nothing claims a server revocation that did not happen.
+ */
+function SessionEndedNotice() {
+  const t = useTranslations("auth.session.ended");
+  const { status, ended } = useSession();
+  if (status !== "anonymous" || ended === undefined) return null;
+  return ended === "expired" ? (
+    <Notice tone="amber" icon={CircleAlert} live>
+      {t("expired")}
+    </Notice>
+  ) : (
+    <Notice tone="muted" icon={LogOut} live>
+      {t("signedOut")}
+    </Notice>
   );
 }
 
@@ -227,6 +261,7 @@ export function WelcomeScreen() {
     >
       <View className="gap-5">
         <BrandLockup />
+        <SessionEndedNotice />
         <WelcomeRings />
         <Text variant="authHero">
           {t.rich("title", {
@@ -264,6 +299,7 @@ export function LoginScreen() {
       }
     >
       <Heading title={t("title")} description={t("description")} />
+      <SessionEndedNotice />
       <View className="flex-row gap-2.5">
         <View className="flex-1">
           <GoogleSignInButton variant="quiet" compact />
@@ -368,7 +404,11 @@ export function VerifyEmailScreen() {
 export function ConsentScreen() {
   return (
     <AccountBasicsForm
-      layout={({ body, actions }) => <AuthFrame actions={actions}>{body}</AuthFrame>}
+      layout={({ body, actions }) => (
+        <AuthFrame actions={actions} headerAction={<SignOutButton variant="ghost" />}>
+          {body}
+        </AuthFrame>
+      )}
     />
   );
 }
@@ -418,6 +458,7 @@ export function RoleChoiceScreen() {
 
   return (
     <AuthFrame
+      headerAction={<SignOutButton variant="ghost" />}
       actions={
         <Button
           label={

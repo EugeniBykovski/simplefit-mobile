@@ -8,9 +8,12 @@ import { jsonResponse, mockFetch } from "@/test/render";
 import {
   callWithSession,
   completeAuthentication,
+  onSessionBoundary,
   refresh,
   resetSessionForTests,
   restoreSession,
+  retryUnavailableSession,
+  SessionChangedError,
   signOut,
   useSession,
   useSessionStatus,
@@ -275,6 +278,176 @@ describe("session", () => {
 
       expect(await getSecureItem(KEY)).toBeNull();
       await expect(restoreSession()).resolves.toBe("anonymous");
+    });
+  });
+
+  /*
+   * SF-28: the lifecycle across identity boundaries. Answers are held back so
+   * they arrive after the user signed out or another user signed in.
+   */
+  describe("session boundaries (SF-28)", () => {
+    const B = `sfr_${"c".repeat(43)}`;
+    const VIEWER_B = {
+      id: "4c5f2b1e-9d0a-4f6e-8a3b-2d7c1e0f9a8b",
+      created_at: "2026-10-02T10:00:00Z",
+    };
+    const viewerB = () => jsonResponse({ user: VIEWER_B });
+    const noContent = () => new Response(null, { status: 204 });
+
+    function deferred<T>() {
+      let resolve!: (value: T) => void;
+      const promise = new Promise<T>((done) => {
+        resolve = done;
+      });
+      return { promise, resolve };
+    }
+
+    /** A signs in; A's next call is rejected so it rotates (held back); B answers afterwards. */
+    function raceApi(lateRefresh: Promise<Response>) {
+      let meCalls = 0;
+      return mockFetch(
+        jest.fn((url: string) => {
+          const path = new URL(url).pathname;
+          if (path === "/api/auth/session/refresh") return lateRefresh;
+          if (path === "/api/auth/logout") return Promise.resolve(noContent());
+          meCalls += 1;
+          return Promise.resolve(
+            meCalls === 1 ? viewer() : meCalls === 2 ? unauthorized() : viewerB(),
+          );
+        }),
+      );
+    }
+
+    it("a late rotation never replaces the next user's refresh token in SecureStore", async () => {
+      const lateRefresh = deferred<Response>();
+      raceApi(lateRefresh.promise);
+      await completeAuthentication(tokenBody(OLD, "sfa_a"));
+      const pendingA = callWithSession((init) => getCurrentUser(init)).catch(
+        (error: unknown) => error,
+      );
+
+      await signOut();
+      await completeAuthentication(tokenBody(B, "sfa_b"));
+      lateRefresh.resolve(tokens(NEW, "sfa_a_rotated"));
+
+      expect(await pendingA).toBeInstanceOf(SessionChangedError);
+      expect(await getSecureItem(KEY)).toBe(B);
+      const { result } = await renderHook(() => useSession());
+      expect(result.current).toEqual({ status: "authenticated", viewer: VIEWER_B });
+    });
+
+    it("a late rejection of the previous session never deletes the next user's token", async () => {
+      const lateRefresh = deferred<Response>();
+      raceApi(lateRefresh.promise);
+      await completeAuthentication(tokenBody(OLD, "sfa_a"));
+      const pendingA = callWithSession((init) => getCurrentUser(init)).catch(
+        (error: unknown) => error,
+      );
+
+      await signOut();
+      await completeAuthentication(tokenBody(B, "sfa_b"));
+      lateRefresh.resolve(unauthorized());
+      await pendingA;
+
+      expect(await getSecureItem(KEY)).toBe(B);
+      const { result } = await renderHook(() => useSessionStatus());
+      expect(result.current).toBe("authenticated");
+    });
+
+    it("discards the previous user's slow response instead of handing it to the caller", async () => {
+      const slow = deferred<Response>();
+      mockFetch(
+        jest.fn((url: string) => {
+          const path = new URL(url).pathname;
+          if (path === "/api/auth/logout") return Promise.resolve(noContent());
+          if (path === "/api/v1/me/fighter-profile") return slow.promise;
+          return Promise.resolve(viewer());
+        }),
+      );
+      await completeAuthentication(tokenBody(OLD, "sfa_a"));
+      const pending = callWithSession((init) =>
+        fetch("http://api.test/api/v1/me/fighter-profile", init).then((response) =>
+          response.json(),
+        ),
+      ).catch((error: unknown) => error);
+
+      await signOut();
+      slow.resolve(jsonResponse({ fighter_profile: { status: "completed" } }));
+
+      expect(await pending).toBeInstanceOf(SessionChangedError);
+    });
+
+    it("an offline sign-out says it is local, deletes the token and queues nothing", async () => {
+      api({ "/api/me": [viewer] });
+      await completeAuthentication(tokenBody(OLD, "sfa_a"));
+      const fetchMock = mockFetch(jest.fn(offline));
+
+      await expect(signOut()).resolves.toBe("local");
+
+      expect(await getSecureItem(KEY)).toBeNull();
+      expect(await asyncStorageKeys()).toEqual([]);
+      // Nothing retries the logout later with a kept credential.
+      const attempts = fetchMock.mock.calls.length;
+      await restoreSession();
+      expect(fetchMock.mock.calls.length).toBe(attempts);
+    });
+
+    it("a confirmed sign-out says the API revoked it", async () => {
+      api({ "/api/me": [viewer], "/api/auth/logout": [noContent] });
+      await completeAuthentication(tokenBody(OLD, "sfa_a"));
+      await expect(signOut()).resolves.toBe("revoked");
+      const { result } = await renderHook(() => useSession());
+      expect(result.current).toEqual({ status: "anonymous", ended: "signed-out" });
+    });
+
+    it("marks a session the API rejected as expired, and never one that never existed", async () => {
+      api({ "/api/me": [viewer] });
+      await completeAuthentication(tokenBody(OLD, "sfa_a"));
+      api({ "/api/me": [unauthorized], "/api/auth/session/refresh": [unauthorized] });
+      await callWithSession((init) => getCurrentUser(init)).catch(() => undefined);
+      const { result } = await renderHook(() => useSession());
+      expect(result.current).toEqual({ status: "anonymous", ended: "expired" });
+
+      resetSessionForTests();
+      await setSecureItem(KEY, OLD);
+      api({ "/api/auth/session/refresh": [unauthorized] });
+      await restoreSession();
+      const { result: launch } = await renderHook(() => useSession());
+      expect(launch.current).toEqual({ status: "anonymous" });
+    });
+
+    it("runs the boundary listeners on sign-in, sign-out and expiry, not on a refresh", async () => {
+      const boundary = jest.fn();
+      onSessionBoundary(boundary);
+      api({
+        "/api/me": [viewer],
+        "/api/auth/session/refresh": [() => tokens(NEW, "sfa_rotated")],
+        "/api/auth/logout": [noContent],
+      });
+
+      await completeAuthentication(tokenBody(OLD, "sfa_a"));
+      expect(boundary).toHaveBeenCalledTimes(1);
+      await refresh();
+      expect(boundary).toHaveBeenCalledTimes(1);
+      await signOut();
+      expect(boundary).toHaveBeenCalledTimes(2);
+    });
+
+    it("retries an unconfirmed restore on request, and leaves other states alone", async () => {
+      await setSecureItem(KEY, OLD);
+      api({ "/api/auth/session/refresh": [serverError] });
+      await restoreSession();
+      const fetchMock = api({
+        "/api/auth/session/refresh": [() => tokens(NEW, "sfa_back")],
+        "/api/me": [viewer],
+      });
+
+      retryUnavailableSession();
+      const { result } = await renderHook(() => useSessionStatus());
+      await waitFor(() => expect(result.current).toBe("authenticated"));
+
+      retryUnavailableSession();
+      expect(paths(fetchMock)).toEqual(["/api/auth/session/refresh", "/api/me"]);
     });
   });
 });

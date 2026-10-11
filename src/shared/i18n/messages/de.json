@@ -138,7 +138,12 @@
       "signedIn": "Du bist angemeldet.",
       "signedOut": "Du bist nicht angemeldet.",
       "signIn": "Anmelden",
-      "signOut": "Abmelden"
+      "signOut": "Abmelden",
+      "signOutHint": "Meldet dich nur auf diesem Gerät ab.",
+      "ended": {
+        "expired": "Deine Sitzung ist abgelaufen. Melde dich erneut an, um fortzufahren.",
+        "signedOut": "Du bist auf diesem Gerät abgemeldet."
+      }
     },
     "signup": {
       "title": "Erstelle dein Konto",
@@ -849,5 +854,10 @@
         }
       }
     }
+  },
+  "accountMenu": {
+    "profileNote": "Dein Profil kommt mit seiner Funktion. Einstellungen und Abmelden funktionieren schon.",
+    "settingsLink": "Einstellungen · Konto · Privatsphäre",
+    "settingsNote": "Konto-, Privatsphäre- und Benachrichtigungseinstellungen kommen mit ihren Funktionen. Hier kannst du dich auf diesem Gerät abmelden."
   }
 }

@@ -1,5 +1,5 @@
 import type * as GoogleSignInNative from "@react-native-google-signin/google-signin";
-import { Platform } from "react-native";
+import { Platform, TurboModuleRegistry } from "react-native";
 
 import { publicEnv } from "@/shared/config/env";
 
@@ -53,15 +53,23 @@ export function configureGoogleSignIn({ GoogleSignin }: GoogleSignInModule): boo
   return true;
 }
 
-/** Clears Google's local sign-in state after a SimpleFit sign-out (best effort). */
+/**
+ * Clears Google's local sign-in state after a SimpleFit sign-out (best
+ * effort). It never throws: a binary without the native module (Expo Go, a
+ * stale development build) or a failing SDK must not interrupt the SimpleFit
+ * sign-out, which has already ended the session (SF-28).
+ */
 export async function signOutOfGoogle(): Promise<void> {
-  if (!googleSignInAvailable()) return;
-  const google = googleSignInModule();
-  configureGoogleSignIn(google);
+  // Without the native module there is no Google state to clear. Checked
+  // without requiring it: in development Metro reports a failing module
+  // evaluation as an uncaught error even when the caller catches it.
+  if (!googleSignInAvailable() || TurboModuleRegistry.get("RNGoogleSignin") === null) return;
   try {
+    const google = googleSignInModule();
+    configureGoogleSignIn(google);
     await google.GoogleSignin.signOut();
   } catch {
-    // Local state only; the SimpleFit session is already revoked.
+    // Local provider state only; the SimpleFit session is already ended.
   }
 }
 

@@ -1,13 +1,18 @@
 export {
   callWithSession,
   completeAuthentication,
+  onSessionBoundary,
   refresh,
   restoreSession,
+  retryUnavailableSession,
+  SessionChangedError,
   SessionUnavailableError,
   signOut,
   useSession,
   useSessionStatus,
   type Session,
+  type SessionEnd,
   type SessionStatus,
+  type SignOutOutcome,
   type Viewer,
 } from "./model/session";

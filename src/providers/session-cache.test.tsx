@@ -1,7 +1,7 @@
 import { CancelledError, QueryClient } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react-native";
 
-import { completeAuthentication, signOut } from "@/entities/session";
+import { completeAuthentication, refresh, signOut } from "@/entities/session";
 import { resetSessionForTests } from "@/entities/session/model/session";
 import { jsonResponse, mockFetch } from "@/test/render";
 
@@ -31,7 +31,7 @@ function signedInAs(userId: string) {
 
 beforeEach(() => resetSessionForTests());
 
-describe("session-scoped query cache (SF-26)", () => {
+describe("session-scoped query cache (SF-26, SF-28)", () => {
   it("clears another account's cached server state when the session ends", async () => {
     const client = new QueryClient();
     signedInAs("user-a");
@@ -43,20 +43,29 @@ describe("session-scoped query cache (SF-26)", () => {
     await waitFor(() => expect(client.getQueryData(PROFILE_KEY)).toBeUndefined());
   });
 
-  it("clears it when a different user signs in, and keeps it for the same user", async () => {
+  it("clears it when a sign-in starts a new session, and keeps it across a refresh", async () => {
     const client = new QueryClient();
     signedInAs("user-a");
     await completeAuthentication(TOKENS);
     await renderHook(() => useSessionScopedCache(client));
     client.setQueryData(PROFILE_KEY, { display_name: "A" });
 
-    // The same user again (a refreshed session) keeps the cache.
-    await act(() => completeAuthentication(TOKENS));
+    // A refresh continues the same session: the cache stays.
+    mockFetch(
+      jest.fn(() =>
+        Promise.resolve(
+          jsonResponse({ ...TOKENS, access_token: "sfa_rotated", refresh_token: "sfr_rotated" }),
+        ),
+      ),
+    );
+    await act(() => refresh());
     expect(client.getQueryData(PROFILE_KEY)).toEqual({ display_name: "A" });
 
+    // Any sign-in is a new session, whoever it turns out to be (SF-28): cleared
+    // synchronously, before the new viewer is even known.
     signedInAs("user-b");
     await act(() => completeAuthentication(TOKENS));
-    await waitFor(() => expect(client.getQueryData(PROFILE_KEY)).toBeUndefined());
+    expect(client.getQueryData(PROFILE_KEY)).toBeUndefined();
   });
 
   it("drops a late answer for the previous user instead of showing it to the next (SF-41)", async () => {

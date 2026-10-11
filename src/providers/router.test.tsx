@@ -6,7 +6,7 @@ import { act, fireEvent, renderRouter, screen, waitFor } from "expo-router/testi
 import { completeAuthentication } from "@/entities/session";
 import { pending } from "@/features/email-auth/model/pending";
 import { resetSessionForTests } from "@/entities/session/model/session";
-import { setSecureItem } from "@/shared/storage/secure-storage";
+import { getSecureItem, setSecureItem } from "@/shared/storage/secure-storage";
 import { jsonResponse, mockFetch } from "@/test/render";
 import { mobileRoutes } from "@/shared/routes/mobile-routes";
 import type { MobileRoute } from "@/shared/routes/routes";
@@ -363,6 +363,95 @@ describe("session access (UX only)", () => {
   });
 });
 
+/*
+ * SF-28: signing out from the signed-in app and from the setup screens, and a
+ * session the API stops accepting, through the real routes and gates.
+ */
+describe("sign-out and session end (SF-28)", () => {
+  const refreshTokenKey = "simplefit.session.refresh_token";
+
+  /**
+   * Presses Sign out and lets its whole handler (sign-out, Google sign-out,
+   * navigation) finish inside this test, in one awaited act scope: the tests
+   * run on fake timers, so its timers are flushed afterwards in their own.
+   */
+  async function pressSignOut() {
+    await fireEvent.press(await screen.findByRole("button", { name: "Sign out" }));
+    await act(async () => {
+      for (let turn = 0; turn < 20; turn += 1) await Promise.resolve();
+    });
+    await act(async () => jest.runOnlyPendingTimers());
+  }
+
+  it("Profile → Settings → Sign out: back to welcome, credentials gone, Back shows nothing private", async () => {
+    await signIn(FIGHTER_HOME);
+    const result = await renderApp("/profile");
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Settings · account · privacy" }),
+    );
+    await waitFor(() => expect(result.getPathname()).toBe("/settings"));
+
+    await pressSignOut();
+
+    await waitFor(() => expect(result.getPathname()).toBe("/welcome"));
+    expect(await screen.findByText("You’re signed out on this device.")).toBeOnTheScreen();
+    expect(await getSecureItem(refreshTokenKey)).toBeNull();
+    // Nothing of the previous session is carried to the next sign-in.
+    expect(result.getSearchParams()).toEqual({});
+
+    // Back (Android's hardware button) cannot reopen a signed-in screen.
+    await act(async () => {
+      if (router.canGoBack()) router.back();
+    });
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(screen.queryByTestId("account-menu:settings")).toBeNull();
+    expect(screen.queryByTestId("account-menu:profile")).toBeNull();
+    await result.unmount();
+  });
+
+  it("a wrong account can sign out of account basics (O04) instead of being stuck", async () => {
+    await signIn(ACCOUNT_REGISTRATION);
+    const result = await renderApp("/signup/consent");
+    await pressSignOut();
+    await waitFor(() => expect(result.getPathname()).toBe("/welcome"));
+    expect(await getSecureItem(refreshTokenKey)).toBeNull();
+    await result.unmount();
+  });
+
+  it("a wrong account can sign out of the journey choice (O05)", async () => {
+    await signIn(ROLE_SELECTION);
+    const result = await renderApp("/onboarding/role");
+    await pressSignOut();
+    await waitFor(() => expect(result.getPathname()).toBe("/welcome"));
+    await result.unmount();
+  });
+
+  it("a session the API stops accepting ends with a notice and a safe returnTo", async () => {
+    await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
+    // The access token is rejected and so is the one refresh after it.
+    mockFetch(
+      jest.fn(() =>
+        Promise.resolve(
+          jsonResponse(
+            { error: { code: "unauthorized", message: "", details: {} } },
+            { status: 401 },
+          ),
+        ),
+      ),
+    );
+
+    const result = await renderApp("/home");
+
+    await waitFor(() => expect(result.getPathname()).toBe("/login"));
+    expect(result.getSearchParams()).toEqual({ returnTo: "/home" });
+    expect(
+      await screen.findByText("Your session ended. Sign in again to continue."),
+    ).toBeOnTheScreen();
+    expect(await getSecureItem(refreshTokenKey)).toBeNull();
+    await result.unmount();
+  });
+});
+
 describe("tab navigation", () => {
   it("shows the fighter tabs with the current tab selected, and switches tabs", async () => {
     await signIn();
@@ -432,7 +521,7 @@ describe("tab navigation", () => {
   it("goes back from a pushed screen to the tab it was opened from", async () => {
     await signIn();
     const result = await renderApp("/profile");
-    await screen.findByTestId(placeholderId("mobile.profile"));
+    await screen.findByTestId("account-menu:profile");
     await act(async () => router.push("/achievements"));
     await waitFor(() => expect(result.getPathname()).toBe("/achievements"));
     await act(async () => router.back());
