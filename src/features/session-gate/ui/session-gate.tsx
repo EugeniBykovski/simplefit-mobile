@@ -102,12 +102,15 @@ export function SessionGate({
 function redirectFor(
   route: MobileRoute | undefined,
   shell: MobileShellId,
-  { status, viewer }: Session,
+  { status, viewer, ended }: Session,
   pathname: string,
   params: Record<string, string | string[] | undefined>,
 ): Href | undefined {
   if (!route || route.shell !== shell) return undefined;
   if (route.session === "AUTHENTICATED" && status === "anonymous") {
+    // A deliberate sign-out returns to the welcome screen (ST1 → A01) and
+    // carries nothing of the previous session to whoever signs in next (SF-28).
+    if (ended === "signed-out") return routeHref("mobile.welcome");
     return signInHref(requestedPath(route, pathname, params));
   }
   if (route.session === "GUEST_ONLY" && status === "authenticated" && viewer !== undefined) {

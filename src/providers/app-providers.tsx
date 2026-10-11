@@ -10,6 +10,7 @@ import { ThemeProvider, ThemeRoot } from "@/shared/styles/theme";
 import { ToastProvider } from "@/shared/ui/toast";
 
 import { useSessionScopedCache } from "./session-cache";
+import { useSessionRecovery } from "./session-recovery";
 
 connectOnlineManager();
 
@@ -29,6 +30,7 @@ export function AppProviders({ children, onReady }: { children: ReactNode; onRea
   const [queryClient] = useState(makeQueryClient);
   useAppStateFocus();
   useSessionScopedCache(queryClient);
+  useSessionRecovery();
 
   return (
     // eslint-disable-next-line no-restricted-syntax -- third-party root view without className support

@@ -31,4 +31,15 @@ describe("provider native-module boundary (Google, Apple)", () => {
 
     expect(() => googleSignInModule()).toThrow(/RNGoogleSignin/);
   });
+
+  it("never lets a missing module break a SimpleFit sign-out, nor even evaluates it (SF-28)", async () => {
+    const { signOutOfGoogle } = withoutNativeModule(() => {
+      jest.doMock("@/shared/config/env", () => ({
+        publicEnv: { googleWebClientId: "web-client", googleIosClientId: "ios-client" },
+      }));
+      return require("./google-sign-in");
+    });
+
+    await expect(signOutOfGoogle()).resolves.toBeUndefined();
+  });
 });

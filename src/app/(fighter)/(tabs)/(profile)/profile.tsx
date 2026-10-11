@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { ProfileScreen } from "@/widgets/account-menu";
 
-export default placeholderRoute("mobile.profile");
+export default function ProfileRoute() {
+  return <ProfileScreen />;
+}

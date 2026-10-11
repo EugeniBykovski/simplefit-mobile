@@ -36,6 +36,9 @@ const REAL_SCREENS = [
   "mobile.home",
   "mobile.app",
   "mobile.dev.design-system",
+  // SF-28: F18's way into Settings and ST1's Sign out.
+  "mobile.profile",
+  "mobile.settings",
 ];
 
 const placeholderSource = (id) => `import { placeholderRoute } from "@/widgets/feature-placeholder";
@@ -122,7 +125,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 13, catchAll: 1, placeholder: 126, deferred: 1 });
+    expect(counts).toEqual({ screen: 15, catchAll: 1, placeholder: 124, deferred: 1 });
     expect(routes).toHaveLength(141);
   });
 
