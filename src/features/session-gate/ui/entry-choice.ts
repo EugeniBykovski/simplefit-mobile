@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from "react";
 
 import { parseIntent, type Continuation, type EntryIntent } from "@/shared/routes/continuation";
 
-import { entryHref, fetchEntry, knowsDestination, type Entry } from "../model/entry";
+import { entryHref, fetchEntry, isKnownEntry, type Entry } from "../model/entry";
 
 export type EntryChoiceState =
   | { status: "idle" }
@@ -39,7 +39,7 @@ export function useEntryChoice(
       const chosen = { ...continuation, intent };
       try {
         const entry = await fetchEntry(chosen);
-        if (!knowsDestination(entry.destination)) {
+        if (!isKnownEntry(entry)) {
           console.error(`Unknown entry destination "${entry.destination}"`);
           throw new UnexpectedDestination();
         }

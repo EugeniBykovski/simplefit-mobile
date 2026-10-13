@@ -53,8 +53,10 @@ const entry = (destination: string, intent: string | null = null) =>
       reason: "test",
       mandatory: destination === "account_registration" || destination === "fighter_onboarding",
       intent,
+      context: null,
       account_registration: "complete",
       fighter_profile: "not_started",
+      coach_profile: "not_started",
       capabilities: [],
     },
   });

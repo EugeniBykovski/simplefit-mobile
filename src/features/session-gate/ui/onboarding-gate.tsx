@@ -6,7 +6,7 @@ import { useSession } from "@/entities/session";
 import { continuationOf } from "@/shared/routes/continuation";
 import { matchMobileRoute, type MobileRouteId } from "@/shared/routes/routes";
 
-import { destinationRoute, entryHref, knowsDestination } from "../model/entry";
+import { destinationRoute, entryHref, isKnownEntry } from "../model/entry";
 import { EntryFailureBoundary, useEntry } from "./entry-redirect";
 
 /** The role onboarding entry routes (Fighter, Coach, Gym) of `guards.entryDestinations`. */
@@ -58,8 +58,9 @@ export function OnboardingGate({
     (ROLE_ONBOARDING.has(route) || onRegistration || onSelection);
   const query = useEntry(continuation, applies);
 
-  const unknown = query.data !== undefined && !knowsDestination(query.data.destination);
-  const entry = applies && !unknown ? query.data : undefined;
+  const unknown = query.data !== undefined && !isKnownEntry(query.data);
+  const entry =
+    applies && query.data !== undefined && isKnownEntry(query.data) ? query.data : undefined;
   const gated = entry?.destination === "account_registration";
   const misplaced =
     entry !== undefined &&
