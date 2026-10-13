@@ -355,9 +355,9 @@ describe("native authentication and app identity (regression)", () => {
     expect(dependencies).toMatchObject({
       "@react-native-google-signin/google-signin": "16.1.5",
       "expo-apple-authentication": "57.0.2",
-      "expo-crypto": "57.0.3",
+      "expo-crypto": "57.0.4",
       "expo-secure-store": "~57.0.4",
-      "expo-router": "~57.0.25",
+      "expo-router": "~57.0.26",
     });
     const config = read("app.config.ts");
     expect(config).toContain('scheme: "simplefit"');
