@@ -30,9 +30,9 @@ export type Entry = EntryResponseEntry;
 
 /**
  * The destinations this client maps (`guards.entryDestinations`). The API may
- * return more (SF-51 added `coach_home` and `context_selection`, mapped once
- * the registry has their routes); those stay unknown here and are a controlled
- * failure, never `fighter_home`.
+ * return more (SF-51's `context_selection` has no route until its chooser is
+ * designed and built); those stay unknown here and are a controlled failure,
+ * never `fighter_home`.
  */
 export type KnownDestination = keyof typeof mobileGuards.entryDestinations &
   EntryResponseEntryDestination;
@@ -79,13 +79,16 @@ function usableReturnTo(returnTo: string | undefined, entry: Entry): string | un
   return safe;
 }
 
+/** The destinations of a completed journey: an intent leading there has nothing left to set up. */
+const HOMES: ReadonlySet<KnownDestination> = new Set(["fighter_home", "coach_home"]);
+
 /**
  * The href for a resolved entry and the continuation the user carries:
  *
- * 1. A mandatory destination (account registration, unfinished Fighter
- *    onboarding) always wins.
+ * 1. A mandatory destination (account registration, unfinished Fighter or
+ *    Coach onboarding) always wins.
  * 2. An explicit intent leads to its journey, unless that journey is already
- *    complete (`fighter_home`).
+ *    complete (`fighter_home`, `coach_home`).
  * 3. Otherwise a usable `returnTo` wins over the derived destination.
  * 4. Otherwise the destination.
  *
@@ -94,7 +97,7 @@ function usableReturnTo(returnTo: string | undefined, entry: Entry): string | un
  */
 export function entryHref(entry: KnownEntry, continuation: Continuation = {}): Href {
   const target = destinationRoute(entry.destination);
-  const intentDriven = continuation.intent !== undefined && entry.destination !== "fighter_home";
+  const intentDriven = continuation.intent !== undefined && !HOMES.has(entry.destination);
 
   if (!entry.mandatory && !intentDriven) {
     const returnTo = usableReturnTo(continuation.returnTo, entry);

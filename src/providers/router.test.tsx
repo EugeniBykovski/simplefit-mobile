@@ -313,15 +313,16 @@ describe("session access (UX only)", () => {
     await waitFor(() => expect(result.getPathname()).toBe("/"));
   });
 
-  it.each(["coach_home", "context_selection"] as const)(
+  it.each(["context_selection"] as const)(
     "a destination this client does not map yet (%s) is the retryable failure, never Fighter home",
     async (destination) => {
       await signIn({
         ...ROLE_SELECTION,
         destination,
-        reason: "coach_onboarding_completed",
+        reason: "context_choice_required",
+        fighter_profile: "completed",
         coach_profile: "completed",
-        capabilities: ["COACH"],
+        capabilities: ["FIGHTER", "COACH"],
       });
       const result = await renderApp("/");
       expect(await screen.findByRole("button", { name: "Try again" })).toBeOnTheScreen();
@@ -657,6 +658,19 @@ describe("entry resolution (SF-45)", () => {
     await signIn(FIGHTER_HOME);
     const result = await renderApp("/");
     await waitFor(() => expect(result.getPathname()).toBe("/home"));
+  });
+
+  it("a completed coach enters Coach today (SF-51 coach_home, SF-52)", async () => {
+    await signIn({
+      ...FIGHTER_HOME,
+      destination: "coach_home",
+      reason: "coach_onboarding_completed",
+      fighter_profile: "not_started",
+      coach_profile: "completed",
+      capabilities: ["COACH"],
+    });
+    const result = await renderApp("/");
+    await waitFor(() => expect(result.getPathname()).toBe("/coach/today"));
   });
 
   it("intent=sponsor: O05, no Sponsor capability, no workspace created or shown", async () => {

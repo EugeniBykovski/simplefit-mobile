@@ -2098,6 +2098,7 @@ export const mobileGuards = {
     fighter_onboarding: "mobile.onboarding.fighter",
     fighter_home: "mobile.home",
     coach_onboarding: "mobile.onboarding.coach",
+    coach_home: "mobile.coach.today",
     gym_onboarding: "mobile.onboarding.gym",
     sponsor_application: "mobile.onboarding.role",
   },

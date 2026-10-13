@@ -112,12 +112,18 @@ describe("entryParams", () => {
   });
 });
 
-describe("destinations this client does not map yet (SF-51)", () => {
-  it("are unknown, never mapped or guessed as Fighter home", () => {
-    for (const destination of ["coach_home", "context_selection"] as const) {
-      const unknown = { ...entry(), destination, capabilities: ["COACH" as const] };
-      expect(isKnownEntry(unknown)).toBe(false);
-    }
+describe("SF-51 destinations (SF-52)", () => {
+  it("maps Coach home, and keeps context_selection unknown: never role selection or Fighter home", () => {
+    const coachHome = {
+      ...entry(),
+      destination: "coach_home" as const,
+      capabilities: ["COACH" as const],
+    };
+    expect(isKnownEntry(coachHome)).toBe(true);
+    expect(routeHref(destinationRoute("coach_home"))).toBe("/coach/today");
+    expect(entryHref(coachHome, { intent: "coach" })).toBe("/coach/today");
+    const choice = { ...entry(), destination: "context_selection" as const };
+    expect(isKnownEntry(choice)).toBe(false);
     expect(isKnownEntry(entry({ destination: "coach_onboarding" }))).toBe(true);
   });
 });
