@@ -649,7 +649,7 @@ typefaces, SIL OFL; imported per weight).
 
 **Added in SF-23:** `expo-apple-authentication` 57.0.2 (MIT, first-party Expo
 SDK 57; AuthenticationServices with the `usesAppleSignIn` entitlement) for
-native Sign in with Apple, and `expo-crypto` 57.0.3 (MIT, first-party) for the
+native Sign in with Apple, and `expo-crypto` 57.0.4 (MIT, first-party) for the
 nonce's random bytes and SHA-256. No install scripts. Apple has no
 alternative native API, and the JS runtime has no secure random source or
 SHA-256 of its own.
