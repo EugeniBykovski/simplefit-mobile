@@ -29,14 +29,29 @@ import {
 export type Entry = EntryResponseEntry;
 
 /**
+ * The destinations this client maps (`guards.entryDestinations`). The API may
+ * return more (SF-51 added `coach_home` and `context_selection`, mapped once
+ * the registry has their routes); those stay unknown here and are a controlled
+ * failure, never `fighter_home`.
+ */
+export type KnownDestination = keyof typeof mobileGuards.entryDestinations &
+  EntryResponseEntryDestination;
+
+/** An entry whose destination this client maps. */
+export type KnownEntry = Entry & { destination: KnownDestination };
+
+/**
  * Whether this client maps `destination`: a newer API may resolve to a
  * destination an older client does not know. Such an entry is a controlled
  * failure, never a guessed fallback.
  */
-export function knowsDestination(
-  destination: string,
-): destination is EntryResponseEntryDestination {
+export function knowsDestination(destination: string): destination is KnownDestination {
   return Object.hasOwn(mobileGuards.entryDestinations, destination);
+}
+
+/** Whether this client maps the entry's destination (see `knowsDestination`). */
+export function isKnownEntry(entry: Entry): entry is KnownEntry {
+  return knowsDestination(entry.destination);
 }
 
 /**
@@ -45,7 +60,7 @@ export function knowsDestination(
  * application opens O05, whose Sponsor / Brand choice continues to the web
  * partner application; never the workspace chooser.
  */
-export function destinationRoute(destination: EntryResponseEntryDestination): MobileRouteId {
+export function destinationRoute(destination: KnownDestination): MobileRouteId {
   return mobileGuards.entryDestinations[destination];
 }
 
@@ -77,7 +92,7 @@ function usableReturnTo(returnTo: string | undefined, entry: Entry): string | un
  * Onboarding routes keep the continuation in their params, so it is resolved
  * again once the step completes.
  */
-export function entryHref(entry: Entry, continuation: Continuation = {}): Href {
+export function entryHref(entry: KnownEntry, continuation: Continuation = {}): Href {
   const target = destinationRoute(entry.destination);
   const intentDriven = continuation.intent !== undefined && entry.destination !== "fighter_home";
 

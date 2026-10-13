@@ -58,8 +58,10 @@ const ROLE_SELECTION: Entry = {
   reason: "no_role_started",
   mandatory: false,
   intent: null,
+  context: null,
   account_registration: "complete",
   fighter_profile: "not_started",
+  coach_profile: "not_started",
   capabilities: [],
 };
 const FIGHTER_HOME: Entry = {
@@ -310,6 +312,22 @@ describe("session access (UX only)", () => {
     const result = await renderApp("/welcome");
     await waitFor(() => expect(result.getPathname()).toBe("/"));
   });
+
+  it.each(["coach_home", "context_selection"] as const)(
+    "a destination this client does not map yet (%s) is the retryable failure, never Fighter home",
+    async (destination) => {
+      await signIn({
+        ...ROLE_SELECTION,
+        destination,
+        reason: "coach_onboarding_completed",
+        coach_profile: "completed",
+        capabilities: ["COACH"],
+      });
+      const result = await renderApp("/");
+      expect(await screen.findByRole("button", { name: "Try again" })).toBeOnTheScreen();
+      expect(result.getPathname()).toBe("/");
+    },
+  );
 
   it("enters a valid returnTo the backend state allows once the viewer is authenticated (SF-24, SF-45)", async () => {
     await signIn(FIGHTER_HOME);

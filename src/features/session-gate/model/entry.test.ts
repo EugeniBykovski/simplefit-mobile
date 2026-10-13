@@ -1,17 +1,18 @@
-import type { EntryResponseEntry } from "@/shared/api/generated/model";
 import { mobileGuards, routeHref } from "@/shared/routes/routes";
 
-import { destinationRoute, entryHref, entryParams } from "./entry";
+import { destinationRoute, entryHref, entryParams, isKnownEntry, type KnownEntry } from "./entry";
 
 jest.mock("@/entities/session", () => ({ callWithSession: jest.fn() }));
 
-const entry = (overrides: Partial<EntryResponseEntry> = {}): EntryResponseEntry => ({
+const entry = (overrides: Partial<KnownEntry> = {}): KnownEntry => ({
   destination: "role_selection",
   reason: "no_role_started",
   mandatory: false,
   intent: null,
+  context: null,
   account_registration: "complete",
   fighter_profile: "not_started",
+  coach_profile: "not_started",
   capabilities: [],
   ...overrides,
 });
@@ -108,5 +109,15 @@ describe("entryParams", () => {
   it("sends only the validated intent", () => {
     expect(entryParams({})).toBeUndefined();
     expect(entryParams({ intent: "gym", returnTo: "/camp/weight" })).toEqual({ intent: "gym" });
+  });
+});
+
+describe("destinations this client does not map yet (SF-51)", () => {
+  it("are unknown, never mapped or guessed as Fighter home", () => {
+    for (const destination of ["coach_home", "context_selection"] as const) {
+      const unknown = { ...entry(), destination, capabilities: ["COACH" as const] };
+      expect(isKnownEntry(unknown)).toBe(false);
+    }
+    expect(isKnownEntry(entry({ destination: "coach_onboarding" }))).toBe(true);
   });
 });
