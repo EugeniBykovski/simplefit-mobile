@@ -85,6 +85,27 @@ const ACCOUNT_REGISTRATION: Entry = {
   account_registration: "not_started",
 };
 
+const COACH_ONBOARDING: Entry = {
+  ...ROLE_SELECTION,
+  destination: "coach_onboarding",
+  reason: "coach_intent",
+};
+const COACH_HOME: Entry = {
+  ...ROLE_SELECTION,
+  destination: "coach_home",
+  reason: "coach_onboarding_completed",
+  context: "coach",
+  coach_profile: "completed",
+  capabilities: ["COACH"],
+};
+const BOTH: Entry = {
+  ...FIGHTER_HOME,
+  reason: "last_context",
+  context: "fighter",
+  coach_profile: "completed",
+  capabilities: ["FIGHTER", "COACH"],
+};
+
 /** Account registration before its first save (SF-44), for O04. */
 const NOT_STARTED = {
   registration: {
@@ -177,28 +198,67 @@ const firstRun = (mobile: string, web = "pending") => ({
   ],
 });
 
+/** SF-50: a Coach profile as the backend derives it from its fields. */
+function coachProfile(fields: Record<string, unknown> = {}, completed = false) {
+  const merged: Record<string, unknown> = {
+    display_name: null,
+    brand_name: null,
+    country_code: null,
+    city: null,
+    bio: null,
+    languages: [],
+    coaching_formats: [],
+    competition_levels: [],
+    ...fields,
+  };
+  return {
+    ...merged,
+    onboarding: {
+      status: completed
+        ? "completed"
+        : Object.keys(fields).length > 0
+          ? "in_progress"
+          : "not_started",
+      completed_at: completed ? "2026-10-14T10:00:00Z" : null,
+      missing_requirements: completed
+        ? []
+        : [
+            ...["display_name", "country_code", "city"].filter((field) => merged[field] === null),
+            ...((merged.coaching_formats as unknown[]).length === 0 ? ["coaching_formats"] : []),
+          ],
+    },
+  };
+}
+
 async function signIn(
-  entry: Entry = ROLE_SELECTION,
+  entry: Entry | ((intent: string | null) => Entry) = ROLE_SELECTION,
   fighter: object = FIGHTER_NOT_STARTED,
   mobileFirstRun = "completed",
+  coach: object = coachProfile(),
 ) {
+  const resolve = (intent: string | null) => ({
+    ...(typeof entry === "function" ? entry(intent) : entry),
+    intent,
+  });
   mockFetch(
     jest.fn((url: string) =>
       Promise.resolve(
         url.includes("/api/v1/me/entry")
-          ? jsonResponse({ entry: { ...entry, intent: new URL(url).searchParams.get("intent") } })
+          ? jsonResponse({ entry: resolve(new URL(url).searchParams.get("intent")) })
           : url.includes("/api/v1/me/account-profile")
             ? jsonResponse({ account_profile: NOT_STARTED })
             : url.includes("/api/v1/me/fighter-profile")
               ? jsonResponse({ fighter_profile: fighter })
-              : url.includes("/api/v1/me/first-run")
-                ? jsonResponse(firstRun(mobileFirstRun))
-                : jsonResponse({
-                    user: {
-                      id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                      created_at: "2026-10-01T10:00:00Z",
-                    },
-                  }),
+              : url.includes("/api/v1/me/coach-profile")
+                ? jsonResponse({ coach_profile: coach })
+                : url.includes("/api/v1/me/first-run")
+                  ? jsonResponse(firstRun(mobileFirstRun))
+                  : jsonResponse({
+                      user: {
+                        id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                        created_at: "2026-10-01T10:00:00Z",
+                      },
+                    }),
       ),
     ),
   );
@@ -237,7 +297,14 @@ describe("canonical routes resolve", () => {
       if (route.id === "mobile.welcome.tour")
         await signIn(FIGHTER_HOME, FIGHTER_COMPLETED, "pending");
       else if (route.session === "AUTHENTICATED")
-        await signIn(route.id === "mobile.signup.consent" ? ACCOUNT_REGISTRATION : ROLE_SELECTION);
+        await signIn(
+          route.id === "mobile.signup.consent"
+            ? ACCOUNT_REGISTRATION
+            : // The Coach workspace needs the COACH capability the entry reports (SF-53).
+              route.shell === "mobile.coach"
+              ? COACH_HOME
+              : ROLE_SELECTION,
+        );
       // The code screens need the pending email flow of the step before them (SF-24).
       if (route.id === "mobile.login.code") {
         pending.set("signIn", { email: "fighter@example.com", resendAt: Date.now() + 60_000 });
@@ -372,9 +439,9 @@ describe("session access (UX only)", () => {
     expect(await screen.findByRole("button", { name: "Continue with Apple" })).toBeOnTheScreen();
   });
 
-  it("opens every capability's routes for any signed-in user (no invented capability state)", async () => {
+  it("opens the routes whose capability is not checked yet for any signed-in user", async () => {
     await signIn();
-    for (const url of ["/home", "/coach/today", "/gym/pulse", "/onboarding/fighter"]) {
+    for (const url of ["/home", "/gym/pulse", "/onboarding/fighter"]) {
       const result = await renderApp(url);
       await waitFor(() => expect(result.getPathname()).toBe(url));
       await result.unmount();
@@ -484,7 +551,7 @@ describe("tab navigation", () => {
   });
 
   it("pushes the coach Inbox (shared /messages) above the coach tabs", async () => {
-    await signIn();
+    await signIn(BOTH);
     const result = await renderApp("/coach/today");
     await fireEvent.press(await screen.findByRole("tab", { name: "Inbox" }));
     await waitFor(() => expect(result.getPathname()).toBe("/messages"));
@@ -504,7 +571,7 @@ describe("tab navigation", () => {
   });
 
   it("keeps the tab bar on the screens the design shows inside a tab, with that tab active", async () => {
-    await signIn();
+    await signIn(BOTH);
     for (const [url, tab] of [
       ["/progress", "Profile"],
       ["/calendar", "Training"],
@@ -548,7 +615,7 @@ describe("tab navigation", () => {
   });
 
   it("keeps the tabs underneath a deep-linked pushed screen", async () => {
-    await signIn();
+    await signIn(BOTH);
     const result = await renderApp("/coach/fighters/f-1/note");
     await screen.findByTestId(placeholderId("mobile.coach.fighters._fighter-id.note"));
     await act(async () => router.back());
@@ -815,8 +882,113 @@ describe("entry resolution (SF-45)", () => {
   it("role onboarding needs no capability once account registration is complete", async () => {
     await signIn(ROLE_SELECTION);
     const result = await renderApp("/onboarding/coach");
-    expect(await screen.findByTestId(placeholderId("mobile.onboarding.coach"))).toBeOnTheScreen();
+    expect(await screen.findByRole("header", { name: "Your coach profile" })).toBeOnTheScreen();
     await act(async () => jest.runOnlyPendingTimers());
     expect(result.getPathname()).toBe("/onboarding/coach");
+  });
+});
+
+/*
+ * SF-53: the Coach journey on the SF-51 entry and the SF-50 profile, through
+ * the real routes and gates.
+ */
+describe("Coach journey (SF-53)", () => {
+  it("a completed Fighter choosing Coach enters Coach registration at OC1, never Fighter home", async () => {
+    await signIn(
+      (intent) =>
+        intent === "coach"
+          ? { ...COACH_ONBOARDING, fighter_profile: "completed", capabilities: ["FIGHTER"] }
+          : FIGHTER_HOME,
+      FIGHTER_COMPLETED,
+    );
+    const result = await renderApp("/?intent=coach");
+    expect(await screen.findByRole("header", { name: "Your coach profile" })).toBeOnTheScreen();
+    expect(result.getPathname()).toBe("/onboarding/coach");
+    await waitFor(() =>
+      expect(result.getSearchParams()).toEqual({ intent: "coach", step: "profile" }),
+    );
+    // Nothing is created or changed on the way: the Fighter profile stays as it is.
+    const writes = (jest.mocked(global.fetch).mock.calls as [string, RequestInit?][]).filter(
+      ([, init]) => (init?.method ?? "GET") !== "GET",
+    );
+    expect(writes).toEqual([]);
+  });
+
+  it("an incomplete account registration comes first, keeping the Coach intent", async () => {
+    await signIn(ACCOUNT_REGISTRATION);
+    const result = await renderApp("/onboarding/coach?intent=coach");
+    await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
+    expect(result.getSearchParams()).toEqual({ intent: "coach" });
+  });
+
+  it("a partly registered Coach resumes on OC2, and a stale link cannot skip ahead", async () => {
+    await signIn(
+      COACH_ONBOARDING,
+      FIGHTER_NOT_STARTED,
+      "completed",
+      coachProfile({
+        display_name: "Coach Sam",
+        country_code: "PL",
+        city: "Kraków",
+      }),
+    );
+    const result = await renderApp("/onboarding/coach?step=complete");
+    expect(await screen.findByRole("header", { name: "How do you coach?" })).toBeOnTheScreen();
+    await waitFor(() => expect(result.getSearchParams()).toEqual({ step: "type" }));
+  });
+
+  it("a completed Coach opening an old registration link enters Coach today, never OC11", async () => {
+    await signIn(
+      COACH_HOME,
+      FIGHTER_NOT_STARTED,
+      "completed",
+      coachProfile(
+        {
+          display_name: "Coach Sam",
+          country_code: "PL",
+          city: "Kraków",
+          coaching_formats: ["online_coaching"],
+        },
+        true,
+      ),
+    );
+    const result = await renderApp("/onboarding/coach?step=complete");
+    await waitFor(() => expect(result.getPathname()).toBe("/coach/today"));
+    expect(screen.queryByRole("header", { name: "Your coach profile is ready." })).toBeNull();
+    expect(await screen.findByTestId(placeholderId("mobile.coach.today"))).toBeOnTheScreen();
+  });
+
+  it("the Coach workspace needs COACH: anyone else goes where the entry sends them", async () => {
+    await signIn(ROLE_SELECTION);
+    let result = await renderApp("/coach/today");
+    await waitFor(() => expect(result.getPathname()).toBe("/onboarding/role"));
+    expect(screen.queryByTestId(placeholderId("mobile.coach.today"))).toBeNull();
+    await result.unmount();
+
+    await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
+    result = await renderApp("/coach/fighters");
+    await waitFor(() => expect(result.getPathname()).toBe("/home"));
+  });
+
+  it("a person holding FIGHTER and COACH opens the Coach workspace whatever the last context", async () => {
+    await signIn(BOTH, FIGHTER_COMPLETED);
+    const result = await renderApp("/coach/today");
+    expect(await screen.findByTestId(placeholderId("mobile.coach.today"))).toBeOnTheScreen();
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(result.getPathname()).toBe("/coach/today");
+  });
+
+  it("context_selection is never role selection or Fighter home: a retryable failure", async () => {
+    await signIn({
+      ...BOTH,
+      destination: "context_selection",
+      reason: "context_choice_required",
+      context: null,
+    });
+    const result = await renderApp("/");
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(result.getPathname()).toBe("/");
+    expect(screen.queryByRole("header", { name: "How will you use SimpleFit?" })).toBeNull();
+    expect(screen.queryByRole("header", { name: /Welcome in/ })).toBeNull();
   });
 });

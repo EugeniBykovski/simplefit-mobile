@@ -22,7 +22,6 @@ export {
   type InfoStepId,
   type StepId,
 } from "./model/steps";
-export { FieldFocus } from "./ui/field-focus";
 export {
   AccountStep,
   CompleteStep,

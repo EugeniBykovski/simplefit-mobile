@@ -716,6 +716,141 @@
       "goTo": "Ir a {section}"
     }
   },
+  "coachOnboarding": {
+    "stepLabel": "Paso {step} de {total} · {section}",
+    "progress": "Paso {step} de {total}",
+    "progressDone": "Registro de entrenador completado",
+    "doneLabel": "Entrenador · listo",
+    "sections": {
+      "profile": "Perfil de entrenador",
+      "type": "Tipo de entrenamiento"
+    },
+    "titles": {
+      "profile": "Tu perfil de entrenador",
+      "type": "¿Cómo entrenas?",
+      "complete": "Tu perfil de entrenador está listo."
+    },
+    "descriptions": {
+      "profile": "Cómo te reconocerán los boxeadores como entrenador. El nombre de entrenador, el país y la ciudad son obligatorios.",
+      "type": "Elige todos los formatos que ofreces. Puedes cambiarlo más tarde.",
+      "complete": "Está guardado en tu cuenta y puedes cambiarlo más tarde. Si tienes un perfil de boxeador, se queda como está."
+    },
+    "back": "Atrás",
+    "continue": "Continuar",
+    "finish": "Terminar",
+    "loading": "Cargando tu perfil de entrenador…",
+    "loadFailed": "No pudimos cargar tu perfil de entrenador. Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "profile": {
+      "requiredLabel": "{label}, obligatorio",
+      "name": {
+        "label": "Nombre de entrenador",
+        "placeholder": "Tu nombre de entrenador",
+        "help": "Visible para los boxeadores. Hasta 60 caracteres.",
+        "suggested": "Sugerido a partir del nombre de tu cuenta. Cámbialo si entrenas con otro nombre."
+      },
+      "brand": {
+        "label": "Nombre de marca · opcional",
+        "placeholder": "Tu negocio de entrenamiento",
+        "help": "Tu negocio de entrenamiento, si tienes uno. Hasta 80 caracteres."
+      },
+      "country": "País",
+      "city": {
+        "label": "Ciudad",
+        "placeholder": "Tu ciudad"
+      },
+      "bio": {
+        "label": "Biografía · opcional",
+        "placeholder": "Qué entrenas y cómo trabajas.",
+        "count": "{count} / {max}"
+      },
+      "languages": {
+        "label": "Idiomas de entrenamiento · opcional",
+        "options": {
+          "en": "English",
+          "pl": "Polski",
+          "ru": "Русский",
+          "be": "Беларуская",
+          "uk": "Українська"
+        }
+      }
+    },
+    "country": {
+      "placeholder": "Elegir",
+      "none": "Sin elegir",
+      "hint": "Abre la lista de países",
+      "title": "País",
+      "close": "Cerrar",
+      "search": "Buscar países",
+      "empty": "Ningún país coincide."
+    },
+    "type": {
+      "formats": {
+        "label": "Formatos de entrenamiento",
+        "help": "Elige al menos uno.",
+        "options": {
+          "personal_training": {
+            "label": "Entrenamiento personal",
+            "description": "Sesiones 1:1"
+          },
+          "group_coaching": {
+            "label": "Entrenamiento en grupo",
+            "description": "Clases y sesiones de equipo"
+          },
+          "online_coaching": {
+            "label": "Entrenamiento online",
+            "description": "Análisis de video, planes a distancia"
+          },
+          "fight_camps": {
+            "label": "Campamentos de pelea",
+            "description": "Picos de 6–12 semanas"
+          }
+        }
+      },
+      "levels": {
+        "label": "Nivel de competición · opcional",
+        "help": "Los boxeadores que preparas para combates.",
+        "options": {
+          "amateur": "Amateur",
+          "professional": "Profesional"
+        }
+      }
+    },
+    "done": {
+      "card": "Tu perfil de entrenador",
+      "formats": "Formatos",
+      "competition": "Competición",
+      "languages": "Idiomas",
+      "none": "—",
+      "pending": "<b>Las herramientas de entrenador aún no están disponibles.</b> Tu inicio de entrenador muestra lo que está previsto. Tu perfil ya está listo para ello.",
+      "continue": "Continuar al inicio de entrenador",
+      "retry": "Reintentar",
+      "failed": "No pudimos abrir tu inicio de entrenador. Tu perfil de entrenador está guardado. Inténtalo de nuevo."
+    },
+    "missing": {
+      "body": "A tu perfil de entrenador le faltan datos. Añade {fields} para terminar.",
+      "goProfile": "Ir al perfil de entrenador",
+      "fields": {
+        "display_name": "tu nombre de entrenador",
+        "country_code": "tu país",
+        "city": "tu ciudad"
+      }
+    },
+    "errors": {
+      "required": {
+        "display_name": "Escribe tu nombre de entrenador.",
+        "country_code": "Selecciona tu país.",
+        "city": "Escribe tu ciudad.",
+        "coaching_formats": "Elige al menos un formato."
+      },
+      "tooLong": "Es demasiado largo.",
+      "invalidChoice": "Elige una de las opciones.",
+      "invalidFormat": "Quita los saltos de línea y otros caracteres ocultos.",
+      "invalid": "Revisa este valor.",
+      "saveFailed": "No pudimos guardar tus cambios. Revisa tu conexión. No se perdió nada de lo que escribiste.",
+      "completeFailed": "No pudimos terminar tu registro de entrenador. Revisa tu conexión. Tus elecciones se conservan."
+    }
+  },
   "firstRunIntro": {
     "brand": "Bienvenida · Peleador",
     "skip": "Omitir intro",

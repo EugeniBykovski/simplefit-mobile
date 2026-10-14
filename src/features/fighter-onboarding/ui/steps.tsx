@@ -6,6 +6,11 @@ import { useLocale, useTranslations } from "use-intl";
 import type { FighterProfile } from "@/entities/fighter-profile";
 import { countryName } from "@/shared/lib/countries";
 import { datePattern, isoFromMasked, maskDate } from "@/shared/lib/date-input";
+import { ChoiceCard } from "@/shared/ui/choice-card";
+import { Chip } from "@/shared/ui/chip";
+import { CountryField } from "@/shared/ui/country-field";
+import { FieldError } from "@/shared/ui/field-error";
+import { useFieldFocus } from "@/shared/ui/field-focus";
 import { Input } from "@/shared/ui/input";
 import { Notice } from "@/shared/ui/notice";
 import { Text } from "@/shared/ui/text";
@@ -20,8 +25,7 @@ import {
   type FighterValues,
 } from "../model/form";
 import type { InfoStepId } from "../model/steps";
-import { ChoiceCard, Chip, CountryField, FieldError, SegmentChoice } from "./controls";
-import { useFieldFocus } from "./field-focus";
+import { SegmentChoice } from "./controls";
 
 /*
  * The OF1–OF11 step bodies (Claude Design FIGHTER 2, 390 × 844). They render
@@ -47,6 +51,7 @@ function useMessage(errors: Errors) {
 /** OF1 · Account: name, username, country, city (SF-25). */
 export function AccountStep({ values, errors, disabled, onChange }: FormProps) {
   const t = useTranslations("fighterOnboarding.account");
+  const country = useTranslations("fighterOnboarding.country");
   const message = useMessage(errors);
   const onFocus = useFieldFocus();
   // The keyboard's "next" key walks Name → Username → City (Country is a picker).
@@ -89,6 +94,15 @@ export function AccountStep({ values, errors, disabled, onChange }: FormProps) {
       <View className="flex-row gap-3">
         <CountryField
           label={t("country")}
+          copy={{
+            placeholder: country("placeholder"),
+            none: country("none"),
+            hint: country("hint"),
+            title: country("title"),
+            close: country("close"),
+            search: country("search"),
+            empty: country("empty"),
+          }}
           value={values.country_code}
           onChange={(code) => onChange("country_code", code)}
           error={message("country_code")}
