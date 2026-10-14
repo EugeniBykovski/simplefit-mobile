@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 
 import type { Messages } from "@/shared/i18n/messages";
-import { mobileShell, routeHref } from "@/shared/routes/routes";
+import { mobileRoute, mobileShell, routeHref } from "@/shared/routes/routes";
 import { Icon } from "@/shared/ui/icon";
 import { useSpotlightTarget } from "@/shared/ui/spotlight";
 import { Text } from "@/shared/ui/text";
@@ -57,7 +57,15 @@ export function ShellTabBar({ shell, focusedTab }: { shell: TabShell; focusedTab
               icon={icon}
               selected={item.key === active}
               center={item.key === config.center}
-              onPress={route === undefined ? undefined : () => router.navigate(routeHref(route))}
+              onPress={
+                route === undefined
+                  ? undefined
+                  : () =>
+                      // A route of another shell (the shared Settings) is pushed above the tabs.
+                      mobileRoute(route).shell === config.shell
+                        ? router.navigate(routeHref(route))
+                        : router.push(routeHref(route))
+              }
             />
           );
         })}

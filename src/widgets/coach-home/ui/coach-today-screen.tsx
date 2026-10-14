@@ -114,7 +114,13 @@ function TodayView({ profile }: { profile: CoachProfile }) {
                 accessibilityLabel={`${t(`fills.${fill}.label`)}: ${t("fills.unavailable")}`}
                 className="flex-1 gap-1 rounded-2xl border border-border bg-background p-2.5"
               >
-                <Text variant="label" color="faintForeground" numberOfLines={1}>
+                <Text
+                  variant="label"
+                  color="faintForeground"
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.75}
+                >
                   {t(`fills.${fill}.label`)}
                 </Text>
                 <Text variant="title" color="faintForeground">

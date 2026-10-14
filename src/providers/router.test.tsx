@@ -566,6 +566,10 @@ describe("tab navigation", () => {
     await fireEvent.press(screen.getByRole("tab", { name: "Settings" }));
     await waitFor(() => expect(result.getPathname()).toBe("/settings"));
     expect(await screen.findByTestId("account-menu:settings")).toBeOnTheScreen();
+    // The first screen of the shared stack goes back to the tab it was opened from.
+    await fireEvent.press(await screen.findByRole("button", { name: "Back" }));
+    await waitFor(() => expect(result.getPathname()).toBe("/coach/today"));
+    expect(await screen.findByRole("tab", { name: "Today", selected: true })).toBeOnTheScreen();
   });
 
   it("selects the gym tab of every gym tab route", async () => {

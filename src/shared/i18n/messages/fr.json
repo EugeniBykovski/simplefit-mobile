@@ -4,7 +4,8 @@
   },
   "navigation": {
     "home": "Accueil",
-    "appShell": "Application"
+    "appShell": "Application",
+    "back": "Retour"
   },
   "actions": {
     "openTheApp": "Ouvrir l’application",

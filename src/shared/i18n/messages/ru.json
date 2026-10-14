@@ -4,7 +4,8 @@
   },
   "navigation": {
     "home": "Главная",
-    "appShell": "Приложение"
+    "appShell": "Приложение",
+    "back": "Назад"
   },
   "actions": {
     "openTheApp": "Открыть приложение",
