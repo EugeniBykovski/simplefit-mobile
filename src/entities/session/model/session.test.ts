@@ -405,8 +405,10 @@ describe("session", () => {
       await completeAuthentication(tokenBody(OLD, "sfa_a"));
       api({ "/api/me": [unauthorized], "/api/auth/session/refresh": [unauthorized] });
       await callWithSession((init) => getCurrentUser(init)).catch(() => undefined);
-      const { result } = await renderHook(() => useSession());
+      const { result, unmount } = await renderHook(() => useSession());
       expect(result.current).toEqual({ status: "anonymous", ended: "expired" });
+      // A new launch: the screen of the previous one is gone before the reset.
+      await unmount();
 
       resetSessionForTests();
       await setSecureItem(KEY, OLD);

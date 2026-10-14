@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react-native";
+import { cleanup, render, screen } from "@testing-library/react-native";
 import { getLocales } from "expo-localization";
 import type { ReactElement, ReactNode } from "react";
 import { Text } from "react-native";
@@ -24,12 +24,14 @@ type Options = {
  * locale preference has loaded.
  */
 export async function renderWithProviders(ui: ReactElement, options: Options = {}) {
+  const test = expect.getState().currentTestName;
   if (options.deviceLocales)
     jest.mocked(getLocales).mockReturnValue(options.deviceLocales as never);
   if (options.storedLocale) await setPreference("locale", options.storedLocale);
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false, gcTime: Infinity } },
   });
+  clients.add(queryClient);
 
   function Wrapper({ children }: { children: ReactNode }) {
     return (
@@ -52,8 +54,27 @@ export async function renderWithProviders(ui: ReactElement, options: Options = {
 
   const result = await render(ui, { wrapper: Wrapper });
   await screen.findByTestId("i18n-ready");
+  if (expect.getState().currentTestName !== test) {
+    // A test that timed out finished rendering during a later one: its tree
+    // must not become that test's `screen`.
+    await result.unmount();
+    throw new Error(`renderWithProviders outlived its test: ${test ?? "(unknown)"}`);
+  }
   return { queryClient, ...result };
 }
+
+/** The query clients of the current test; dropped after it, so no request of one test answers in the next. */
+const clients = new Set<QueryClient>();
+afterEach(async () => {
+  // Unmount first (RNTL's own cleanup then has nothing left), so dropping the
+  // queries notifies no mounted screen.
+  await cleanup();
+  for (const client of clients) {
+    await client.cancelQueries();
+    client.clear();
+  }
+  clients.clear();
+});
 
 /** iPhone-like frame and insets for components that read safe-area insets. */
 const TEST_METRICS = {

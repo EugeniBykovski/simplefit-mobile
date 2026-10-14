@@ -514,7 +514,7 @@ describe("Fighter onboarding lifecycle (SF-26)", () => {
     await heading("Your boxing journey starts here.");
 
     let handled: boolean | null | undefined;
-    act(() => {
+    await act(() => {
       handled = handlers.at(-1)?.({} as Parameters<BackHandlerListener>[0]);
     });
     expect(handled).toBe(true);
