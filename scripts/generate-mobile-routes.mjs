@@ -73,6 +73,8 @@ export async function renderMobileRoutes(registry) {
     entryDestinations: Object.fromEntries(
       Object.entries(guards.entryDestinations)
         .filter(([key]) => !key.startsWith("$"))
+        // A destination without a route on this platform stays unknown here (never guessed).
+        .filter(([, target]) => target[PLATFORM] !== null)
         .map(([destination, target]) => [destination, target[PLATFORM]]),
     ),
   };
