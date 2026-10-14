@@ -445,7 +445,9 @@
       "fighters": "Boxeurs",
       "board": "Tableau",
       "requests": "Demandes",
-      "inbox": "Messagerie"
+      "inbox": "Messagerie",
+      "sessions": "Séances",
+      "settings": "Réglages"
     },
     "gym": {
       "label": "Navigation salle",
@@ -455,6 +457,8 @@
       "members": "Membres",
       "staff": "Personnel"
     },
+    "soon": "{label}, pas encore disponible",
+    "soonBadge": "Bientôt",
     "placeholder": {
       "badge": "Prévu",
       "description": "Cet écran fait partie de l’application SimpleFit et arrivera avec sa fonctionnalité. Rien n’y fonctionne encore.",
@@ -988,11 +992,130 @@
           "body": "Refais la visite quand tu veux depuis Aide (?)."
         }
       }
-    }
+    },
+    "switchProfile": "{name}, boxeur. Changer de profil"
   },
   "accountMenu": {
     "profileNote": "Votre profil arrive avec sa fonctionnalité. Les réglages et la déconnexion fonctionnent déjà.",
     "settingsLink": "Réglages · compte · confidentialité",
     "settingsNote": "Les réglages du compte, de la confidentialité et des notifications arrivent avec leurs fonctionnalités. Vous pouvez vous déconnecter de cet appareil ici."
+  },
+  "contextSwitcher": {
+    "close": "Fermer",
+    "loading": "Chargement de tes profils…",
+    "loadFailed": "Nous n’avons pas pu charger tes profils. Vérifie ta connexion et réessaie.",
+    "retry": "Réessayer",
+    "contexts": {
+      "fighter": "Boxeur",
+      "coach": "Coach"
+    },
+    "initials": {
+      "fighter": "B",
+      "coach": "C"
+    },
+    "homes": {
+      "fighter": "Accueil boxeur",
+      "coach": "Coach aujourd’hui"
+    },
+    "start": {
+      "fighter": "Créer un profil de boxeur",
+      "coach": "Commencer comme coach"
+    },
+    "startLines": {
+      "fighter": "T’entraîner et suivre tes progrès",
+      "coach": "Créer ton profil de coach"
+    },
+    "continue": {
+      "fighter": "Reprendre l’inscription boxeur",
+      "coach": "Reprendre l’inscription coach"
+    },
+    "continueLines": {
+      "fighter": "Ton profil de boxeur n’est pas terminé",
+      "coach": "Ton profil de coach n’est pas terminé"
+    },
+    "opening": "Ouverture…",
+    "failed": {
+      "switch": "Le changement n’a pas abouti. Tu restes dans ton profil actuel. Réessaie.",
+      "select": "Impossible de l’ouvrir. Rien n’a changé. Réessaie."
+    },
+    "notes": {
+      "switch": "Un seul compte. La prochaine fois, nous ouvrons ton dernier choix.",
+      "select": "Un seul compte. La prochaine fois, nous ouvrons ton dernier choix.",
+      "setup": "Rien n’est perdu : chaque inscription garde ce que tu as enregistré."
+    },
+    "switch": {
+      "title": "Un compte, tous les rôles",
+      "lead": "Change de profil sans te reconnecter."
+    },
+    "choose": {
+      "eyebrow": "Tes profils",
+      "title": "Où veux-tu aller ?",
+      "lead": "Tu as un profil de boxeur et un profil de coach sur un seul compte."
+    },
+    "setup": {
+      "eyebrow": "Ton inscription",
+      "title": "Quelle inscription veux-tu reprendre ?",
+      "lead": "Tu en as commencé plus d’une. Choisis-en une ; l’autre t’attend."
+    }
+  },
+  "coachHome": {
+    "loading": "Chargement de ton profil de coach…",
+    "loadFailed": "Nous n’avons pas pu charger ton profil de coach. Vérifie ta connexion et réessaie.",
+    "retry": "Réessayer",
+    "identity": "Coach",
+    "switchProfile": "{name}, coach. Changer de profil",
+    "eyebrow": "Coach · Aujourd’hui",
+    "title": "Bienvenue, {name}",
+    "profile": {
+      "title": "Ton profil de coach",
+      "complete": "Complet",
+      "formats": "Formats de coaching",
+      "competition": "Niveau de compétition",
+      "languages": "Langues de coaching",
+      "bio": "Bio",
+      "none": "—"
+    },
+    "fills": {
+      "title": "Ce qui remplira cet écran",
+      "unavailable": "Pas encore disponible",
+      "fighters": {
+        "label": "Boxeurs",
+        "when": "quand les boxeurs pourront te rejoindre"
+      },
+      "sessions": {
+        "label": "Séances",
+        "when": "quand tu pourras planifier des séances"
+      },
+      "invitations": {
+        "label": "Invitations",
+        "when": "quand tu pourras inviter des boxeurs"
+      }
+    },
+    "setup": {
+      "eyebrow": "Inscription coach",
+      "title": "Prépare ton espace de coaching",
+      "done": "Fait",
+      "unavailable": "Pas encore disponible",
+      "profile": {
+        "title": "Profil de coach",
+        "line": "Enregistré · tu peux le modifier plus tard"
+      },
+      "invite": {
+        "title": "Invite ton premier boxeur",
+        "line": "Les boxeurs te rejoignent sur invitation"
+      },
+      "session": {
+        "title": "Planifie ta première séance",
+        "line": "Les séances que tu mènes avec tes boxeurs"
+      },
+      "dataRules": {
+        "title": "Accepte les règles de données du coach",
+        "line": "Ce que tu peux voir avec le consentement d’un boxeur"
+      }
+    },
+    "note": {
+      "title": "Les outils de coach arrivent pas à pas.",
+      "body": "Boxeurs, séances et invitations apparaîtront ici dès qu’ils seront disponibles. Rien n’est affiché avant d’être réel."
+    }
   }
 }

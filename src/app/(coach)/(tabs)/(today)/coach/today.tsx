@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { CoachTodayScreen } from "@/widgets/coach-home";
 
-export default placeholderRoute("mobile.coach.today");
+export default function CoachTodayRoute() {
+  return <CoachTodayScreen />;
+}

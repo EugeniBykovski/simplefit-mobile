@@ -38,10 +38,11 @@ export async function fetchCoachProfile(signal?: AbortSignal): Promise<CoachProf
  * returns to the foreground, so a save from the web client or another
  * device is reconciled instead of overwritten.
  */
-export function useCoachProfile() {
+export function useCoachProfile({ enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: coachProfileQueryKey,
     queryFn: ({ signal }) => fetchCoachProfile(signal),
+    enabled,
     retry: false,
     staleTime: 0,
     refetchOnWindowFocus: true,

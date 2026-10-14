@@ -39,6 +39,9 @@ const REAL_SCREENS = [
   // SF-28: F18's way into Settings and ST1's Sign out.
   "mobile.profile",
   "mobile.settings",
+  // SF-55: C01 Coach today and A04 One account, every role.
+  "mobile.coach.today",
+  "mobile.workspaces",
 ];
 
 const placeholderSource = (id) => `import { placeholderRoute } from "@/widgets/feature-placeholder";
@@ -125,7 +128,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 16, catchAll: 1, placeholder: 123, deferred: 1 });
+    expect(counts).toEqual({ screen: 18, catchAll: 1, placeholder: 121, deferred: 1 });
     expect(routes).toHaveLength(141);
   });
 

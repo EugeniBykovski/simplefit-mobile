@@ -230,6 +230,20 @@ function coachProfile(fields: Record<string, unknown> = {}, completed = false) {
   };
 }
 
+/** SF-50: a completed Coach profile (SF-55 Coach today). */
+const COACH_COMPLETED = coachProfile(
+  {
+    display_name: "Coach Sam",
+    brand_name: "Sam Boxing",
+    country_code: "PL",
+    city: "Kraków",
+    languages: ["en", "pl"],
+    coaching_formats: ["personal_training", "fight_camps"],
+    competition_levels: ["amateur"],
+  },
+  true,
+);
+
 async function signIn(
   entry: Entry | ((intent: string | null) => Entry) = ROLE_SELECTION,
   fighter: object = FIGHTER_NOT_STARTED,
@@ -303,7 +317,10 @@ describe("canonical routes resolve", () => {
             : // The Coach workspace needs the COACH capability the entry reports (SF-53).
               route.shell === "mobile.coach"
               ? COACH_HOME
-              : ROLE_SELECTION,
+              : // A04 shows while the entry answers a home or context_selection (SF-55).
+                route.id === "mobile.workspaces"
+                ? FIGHTER_HOME
+                : ROLE_SELECTION,
         );
       // The code screens need the pending email flow of the step before them (SF-24).
       if (route.id === "mobile.login.code") {
@@ -379,23 +396,6 @@ describe("session access (UX only)", () => {
     const result = await renderApp("/welcome");
     await waitFor(() => expect(result.getPathname()).toBe("/"));
   });
-
-  it.each(["context_selection"] as const)(
-    "a destination this client does not map yet (%s) is the retryable failure, never Fighter home",
-    async (destination) => {
-      await signIn({
-        ...ROLE_SELECTION,
-        destination,
-        reason: "context_choice_required",
-        fighter_profile: "completed",
-        coach_profile: "completed",
-        capabilities: ["FIGHTER", "COACH"],
-      });
-      const result = await renderApp("/");
-      expect(await screen.findByRole("button", { name: "Try again" })).toBeOnTheScreen();
-      expect(result.getPathname()).toBe("/");
-    },
-  );
 
   it("enters a valid returnTo the backend state allows once the viewer is authenticated (SF-24, SF-45)", async () => {
     await signIn(FIGHTER_HOME);
@@ -550,12 +550,22 @@ describe("tab navigation", () => {
     expect(await screen.findByRole("tab", { name: "Training", selected: true })).toBeOnTheScreen();
   });
 
-  it("pushes the coach Inbox (shared /messages) above the coach tabs", async () => {
-    await signIn(BOTH);
+  it("shows the Coach MVP tabs: Today, Fighters and Sessions as Soon, Settings above the tabs", async () => {
+    await signIn(BOTH, FIGHTER_COMPLETED, "completed", COACH_COMPLETED);
     const result = await renderApp("/coach/today");
-    await fireEvent.press(await screen.findByRole("tab", { name: "Inbox" }));
-    await waitFor(() => expect(result.getPathname()).toBe("/messages"));
-    expect(await screen.findByTestId(placeholderId("mobile.messages"))).toBeOnTheScreen();
+    expect(await screen.findByRole("tab", { name: "Today", selected: true })).toBeOnTheScreen();
+    for (const soon of ["Fighters", "Sessions"]) {
+      const tab = screen.getByRole("tab", { name: `${soon}, not available yet` });
+      expect(tab).toBeDisabled();
+      await fireEvent.press(tab);
+      expect(result.getPathname()).toBe("/coach/today");
+    }
+    for (const gone of ["Board", "Requests", "Inbox"])
+      expect(screen.queryByRole("tab", { name: gone })).toBeNull();
+    // The shared ST1 (SF-28), pushed above the tabs.
+    await fireEvent.press(screen.getByRole("tab", { name: "Settings" }));
+    await waitFor(() => expect(result.getPathname()).toBe("/settings"));
+    expect(await screen.findByTestId("account-menu:settings")).toBeOnTheScreen();
   });
 
   it("selects the gym tab of every gym tab route", async () => {
@@ -576,7 +586,6 @@ describe("tab navigation", () => {
       ["/progress", "Profile"],
       ["/calendar", "Training"],
       ["/marketplace", "Community"],
-      ["/coach/sparring", "Requests"],
       ["/coach/challenge/c-1", "Today"],
       ["/gym/members/m-1", "Members"],
       ["/gym/classes/c-1/roster", "Classes"],
@@ -955,14 +964,14 @@ describe("Coach journey (SF-53)", () => {
     const result = await renderApp("/onboarding/coach?step=complete");
     await waitFor(() => expect(result.getPathname()).toBe("/coach/today"));
     expect(screen.queryByRole("header", { name: "Your coach profile is ready." })).toBeNull();
-    expect(await screen.findByTestId(placeholderId("mobile.coach.today"))).toBeOnTheScreen();
+    expect(await screen.findByRole("header", { name: "Welcome, Coach Sam" })).toBeOnTheScreen();
   });
 
   it("the Coach workspace needs COACH: anyone else goes where the entry sends them", async () => {
     await signIn(ROLE_SELECTION);
     let result = await renderApp("/coach/today");
     await waitFor(() => expect(result.getPathname()).toBe("/onboarding/role"));
-    expect(screen.queryByTestId(placeholderId("mobile.coach.today"))).toBeNull();
+    expect(screen.queryByRole("header", { name: /^Welcome, / })).toBeNull();
     await result.unmount();
 
     await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
@@ -971,14 +980,14 @@ describe("Coach journey (SF-53)", () => {
   });
 
   it("a person holding FIGHTER and COACH opens the Coach workspace whatever the last context", async () => {
-    await signIn(BOTH, FIGHTER_COMPLETED);
+    await signIn(BOTH, FIGHTER_COMPLETED, "completed", COACH_COMPLETED);
     const result = await renderApp("/coach/today");
-    expect(await screen.findByTestId(placeholderId("mobile.coach.today"))).toBeOnTheScreen();
+    expect(await screen.findByRole("header", { name: "Welcome, Coach Sam" })).toBeOnTheScreen();
     await act(async () => jest.runOnlyPendingTimers());
     expect(result.getPathname()).toBe("/coach/today");
   });
 
-  it("context_selection is never role selection or Fighter home: a retryable failure", async () => {
+  it("context_selection opens the A04 chooser, never role selection or Fighter home", async () => {
     await signIn({
       ...BOTH,
       destination: "context_selection",
@@ -986,9 +995,156 @@ describe("Coach journey (SF-53)", () => {
       context: null,
     });
     const result = await renderApp("/");
-    await act(async () => jest.runOnlyPendingTimers());
-    expect(result.getPathname()).toBe("/");
+    await waitFor(() => expect(result.getPathname()).toBe("/workspaces"));
+    expect(
+      await screen.findByRole("header", { name: "Where do you want to go?" }),
+    ).toBeOnTheScreen();
     expect(screen.queryByRole("header", { name: "How will you use SimpleFit?" })).toBeNull();
     expect(screen.queryByRole("header", { name: /Welcome in/ })).toBeNull();
+  });
+});
+
+describe("Coach shell and context switching (SF-55)", () => {
+  /**
+   * A signed-in account whose entry follows the recorded context choice:
+   * `PUT /api/v1/me/entry/context` stores it, `GET /api/v1/me/entry` answers
+   * that context's home (or the journey of an explicit intent).
+   */
+  async function contexts(initial: Entry) {
+    await signIn(initial, FIGHTER_COMPLETED, "completed", COACH_COMPLETED);
+    let chosen: string | null = null;
+    const writes: unknown[] = [];
+    const reads: string[] = [];
+    const answer = (intent: string | null): Entry => {
+      if (intent === "coach" && initial.coach_profile !== "completed")
+        return { ...initial, destination: "coach_onboarding", reason: "coach_intent", intent };
+      if (chosen === "coach")
+        return { ...COACH_HOME, ...BOTH, destination: "coach_home", context: "coach" };
+      if (chosen === "fighter") return { ...BOTH, destination: "fighter_home", context: "fighter" };
+      return initial;
+    };
+    mockFetch(
+      jest.fn((url: string, init: RequestInit = {}) => {
+        const { pathname, search } = new URL(url);
+        if (pathname === "/api/v1/me/entry/context") {
+          const body = JSON.parse(String(init.body)) as { context: string };
+          writes.push(body);
+          chosen = body.context;
+          return Promise.resolve(new Response(null, { status: 204 }));
+        }
+        if (pathname === "/api/v1/me/entry") {
+          reads.push(search);
+          return Promise.resolve(
+            jsonResponse({ entry: answer(new URLSearchParams(search).get("intent")) }),
+          );
+        }
+        if (pathname === "/api/v1/me/fighter-profile")
+          return Promise.resolve(jsonResponse({ fighter_profile: FIGHTER_COMPLETED }));
+        if (pathname === "/api/v1/me/coach-profile")
+          return Promise.resolve(jsonResponse({ coach_profile: COACH_COMPLETED }));
+        if (pathname === "/api/v1/me/first-run")
+          return Promise.resolve(jsonResponse(firstRun("completed")));
+        return Promise.resolve(
+          jsonResponse({
+            user: {
+              id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+              created_at: "2026-10-01T10:00:00Z",
+            },
+          }),
+        );
+      }),
+    );
+    return { writes, reads };
+  }
+
+  const CHOICE: Entry = {
+    ...BOTH,
+    destination: "context_selection",
+    reason: "context_choice_required",
+    context: null,
+  };
+  const E11: Entry = {
+    ...ROLE_SELECTION,
+    destination: "context_selection",
+    reason: "multiple_roles_in_progress",
+    fighter_profile: "in_progress",
+    coach_profile: "in_progress",
+    capabilities: [],
+  };
+
+  it("Coach today shows only the real CoachProfile and dashes for domains that do not exist", async () => {
+    await contexts(BOTH);
+    await renderApp("/coach/today");
+    expect(await screen.findByRole("header", { name: "Welcome, Coach Sam" })).toBeOnTheScreen();
+    expect(screen.getByText("Sam Boxing · Kraków, Poland")).toBeOnTheScreen();
+    expect(
+      screen.getByLabelText("Coaching formats: Personal Training · Fight Camps"),
+    ).toBeOnTheScreen();
+    for (const fill of ["Fighters", "Sessions", "Invitations"])
+      expect(screen.getByLabelText(`${fill}: Not available yet`)).toBeOnTheScreen();
+    expect(screen.queryByText("0")).toBeNull();
+    expect(screen.getByLabelText("Coach profile, Done")).toBeOnTheScreen();
+  });
+
+  it("chooses a completed context where context_selection lands: records it, then follows the entry", async () => {
+    const calls = await contexts(CHOICE);
+    const result = await renderApp("/");
+    await waitFor(() => expect(result.getPathname()).toBe("/workspaces"));
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Coach, Coach Sam · Coach today" }),
+    );
+    await waitFor(() => expect(result.getPathname()).toBe("/coach/today"));
+    expect(calls.writes).toEqual([{ context: "coach" }]);
+    expect(await screen.findByRole("header", { name: "Welcome, Coach Sam" })).toBeOnTheScreen();
+  });
+
+  it("E11: continues an unfinished journey by intent and records nothing", async () => {
+    const calls = await contexts(E11);
+    const result = await renderApp("/");
+    await waitFor(() => expect(result.getPathname()).toBe("/workspaces"));
+    expect(
+      await screen.findByRole("header", { name: "Which setup do you want to continue?" }),
+    ).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole("button", { name: /^Continue coach setup/ }));
+    await waitFor(() => expect(result.getPathname()).toBe("/onboarding/coach"));
+    expect(result.getSearchParams()).toEqual({ intent: "coach" });
+    expect(calls.writes).toEqual([]);
+    expect(calls.reads).toContain("?intent=coach");
+  });
+
+  it("switches from Coach today to the Fighter home through the A04 sheet", async () => {
+    const calls = await contexts({ ...BOTH, destination: "coach_home", context: "coach" });
+    const result = await renderApp("/coach/today");
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Coach Sam, Coach. Switch profile" }),
+    );
+    expect(
+      await screen.findByRole("button", { name: "Coach, Coach Sam · Coach today" }),
+    ).toBeSelected();
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Fighter, Alex Rivera · Fighter home" }),
+    );
+    await waitFor(() => expect(result.getPathname()).toBe("/home"));
+    expect(calls.writes).toEqual([{ context: "fighter" }]);
+  });
+
+  it("keeps the user in place when the choice cannot be recorded", async () => {
+    await contexts(CHOICE);
+    const result = await renderApp("/");
+    await waitFor(() => expect(result.getPathname()).toBe("/workspaces"));
+    const fetchMock = global.fetch as jest.Mock;
+    const original = fetchMock.getMockImplementation();
+    fetchMock.mockImplementation((url: string, init?: RequestInit) =>
+      new URL(url).pathname === "/api/v1/me/entry/context"
+        ? Promise.resolve(jsonResponse({ error: { code: "service_unavailable" } }, { status: 503 }))
+        : original?.(url, init),
+    );
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Coach, Coach Sam · Coach today" }),
+    );
+    expect(
+      await screen.findByText("We couldn’t open that. Nothing changed. Try again."),
+    ).toBeOnTheScreen();
+    expect(result.getPathname()).toBe("/workspaces");
   });
 });

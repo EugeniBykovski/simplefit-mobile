@@ -39,8 +39,9 @@ export function useEntryChoice(
       const chosen = { ...continuation, intent };
       try {
         const entry = await fetchEntry(chosen);
+        const destination: string = entry.destination;
         if (!isKnownEntry(entry)) {
-          console.error(`Unknown entry destination "${entry.destination}"`);
+          console.error(`Unknown entry destination "${destination}"`);
           throw new UnexpectedDestination();
         }
         if (entry.destination === "sponsor_application") await onSponsor(entry);
