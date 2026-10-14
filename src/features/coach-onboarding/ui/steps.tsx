@@ -1,4 +1,4 @@
-import { CircleCheck, Info } from "lucide-react-native";
+import { Info } from "lucide-react-native";
 import { useEffect, useRef } from "react";
 import { View, type TextInput } from "react-native";
 import { useLocale, useTranslations } from "use-intl";
@@ -11,7 +11,6 @@ import { Chip } from "@/shared/ui/chip";
 import { CountryField } from "@/shared/ui/country-field";
 import { FieldError } from "@/shared/ui/field-error";
 import { useFieldFocus } from "@/shared/ui/field-focus";
-import { Icon } from "@/shared/ui/icon";
 import { Input } from "@/shared/ui/input";
 import { Notice } from "@/shared/ui/notice";
 import { Text } from "@/shared/ui/text";
@@ -311,9 +310,6 @@ export function CompleteStep({ profile }: { profile: CoachProfile }) {
 
   return (
     <View className="gap-4">
-      <View className="size-16 items-center justify-center rounded-3xl bg-primary">
-        <Icon icon={CircleCheck} size={32} color="primaryForeground" />
-      </View>
       <View className="gap-2.5 rounded-3xl border border-border bg-surface px-4 py-3.5">
         <Text variant="label" color="faintForeground">
           {t("card")}

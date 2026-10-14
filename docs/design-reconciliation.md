@@ -215,6 +215,18 @@ Other SF-17 decisions:
   no back button (completion is final). OF4's privacy note drops "and a
   coach you approve" (no coach access exists). The OF11 28 px heading uses
   `h1` (26 px, within tolerance).
+- **SF-53 mobile Coach registration (decision, no token change):** the
+  Coach mobile artboards were reconciled in Claude Design itself (Version 89,
+  `1791966129-8ecb`, approved for SF-53): OC1 asks the SF-50 fields (coach
+  name, brand, country, city, bio, coaching languages), OC2 separates the four
+  coaching formats from the optional competition levels, OC11 shows the saved
+  profile only and says the coach tools are not available yet; OC3–OC10 are
+  FUTURE. Production differences: the bio is the shared 112 pt `Textarea`
+  (artboard 96 pt) with its count as the field's helper line; the competition
+  levels are the shared 40 pt registration chips (artboard 44 pt cells); the
+  OC11 avatar is the shared round `Avatar` (artboard 14 pt corners); the
+  completion tile's 22 px radius is `3xl`. Neither mobile registration draws
+  Save & exit: Continue / Finish save, Back on the first step leaves.
 - **SF-41 mobile Fighter first run (decision, no token change):** FR1–FR3
   illustrations keep the artboards' shapes but use generic labels (Your gym,
   Training partner, Your coach) instead of named people, a named gym and

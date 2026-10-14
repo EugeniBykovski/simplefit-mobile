@@ -1,5 +1,5 @@
 import { Redirect, Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { ChevronLeft, CircleAlert, TriangleAlert } from "lucide-react-native";
+import { Check, ChevronLeft, CircleAlert, TriangleAlert } from "lucide-react-native";
 import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import {
   BackHandler,
@@ -501,6 +501,12 @@ function StepFrame({
                 ))}
               </View>
             </View>
+            {step === "complete" && (
+              // OC11: the completion mark sits above the heading.
+              <View className="size-16 items-center justify-center rounded-3xl bg-primary">
+                <Icon icon={Check} size={32} color="primaryForeground" />
+              </View>
+            )}
             <View className="gap-2">
               <Text variant="h1" accessibilityRole="header">
                 {t(`titles.${step}`)}
