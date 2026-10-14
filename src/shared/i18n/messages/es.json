@@ -4,7 +4,8 @@
   },
   "navigation": {
     "home": "Inicio",
-    "appShell": "Aplicación"
+    "appShell": "Aplicación",
+    "back": "Atrás"
   },
   "actions": {
     "openTheApp": "Abrir la aplicación",
@@ -445,7 +446,9 @@
       "fighters": "Boxeadores",
       "board": "Tablero",
       "requests": "Solicitudes",
-      "inbox": "Bandeja"
+      "inbox": "Bandeja",
+      "sessions": "Sesiones",
+      "settings": "Ajustes"
     },
     "gym": {
       "label": "Navegación del gimnasio",
@@ -455,6 +458,8 @@
       "members": "Miembros",
       "staff": "Personal"
     },
+    "soon": "{label}, aún no disponible",
+    "soonBadge": "Pronto",
     "placeholder": {
       "badge": "Previsto",
       "description": "Esta pantalla forma parte de la app SimpleFit y llegará con su función. Aquí todavía no funciona nada.",
@@ -988,11 +993,130 @@
           "body": "Repite el recorrido cuando quieras desde Ayuda (?)."
         }
       }
-    }
+    },
+    "switchProfile": "{name}, boxeador. Cambiar de perfil"
   },
   "accountMenu": {
     "profileNote": "Tu perfil llegará con su función. La configuración y el cierre de sesión ya funcionan.",
     "settingsLink": "Configuración · cuenta · privacidad",
     "settingsNote": "La configuración de la cuenta, la privacidad y las notificaciones llegará con sus funciones. Aquí puedes cerrar sesión en este dispositivo."
+  },
+  "contextSwitcher": {
+    "close": "Cerrar",
+    "loading": "Cargando tus perfiles…",
+    "loadFailed": "No pudimos cargar tus perfiles. Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "contexts": {
+      "fighter": "Boxeador",
+      "coach": "Entrenador"
+    },
+    "initials": {
+      "fighter": "B",
+      "coach": "E"
+    },
+    "homes": {
+      "fighter": "Inicio de boxeador",
+      "coach": "Entrenador hoy"
+    },
+    "start": {
+      "fighter": "Crear un perfil de boxeador",
+      "coach": "Empezar como entrenador"
+    },
+    "startLines": {
+      "fighter": "Entrena y registra tu progreso",
+      "coach": "Crea tu perfil de entrenador"
+    },
+    "continue": {
+      "fighter": "Continuar el registro de boxeador",
+      "coach": "Continuar el registro de entrenador"
+    },
+    "continueLines": {
+      "fighter": "Tu perfil de boxeador no está terminado",
+      "coach": "Tu perfil de entrenador no está terminado"
+    },
+    "opening": "Abriendo…",
+    "failed": {
+      "switch": "No pudimos cambiar. Sigues en tu perfil actual. Inténtalo de nuevo.",
+      "select": "No pudimos abrirlo. No cambió nada. Inténtalo de nuevo."
+    },
+    "notes": {
+      "switch": "Una cuenta. La próxima vez abrimos tu última elección.",
+      "select": "Una cuenta. La próxima vez abrimos tu última elección.",
+      "setup": "No se pierde nada: cada registro conserva lo que guardaste."
+    },
+    "switch": {
+      "title": "Una cuenta, todos los roles",
+      "lead": "Cambia de perfil sin volver a iniciar sesión."
+    },
+    "choose": {
+      "eyebrow": "Tus perfiles",
+      "title": "¿A dónde quieres ir?",
+      "lead": "Tienes un perfil de boxeador y otro de entrenador en una sola cuenta."
+    },
+    "setup": {
+      "eyebrow": "Tu registro",
+      "title": "¿Qué registro quieres continuar?",
+      "lead": "Empezaste más de uno. Elige uno; el otro te espera."
+    }
+  },
+  "coachHome": {
+    "loading": "Cargando tu perfil de entrenador…",
+    "loadFailed": "No pudimos cargar tu perfil de entrenador. Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "identity": "Entrenador",
+    "switchProfile": "{name}, entrenador. Cambiar de perfil",
+    "eyebrow": "Entrenador · Hoy",
+    "title": "Hola, {name}",
+    "profile": {
+      "title": "Tu perfil de entrenador",
+      "complete": "Completo",
+      "formats": "Formatos de entrenamiento",
+      "competition": "Nivel de competición",
+      "languages": "Idiomas de entrenamiento",
+      "bio": "Biografía",
+      "none": "—"
+    },
+    "fills": {
+      "title": "Qué llenará esta pantalla",
+      "unavailable": "Aún no disponible",
+      "fighters": {
+        "label": "Boxeadores",
+        "when": "cuando los boxeadores puedan unirse a ti"
+      },
+      "sessions": {
+        "label": "Sesiones",
+        "when": "cuando puedas planificar sesiones"
+      },
+      "invitations": {
+        "label": "Invitaciones",
+        "when": "cuando puedas invitar a boxeadores"
+      }
+    },
+    "setup": {
+      "eyebrow": "Registro de entrenador",
+      "title": "Prepara tu espacio de entrenador",
+      "done": "Hecho",
+      "unavailable": "Aún no disponible",
+      "profile": {
+        "title": "Perfil de entrenador",
+        "line": "Guardado · puedes cambiarlo después"
+      },
+      "invite": {
+        "title": "Invita a tu primer boxeador",
+        "line": "Los boxeadores se unen por invitación"
+      },
+      "session": {
+        "title": "Planifica tu primera sesión",
+        "line": "Sesiones que diriges con tus boxeadores"
+      },
+      "dataRules": {
+        "title": "Acepta las reglas de datos del entrenador",
+        "line": "Lo que puedes ver con el consentimiento del boxeador"
+      }
+    },
+    "note": {
+      "title": "Las herramientas de entrenador llegan paso a paso.",
+      "body": "Boxeadores, sesiones e invitaciones aparecerán aquí en cuanto estén disponibles. No se muestra nada antes de que sea real."
+    }
   }
 }

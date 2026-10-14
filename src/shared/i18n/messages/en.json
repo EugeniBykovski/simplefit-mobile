@@ -4,7 +4,8 @@
   },
   "navigation": {
     "home": "Home",
-    "appShell": "App"
+    "appShell": "App",
+    "back": "Back"
   },
   "actions": {
     "openTheApp": "Open the app",
@@ -445,7 +446,9 @@
       "fighters": "Fighters",
       "board": "Board",
       "requests": "Requests",
-      "inbox": "Inbox"
+      "inbox": "Inbox",
+      "sessions": "Sessions",
+      "settings": "Settings"
     },
     "gym": {
       "label": "Gym navigation",
@@ -455,6 +458,8 @@
       "members": "Members",
       "staff": "Staff"
     },
+    "soon": "{label}, not available yet",
+    "soonBadge": "Soon",
     "placeholder": {
       "badge": "Planned",
       "description": "This screen is part of the SimpleFit app and arrives with its feature. Nothing here works yet.",
@@ -988,11 +993,130 @@
           "body": "Replay the tour any time from Help (?)."
         }
       }
-    }
+    },
+    "switchProfile": "{name}, Fighter. Switch profile"
   },
   "accountMenu": {
     "profileNote": "Your profile arrives with its feature. Settings and sign-out work now.",
     "settingsLink": "Settings · account · privacy",
     "settingsNote": "Account, privacy and notification settings arrive with their features. You can sign out of this device here."
+  },
+  "contextSwitcher": {
+    "close": "Close",
+    "loading": "Loading your profiles…",
+    "loadFailed": "We couldn’t load your profiles. Check your connection and try again.",
+    "retry": "Try again",
+    "contexts": {
+      "fighter": "Fighter",
+      "coach": "Coach"
+    },
+    "initials": {
+      "fighter": "F",
+      "coach": "C"
+    },
+    "homes": {
+      "fighter": "Fighter home",
+      "coach": "Coach today"
+    },
+    "start": {
+      "fighter": "Set up a fighter profile",
+      "coach": "Set up coaching"
+    },
+    "startLines": {
+      "fighter": "Train and track as a fighter",
+      "coach": "Create your coach profile"
+    },
+    "continue": {
+      "fighter": "Continue fighter setup",
+      "coach": "Continue coach setup"
+    },
+    "continueLines": {
+      "fighter": "Your fighter profile is not finished",
+      "coach": "Your coach profile is not finished"
+    },
+    "opening": "Opening…",
+    "failed": {
+      "switch": "We couldn’t switch. You’re still in your current profile. Try again.",
+      "select": "We couldn’t open that. Nothing changed. Try again."
+    },
+    "notes": {
+      "switch": "One account. We open your last choice next time.",
+      "select": "One account. We open your last choice next time.",
+      "setup": "Nothing is lost: each setup keeps what you saved."
+    },
+    "switch": {
+      "title": "One account, every role",
+      "lead": "Switch profile without signing in again."
+    },
+    "choose": {
+      "eyebrow": "Your profiles",
+      "title": "Where do you want to go?",
+      "lead": "You have a fighter and a coach profile on one account."
+    },
+    "setup": {
+      "eyebrow": "Your setup",
+      "title": "Which setup do you want to continue?",
+      "lead": "You started more than one. Pick one; the other waits for you."
+    }
+  },
+  "coachHome": {
+    "loading": "Loading your coach profile…",
+    "loadFailed": "We couldn’t load your coach profile. Check your connection and try again.",
+    "retry": "Try again",
+    "identity": "Coach",
+    "switchProfile": "{name}, Coach. Switch profile",
+    "eyebrow": "Coach · Today",
+    "title": "Welcome, {name}",
+    "profile": {
+      "title": "Your coach profile",
+      "complete": "Complete",
+      "formats": "Coaching formats",
+      "competition": "Competition level",
+      "languages": "Coaching languages",
+      "bio": "Bio",
+      "none": "—"
+    },
+    "fills": {
+      "title": "What fills this screen",
+      "unavailable": "Not available yet",
+      "fighters": {
+        "label": "Fighters",
+        "when": "when fighters can join you"
+      },
+      "sessions": {
+        "label": "Sessions",
+        "when": "when you can plan sessions"
+      },
+      "invitations": {
+        "label": "Invitations",
+        "when": "when you can invite fighters"
+      }
+    },
+    "setup": {
+      "eyebrow": "Coach setup",
+      "title": "Get your coaching space ready",
+      "done": "Done",
+      "unavailable": "Not available yet",
+      "profile": {
+        "title": "Coach profile",
+        "line": "Saved · you can change it later"
+      },
+      "invite": {
+        "title": "Invite your first fighter",
+        "line": "Fighters join you by invitation"
+      },
+      "session": {
+        "title": "Plan your first session",
+        "line": "Sessions you run with your fighters"
+      },
+      "dataRules": {
+        "title": "Agree to the coach data rules",
+        "line": "What you may see with a fighter’s consent"
+      }
+    },
+    "note": {
+      "title": "Coach tools arrive step by step.",
+      "body": "Fighters, sessions and invitations appear here as soon as they are available. Nothing is shown before it is real."
+    }
   }
 }

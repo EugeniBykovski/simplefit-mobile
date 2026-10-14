@@ -39,10 +39,11 @@ export async function fetchFighterProfile(signal?: AbortSignal): Promise<Fighter
  * returns to the foreground, so a save from the web client or another
  * device is reconciled instead of overwritten.
  */
-export function useFighterProfile() {
+export function useFighterProfile({ enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: fighterProfileQueryKey,
     queryFn: ({ signal }) => fetchFighterProfile(signal),
+    enabled,
     retry: false,
     staleTime: 0,
     refetchOnWindowFocus: true,

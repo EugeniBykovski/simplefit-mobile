@@ -1,3 +1,5 @@
+import { preloadReactNative } from "./src/test/react-native-preload";
+
 // Native modules are replaced with in-memory or controllable fakes. Matchers
 // from @testing-library/react-native are registered automatically.
 
@@ -69,6 +71,10 @@ jest.mock("expo-localization", () => ({
 jest.mock("expo-network", () => ({
   addNetworkStateListener: jest.fn(() => ({ remove: jest.fn() })),
 }));
+
+// React Native's lazily required components load here, outside every test's
+// timeout (src/test/react-native-preload.ts).
+preloadReactNative();
 
 beforeEach(async () => {
   const AsyncStorage = require("@react-native-async-storage/async-storage");

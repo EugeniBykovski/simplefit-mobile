@@ -112,7 +112,7 @@ describe("generated mobile routes", () => {
       entryDestinations: Object.fromEntries(
         Object.entries(guards.entryDestinations)
           .filter(([key]) => !key.startsWith("$"))
-          // Unrouted on mobile (context_selection): left out, so it stays unknown here.
+          // A destination unrouted on mobile (none today) is left out, so it stays unknown here.
           .filter(([, target]) => target.mobile !== null)
           .map(([destination, target]) => [destination, target.mobile]),
       ),

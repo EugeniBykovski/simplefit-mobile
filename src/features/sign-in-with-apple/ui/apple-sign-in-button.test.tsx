@@ -189,12 +189,24 @@ describe("AppleSignInButton", () => {
   });
 
   it("ignores repeated presses while a sign-in is in flight", async () => {
-    mockFetch(jest.fn().mockReturnValue(new Promise(() => undefined)));
+    // The exchange stays in flight until the presses are checked, then fails:
+    // a request that never settles would keep apiFetch's timeout timer alive
+    // after the suite (and the Jest worker with it).
+    let fail: (error: Error) => void = () => undefined;
+    mockFetch(
+      jest.fn().mockReturnValue(
+        new Promise((_resolve, reject) => {
+          fail = reject;
+        }),
+      ),
+    );
     await renderButton();
     const button = await screen.findByRole("button", { name: "Continue with Apple" });
     await userEvent.press(button);
     await userEvent.press(button);
     expect(signIn).toHaveBeenCalledTimes(1);
+    fail(new TypeError("Network request failed"));
+    expect(await screen.findByRole("alert")).toBeOnTheScreen();
   });
 
   it("is hidden when Sign in with Apple is not available on the device", async () => {

@@ -113,7 +113,7 @@ describe("entryParams", () => {
 });
 
 describe("SF-51 destinations (SF-52)", () => {
-  it("maps Coach home, and keeps context_selection unknown: never role selection or Fighter home", () => {
+  it("maps Coach home, and context_selection to A04: never role selection or Fighter home", () => {
     const coachHome = {
       ...entry(),
       destination: "coach_home" as const,
@@ -123,7 +123,9 @@ describe("SF-51 destinations (SF-52)", () => {
     expect(routeHref(destinationRoute("coach_home"))).toBe("/coach/today");
     expect(entryHref(coachHome, { intent: "coach" })).toBe("/coach/today");
     const choice = { ...entry(), destination: "context_selection" as const };
-    expect(isKnownEntry(choice)).toBe(false);
+    expect(isKnownEntry(choice)).toBe(true);
+    // SF-55: the mobile chooser; nothing to carry, it reads the entry itself.
+    expect(entryHref(choice, { returnTo: "/coach/today" })).toBe("/workspaces");
     expect(isKnownEntry(entry({ destination: "coach_onboarding" }))).toBe(true);
   });
 });

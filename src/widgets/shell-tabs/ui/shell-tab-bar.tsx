@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 
 import type { Messages } from "@/shared/i18n/messages";
-import { mobileShell, routeHref } from "@/shared/routes/routes";
+import { mobileRoute, mobileShell, routeHref } from "@/shared/routes/routes";
 import { Icon } from "@/shared/ui/icon";
 import { useSpotlightTarget } from "@/shared/ui/spotlight";
 import { Text } from "@/shared/ui/text";
@@ -43,18 +43,29 @@ export function ShellTabBar({ shell, focusedTab }: { shell: TabShell; focusedTab
         accessibilityLabel={label("label")}
         className="flex-row items-center justify-between rounded-full border border-border-strong bg-surface-elevated px-2 py-2.5"
       >
-        {mobileShell(config.shell).navItems.map((item) => {
+        {(config.items ?? mobileShell(config.shell).navItems).map((item) => {
           const icon = config.icons[item.key];
           if (!icon) throw new Error(`No tab icon for ${config.shell}#${item.key}`);
+          const { route } = item;
           return (
             <TabItem
               key={item.key}
               id={item.key}
               label={label(item.key)}
+              soonLabel={route === undefined ? t("soon", { label: label(item.key) }) : undefined}
+              soonBadge={t("soonBadge")}
               icon={icon}
               selected={item.key === active}
               center={item.key === config.center}
-              onPress={() => router.navigate(routeHref(item.route))}
+              onPress={
+                route === undefined
+                  ? undefined
+                  : () =>
+                      // A route of another shell (the shared Settings) is pushed above the tabs.
+                      mobileRoute(route).shell === config.shell
+                        ? router.navigate(routeHref(route))
+                        : router.push(routeHref(route))
+              }
             />
           );
         })}
@@ -63,10 +74,16 @@ export function ShellTabBar({ shell, focusedTab }: { shell: TabShell; focusedTab
   );
 }
 
-/** One tab button; a spotlight target named `tab:<key>` (SF-41 tours point at it). */
+/**
+ * One tab button; a spotlight target named `tab:<key>` (SF-41 tours point at
+ * it). Without `onPress` it is a Soon item: visible, announced as not
+ * available yet, and disabled.
+ */
 function TabItem({
   id,
   label,
+  soonLabel,
+  soonBadge,
   icon,
   selected,
   center,
@@ -74,12 +91,37 @@ function TabItem({
 }: {
   id: string;
   label: string;
+  soonLabel: string | undefined;
+  soonBadge: string;
   icon: LucideIcon;
   selected: boolean;
   center: boolean;
-  onPress: () => void;
+  onPress: (() => void) | undefined;
 }) {
   const target = useSpotlightTarget(`tab:${id}`);
+  if (onPress === undefined) {
+    return (
+      <Pressable
+        ref={target}
+        accessibilityRole="tab"
+        accessibilityLabel={soonLabel ?? label}
+        accessibilityState={{ selected: false, disabled: true }}
+        disabled
+        className="h-12 w-12 items-center justify-center rounded-full"
+      >
+        <Icon icon={icon} size={22} color="faintForeground" />
+        <Text
+          variant="micro"
+          color="faintForeground"
+          className="absolute bottom-0.5"
+          importantForAccessibility="no"
+          accessibilityElementsHidden
+        >
+          {soonBadge}
+        </Text>
+      </Pressable>
+    );
+  }
   return (
     <Pressable
       ref={target}

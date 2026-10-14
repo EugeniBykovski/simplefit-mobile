@@ -52,6 +52,22 @@ function backend(mobile: string) {
       if (pathname === "/api/me") return Promise.resolve(jsonResponse({ user: VIEWER }));
       if (pathname === "/api/v1/me/fighter-profile")
         return Promise.resolve(jsonResponse({ fighter_profile: PROFILE }));
+      if (pathname === "/api/v1/me/entry")
+        return Promise.resolve(
+          jsonResponse({
+            entry: {
+              destination: "fighter_home",
+              reason: "fighter_onboarding_completed",
+              mandatory: false,
+              intent: null,
+              context: null,
+              account_registration: "complete",
+              fighter_profile: "completed",
+              coach_profile: "not_started",
+              capabilities: ["FIGHTER"],
+            },
+          }),
+        );
       if (pathname === "/api/v1/me/first-run")
         return Promise.resolve(
           jsonResponse({
@@ -102,7 +118,9 @@ describe("Fighter home (FR4)", () => {
         await screen.findByRole("header", { name: /Welcome in, Alex Rivera\./ }),
       ).toBeOnTheScreen();
       expect(screen.getByText(/· Day 1$/)).toBeOnTheScreen();
-      expect(screen.getByLabelText("Alex Rivera, Fighter")).toBeOnTheScreen();
+      expect(
+        screen.getByRole("button", { name: "Alex Rivera, Fighter. Switch profile" }),
+      ).toBeOnTheScreen();
       // Every checklist step belongs to a domain that does not exist yet.
       expect(screen.getAllByText("Not available yet")).toHaveLength(5);
       expect(screen.getByLabelText("0 of 5 done")).toBeOnTheScreen();
@@ -110,6 +128,31 @@ describe("Fighter home (FR4)", () => {
       expect(mockRedirects).toEqual([]);
     },
   );
+
+  it("opens A04 from the identity pill: Fighter checked, coaching to set up, nothing recorded", async () => {
+    const fetchMock = backend("completed");
+    await renderWithProviders(<FighterHomeScreen />);
+    await user.press(
+      await screen.findByRole("button", { name: "Alex Rivera, Fighter. Switch profile" }),
+    );
+    expect(
+      await screen.findByRole("header", { name: "One account, every role" }),
+    ).toBeOnTheScreen();
+    const fighter = await screen.findByRole("button", {
+      name: "Fighter, Alex Rivera · Fighter home",
+    });
+    expect(fighter).toBeSelected();
+    expect(
+      screen.getByRole("button", { name: "Set up coaching, Create your coach profile" }),
+    ).toBeOnTheScreen();
+    // The current context closes the sheet; nothing is written.
+    await user.press(fighter);
+    await waitFor(() =>
+      expect(screen.queryByRole("header", { name: "One account, every role" })).toBeNull(),
+    );
+    expect(mockRouter.replace).not.toHaveBeenCalled();
+    expect(fetchMock.mock.calls.every(([, init]) => (init?.method ?? "GET") === "GET")).toBe(true);
+  });
 
   it("opens Notifications from the bell", async () => {
     backend("completed");

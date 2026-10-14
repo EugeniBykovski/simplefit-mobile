@@ -4,7 +4,8 @@
   },
   "navigation": {
     "home": "Start",
-    "appShell": "Aplikacja"
+    "appShell": "Aplikacja",
+    "back": "Wstecz"
   },
   "actions": {
     "openTheApp": "Otwórz aplikację",
@@ -445,7 +446,9 @@
       "fighters": "Zawodnicy",
       "board": "Tablica",
       "requests": "Prośby",
-      "inbox": "Skrzynka"
+      "inbox": "Skrzynka",
+      "sessions": "Sesje",
+      "settings": "Ustawienia"
     },
     "gym": {
       "label": "Nawigacja klubu",
@@ -455,6 +458,8 @@
       "members": "Członkowie",
       "staff": "Personel"
     },
+    "soon": "{label}, jeszcze niedostępne",
+    "soonBadge": "Wkrótce",
     "placeholder": {
       "badge": "Planowane",
       "description": "Ten ekran jest częścią aplikacji SimpleFit i pojawi się razem ze swoją funkcją. Na razie nic tu nie działa.",
@@ -988,11 +993,130 @@
           "body": "Przewodnik możesz powtórzyć w każdej chwili w Pomocy (?)."
         }
       }
-    }
+    },
+    "switchProfile": "{name}, zawodnik. Zmień profil"
   },
   "accountMenu": {
     "profileNote": "Profil pojawi się razem ze swoją funkcją. Ustawienia i wylogowanie już działają.",
     "settingsLink": "Ustawienia · konto · prywatność",
     "settingsNote": "Ustawienia konta, prywatności i powiadomień pojawią się razem ze swoimi funkcjami. Tutaj możesz wylogować się z tego urządzenia."
+  },
+  "contextSwitcher": {
+    "close": "Zamknij",
+    "loading": "Wczytujemy Twoje profile…",
+    "loadFailed": "Nie udało się wczytać Twoich profili. Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie",
+    "contexts": {
+      "fighter": "Zawodnik",
+      "coach": "Trener"
+    },
+    "initials": {
+      "fighter": "Z",
+      "coach": "T"
+    },
+    "homes": {
+      "fighter": "Strona główna zawodnika",
+      "coach": "Trener dziś"
+    },
+    "start": {
+      "fighter": "Załóż profil zawodnika",
+      "coach": "Zacznij jako trener"
+    },
+    "startLines": {
+      "fighter": "Trenuj i śledź postępy",
+      "coach": "Utwórz profil trenera"
+    },
+    "continue": {
+      "fighter": "Dokończ rejestrację zawodnika",
+      "coach": "Dokończ rejestrację trenera"
+    },
+    "continueLines": {
+      "fighter": "Twój profil zawodnika nie jest gotowy",
+      "coach": "Twój profil trenera nie jest gotowy"
+    },
+    "opening": "Otwieranie…",
+    "failed": {
+      "switch": "Nie udało się przełączyć. Nadal jesteś w obecnym profilu. Spróbuj ponownie.",
+      "select": "Nie udało się tego otworzyć. Nic się nie zmieniło. Spróbuj ponownie."
+    },
+    "notes": {
+      "switch": "Jedno konto. Następnym razem otworzymy Twój ostatni wybór.",
+      "select": "Jedno konto. Następnym razem otworzymy Twój ostatni wybór.",
+      "setup": "Nic nie przepada: każda rejestracja zachowuje to, co zapisałeś."
+    },
+    "switch": {
+      "title": "Jedno konto, każda rola",
+      "lead": "Zmień profil bez ponownego logowania."
+    },
+    "choose": {
+      "eyebrow": "Twoje profile",
+      "title": "Dokąd chcesz przejść?",
+      "lead": "Masz profil zawodnika i profil trenera na jednym koncie."
+    },
+    "setup": {
+      "eyebrow": "Twoja rejestracja",
+      "title": "Którą rejestrację chcesz dokończyć?",
+      "lead": "Zacząłeś więcej niż jedną. Wybierz jedną; druga na Ciebie poczeka."
+    }
+  },
+  "coachHome": {
+    "loading": "Wczytujemy Twój profil trenera…",
+    "loadFailed": "Nie udało się wczytać Twojego profilu trenera. Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie",
+    "identity": "Trener",
+    "switchProfile": "{name}, trener. Zmień profil",
+    "eyebrow": "Trener · Dziś",
+    "title": "Witaj, {name}",
+    "profile": {
+      "title": "Twój profil trenera",
+      "complete": "Gotowy",
+      "formats": "Formy treningów",
+      "competition": "Poziom zawodów",
+      "languages": "Języki treningów",
+      "bio": "Bio",
+      "none": "—"
+    },
+    "fills": {
+      "title": "Co wypełni ten ekran",
+      "unavailable": "Jeszcze niedostępne",
+      "fighters": {
+        "label": "Zawodnicy",
+        "when": "gdy zawodnicy będą mogli do Ciebie dołączyć"
+      },
+      "sessions": {
+        "label": "Treningi",
+        "when": "gdy będziesz mógł planować treningi"
+      },
+      "invitations": {
+        "label": "Zaproszenia",
+        "when": "gdy będziesz mógł zapraszać zawodników"
+      }
+    },
+    "setup": {
+      "eyebrow": "Konfiguracja trenera",
+      "title": "Przygotuj swoją przestrzeń trenerską",
+      "done": "Gotowe",
+      "unavailable": "Jeszcze niedostępne",
+      "profile": {
+        "title": "Profil trenera",
+        "line": "Zapisany · możesz go później zmienić"
+      },
+      "invite": {
+        "title": "Zaproś pierwszego zawodnika",
+        "line": "Zawodnicy dołączają na zaproszenie"
+      },
+      "session": {
+        "title": "Zaplanuj pierwszy trening",
+        "line": "Treningi, które prowadzisz z zawodnikami"
+      },
+      "dataRules": {
+        "title": "Zaakceptuj zasady danych trenera",
+        "line": "Co możesz zobaczyć za zgodą zawodnika"
+      }
+    },
+    "note": {
+      "title": "Narzędzia trenera pojawiają się krok po kroku.",
+      "body": "Zawodnicy, treningi i zaproszenia pojawią się tutaj, gdy będą dostępne. Nic nie jest pokazywane, zanim stanie się prawdziwe."
+    }
   }
 }

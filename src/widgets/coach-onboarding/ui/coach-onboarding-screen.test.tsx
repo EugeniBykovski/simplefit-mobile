@@ -239,6 +239,38 @@ describe("Coach registration (OC1, OC2, OC11)", () => {
     expect(api.writes()).toEqual([]);
   });
 
+  it("accepts the suggested coach name and still requires country and city", async () => {
+    const api = backend({}, { fullName: "Alex Novak" });
+    await renderWithProviders(<CoachOnboardingScreen />);
+    await screen.findByDisplayValue("Alex Novak");
+    // Showing the suggestion creates no Coach profile.
+    expect(api.writes()).toEqual([]);
+    await press("Continue");
+    expect(await screen.findByText("Select your country.")).toBeOnTheScreen();
+    expect(screen.getByText("Enter your city.")).toBeOnTheScreen();
+    expect(screen.queryByText("Enter your coach name.")).toBeNull();
+    expect(await heading("Your coach profile")).toBeOnTheScreen();
+    // Continue saves the step's valid change (the name) and nothing invalid;
+    // the account is never written.
+    expect(api.writes()).toEqual([
+      { call: `PATCH ${PROFILE}`, body: { display_name: "Alex Novak" } },
+    ]);
+  });
+
+  it("requires a coach name the person cleared, and keeps it cleared", async () => {
+    const api = backend({}, { fullName: "Alex Novak" });
+    await renderWithProviders(<CoachOnboardingScreen />);
+    await screen.findByDisplayValue("Alex Novak");
+    await user.clear(screen.getByLabelText("Coach name"));
+    await press("Continue");
+    expect(await screen.findByText("Enter your coach name.")).toBeOnTheScreen();
+    expect(screen.getByText("Select your country.")).toBeOnTheScreen();
+    expect(screen.getByText("Enter your city.")).toBeOnTheScreen();
+    // The suggestion does not come back over the person's edit.
+    expect(screen.queryByDisplayValue("Alex Novak")).toBeNull();
+    expect(api.writes()).toEqual([]);
+  });
+
   it("checks lengths as the API counts them (code points) and sends nothing too long", async () => {
     const api = backend(PROFILE_FIELDS);
     mockParams.current = { step: "profile" };
@@ -471,6 +503,9 @@ describe("Coach registration (OC1, OC2, OC11)", () => {
         if (new URL(url).pathname === "/api/me")
           return Promise.resolve(jsonResponse({ user: VIEWER }));
         if (fail) return Promise.reject(new TypeError("Network request failed"));
+        // A new profile also reads the account for the coach-name suggestion.
+        if (new URL(url).pathname === ACCOUNT)
+          return Promise.resolve(jsonResponse(account("Alex Novak")));
         return Promise.resolve(jsonResponse(profile()));
       }),
     );
@@ -480,6 +515,8 @@ describe("Coach registration (OC1, OC2, OC11)", () => {
     fail = false;
     await press("Try again");
     expect(await heading("Your coach profile")).toBeOnTheScreen();
+    // The new profile's name suggestion arrives with the account.
+    expect(await screen.findByDisplayValue("Alex Novak")).toBeOnTheScreen();
   });
 
   it("leaves OC1 back to the role choice, keeping the intent", async () => {

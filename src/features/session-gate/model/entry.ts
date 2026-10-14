@@ -29,10 +29,9 @@ import {
 export type Entry = EntryResponseEntry;
 
 /**
- * The destinations this client maps (`guards.entryDestinations`). The API may
- * return more (SF-51's `context_selection` has no route until its chooser is
- * designed and built); those stay unknown here and are a controlled failure,
- * never `fighter_home`.
+ * The destinations this client maps (`guards.entryDestinations`). A newer API
+ * may return more; those stay unknown here and are a controlled failure,
+ * never `fighter_home`. (`context_selection` opens A04 since SF-55.)
  */
 export type KnownDestination = keyof typeof mobileGuards.entryDestinations &
   EntryResponseEntryDestination;

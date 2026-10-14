@@ -1,5 +1,5 @@
 import { Redirect, useRouter } from "expo-router";
-import { Bell, CircleAlert, CircleHelp, LayoutGrid } from "lucide-react-native";
+import { Bell, ChevronDown, CircleAlert, CircleHelp, LayoutGrid } from "lucide-react-native";
 import { useRef, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "use-intl";
 
 import { FIGHTER_MOBILE_FIRST_RUN, useFirstRun } from "@/entities/first-run";
 import { useFighterProfile } from "@/entities/fighter-profile";
+import { ContextSwitcherSheet } from "@/features/session-gate";
 import { routeHref } from "@/shared/routes/routes";
 import { Button } from "@/shared/ui/button";
 import { Icon } from "@/shared/ui/icon";
@@ -31,6 +32,8 @@ import { HomeTour } from "./home-tour";
  *   do not exist yet (gym, bookings, round timer, training log, partners):
  *   none is ticked or linked, each says it is not available yet (as the web
  *   home). The Live Board is empty until training exists.
+ * - The identity pill opens A04, "One account, every role" (SF-55): the
+ *   profile context switcher sheet.
  * - The tour (FR5) is help: Help (?) or the Live Board card opens it, it
  *   points at the real header, checklist and tab bar, and records nothing.
  */
@@ -87,6 +90,7 @@ function HomeView({ name, completedAt }: { name: string; completedAt: string | n
   const insets = useSafeAreaInsets();
   const scroll = useRef<ScrollView>(null);
   const [touring, setTouring] = useState(false);
+  const [switching, setSwitching] = useState(false);
   const identityTarget = useSpotlightTarget("home:identity");
   const notificationsTarget = useSpotlightTarget("home:notifications");
   const helpTarget = useSpotlightTarget("home:help");
@@ -111,11 +115,12 @@ function HomeView({ name, completedAt }: { name: string; completedAt: string | n
     <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       <ScrollView ref={scroll} contentContainerClassName="gap-4 px-5 pb-6 pt-3">
         <View className="flex-row items-center justify-between gap-3">
-          <View
+          <Pressable
             ref={identityTarget}
-            accessible
-            accessibilityLabel={`${name}, ${t("identity")}`}
-            className="h-11 flex-row items-center gap-2.5 rounded-full border border-border bg-surface pl-1 pr-3.5"
+            accessibilityRole="button"
+            accessibilityLabel={t("switchProfile", { name })}
+            onPress={() => setSwitching(true)}
+            className="h-11 flex-shrink flex-row items-center gap-2.5 rounded-full border border-border bg-surface pl-1 pr-3.5"
           >
             <View className="size-9 items-center justify-center rounded-full bg-accent-strong">
               <Text variant="caption" weight="bold" color="highlight" className="font-display-bold">
@@ -130,7 +135,8 @@ function HomeView({ name, completedAt }: { name: string; completedAt: string | n
                 {t("identity")}
               </Text>
             </View>
-          </View>
+            <Icon icon={ChevronDown} size={16} color="mutedForeground" />
+          </Pressable>
           <View className="flex-row gap-2">
             <Pressable
               ref={notificationsTarget}
@@ -255,6 +261,11 @@ function HomeView({ name, completedAt }: { name: string; completedAt: string | n
         </View>
       </ScrollView>
       {touring ? <HomeTour onClose={() => setTouring(false)} /> : null}
+      <ContextSwitcherSheet
+        visible={switching}
+        current="fighter"
+        onClose={() => setSwitching(false)}
+      />
     </View>
   );
 }
