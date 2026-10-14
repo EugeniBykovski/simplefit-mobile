@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { CoachOnboardingScreen } from "@/widgets/coach-onboarding";
 
-export default placeholderRoute("mobile.onboarding.coach");
+export default function CoachOnboardingRoute() {
+  return <CoachOnboardingScreen />;
+}

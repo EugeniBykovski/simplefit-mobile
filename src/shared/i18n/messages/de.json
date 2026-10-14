@@ -716,6 +716,141 @@
       "goTo": "Zu {section}"
     }
   },
+  "coachOnboarding": {
+    "stepLabel": "Schritt {step} von {total} · {section}",
+    "progress": "Schritt {step} von {total}",
+    "progressDone": "Coach-Registrierung abgeschlossen",
+    "doneLabel": "Coach · fertig",
+    "sections": {
+      "profile": "Coach-Profil",
+      "type": "Coaching-Art"
+    },
+    "titles": {
+      "profile": "Dein Coach-Profil",
+      "type": "Wie coachst du?",
+      "complete": "Dein Coach-Profil ist fertig."
+    },
+    "descriptions": {
+      "profile": "Woran Boxer:innen dich als Coach erkennen. Coach-Name, Land und Stadt sind Pflicht.",
+      "type": "Wähle alle Formate, die du anbietest. Du kannst das später ändern.",
+      "complete": "Es ist in deinem Konto gespeichert und du kannst es später ändern. Ein vorhandenes Boxerprofil bleibt, wie es ist."
+    },
+    "back": "Zurück",
+    "continue": "Weiter",
+    "finish": "Abschließen",
+    "loading": "Dein Coach-Profil wird geladen…",
+    "loadFailed": "Dein Coach-Profil konnte nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
+    "retry": "Erneut versuchen",
+    "profile": {
+      "requiredLabel": "{label}, Pflichtfeld",
+      "name": {
+        "label": "Coach-Name",
+        "placeholder": "Dein Coach-Name",
+        "help": "Für Boxer:innen sichtbar. Bis zu 60 Zeichen.",
+        "suggested": "Aus deinem Kontonamen vorgeschlagen. Ändere ihn, wenn du unter einem anderen Namen coachst."
+      },
+      "brand": {
+        "label": "Markenname · optional",
+        "placeholder": "Dein Coaching-Business",
+        "help": "Dein Coaching-Business, falls du eines hast. Bis zu 80 Zeichen."
+      },
+      "country": "Land",
+      "city": {
+        "label": "Stadt",
+        "placeholder": "Deine Stadt"
+      },
+      "bio": {
+        "label": "Bio · optional",
+        "placeholder": "Was du trainierst und wie du arbeitest.",
+        "count": "{count} / {max}"
+      },
+      "languages": {
+        "label": "Coaching-Sprachen · optional",
+        "options": {
+          "en": "English",
+          "pl": "Polski",
+          "ru": "Русский",
+          "be": "Беларуская",
+          "uk": "Українська"
+        }
+      }
+    },
+    "country": {
+      "placeholder": "Wählen",
+      "none": "Nicht gewählt",
+      "hint": "Öffnet die Länderliste",
+      "title": "Land",
+      "close": "Schließen",
+      "search": "Länder suchen",
+      "empty": "Kein Land gefunden."
+    },
+    "type": {
+      "formats": {
+        "label": "Coaching-Formate",
+        "help": "Wähle mindestens eines.",
+        "options": {
+          "personal_training": {
+            "label": "Personal Training",
+            "description": "1:1-Einheiten"
+          },
+          "group_coaching": {
+            "label": "Gruppen-Coaching",
+            "description": "Kurse und Team-Einheiten"
+          },
+          "online_coaching": {
+            "label": "Online-Coaching",
+            "description": "Videoanalyse, Pläne aus der Ferne"
+          },
+          "fight_camps": {
+            "label": "Fight Camps",
+            "description": "6–12 Wochen bis zum Höhepunkt"
+          }
+        }
+      },
+      "levels": {
+        "label": "Wettkampfniveau · optional",
+        "help": "Die Boxer:innen, die du auf Kämpfe vorbereitest.",
+        "options": {
+          "amateur": "Amateur",
+          "professional": "Profi"
+        }
+      }
+    },
+    "done": {
+      "card": "Dein Coach-Profil",
+      "formats": "Formate",
+      "competition": "Wettkampf",
+      "languages": "Sprachen",
+      "none": "—",
+      "pending": "<b>Coach-Werkzeuge sind noch nicht verfügbar.</b> Deine Coach-Startseite zeigt, was geplant ist. Dein Profil ist dafür bereit.",
+      "continue": "Weiter zur Coach-Startseite",
+      "retry": "Erneut versuchen",
+      "failed": "Deine Coach-Startseite konnte nicht geöffnet werden. Dein Coach-Profil ist gespeichert. Versuche es erneut."
+    },
+    "missing": {
+      "body": "In deinem Coach-Profil fehlen Angaben. Ergänze {fields}, um abzuschließen.",
+      "goProfile": "Zum Coach-Profil",
+      "fields": {
+        "display_name": "deinen Coach-Namen",
+        "country_code": "dein Land",
+        "city": "deine Stadt"
+      }
+    },
+    "errors": {
+      "required": {
+        "display_name": "Gib deinen Coach-Namen ein.",
+        "country_code": "Wähle dein Land.",
+        "city": "Gib deine Stadt ein.",
+        "coaching_formats": "Wähle mindestens ein Format."
+      },
+      "tooLong": "Das ist zu lang.",
+      "invalidChoice": "Wähle eine der Optionen.",
+      "invalidFormat": "Entferne Zeilenumbrüche und andere unsichtbare Zeichen.",
+      "invalid": "Prüfe diesen Wert.",
+      "saveFailed": "Deine Änderungen konnten nicht gespeichert werden. Prüfe deine Verbindung. Nichts, was du eingegeben hast, ist verloren.",
+      "completeFailed": "Deine Coach-Registrierung konnte nicht abgeschlossen werden. Prüfe deine Verbindung. Deine Auswahl bleibt erhalten."
+    }
+  },
   "firstRunIntro": {
     "brand": "Willkommen · Fighter",
     "skip": "Intro überspringen",

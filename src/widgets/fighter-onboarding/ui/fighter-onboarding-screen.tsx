@@ -23,7 +23,6 @@ import {
   AccountStep,
   CompleteStep,
   ExperienceStep,
-  FieldFocus,
   FINAL_STEP,
   GoalsStep,
   InfoStep,
@@ -50,6 +49,7 @@ import {
 import { maskedFromIso } from "@/shared/lib/date-input";
 import { continuationOf, withContinuation } from "@/shared/routes/continuation";
 import { Button } from "@/shared/ui/button";
+import { FieldFocus } from "@/shared/ui/field-focus";
 import { Icon } from "@/shared/ui/icon";
 import { Notice } from "@/shared/ui/notice";
 import { Spinner } from "@/shared/ui/spinner";

@@ -716,6 +716,141 @@
       "goTo": "Przejdź: {section}"
     }
   },
+  "coachOnboarding": {
+    "stepLabel": "Krok {step} z {total} · {section}",
+    "progress": "Krok {step} z {total}",
+    "progressDone": "Rejestracja trenera zakończona",
+    "doneLabel": "Trener · gotowe",
+    "sections": {
+      "profile": "Profil trenera",
+      "type": "Rodzaj treningów"
+    },
+    "titles": {
+      "profile": "Twój profil trenera",
+      "type": "Jak trenujesz?",
+      "complete": "Twój profil trenera jest gotowy."
+    },
+    "descriptions": {
+      "profile": "Po tym zawodnicy rozpoznają Cię jako trenera. Nazwa trenera, kraj i miasto są wymagane.",
+      "type": "Wybierz wszystkie formy, które oferujesz. Możesz to później zmienić.",
+      "complete": "Jest zapisany na Twoim koncie i możesz go później zmienić. Twój ewentualny profil zawodnika pozostaje bez zmian."
+    },
+    "back": "Wstecz",
+    "continue": "Dalej",
+    "finish": "Zakończ",
+    "loading": "Wczytujemy Twój profil trenera…",
+    "loadFailed": "Nie udało się wczytać profilu trenera. Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie",
+    "profile": {
+      "requiredLabel": "{label}, wymagane",
+      "name": {
+        "label": "Nazwa trenera",
+        "placeholder": "Twoja nazwa trenera",
+        "help": "Widoczna dla zawodników. Do 60 znaków.",
+        "suggested": "Zaproponowana na podstawie nazwy konta. Zmień ją, jeśli trenujesz pod inną nazwą."
+      },
+      "brand": {
+        "label": "Nazwa marki · opcjonalnie",
+        "placeholder": "Twoja działalność trenerska",
+        "help": "Twoja działalność trenerska, jeśli ją prowadzisz. Do 80 znaków."
+      },
+      "country": "Kraj",
+      "city": {
+        "label": "Miasto",
+        "placeholder": "Twoje miasto"
+      },
+      "bio": {
+        "label": "Bio · opcjonalnie",
+        "placeholder": "Czego uczysz i jak pracujesz.",
+        "count": "{count} / {max}"
+      },
+      "languages": {
+        "label": "Języki treningów · opcjonalnie",
+        "options": {
+          "en": "English",
+          "pl": "Polski",
+          "ru": "Русский",
+          "be": "Беларуская",
+          "uk": "Українська"
+        }
+      }
+    },
+    "country": {
+      "placeholder": "Wybierz",
+      "none": "Nie wybrano",
+      "hint": "Otwiera listę krajów",
+      "title": "Kraj",
+      "close": "Zamknij",
+      "search": "Szukaj kraju",
+      "empty": "Brak pasujących krajów."
+    },
+    "type": {
+      "formats": {
+        "label": "Formy treningów",
+        "help": "Wybierz co najmniej jedną.",
+        "options": {
+          "personal_training": {
+            "label": "Trening personalny",
+            "description": "Zajęcia 1:1"
+          },
+          "group_coaching": {
+            "label": "Treningi grupowe",
+            "description": "Zajęcia i treningi zespołowe"
+          },
+          "online_coaching": {
+            "label": "Treningi online",
+            "description": "Analiza wideo, plany zdalne"
+          },
+          "fight_camps": {
+            "label": "Obozy przed walką",
+            "description": "Przygotowania 6–12 tygodni"
+          }
+        }
+      },
+      "levels": {
+        "label": "Poziom rywalizacji · opcjonalnie",
+        "help": "Zawodnicy, których przygotowujesz do walk.",
+        "options": {
+          "amateur": "Amator",
+          "professional": "Zawodowiec"
+        }
+      }
+    },
+    "done": {
+      "card": "Twój profil trenera",
+      "formats": "Formy",
+      "competition": "Rywalizacja",
+      "languages": "Języki",
+      "none": "—",
+      "pending": "<b>Narzędzia trenera nie są jeszcze dostępne.</b> Strona główna trenera pokazuje, co jest zaplanowane. Twój profil jest na to gotowy.",
+      "continue": "Przejdź do strony trenera",
+      "retry": "Spróbuj ponownie",
+      "failed": "Nie udało się otworzyć strony trenera. Twój profil trenera jest zapisany. Spróbuj ponownie."
+    },
+    "missing": {
+      "body": "W profilu trenera brakuje danych. Uzupełnij: {fields}, aby zakończyć.",
+      "goProfile": "Przejdź do profilu trenera",
+      "fields": {
+        "display_name": "nazwę trenera",
+        "country_code": "kraj",
+        "city": "miasto"
+      }
+    },
+    "errors": {
+      "required": {
+        "display_name": "Wpisz nazwę trenera.",
+        "country_code": "Wybierz kraj.",
+        "city": "Wpisz miasto.",
+        "coaching_formats": "Wybierz co najmniej jedną formę."
+      },
+      "tooLong": "To za długie.",
+      "invalidChoice": "Wybierz jedną z opcji.",
+      "invalidFormat": "Usuń podziały wierszy i inne ukryte znaki.",
+      "invalid": "Sprawdź tę wartość.",
+      "saveFailed": "Nie udało się zapisać zmian. Sprawdź połączenie. Nic z tego, co wpisano, nie przepadło.",
+      "completeFailed": "Nie udało się zakończyć rejestracji trenera. Sprawdź połączenie. Twoje wybory zostają."
+    }
+  },
   "firstRunIntro": {
     "brand": "Witaj · Zawodnik",
     "skip": "Pomiń wstęp",

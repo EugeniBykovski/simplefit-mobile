@@ -716,6 +716,141 @@
       "goTo": "Aller à : {section}"
     }
   },
+  "coachOnboarding": {
+    "stepLabel": "Étape {step} sur {total} · {section}",
+    "progress": "Étape {step} sur {total}",
+    "progressDone": "Inscription coach terminée",
+    "doneLabel": "Coach · terminé",
+    "sections": {
+      "profile": "Profil coach",
+      "type": "Type de coaching"
+    },
+    "titles": {
+      "profile": "Votre profil coach",
+      "type": "Comment coachez-vous ?",
+      "complete": "Votre profil coach est prêt."
+    },
+    "descriptions": {
+      "profile": "Comment les boxeurs vous reconnaîtront en tant que coach. Le nom de coach, le pays et la ville sont obligatoires.",
+      "type": "Choisissez tous les formats que vous proposez. Vous pourrez changer cela plus tard.",
+      "complete": "Il est enregistré dans votre compte et vous pourrez le modifier plus tard. Votre éventuel profil de boxeur reste inchangé."
+    },
+    "back": "Retour",
+    "continue": "Continuer",
+    "finish": "Terminer",
+    "loading": "Chargement de votre profil coach…",
+    "loadFailed": "Impossible de charger votre profil coach. Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer",
+    "profile": {
+      "requiredLabel": "{label}, obligatoire",
+      "name": {
+        "label": "Nom de coach",
+        "placeholder": "Votre nom de coach",
+        "help": "Visible par les boxeurs. Jusqu’à 60 caractères.",
+        "suggested": "Suggéré à partir du nom de votre compte. Modifiez-le si vous coachez sous un autre nom."
+      },
+      "brand": {
+        "label": "Nom de marque · facultatif",
+        "placeholder": "Votre activité de coaching",
+        "help": "Votre activité de coaching, si vous en avez une. Jusqu’à 80 caractères."
+      },
+      "country": "Pays",
+      "city": {
+        "label": "Ville",
+        "placeholder": "Votre ville"
+      },
+      "bio": {
+        "label": "Bio · facultatif",
+        "placeholder": "Ce que vous enseignez et comment vous travaillez.",
+        "count": "{count} / {max}"
+      },
+      "languages": {
+        "label": "Langues de coaching · facultatif",
+        "options": {
+          "en": "English",
+          "pl": "Polski",
+          "ru": "Русский",
+          "be": "Беларуская",
+          "uk": "Українська"
+        }
+      }
+    },
+    "country": {
+      "placeholder": "Choisir",
+      "none": "Non choisi",
+      "hint": "Ouvre la liste des pays",
+      "title": "Pays",
+      "close": "Fermer",
+      "search": "Rechercher un pays",
+      "empty": "Aucun pays ne correspond."
+    },
+    "type": {
+      "formats": {
+        "label": "Formats de coaching",
+        "help": "Choisissez-en au moins un.",
+        "options": {
+          "personal_training": {
+            "label": "Coaching individuel",
+            "description": "Séances 1:1"
+          },
+          "group_coaching": {
+            "label": "Coaching de groupe",
+            "description": "Cours et séances d’équipe"
+          },
+          "online_coaching": {
+            "label": "Coaching en ligne",
+            "description": "Analyse vidéo, programmes à distance"
+          },
+          "fight_camps": {
+            "label": "Camps de combat",
+            "description": "Préparations de 6 à 12 semaines"
+          }
+        }
+      },
+      "levels": {
+        "label": "Niveau de compétition · facultatif",
+        "help": "Les boxeurs que vous préparez aux combats.",
+        "options": {
+          "amateur": "Amateur",
+          "professional": "Professionnel"
+        }
+      }
+    },
+    "done": {
+      "card": "Votre profil coach",
+      "formats": "Formats",
+      "competition": "Compétition",
+      "languages": "Langues",
+      "none": "—",
+      "pending": "<b>Les outils coach ne sont pas encore disponibles.</b> Votre accueil coach présente ce qui est prévu. Votre profil est prêt.",
+      "continue": "Continuer vers l’accueil coach",
+      "retry": "Réessayer",
+      "failed": "Impossible d’ouvrir votre accueil coach. Votre profil coach est enregistré. Réessayez."
+    },
+    "missing": {
+      "body": "Il manque des informations à votre profil coach. Ajoutez {fields} pour terminer.",
+      "goProfile": "Aller au profil coach",
+      "fields": {
+        "display_name": "votre nom de coach",
+        "country_code": "votre pays",
+        "city": "votre ville"
+      }
+    },
+    "errors": {
+      "required": {
+        "display_name": "Saisissez votre nom de coach.",
+        "country_code": "Choisissez votre pays.",
+        "city": "Saisissez votre ville.",
+        "coaching_formats": "Choisissez au moins un format."
+      },
+      "tooLong": "C’est trop long.",
+      "invalidChoice": "Choisissez une des options.",
+      "invalidFormat": "Supprimez les retours à la ligne et autres caractères invisibles.",
+      "invalid": "Vérifiez cette valeur.",
+      "saveFailed": "Impossible d’enregistrer vos modifications. Vérifiez votre connexion. Rien de ce que vous avez saisi n’est perdu.",
+      "completeFailed": "Impossible de terminer votre inscription coach. Vérifiez votre connexion. Vos choix sont conservés."
+    }
+  },
   "firstRunIntro": {
     "brand": "Bienvenue · Boxeur",
     "skip": "Passer l’intro",

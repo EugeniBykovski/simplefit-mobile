@@ -36,11 +36,16 @@ export async function fetchAccountProfile(signal?: AbortSignal): Promise<Account
   return account_profile;
 }
 
-/** The current registration, read fresh on every screen entry (another client may have changed it). */
-export function useAccountProfile() {
+/**
+ * The current registration, read fresh on every screen entry (another client
+ * may have changed it). `enabled: false` reads nothing (a screen that needs it
+ * only in some states).
+ */
+export function useAccountProfile({ enabled = true }: { enabled?: boolean } = {}) {
   return useQuery({
     queryKey: accountProfileQueryKey,
     queryFn: ({ signal }) => fetchAccountProfile(signal),
+    enabled,
     retry: false,
     staleTime: 0,
     gcTime: 0,
