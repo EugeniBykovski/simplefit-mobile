@@ -267,12 +267,14 @@ async function signIn(
                 ? jsonResponse({ coach_profile: coach })
                 : url.includes("/api/v1/me/first-run")
                   ? jsonResponse(firstRun(mobileFirstRun))
-                  : jsonResponse({
-                      user: {
-                        id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                        created_at: "2026-10-01T10:00:00Z",
-                      },
-                    }),
+                  : url.includes("/api/v1/me/coaches")
+                    ? jsonResponse({ relationships: [], next_cursor: null })
+                    : jsonResponse({
+                        user: {
+                          id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                          created_at: "2026-10-01T10:00:00Z",
+                        },
+                      }),
       ),
     ),
   );

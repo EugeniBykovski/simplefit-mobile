@@ -428,7 +428,9 @@
       "mobile/training/share": "Udostępnij trening",
       "mobile/trial": "Okres próbny",
       "mobile/welcome/tour": "Wprowadzenie dla zawodnika",
-      "mobile/workspaces": "Przestrzenie robocze"
+      "mobile/workspaces": "Przestrzenie robocze",
+      "mobile/profile/coaches": "Trenerzy",
+      "mobile/profile/coaches/_relationship-id": "Trener"
     }
   },
   "shells": {
@@ -999,7 +1001,8 @@
   "accountMenu": {
     "profileNote": "Profil pojawi się razem ze swoją funkcją. Ustawienia i wylogowanie już działają.",
     "settingsLink": "Ustawienia · konto · prywatność",
-    "settingsNote": "Ustawienia konta, prywatności i powiadomień pojawią się razem ze swoimi funkcjami. Tutaj możesz wylogować się z tego urządzenia."
+    "settingsNote": "Ustawienia konta, prywatności i powiadomień pojawią się razem ze swoimi funkcjami. Tutaj możesz wylogować się z tego urządzenia.",
+    "coachesLink": "Trenerzy"
   },
   "contextSwitcher": {
     "close": "Zamknij",
@@ -1117,6 +1120,85 @@
     "note": {
       "title": "Narzędzia trenera pojawiają się krok po kroku.",
       "body": "Zawodnicy, treningi i zaproszenia pojawią się tutaj, gdy będą dostępne. Nic nie jest pokazywane, zanim stanie się prawdziwe."
+    }
+  },
+  "fighterCoaches": {
+    "intro": "Trenerzy, z którymi pracujesz w SimpleFit. Każdy widzi tylko to, co zgodziłeś się udostępnić.",
+    "views": "Relacje",
+    "tabs": {
+      "active": "Aktywne",
+      "ended": "Zakończone"
+    },
+    "loading": "Wczytywanie trenerów",
+    "more": "Pokaż więcej",
+    "loadingMore": "Wczytywanie…",
+    "fallbackName": "Twój trener",
+    "row": {
+      "since": "Od {date}",
+      "brandSince": "{brand} · od {date}",
+      "open": "Pokazuje, co widzi ten trener",
+      "ended": "Zakończona {date} · {by}",
+      "endedBy": {
+        "fighter": "przez Ciebie",
+        "coach": "przez trenera"
+      }
+    },
+    "endedNote": "Zakończonej relacji nie można wznowić. Trener, z którym pracowałeś, zachowuje tylko daty i Twoje imię z chwili zakończenia.",
+    "empty": {
+      "active": {
+        "title": "Nie masz jeszcze trenerów",
+        "body": "Trener pojawi się tutaj, gdy przyjmiesz jego zaproszenie. Do tego czasu nic nie jest nikomu udostępniane."
+      },
+      "ended": {
+        "title": "Brak zakończonych relacji",
+        "body": "Tutaj znajdziesz relacje zakończone przez Ciebie lub trenera – tylko z datami."
+      }
+    },
+    "unavailable": {
+      "title": "Trenerzy nie są dostępni",
+      "body": "Uzupełnij profil zawodnika, aby zobaczyć trenerów, z którymi pracujesz."
+    },
+    "failed": {
+      "title": "Nie udało się wczytać trenerów.",
+      "body": "Sprawdź połączenie i spróbuj ponownie.",
+      "retry": "Spróbuj ponownie"
+    },
+    "detail": {
+      "loading": "Wczytywanie trenera",
+      "active": "Aktywna · od {date}",
+      "sees": "Co widzi {name}",
+      "nothing": "Obecnie nic z Twojego profilu.",
+      "fields": {
+        "display_name": "Wyświetlana nazwa",
+        "username": "Nazwa użytkownika",
+        "country_code": "Kraj",
+        "city": "Miasto",
+        "experience_level": "Poziom doświadczenia",
+        "stance": "Pozycja",
+        "amateur_bout_count": "Walki amatorskie"
+      },
+      "never": {
+        "title": "Nigdy nie udostępniane trenerom",
+        "body": "Waga, wzrost, cele i najbliższa walka",
+        "account": "Nazwa konta, data urodzenia i e-mail",
+        "others": "Wszystko, co udostępniasz innym trenerom"
+      },
+      "unavailable": {
+        "title": "Ten trener jest niedostępny",
+        "body": "Relacja mogła się zakończyć – tutaj lub na innym urządzeniu.",
+        "back": "Wróć do trenerów"
+      }
+    },
+    "end": {
+      "action": "Zakończ relację",
+      "title": "Zakończyć relację z {name}?",
+      "body": "{name} od razu przestaje widzieć Twój profil. Aby znów współpracować, musi wysłać Ci nowe zaproszenie.",
+      "keep": "Zachowaj",
+      "confirm": "Zakończ relację",
+      "pending": "Kończenie…",
+      "failed": "Nie udało się zakończyć relacji. Nic się nie zmieniło. Spróbuj ponownie.",
+      "ended": "{name} nie widzi już Twojego profilu.",
+      "unavailable": "Ta relacja nie jest już dostępna. Twoja lista trenerów jest aktualna."
     }
   }
 }

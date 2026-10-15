@@ -428,7 +428,9 @@
       "mobile/training/share": "Share training",
       "mobile/trial": "Trial",
       "mobile/welcome/tour": "Fighter introduction",
-      "mobile/workspaces": "Workspaces"
+      "mobile/workspaces": "Workspaces",
+      "mobile/profile/coaches": "Coaches",
+      "mobile/profile/coaches/_relationship-id": "Coach"
     }
   },
   "shells": {
@@ -999,7 +1001,8 @@
   "accountMenu": {
     "profileNote": "Your profile arrives with its feature. Settings and sign-out work now.",
     "settingsLink": "Settings · account · privacy",
-    "settingsNote": "Account, privacy and notification settings arrive with their features. You can sign out of this device here."
+    "settingsNote": "Account, privacy and notification settings arrive with their features. You can sign out of this device here.",
+    "coachesLink": "Coaches"
   },
   "contextSwitcher": {
     "close": "Close",
@@ -1117,6 +1120,85 @@
     "note": {
       "title": "Coach tools arrive step by step.",
       "body": "Fighters, sessions and invitations appear here as soon as they are available. Nothing is shown before it is real."
+    }
+  },
+  "fighterCoaches": {
+    "intro": "Coaches you work with on SimpleFit. Each one sees only what you agreed to share.",
+    "views": "Relationships",
+    "tabs": {
+      "active": "Active",
+      "ended": "Ended"
+    },
+    "loading": "Loading your coaches",
+    "more": "Show more",
+    "loadingMore": "Loading more…",
+    "fallbackName": "Your coach",
+    "row": {
+      "since": "Since {date}",
+      "brandSince": "{brand} · since {date}",
+      "open": "Opens what this coach sees",
+      "ended": "Ended {date} · {by}",
+      "endedBy": {
+        "fighter": "by you",
+        "coach": "by the coach"
+      }
+    },
+    "endedNote": "An ended relationship can’t be restarted. A coach you worked with keeps only the dates and your name at the end.",
+    "empty": {
+      "active": {
+        "title": "No coaches yet",
+        "body": "A coach appears here once you accept their invitation. Nothing is shared with anyone until you do."
+      },
+      "ended": {
+        "title": "No ended relationships",
+        "body": "Relationships you or a coach end are listed here, with the dates only."
+      }
+    },
+    "unavailable": {
+      "title": "Coaches aren’t available",
+      "body": "Finish your fighter profile to see the coaches you work with."
+    },
+    "failed": {
+      "title": "We couldn’t load your coaches.",
+      "body": "Check your connection and try again.",
+      "retry": "Try again"
+    },
+    "detail": {
+      "loading": "Loading the coach",
+      "active": "Active · since {date}",
+      "sees": "What {name} sees",
+      "nothing": "Nothing from your profile right now.",
+      "fields": {
+        "display_name": "Display name",
+        "username": "Username",
+        "country_code": "Country",
+        "city": "City",
+        "experience_level": "Experience level",
+        "stance": "Stance",
+        "amateur_bout_count": "Amateur bouts"
+      },
+      "never": {
+        "title": "Never shared with coaches",
+        "body": "Weight, height, goals and next fight",
+        "account": "Account name, date of birth and email",
+        "others": "Anything you share with other coaches"
+      },
+      "unavailable": {
+        "title": "This coach isn’t available",
+        "body": "The relationship may have ended, here or on another device.",
+        "back": "Back to coaches"
+      }
+    },
+    "end": {
+      "action": "End relationship",
+      "title": "End your relationship with {name}?",
+      "body": "{name} stops seeing your profile at once. To work together again, they have to send you a new invitation.",
+      "keep": "Keep",
+      "confirm": "End relationship",
+      "pending": "Ending…",
+      "failed": "We couldn’t end the relationship. Nothing changed. Try again.",
+      "ended": "{name} no longer sees your profile.",
+      "unavailable": "This relationship is no longer available. Your coaches list is up to date."
     }
   }
 }

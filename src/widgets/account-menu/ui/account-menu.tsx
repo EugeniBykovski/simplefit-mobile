@@ -1,5 +1,5 @@
 import { useNavigation, useRouter } from "expo-router";
-import { Settings } from "lucide-react-native";
+import { Settings, UsersRound } from "lucide-react-native";
 import { useLayoutEffect } from "react";
 import { View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -17,9 +17,11 @@ import { Text } from "@/shared/ui/text";
  * (Settings hub), whose last action is Sign out. Neither screen's other
  * content exists yet (profile stats, the settings rows), so each says so
  * plainly and offers only what works: the way to Settings, and Sign out.
+ * SF-59 adds F18's Coaches row (Claude Design 1792069267-b198): the
+ * fighter's real coaching relationships (FC1).
  */
 
-/** F18's way into Settings, on the Profile tab (`mobile.profile`). */
+/** F18's ways into Coaches and Settings, on the Profile tab (`mobile.profile`). */
 export function ProfileScreen() {
   const t = useTranslations("accountMenu");
   const titles = useTranslations("routes.titles");
@@ -34,6 +36,12 @@ export function ProfileScreen() {
           {titles("mobile/profile")}
         </Text>
         <Text color="mutedForeground">{t("profileNote")}</Text>
+        <Button
+          label={t("coachesLink")}
+          variant="quiet"
+          icon={UsersRound}
+          onPress={() => router.push(routeHref("mobile.profile.coaches"))}
+        />
         <Button
           label={t("settingsLink")}
           variant="quiet"
