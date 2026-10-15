@@ -428,7 +428,9 @@
       "mobile/training/share": "Training teilen",
       "mobile/trial": "Testphase",
       "mobile/welcome/tour": "Einführung für Fighter",
-      "mobile/workspaces": "Arbeitsbereiche"
+      "mobile/workspaces": "Arbeitsbereiche",
+      "mobile/profile/coaches": "Coaches",
+      "mobile/profile/coaches/_relationship-id": "Coach"
     }
   },
   "shells": {
@@ -999,7 +1001,8 @@
   "accountMenu": {
     "profileNote": "Dein Profil kommt mit seiner Funktion. Einstellungen und Abmelden funktionieren schon.",
     "settingsLink": "Einstellungen · Konto · Privatsphäre",
-    "settingsNote": "Konto-, Privatsphäre- und Benachrichtigungseinstellungen kommen mit ihren Funktionen. Hier kannst du dich auf diesem Gerät abmelden."
+    "settingsNote": "Konto-, Privatsphäre- und Benachrichtigungseinstellungen kommen mit ihren Funktionen. Hier kannst du dich auf diesem Gerät abmelden.",
+    "coachesLink": "Coaches"
   },
   "contextSwitcher": {
     "close": "Schließen",
@@ -1117,6 +1120,85 @@
     "note": {
       "title": "Coach-Werkzeuge kommen Schritt für Schritt.",
       "body": "Fighter, Einheiten und Einladungen erscheinen hier, sobald sie verfügbar sind. Nichts wird gezeigt, bevor es echt ist."
+    }
+  },
+  "fighterCoaches": {
+    "intro": "Coaches, mit denen du auf SimpleFit arbeitest. Jeder sieht nur, was du zu teilen zugestimmt hast.",
+    "views": "Beziehungen",
+    "tabs": {
+      "active": "Aktiv",
+      "ended": "Beendet"
+    },
+    "loading": "Deine Coaches werden geladen",
+    "more": "Mehr anzeigen",
+    "loadingMore": "Wird geladen…",
+    "fallbackName": "Dein Coach",
+    "row": {
+      "since": "Seit {date}",
+      "brandSince": "{brand} · seit {date}",
+      "open": "Zeigt, was dieser Coach sieht",
+      "ended": "Beendet am {date} · {by}",
+      "endedBy": {
+        "fighter": "von dir",
+        "coach": "vom Coach"
+      }
+    },
+    "endedNote": "Eine beendete Beziehung kann nicht neu gestartet werden. Ein früherer Coach behält nur die Daten und deinen Namen zum Ende.",
+    "empty": {
+      "active": {
+        "title": "Noch keine Coaches",
+        "body": "Ein Coach erscheint hier, sobald du seine Einladung annimmst. Bis dahin wird mit niemandem etwas geteilt."
+      },
+      "ended": {
+        "title": "Keine beendeten Beziehungen",
+        "body": "Beziehungen, die du oder ein Coach beendet, stehen hier – nur mit den Daten."
+      }
+    },
+    "unavailable": {
+      "title": "Coaches sind nicht verfügbar",
+      "body": "Schließe dein Kämpferprofil ab, um die Coaches zu sehen, mit denen du arbeitest."
+    },
+    "failed": {
+      "title": "Wir konnten deine Coaches nicht laden.",
+      "body": "Prüfe deine Verbindung und versuche es erneut.",
+      "retry": "Erneut versuchen"
+    },
+    "detail": {
+      "loading": "Der Coach wird geladen",
+      "active": "Aktiv · seit {date}",
+      "sees": "Was {name} sieht",
+      "nothing": "Derzeit nichts aus deinem Profil.",
+      "fields": {
+        "display_name": "Anzeigename",
+        "username": "Benutzername",
+        "country_code": "Land",
+        "city": "Stadt",
+        "experience_level": "Erfahrung",
+        "stance": "Auslage",
+        "amateur_bout_count": "Amateurkämpfe"
+      },
+      "never": {
+        "title": "Nie mit Coaches geteilt",
+        "body": "Gewicht, Größe, Ziele und nächster Kampf",
+        "account": "Kontoname, Geburtsdatum und E-Mail",
+        "others": "Alles, was du mit anderen Coaches teilst"
+      },
+      "unavailable": {
+        "title": "Dieser Coach ist nicht verfügbar",
+        "body": "Die Beziehung wurde vielleicht beendet – hier oder auf einem anderen Gerät.",
+        "back": "Zurück zu den Coaches"
+      }
+    },
+    "end": {
+      "action": "Beziehung beenden",
+      "title": "Beziehung mit {name} beenden?",
+      "body": "{name} sieht dein Profil sofort nicht mehr. Um wieder zusammenzuarbeiten, braucht es eine neue Einladung des Coaches.",
+      "keep": "Behalten",
+      "confirm": "Beziehung beenden",
+      "pending": "Wird beendet…",
+      "failed": "Wir konnten die Beziehung nicht beenden. Es hat sich nichts geändert. Versuche es erneut.",
+      "ended": "{name} sieht dein Profil nicht mehr.",
+      "unavailable": "Diese Beziehung ist nicht mehr verfügbar. Deine Coach-Liste ist aktuell."
     }
   }
 }

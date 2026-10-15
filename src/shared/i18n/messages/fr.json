@@ -428,7 +428,9 @@
       "mobile/training/share": "Partager l’entraînement",
       "mobile/trial": "Essai",
       "mobile/welcome/tour": "Découverte boxeur",
-      "mobile/workspaces": "Espaces de travail"
+      "mobile/workspaces": "Espaces de travail",
+      "mobile/profile/coaches": "Coachs",
+      "mobile/profile/coaches/_relationship-id": "Coach"
     }
   },
   "shells": {
@@ -999,7 +1001,8 @@
   "accountMenu": {
     "profileNote": "Votre profil arrive avec sa fonctionnalité. Les réglages et la déconnexion fonctionnent déjà.",
     "settingsLink": "Réglages · compte · confidentialité",
-    "settingsNote": "Les réglages du compte, de la confidentialité et des notifications arrivent avec leurs fonctionnalités. Vous pouvez vous déconnecter de cet appareil ici."
+    "settingsNote": "Les réglages du compte, de la confidentialité et des notifications arrivent avec leurs fonctionnalités. Vous pouvez vous déconnecter de cet appareil ici.",
+    "coachesLink": "Coachs"
   },
   "contextSwitcher": {
     "close": "Fermer",
@@ -1117,6 +1120,85 @@
     "note": {
       "title": "Les outils de coach arrivent pas à pas.",
       "body": "Boxeurs, séances et invitations apparaîtront ici dès qu’ils seront disponibles. Rien n’est affiché avant d’être réel."
+    }
+  },
+  "fighterCoaches": {
+    "intro": "Les coachs avec qui tu travailles sur SimpleFit. Chacun ne voit que ce que tu as accepté de partager.",
+    "views": "Relations",
+    "tabs": {
+      "active": "Actives",
+      "ended": "Terminées"
+    },
+    "loading": "Chargement de tes coachs",
+    "more": "Afficher plus",
+    "loadingMore": "Chargement…",
+    "fallbackName": "Ton coach",
+    "row": {
+      "since": "Depuis le {date}",
+      "brandSince": "{brand} · depuis le {date}",
+      "open": "Montre ce que voit ce coach",
+      "ended": "Terminée le {date} · {by}",
+      "endedBy": {
+        "fighter": "par toi",
+        "coach": "par le coach"
+      }
+    },
+    "endedNote": "Une relation terminée ne peut pas reprendre. Un coach avec qui tu as travaillé ne garde que les dates et ton nom à la fin.",
+    "empty": {
+      "active": {
+        "title": "Aucun coach pour l’instant",
+        "body": "Un coach apparaît ici dès que tu acceptes son invitation. Rien n’est partagé avec personne avant cela."
+      },
+      "ended": {
+        "title": "Aucune relation terminée",
+        "body": "Les relations que toi ou un coach terminez apparaissent ici, avec les dates uniquement."
+      }
+    },
+    "unavailable": {
+      "title": "Les coachs ne sont pas disponibles",
+      "body": "Termine ton profil de boxeur pour voir les coachs avec qui tu travailles."
+    },
+    "failed": {
+      "title": "Impossible de charger tes coachs.",
+      "body": "Vérifie ta connexion et réessaie.",
+      "retry": "Réessayer"
+    },
+    "detail": {
+      "loading": "Chargement du coach",
+      "active": "Active · depuis le {date}",
+      "sees": "Ce que voit {name}",
+      "nothing": "Rien de ton profil pour le moment.",
+      "fields": {
+        "display_name": "Nom affiché",
+        "username": "Nom d’utilisateur",
+        "country_code": "Pays",
+        "city": "Ville",
+        "experience_level": "Niveau d’expérience",
+        "stance": "Garde",
+        "amateur_bout_count": "Combats amateurs"
+      },
+      "never": {
+        "title": "Jamais partagé avec les coachs",
+        "body": "Poids, taille, objectifs et prochain combat",
+        "account": "Nom du compte, date de naissance et e-mail",
+        "others": "Tout ce que tu partages avec d’autres coachs"
+      },
+      "unavailable": {
+        "title": "Ce coach n’est pas disponible",
+        "body": "La relation est peut-être terminée, ici ou sur un autre appareil.",
+        "back": "Retour aux coachs"
+      }
+    },
+    "end": {
+      "action": "Mettre fin à la relation",
+      "title": "Mettre fin à ta relation avec {name} ?",
+      "body": "{name} ne voit plus ton profil immédiatement. Pour travailler à nouveau ensemble, il faudra qu’on t’envoie une nouvelle invitation.",
+      "keep": "Garder",
+      "confirm": "Mettre fin à la relation",
+      "pending": "Fin en cours…",
+      "failed": "Impossible de mettre fin à la relation. Rien n’a changé. Réessaie.",
+      "ended": "{name} ne voit plus ton profil.",
+      "unavailable": "Cette relation n’est plus disponible. Ta liste de coachs est à jour."
     }
   }
 }
