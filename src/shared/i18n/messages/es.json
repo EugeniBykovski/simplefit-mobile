@@ -1093,7 +1093,9 @@
       "invitations": {
         "label": "Invitaciones",
         "when": "cuando puedas invitar a boxeadores"
-      }
+      },
+      "open": "Abrir",
+      "note": "Los boxeadores y las invitaciones están en Boxeadores. Las sesiones llegarán más adelante."
     },
     "setup": {
       "eyebrow": "Registro de entrenador",
@@ -1106,15 +1108,11 @@
       },
       "invite": {
         "title": "Invita a tu primer boxeador",
-        "line": "Los boxeadores se unen por invitación"
+        "line": "En Boxeadores · tras las reglas de datos"
       },
       "session": {
         "title": "Planifica tu primera sesión",
         "line": "Sesiones que diriges con tus boxeadores"
-      },
-      "dataRules": {
-        "title": "Acepta las reglas de datos del entrenador",
-        "line": "Lo que puedes ver con el consentimiento del boxeador"
       }
     },
     "note": {
@@ -1199,6 +1197,167 @@
       "failed": "No pudimos finalizar la relación. No cambió nada. Inténtalo de nuevo.",
       "ended": "{name} ya no ve tu perfil.",
       "unavailable": "Esta relación ya no está disponible. Tu lista de entrenadores está actualizada."
+    }
+  },
+  "coachFighters": {
+    "title": "Boxeadores",
+    "views": "Relaciones",
+    "tabs": {
+      "active": "Activos",
+      "ended": "Finalizadas",
+      "invitations": "Invitaciones"
+    },
+    "loading": "Cargando tus boxeadores",
+    "more": "Mostrar más",
+    "loadingMore": "Cargando más…",
+    "fallbackName": "Este boxeador",
+    "notShared": "No compartido",
+    "privacy": "Solo ves lo que cada boxeador aceptó compartir: nombre, usuario, lugar, nivel, guardia y combates. Nunca su peso, objetivos ni datos de la cuenta.",
+    "endedNote": "Una relación finalizada no se puede reanudar. Solo conservas las fechas y el nombre del boxeador al finalizar.",
+    "row": {
+      "open": "Muestra lo que comparte este boxeador",
+      "ended": "Finalizada el {date} · {by}",
+      "endedBy": {
+        "coach": "por ti",
+        "fighter": "por el boxeador"
+      }
+    },
+    "empty": {
+      "active": {
+        "title": "Aún no tienes boxeadores",
+        "body": "Los boxeadores aparecen aquí cuando aceptan tu invitación. Invita a un boxeador por correo para empezar."
+      },
+      "ended": {
+        "title": "No hay relaciones finalizadas",
+        "body": "Aquí aparecen las relaciones que finalicen tú o un boxeador, solo con las fechas."
+      },
+      "invitations": {
+        "title": "Aún no hay invitaciones",
+        "body": "Invita a un boxeador por correo con el botón +."
+      }
+    },
+    "unavailable": {
+      "title": "Los boxeadores aún no están disponibles",
+      "body": "Entrenar boxeadores en SimpleFit se abrirá cuando se publiquen las reglas de datos para entrenadores y lo que los boxeadores aceptan compartir. No se te oculta nada: simplemente aún no hay nada que mostrar."
+    },
+    "failed": {
+      "title": "No pudimos cargar tus boxeadores.",
+      "body": "Revisa tu conexión e inténtalo de nuevo.",
+      "retry": "Reintentar",
+      "more": "No pudimos cargar más. Inténtalo de nuevo."
+    },
+    "invitations": {
+      "note": "Las invitaciones no son boxeadores: un boxeador aparece en Activos solo después de aceptar.",
+      "status": {
+        "pending": "Pendiente",
+        "accepted": "Aceptada",
+        "declined": "Rechazada",
+        "cancelled": "Cancelada",
+        "expired": "Caducada"
+      },
+      "line": {
+        "pending": "Enviada {sent} · caduca {expires}",
+        "accepted": "Aceptada {date}",
+        "declined": "Rechazada {date}",
+        "cancelled": "Cancelada {date}",
+        "expired": "Caducó {date} · puedes invitar de nuevo cuando quieras"
+      },
+      "resend": "Reenviar · quedan {count}",
+      "resending": "Reenviando…",
+      "cancel": "Cancelar"
+    },
+    "cancelInvitation": {
+      "title": "¿Cancelar esta invitación?",
+      "body": "El enlace del correo enviado a {email} dejará de funcionar. Puedes volver a invitar más adelante.",
+      "keep": "Mantener invitación",
+      "confirm": "Cancelar invitación",
+      "pending": "Cancelando…",
+      "failed": "No pudimos cancelar la invitación. Inténtalo de nuevo."
+    },
+    "results": {
+      "resent": "Invitación reenviada a {email}.",
+      "cancelled": "Invitación a {email} cancelada.",
+      "cooldown": "Podrás reenviar en {seconds, plural, one {# segundo} other {# segundos}}.",
+      "noResends": "No quedan reenvíos para esta invitación.",
+      "notPending": "Esta invitación ya fue respondida o caducó.",
+      "failed": "No funcionó. Inténtalo de nuevo."
+    },
+    "invite": {
+      "open": "Invitar boxeador",
+      "title": "Invitar a un boxeador",
+      "close": "Cerrar",
+      "checking": "Comprobando las reglas de datos para entrenadores",
+      "lead": "Recibirá un correo con un enlace. Solo quien inicie sesión con este correo puede aceptar, y no se comparte nada hasta entonces.",
+      "email": {
+        "label": "Correo electrónico",
+        "invalid": "Introduce un correo electrónico válido.",
+        "own": "No puedes invitar tu propia dirección."
+      },
+      "note": {
+        "label": "Nota · opcional",
+        "invalid": "La nota debe ser un solo párrafo de hasta 500 caracteres."
+      },
+      "cancel": "Cancelar",
+      "submit": "Enviar invitación",
+      "sending": "Enviando…",
+      "limited": "Has enviado muchas invitaciones. Inténtalo de nuevo en {minutes, plural, one {# minuto} other {# minutos}}.",
+      "pendingLimit": "Tienes 50 invitaciones pendientes. Cancela algunas antes de invitar a más.",
+      "failed": "No pudimos enviar la invitación. No se creó nada. Inténtalo de nuevo.",
+      "blocked": {
+        "title": "Invitar aún no está disponible",
+        "body": "Para invitar boxeadores se necesitan las reglas de datos para entrenadores, que aún no se han publicado. Podrás invitar en cuanto lo estén."
+      },
+      "pending": {
+        "title": "Invitación pendiente",
+        "body": "Hay una invitación a {email} pendiente hasta el {expires}. No se comparte nada hasta que la acepte. Puedes reenviarla o cancelarla desde Invitaciones.",
+        "done": "Listo"
+      }
+    },
+    "rules": {
+      "body": "Antes de invitar, acepta las reglas de datos vigentes para entrenadores: solo ves lo que cada boxeador acepta compartir y lo usas solo para entrenar.",
+      "agree": "Acepto las reglas de datos para entrenadores (versión {version}).",
+      "acknowledge": "Aceptar",
+      "pending": "Guardando…",
+      "later": "Ahora no",
+      "stale": "Las reglas de datos para entrenadores cambiaron. Revisa la versión vigente y vuelve a aceptarla.",
+      "failed": "No pudimos guardarlo. No cambió nada. Inténtalo de nuevo."
+    },
+    "detail": {
+      "loading": "Cargando el boxeador",
+      "active": "Activa · desde {date}",
+      "shares": "Lo que {name} comparte contigo",
+      "fields": {
+        "display_name": "Nombre visible",
+        "username": "Usuario",
+        "country_code": "País",
+        "city": "Ciudad",
+        "experience_level": "Nivel de experiencia",
+        "stance": "Guardia",
+        "amateur_bout_count": "Combates amateur"
+      },
+      "never": {
+        "title": "Nunca se comparte con entrenadores",
+        "body": "Peso, altura, objetivos y próximo combate",
+        "account": "Nombre de la cuenta, fecha de nacimiento y correo",
+        "others": "Todo lo que se comparte con otros entrenadores"
+      },
+      "later": "Las sesiones y notas llegarán más adelante.",
+      "unavailable": {
+        "title": "Este boxeador no está disponible",
+        "body": "Puede que la relación haya finalizado o que el enlace no sea tuyo.",
+        "back": "Volver a boxeadores"
+      }
+    },
+    "end": {
+      "action": "Finalizar relación",
+      "title": "¿Finalizar tu relación con {name}?",
+      "body": "Pierdes el acceso al perfil de {name} de inmediato. Para volver a trabajar juntos, {name} tendrá que aceptar una nueva invitación.",
+      "keep": "Mantener",
+      "confirm": "Finalizar relación",
+      "pending": "Finalizando…",
+      "failed": "No pudimos finalizar la relación. No cambió nada. Inténtalo de nuevo.",
+      "ended": "Tu relación con {name} ha finalizado.",
+      "unavailable": "Esta relación ya no está disponible. Tu lista de boxeadores está actualizada."
     }
   }
 }

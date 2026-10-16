@@ -267,14 +267,29 @@ async function signIn(
                 ? jsonResponse({ coach_profile: coach })
                 : url.includes("/api/v1/me/first-run")
                   ? jsonResponse(firstRun(mobileFirstRun))
-                  : url.includes("/api/v1/me/coaches")
-                    ? jsonResponse({ relationships: [], next_cursor: null })
-                    : jsonResponse({
-                        user: {
-                          id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                          created_at: "2026-10-01T10:00:00Z",
+                  : /\/api\/v1\/me\/coach\/fighters\/[^?]/.test(url)
+                    ? jsonResponse(
+                        {
+                          error: {
+                            code: "not_found",
+                            message: "Not found",
+                            details: {},
+                            request_id: "r",
+                          },
                         },
-                      }),
+                        { status: 404 },
+                      )
+                    : url.includes("/api/v1/me/coaches") ||
+                        url.includes("/api/v1/me/coach/fighters")
+                      ? jsonResponse({ relationships: [], next_cursor: null })
+                      : url.includes("/api/v1/me/coach/invitations")
+                        ? jsonResponse({ invitations: [], next_cursor: null })
+                        : jsonResponse({
+                            user: {
+                              id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                              created_at: "2026-10-01T10:00:00Z",
+                            },
+                          }),
       ),
     ),
   );
@@ -552,16 +567,21 @@ describe("tab navigation", () => {
     expect(await screen.findByRole("tab", { name: "Training", selected: true })).toBeOnTheScreen();
   });
 
-  it("shows the Coach MVP tabs: Today, Fighters and Sessions as Soon, Settings above the tabs", async () => {
+  it("shows the Coach MVP tabs: Today, Fighters (SF-61), Sessions as Soon, Settings above the tabs", async () => {
     await signIn(BOTH, FIGHTER_COMPLETED, "completed", COACH_COMPLETED);
     const result = await renderApp("/coach/today");
     expect(await screen.findByRole("tab", { name: "Today", selected: true })).toBeOnTheScreen();
-    for (const soon of ["Fighters", "Sessions"]) {
-      const tab = screen.getByRole("tab", { name: `${soon}, not available yet` });
-      expect(tab).toBeDisabled();
-      await fireEvent.press(tab);
-      expect(result.getPathname()).toBe("/coach/today");
-    }
+    const sessions = screen.getByRole("tab", { name: "Sessions, not available yet" });
+    expect(sessions).toBeDisabled();
+    await fireEvent.press(sessions);
+    expect(result.getPathname()).toBe("/coach/today");
+    // SF-61: Fighters is the real roster.
+    await fireEvent.press(screen.getByRole("tab", { name: "Fighters" }));
+    await waitFor(() => expect(result.getPathname()).toBe("/coach/fighters"));
+    expect(await screen.findByRole("tab", { name: "Fighters", selected: true })).toBeOnTheScreen();
+    expect(await screen.findByText("No fighters yet")).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole("tab", { name: "Today" }));
+    await waitFor(() => expect(result.getPathname()).toBe("/coach/today"));
     for (const gone of ["Board", "Requests", "Inbox"])
       expect(screen.queryByRole("tab", { name: gone })).toBeNull();
     // The shared ST1 (SF-28), pushed above the tabs.
@@ -1050,6 +1070,8 @@ describe("Coach shell and context switching (SF-55)", () => {
           return Promise.resolve(jsonResponse({ coach_profile: COACH_COMPLETED }));
         if (pathname === "/api/v1/me/first-run")
           return Promise.resolve(jsonResponse(firstRun("completed")));
+        if (pathname === "/api/v1/me/coach/fighters")
+          return Promise.resolve(jsonResponse({ relationships: [], next_cursor: null }));
         return Promise.resolve(
           jsonResponse({
             user: {
@@ -1078,7 +1100,7 @@ describe("Coach shell and context switching (SF-55)", () => {
     capabilities: [],
   };
 
-  it("Coach today shows only the real CoachProfile and dashes for domains that do not exist", async () => {
+  it("Coach today shows only the real CoachProfile, opens Fighters, and a dash for sessions", async () => {
     await contexts(BOTH);
     await renderApp("/coach/today");
     expect(await screen.findByRole("header", { name: "Welcome, Coach Sam" })).toBeOnTheScreen();
@@ -1086,8 +1108,14 @@ describe("Coach shell and context switching (SF-55)", () => {
     expect(
       screen.getByLabelText("Coaching formats: Personal Training · Fight Camps"),
     ).toBeOnTheScreen();
-    for (const fill of ["Fighters", "Sessions", "Invitations"])
-      expect(screen.getByLabelText(`${fill}: Not available yet`)).toBeOnTheScreen();
+    expect(screen.getByLabelText("Sessions: Not available yet")).toBeOnTheScreen();
+    for (const fill of ["Fighters", "Invitations"])
+      expect(screen.getByRole("link", { name: `${fill}: Open` })).toBeOnTheScreen();
+    expect(
+      screen.getByRole("link", {
+        name: "Invite your first fighter, In Fighters · after the coach data rules",
+      }),
+    ).toBeOnTheScreen();
     expect(screen.queryByText("0")).toBeNull();
     expect(screen.getByLabelText("Coach profile, Done")).toBeOnTheScreen();
   });

@@ -1093,7 +1093,9 @@
       "invitations": {
         "label": "Zaproszenia",
         "when": "gdy będziesz mógł zapraszać zawodników"
-      }
+      },
+      "open": "Otwórz",
+      "note": "Zawodnicy i zaproszenia są w sekcji Zawodnicy. Sesje pojawią się później."
     },
     "setup": {
       "eyebrow": "Konfiguracja trenera",
@@ -1106,15 +1108,11 @@
       },
       "invite": {
         "title": "Zaproś pierwszego zawodnika",
-        "line": "Zawodnicy dołączają na zaproszenie"
+        "line": "W sekcji Zawodnicy · po zasadach danych"
       },
       "session": {
         "title": "Zaplanuj pierwszy trening",
         "line": "Treningi, które prowadzisz z zawodnikami"
-      },
-      "dataRules": {
-        "title": "Zaakceptuj zasady danych trenera",
-        "line": "Co możesz zobaczyć za zgodą zawodnika"
       }
     },
     "note": {
@@ -1199,6 +1197,167 @@
       "failed": "Nie udało się zakończyć relacji. Nic się nie zmieniło. Spróbuj ponownie.",
       "ended": "{name} nie widzi już Twojego profilu.",
       "unavailable": "Ta relacja nie jest już dostępna. Twoja lista trenerów jest aktualna."
+    }
+  },
+  "coachFighters": {
+    "title": "Zawodnicy",
+    "views": "Relacje",
+    "tabs": {
+      "active": "Aktywne",
+      "ended": "Zakończone",
+      "invitations": "Zaproszenia"
+    },
+    "loading": "Wczytywanie zawodników",
+    "more": "Pokaż więcej",
+    "loadingMore": "Wczytywanie…",
+    "fallbackName": "Ten zawodnik",
+    "notShared": "Nieudostępnione",
+    "privacy": "Widzisz tylko to, co każdy zawodnik zgodził się udostępnić: imię, nazwę użytkownika, miejsce, poziom, pozycję i walki. Nigdy wagi, celów ani danych konta.",
+    "endedNote": "Zakończonej relacji nie można wznowić. Zachowujesz tylko daty i imię zawodnika z chwili zakończenia.",
+    "row": {
+      "open": "Pokazuje, co udostępnia ten zawodnik",
+      "ended": "Zakończona {date} · {by}",
+      "endedBy": {
+        "coach": "przez Ciebie",
+        "fighter": "przez zawodnika"
+      }
+    },
+    "empty": {
+      "active": {
+        "title": "Nie masz jeszcze zawodników",
+        "body": "Zawodnicy pojawią się tutaj, gdy przyjmą Twoje zaproszenie. Zaproś zawodnika e-mailem, aby zacząć."
+      },
+      "ended": {
+        "title": "Brak zakończonych relacji",
+        "body": "Tutaj znajdziesz relacje zakończone przez Ciebie lub zawodnika – tylko z datami."
+      },
+      "invitations": {
+        "title": "Brak zaproszeń",
+        "body": "Zaproś zawodnika e-mailem przyciskiem +."
+      }
+    },
+    "unavailable": {
+      "title": "Zawodnicy nie są jeszcze dostępni",
+      "body": "Trenowanie zawodników w SimpleFit ruszy, gdy zostaną opublikowane zasady danych dla trenerów i to, co zawodnicy zgadzają się udostępniać. Nic nie jest przed Tobą ukryte – po prostu nie ma jeszcze czego pokazać."
+    },
+    "failed": {
+      "title": "Nie udało się wczytać zawodników.",
+      "body": "Sprawdź połączenie i spróbuj ponownie.",
+      "retry": "Spróbuj ponownie",
+      "more": "Nie udało się wczytać więcej. Spróbuj ponownie."
+    },
+    "invitations": {
+      "note": "Zaproszenia to nie zawodnicy: zawodnik pojawia się w Aktywnych dopiero po przyjęciu.",
+      "status": {
+        "pending": "Oczekuje",
+        "accepted": "Przyjęte",
+        "declined": "Odrzucone",
+        "cancelled": "Anulowane",
+        "expired": "Wygasło"
+      },
+      "line": {
+        "pending": "Wysłane {sent} · wygasa {expires}",
+        "accepted": "Przyjęte {date}",
+        "declined": "Odrzucone {date}",
+        "cancelled": "Anulowane {date}",
+        "expired": "Wygasło {date} · możesz zaprosić ponownie w każdej chwili"
+      },
+      "resend": "Wyślij ponownie · zostało {count}",
+      "resending": "Wysyłanie…",
+      "cancel": "Anuluj"
+    },
+    "cancelInvitation": {
+      "title": "Anulować to zaproszenie?",
+      "body": "Link w e-mailu do {email} przestanie działać. Możesz zaprosić ponownie później.",
+      "keep": "Zachowaj zaproszenie",
+      "confirm": "Anuluj zaproszenie",
+      "pending": "Anulowanie…",
+      "failed": "Nie udało się anulować zaproszenia. Spróbuj ponownie."
+    },
+    "results": {
+      "resent": "Zaproszenie wysłane ponownie do {email}.",
+      "cancelled": "Zaproszenie do {email} anulowane.",
+      "cooldown": "Możesz wysłać ponownie za {seconds, plural, one {# sekundę} few {# sekundy} many {# sekund} other {# sekundy}}.",
+      "noResends": "Dla tego zaproszenia nie zostały już ponowne wysyłki.",
+      "notPending": "To zaproszenie zostało już rozpatrzone lub wygasło.",
+      "failed": "Nie udało się. Spróbuj ponownie."
+    },
+    "invite": {
+      "open": "Zaproś zawodnika",
+      "title": "Zaproś zawodnika",
+      "close": "Zamknij",
+      "checking": "Sprawdzanie zasad danych dla trenerów",
+      "lead": "Otrzyma e-mail z linkiem. Przyjąć może tylko osoba zalogowana tym adresem e-mail i do tego czasu nic nie jest udostępniane.",
+      "email": {
+        "label": "E-mail",
+        "invalid": "Wpisz poprawny adres e-mail.",
+        "own": "Nie możesz zaprosić własnego adresu."
+      },
+      "note": {
+        "label": "Wiadomość · opcjonalnie",
+        "invalid": "Wiadomość może mieć jeden akapit, maksymalnie 500 znaków."
+      },
+      "cancel": "Anuluj",
+      "submit": "Wyślij zaproszenie",
+      "sending": "Wysyłanie…",
+      "limited": "Wysłano dużo zaproszeń. Spróbuj ponownie za {minutes, plural, one {# minutę} few {# minuty} many {# minut} other {# minuty}}.",
+      "pendingLimit": "Masz 50 oczekujących zaproszeń. Anuluj część z nich, zanim zaprosisz kolejne osoby.",
+      "failed": "Nie udało się wysłać zaproszenia. Nic nie zostało utworzone. Spróbuj ponownie.",
+      "blocked": {
+        "title": "Zapraszanie nie jest jeszcze dostępne",
+        "body": "Zapraszanie zawodników wymaga zasad danych dla trenerów, które nie zostały jeszcze opublikowane. Będziesz mógł zapraszać, gdy tylko się pojawią."
+      },
+      "pending": {
+        "title": "Zaproszenie oczekuje",
+        "body": "Zaproszenie do {email} oczekuje do {expires}. Nic nie jest udostępniane, dopóki nie zostanie przyjęte. Możesz je wysłać ponownie lub anulować w sekcji Zaproszenia.",
+        "done": "Gotowe"
+      }
+    },
+    "rules": {
+      "body": "Zanim zaprosisz, potwierdź aktualne zasady danych dla trenerów: widzisz tylko to, co każdy zawodnik zgodzi się udostępnić, i używasz tego wyłącznie do treningu.",
+      "agree": "Potwierdzam zasady danych dla trenerów (wersja {version}).",
+      "acknowledge": "Potwierdź",
+      "pending": "Zapisywanie…",
+      "later": "Nie teraz",
+      "stale": "Zasady danych dla trenerów się zmieniły. Sprawdź aktualną wersję i potwierdź ponownie.",
+      "failed": "Nie udało się zapisać. Nic się nie zmieniło. Spróbuj ponownie."
+    },
+    "detail": {
+      "loading": "Wczytywanie zawodnika",
+      "active": "Aktywna relacja · od {date}",
+      "shares": "Co {name} Ci udostępnia",
+      "fields": {
+        "display_name": "Wyświetlana nazwa",
+        "username": "Nazwa użytkownika",
+        "country_code": "Kraj",
+        "city": "Miasto",
+        "experience_level": "Poziom doświadczenia",
+        "stance": "Pozycja",
+        "amateur_bout_count": "Walki amatorskie"
+      },
+      "never": {
+        "title": "Nigdy nie udostępniane trenerom",
+        "body": "Waga, wzrost, cele i najbliższa walka",
+        "account": "Nazwa konta, data urodzenia i e-mail",
+        "others": "Wszystko, co jest udostępniane innym trenerom"
+      },
+      "later": "Sesje i notatki pojawią się później.",
+      "unavailable": {
+        "title": "Ten zawodnik jest niedostępny",
+        "body": "Relacja mogła się zakończyć albo link nie należy do Ciebie.",
+        "back": "Wróć do zawodników"
+      }
+    },
+    "end": {
+      "action": "Zakończ relację",
+      "title": "Zakończyć relację z {name}?",
+      "body": "Od razu tracisz dostęp do profilu {name}. Aby znów współpracować, {name} musi przyjąć nowe zaproszenie.",
+      "keep": "Zachowaj",
+      "confirm": "Zakończ relację",
+      "pending": "Kończenie…",
+      "failed": "Nie udało się zakończyć relacji. Nic się nie zmieniło. Spróbuj ponownie.",
+      "ended": "Twoja relacja z {name} została zakończona.",
+      "unavailable": "Ta relacja nie jest już dostępna. Twoja lista zawodników jest aktualna."
     }
   }
 }

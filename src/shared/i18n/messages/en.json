@@ -1093,7 +1093,9 @@
       "invitations": {
         "label": "Invitations",
         "when": "when you can invite fighters"
-      }
+      },
+      "open": "Open",
+      "note": "Fighters and invitations live in Fighters. Sessions arrive later."
     },
     "setup": {
       "eyebrow": "Coach setup",
@@ -1106,15 +1108,11 @@
       },
       "invite": {
         "title": "Invite your first fighter",
-        "line": "Fighters join you by invitation"
+        "line": "In Fighters · after the coach data rules"
       },
       "session": {
         "title": "Plan your first session",
         "line": "Sessions you run with your fighters"
-      },
-      "dataRules": {
-        "title": "Agree to the coach data rules",
-        "line": "What you may see with a fighter’s consent"
       }
     },
     "note": {
@@ -1199,6 +1197,167 @@
       "failed": "We couldn’t end the relationship. Nothing changed. Try again.",
       "ended": "{name} no longer sees your profile.",
       "unavailable": "This relationship is no longer available. Your coaches list is up to date."
+    }
+  },
+  "coachFighters": {
+    "title": "Fighters",
+    "views": "Relationships",
+    "tabs": {
+      "active": "Active",
+      "ended": "Ended",
+      "invitations": "Invitations"
+    },
+    "loading": "Loading your fighters",
+    "more": "Show more",
+    "loadingMore": "Loading more…",
+    "fallbackName": "This fighter",
+    "notShared": "Not shared",
+    "privacy": "You see only what each fighter agreed to share: name, username, place, level, stance and bouts. Never their weight, goals or account details.",
+    "endedNote": "An ended relationship can’t be restarted. You keep only the dates and the fighter’s name at the end.",
+    "row": {
+      "open": "Opens what this fighter shares",
+      "ended": "Ended {date} · {by}",
+      "endedBy": {
+        "coach": "by you",
+        "fighter": "by the fighter"
+      }
+    },
+    "empty": {
+      "active": {
+        "title": "No fighters yet",
+        "body": "Fighters appear here after they accept your invitation. Invite a fighter by email to start."
+      },
+      "ended": {
+        "title": "No ended relationships",
+        "body": "Relationships you or a fighter end are listed here, with the dates only."
+      },
+      "invitations": {
+        "title": "No invitations yet",
+        "body": "Invite a fighter by email with the + button."
+      }
+    },
+    "unavailable": {
+      "title": "Fighters aren’t available yet",
+      "body": "Coaching fighters on SimpleFit opens once the coach data rules and what fighters agree to share are published. Nothing is hidden from you: there is simply nothing to show yet."
+    },
+    "failed": {
+      "title": "We couldn’t load your fighters.",
+      "body": "Check your connection and try again.",
+      "retry": "Try again",
+      "more": "We couldn’t load more. Try again."
+    },
+    "invitations": {
+      "note": "Invitations are not fighters: a fighter appears under Active only after accepting.",
+      "status": {
+        "pending": "Pending",
+        "accepted": "Accepted",
+        "declined": "Declined",
+        "cancelled": "Cancelled",
+        "expired": "Expired"
+      },
+      "line": {
+        "pending": "Sent {sent} · expires {expires}",
+        "accepted": "Accepted {date}",
+        "declined": "Declined {date}",
+        "cancelled": "Cancelled {date}",
+        "expired": "Expired {date} · invite again any time"
+      },
+      "resend": "Resend · {count} left",
+      "resending": "Resending…",
+      "cancel": "Cancel"
+    },
+    "cancelInvitation": {
+      "title": "Cancel this invitation?",
+      "body": "The link in the email to {email} stops working. You can invite them again later.",
+      "keep": "Keep invitation",
+      "confirm": "Cancel invitation",
+      "pending": "Cancelling…",
+      "failed": "We couldn’t cancel the invitation. Try again."
+    },
+    "results": {
+      "resent": "Invitation sent again to {email}.",
+      "cancelled": "Invitation to {email} cancelled.",
+      "cooldown": "You can resend in {seconds, plural, one {# second} other {# seconds}}.",
+      "noResends": "No resends left for this invitation.",
+      "notPending": "This invitation was already answered or has expired.",
+      "failed": "That didn’t work. Try again."
+    },
+    "invite": {
+      "open": "Invite fighter",
+      "title": "Invite a fighter",
+      "close": "Close",
+      "checking": "Checking the coach data rules",
+      "lead": "They get an email with a link. Only someone signed in with this email can accept, and nothing is shared until they do.",
+      "email": {
+        "label": "Email",
+        "invalid": "Enter a valid email address.",
+        "own": "You can’t invite your own address."
+      },
+      "note": {
+        "label": "Note · optional",
+        "invalid": "Keep the note to one paragraph of up to 500 characters."
+      },
+      "cancel": "Cancel",
+      "submit": "Send invitation",
+      "sending": "Sending…",
+      "limited": "You’ve sent a lot of invitations. Try again in {minutes, plural, one {# minute} other {# minutes}}.",
+      "pendingLimit": "You have 50 pending invitations. Cancel some before inviting more.",
+      "failed": "We couldn’t send the invitation. Nothing was created. Try again.",
+      "blocked": {
+        "title": "Inviting isn’t available yet",
+        "body": "Inviting fighters needs the coach data rules, which aren’t published yet. You’ll be able to invite as soon as they are."
+      },
+      "pending": {
+        "title": "Invitation pending",
+        "body": "An invitation to {email} is pending until {expires}. Nothing is shared until they accept. You can resend or cancel it from Invitations.",
+        "done": "Done"
+      }
+    },
+    "rules": {
+      "body": "Before inviting, acknowledge the current coach data rules: you see only what each fighter agrees to share, and use it only for coaching.",
+      "agree": "I acknowledge the coach data rules (version {version}).",
+      "acknowledge": "Acknowledge",
+      "pending": "Saving…",
+      "later": "Not now",
+      "stale": "The coach data rules changed. Review the current version and acknowledge again.",
+      "failed": "We couldn’t save that. Nothing changed. Try again."
+    },
+    "detail": {
+      "loading": "Loading the fighter",
+      "active": "Active · since {date}",
+      "shares": "What {name} shares with you",
+      "fields": {
+        "display_name": "Display name",
+        "username": "Username",
+        "country_code": "Country",
+        "city": "City",
+        "experience_level": "Experience level",
+        "stance": "Stance",
+        "amateur_bout_count": "Amateur bouts"
+      },
+      "never": {
+        "title": "Never shared with coaches",
+        "body": "Weight, height, goals and next fight",
+        "account": "Account name, date of birth and email",
+        "others": "Anything shared with other coaches"
+      },
+      "later": "Sessions and notes arrive later.",
+      "unavailable": {
+        "title": "This fighter isn’t available",
+        "body": "The relationship may have ended, or the link is not one of yours.",
+        "back": "Back to fighters"
+      }
+    },
+    "end": {
+      "action": "End relationship",
+      "title": "End your relationship with {name}?",
+      "body": "You lose access to {name}’s profile at once. To work together again, {name} has to accept a new invitation.",
+      "keep": "Keep",
+      "confirm": "End relationship",
+      "pending": "Ending…",
+      "failed": "We couldn’t end the relationship. Nothing changed. Try again.",
+      "ended": "Your relationship with {name} has ended.",
+      "unavailable": "This relationship is no longer available. Your fighters list is up to date."
     }
   }
 }

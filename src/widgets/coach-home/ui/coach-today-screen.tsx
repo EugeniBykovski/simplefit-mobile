@@ -1,4 +1,5 @@
-import { Check, ChevronDown, CircleAlert, Info } from "lucide-react-native";
+import { Check, ChevronDown, ChevronRight, CircleAlert, Info } from "lucide-react-native";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,6 +8,7 @@ import { useLocale, useTranslations } from "use-intl";
 import { useCoachProfile, type CoachProfile } from "@/entities/coach-profile";
 import { ContextSwitcherSheet } from "@/features/session-gate";
 import { countryName } from "@/shared/lib/countries";
+import { routeHref } from "@/shared/routes/routes";
 import { Avatar, initialsOf } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import { Icon } from "@/shared/ui/icon";
@@ -18,15 +20,16 @@ import { Text } from "@/shared/ui/text";
  * C01 Coach today (`mobile.coach.today`, SF-55; Claude Design CoachToday,
  * version 1791994719-673f, 390 pt), the first screen of the Coach app.
  *
- * - Only real data: the CoachProfile (SF-50). Fighters, sessions and
- *   invitations have no domain yet: a dash, never a zero, and the setup
- *   steps that need them say they are not available yet (as the web WC1).
+ * - Only real data: the CoachProfile (SF-50). Fighters and invitations
+ *   open the Fighters tab (SF-61, Claude Design 1792155768-3179) without
+ *   counts; sessions have no domain yet: a dash, never a zero.
  * - The identity pill opens A04, "One account, every role" (the context
  *   switcher sheet). Behind the Coach CapabilityGate (COACH from the entry).
  */
 
-const FILLS = ["fighters", "sessions", "invitations"] as const;
-const LATER_STEPS = ["invite", "session", "dataRules"] as const;
+/** What fills this screen: Fighters and Invitations open the Fighters tab (SF-61); sessions do not exist yet. */
+const OPEN_FILLS = { fighters: {}, invitations: { view: "invitations" } } as const;
+const LATER_STEPS = ["session"] as const;
 
 export function CoachTodayScreen() {
   const t = useTranslations("coachHome");
@@ -54,6 +57,7 @@ export function CoachTodayScreen() {
 
 function TodayView({ profile }: { profile: CoachProfile }) {
   const t = useTranslations("coachHome");
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [switching, setSwitching] = useState(false);
   const name = profile.display_name ?? "";
@@ -107,30 +111,55 @@ function TodayView({ profile }: { profile: CoachProfile }) {
             {t("fills.title")}
           </Text>
           <View className="flex-row gap-2">
-            {FILLS.map((fill) => (
-              <View
-                key={fill}
-                accessible
-                accessibilityLabel={`${t(`fills.${fill}.label`)}: ${t("fills.unavailable")}`}
-                className="flex-1 gap-1 rounded-2xl border border-border bg-background p-2.5"
-              >
-                <Text
-                  variant="label"
-                  color="faintForeground"
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.75}
+            {(["fighters", "sessions", "invitations"] as const).map((fill) =>
+              fill === "sessions" ? (
+                <View
+                  key={fill}
+                  accessible
+                  accessibilityLabel={`${t("fills.sessions.label")}: ${t("fills.unavailable")}`}
+                  className="flex-1 gap-1 rounded-2xl border border-border bg-background p-2.5"
                 >
-                  {t(`fills.${fill}.label`)}
-                </Text>
-                <Text variant="title" color="faintForeground">
-                  {t("profile.none")}
-                </Text>
-              </View>
-            ))}
+                  <Text
+                    variant="label"
+                    color="faintForeground"
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.75}
+                  >
+                    {t("fills.sessions.label")}
+                  </Text>
+                  <Text variant="title" color="faintForeground">
+                    {t("profile.none")}
+                  </Text>
+                </View>
+              ) : (
+                <Pressable
+                  key={fill}
+                  accessibilityRole="link"
+                  accessibilityLabel={`${t(`fills.${fill}.label`)}: ${t("fills.open")}`}
+                  onPress={() =>
+                    router.push(routeHref("mobile.coach.fighters", {}, OPEN_FILLS[fill]))
+                  }
+                  className="flex-1 gap-1 rounded-2xl border border-accent-border bg-background p-2.5 active:bg-muted"
+                >
+                  <Text
+                    variant="label"
+                    color="highlight"
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.75}
+                  >
+                    {t(`fills.${fill}.label`)}
+                  </Text>
+                  <Text variant="bodySm" weight="extrabold">
+                    {t("fills.open")}
+                  </Text>
+                </Pressable>
+              ),
+            )}
           </View>
           <Text variant="caption" color="mutedForeground">
-            {t("fills.unavailable")}
+            {t("fills.note")}
           </Text>
         </View>
 
@@ -158,6 +187,23 @@ function TodayView({ profile }: { profile: CoachProfile }) {
               </Text>
             </View>
           </View>
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={`${t("setup.invite.title")}, ${t("setup.invite.line")}`}
+            onPress={() => router.push(routeHref("mobile.coach.fighters"))}
+            className="min-h-14 flex-row items-center gap-3 border-t border-border py-1.5 active:bg-muted"
+          >
+            <View className="size-6.5 rounded-full border-2 border-primary-muted" />
+            <View className="flex-1 gap-0.5">
+              <Text variant="body" weight="extrabold">
+                {t("setup.invite.title")}
+              </Text>
+              <Text variant="caption" color="faintForeground">
+                {t("setup.invite.line")}
+              </Text>
+            </View>
+            <Icon icon={ChevronRight} size={16} color="faintForeground" />
+          </Pressable>
           {LATER_STEPS.map((step) => (
             <View
               key={step}
