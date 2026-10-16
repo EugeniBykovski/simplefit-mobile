@@ -47,9 +47,10 @@ export const tabNavigation: Record<
     icons: { home: House, training: Timer, board: Waypoints, community: Users, profile: User },
     center: "board",
   },
-  // The Coach MVP (Claude Design CoachTabs, version 1791994719-673f, SF-55):
-  // Today, Fighters and Sessions marked Soon (no roster or session domain
-  // yet), and Settings (the shared ST1, pushed above the tabs). The registry
+  // The Coach MVP (Claude Design CoachTabs, version 1791994719-673f, SF-55;
+  // Fighters live since SF-61, 1792155768-3179): Today, Fighters, Sessions
+  // marked Soon (no session domain yet), and Settings (the shared ST1, pushed
+  // above the tabs). The registry
   // keeps the Route Gallery's items and their placeholder routes
   // (D-MOBILE-COACH-SHELL-MVP).
   coach: {
@@ -65,7 +66,7 @@ export const tabNavigation: Record<
     },
     items: [
       { key: "today", route: "mobile.coach.today" },
-      { key: "fighters" },
+      { key: "fighters", route: "mobile.coach.fighters" },
       { key: "sessions" },
       { key: "settings", route: "mobile.settings" },
     ],

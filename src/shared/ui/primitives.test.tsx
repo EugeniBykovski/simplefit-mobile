@@ -10,6 +10,7 @@ import { Button } from "./button";
 import { Checkbox } from "./checkbox";
 import { Input } from "./input";
 import { Modal } from "./modal";
+import { Sheet } from "./sheet";
 import { RadioGroup } from "./radio-group";
 import { SegmentedControl } from "./segmented-control";
 import { Skeleton } from "./skeleton";
@@ -249,6 +250,42 @@ describe("Modal", () => {
       <Modal visible={false} title="Hidden" closeLabel="Close" onClose={jest.fn()} />,
     );
     expect(screen.queryByText("Hidden")).toBeNull();
+  });
+});
+
+describe("Sheet", () => {
+  it("shows a titled bottom sheet that closes from its backdrop", async () => {
+    const onClose = jest.fn();
+    await renderWithProviders(
+      <Sheet
+        visible
+        title="Cancel this invitation?"
+        description="The link stops working."
+        closeLabel="Keep"
+        onClose={onClose}
+      >
+        <Text>Body</Text>
+      </Sheet>,
+    );
+    expect(screen.getByRole("header", { name: "Cancel this invitation?" })).toBeOnTheScreen();
+    expect(screen.getByText("The link stops working.")).toBeOnTheScreen();
+    // The backdrop is outside the accessibility-modal view (screen readers skip it).
+    await userEvent.press(
+      screen.getByRole("button", { name: "Keep", includeHiddenElements: true }),
+    );
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("cannot be dismissed while a request runs", async () => {
+    const onClose = jest.fn();
+    await renderWithProviders(
+      <Sheet visible dismissible={false} title="Ending…" closeLabel="Keep" onClose={onClose} />,
+    );
+    // The backdrop is outside the accessibility-modal view (screen readers skip it).
+    await userEvent.press(
+      screen.getByRole("button", { name: "Keep", includeHiddenElements: true }),
+    );
+    expect(onClose).not.toHaveBeenCalled();
   });
 });
 

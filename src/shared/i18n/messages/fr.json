@@ -1093,7 +1093,9 @@
       "invitations": {
         "label": "Invitations",
         "when": "quand tu pourras inviter des boxeurs"
-      }
+      },
+      "open": "Ouvrir",
+      "note": "Les boxeurs et les invitations sont dans Boxeurs. Les séances arrivent plus tard."
     },
     "setup": {
       "eyebrow": "Inscription coach",
@@ -1106,15 +1108,11 @@
       },
       "invite": {
         "title": "Invite ton premier boxeur",
-        "line": "Les boxeurs te rejoignent sur invitation"
+        "line": "Dans Boxeurs · après les règles de données"
       },
       "session": {
         "title": "Planifie ta première séance",
         "line": "Les séances que tu mènes avec tes boxeurs"
-      },
-      "dataRules": {
-        "title": "Accepte les règles de données du coach",
-        "line": "Ce que tu peux voir avec le consentement d’un boxeur"
       }
     },
     "note": {
@@ -1199,6 +1197,167 @@
       "failed": "Impossible de mettre fin à la relation. Rien n’a changé. Réessaie.",
       "ended": "{name} ne voit plus ton profil.",
       "unavailable": "Cette relation n’est plus disponible. Ta liste de coachs est à jour."
+    }
+  },
+  "coachFighters": {
+    "title": "Boxeurs",
+    "views": "Relations",
+    "tabs": {
+      "active": "Actifs",
+      "ended": "Terminées",
+      "invitations": "Invitations"
+    },
+    "loading": "Chargement de tes boxeurs",
+    "more": "Afficher plus",
+    "loadingMore": "Chargement…",
+    "fallbackName": "Ce boxeur",
+    "notShared": "Non partagé",
+    "privacy": "Tu ne vois que ce que chaque boxeur a accepté de partager : nom, nom d’utilisateur, lieu, niveau, garde et combats. Jamais son poids, ses objectifs ni ses informations de compte.",
+    "endedNote": "Une relation terminée ne peut pas reprendre. Tu ne gardes que les dates et le nom du boxeur à la fin.",
+    "row": {
+      "open": "Montre ce que partage ce boxeur",
+      "ended": "Terminée le {date} · {by}",
+      "endedBy": {
+        "coach": "par toi",
+        "fighter": "par le boxeur"
+      }
+    },
+    "empty": {
+      "active": {
+        "title": "Aucun boxeur pour l’instant",
+        "body": "Les boxeurs apparaissent ici quand ils acceptent ton invitation. Invite un boxeur par e-mail pour commencer."
+      },
+      "ended": {
+        "title": "Aucune relation terminée",
+        "body": "Les relations que toi ou un boxeur terminez apparaissent ici, avec les dates uniquement."
+      },
+      "invitations": {
+        "title": "Aucune invitation pour l’instant",
+        "body": "Invite un boxeur par e-mail avec le bouton +."
+      }
+    },
+    "unavailable": {
+      "title": "Les boxeurs ne sont pas encore disponibles",
+      "body": "Le coaching de boxeurs sur SimpleFit ouvrira quand les règles de données des coachs et ce que les boxeurs acceptent de partager seront publiés. Rien ne t’est caché : il n’y a simplement rien à afficher pour l’instant."
+    },
+    "failed": {
+      "title": "Impossible de charger tes boxeurs.",
+      "body": "Vérifie ta connexion et réessaie.",
+      "retry": "Réessayer",
+      "more": "Impossible d’en charger plus. Réessaie."
+    },
+    "invitations": {
+      "note": "Les invitations ne sont pas des boxeurs : un boxeur apparaît dans Actifs seulement après avoir accepté.",
+      "status": {
+        "pending": "En attente",
+        "accepted": "Acceptée",
+        "declined": "Refusée",
+        "cancelled": "Annulée",
+        "expired": "Expirée"
+      },
+      "line": {
+        "pending": "Envoyée le {sent} · expire le {expires}",
+        "accepted": "Acceptée le {date}",
+        "declined": "Refusée le {date}",
+        "cancelled": "Annulée le {date}",
+        "expired": "Expirée le {date} · tu peux réinviter à tout moment"
+      },
+      "resend": "Renvoyer · encore {count}",
+      "resending": "Envoi…",
+      "cancel": "Annuler"
+    },
+    "cancelInvitation": {
+      "title": "Annuler cette invitation ?",
+      "body": "Le lien de l’e-mail envoyé à {email} ne fonctionnera plus. Tu pourras réinviter plus tard.",
+      "keep": "Garder l’invitation",
+      "confirm": "Annuler l’invitation",
+      "pending": "Annulation…",
+      "failed": "Impossible d’annuler l’invitation. Réessaie."
+    },
+    "results": {
+      "resent": "Invitation renvoyée à {email}.",
+      "cancelled": "Invitation à {email} annulée.",
+      "cooldown": "Tu pourras renvoyer dans {seconds, plural, one {# seconde} other {# secondes}}.",
+      "noResends": "Plus aucun renvoi possible pour cette invitation.",
+      "notPending": "Cette invitation a déjà reçu une réponse ou a expiré.",
+      "failed": "Ça n’a pas fonctionné. Réessaie."
+    },
+    "invite": {
+      "open": "Inviter un boxeur",
+      "title": "Inviter un boxeur",
+      "close": "Fermer",
+      "checking": "Vérification des règles de données des coachs",
+      "lead": "La personne reçoit un e-mail avec un lien. Seule une personne connectée avec cette adresse peut accepter, et rien n’est partagé avant.",
+      "email": {
+        "label": "E-mail",
+        "invalid": "Saisis une adresse e-mail valide.",
+        "own": "Tu ne peux pas inviter ta propre adresse."
+      },
+      "note": {
+        "label": "Message · facultatif",
+        "invalid": "Limite le message à un paragraphe de 500 caractères maximum."
+      },
+      "cancel": "Annuler",
+      "submit": "Envoyer l’invitation",
+      "sending": "Envoi…",
+      "limited": "Tu as envoyé beaucoup d’invitations. Réessaie dans {minutes, plural, one {# minute} other {# minutes}}.",
+      "pendingLimit": "Tu as 50 invitations en attente. Annule-en quelques-unes avant d’en envoyer d’autres.",
+      "failed": "Impossible d’envoyer l’invitation. Rien n’a été créé. Réessaie.",
+      "blocked": {
+        "title": "L’invitation n’est pas encore disponible",
+        "body": "Inviter des boxeurs nécessite les règles de données des coachs, qui ne sont pas encore publiées. Tu pourras inviter dès qu’elles le seront."
+      },
+      "pending": {
+        "title": "Invitation en attente",
+        "body": "Une invitation à {email} est en attente jusqu’au {expires}. Rien n’est partagé tant qu’elle n’est pas acceptée. Tu peux la renvoyer ou l’annuler depuis Invitations.",
+        "done": "Terminé"
+      }
+    },
+    "rules": {
+      "body": "Avant d’inviter, accepte les règles de données des coachs en vigueur : tu ne vois que ce que chaque boxeur accepte de partager, et seulement pour le coaching.",
+      "agree": "J’accepte les règles de données des coachs (version {version}).",
+      "acknowledge": "Accepter",
+      "pending": "Enregistrement…",
+      "later": "Pas maintenant",
+      "stale": "Les règles de données des coachs ont changé. Consulte la version en vigueur et accepte-la à nouveau.",
+      "failed": "Impossible d’enregistrer. Rien n’a changé. Réessaie."
+    },
+    "detail": {
+      "loading": "Chargement du boxeur",
+      "active": "Active · depuis le {date}",
+      "shares": "Ce que {name} partage avec toi",
+      "fields": {
+        "display_name": "Nom affiché",
+        "username": "Nom d’utilisateur",
+        "country_code": "Pays",
+        "city": "Ville",
+        "experience_level": "Niveau d’expérience",
+        "stance": "Garde",
+        "amateur_bout_count": "Combats amateurs"
+      },
+      "never": {
+        "title": "Jamais partagé avec les coachs",
+        "body": "Poids, taille, objectifs et prochain combat",
+        "account": "Nom du compte, date de naissance et e-mail",
+        "others": "Tout ce qui est partagé avec d’autres coachs"
+      },
+      "later": "Les séances et notes arriveront plus tard.",
+      "unavailable": {
+        "title": "Ce boxeur n’est pas disponible",
+        "body": "La relation est peut-être terminée, ou le lien ne fait pas partie des tiens.",
+        "back": "Retour aux boxeurs"
+      }
+    },
+    "end": {
+      "action": "Mettre fin à la relation",
+      "title": "Mettre fin à ta relation avec {name} ?",
+      "body": "Tu perds immédiatement l’accès au profil de {name}. Pour travailler à nouveau ensemble, {name} devra accepter une nouvelle invitation.",
+      "keep": "Garder",
+      "confirm": "Mettre fin à la relation",
+      "pending": "Fin en cours…",
+      "failed": "Impossible de mettre fin à la relation. Rien n’a changé. Réessaie.",
+      "ended": "Ta relation avec {name} est terminée.",
+      "unavailable": "Cette relation n’est plus disponible. Ta liste de boxeurs est à jour."
     }
   }
 }

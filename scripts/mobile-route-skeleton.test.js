@@ -42,6 +42,9 @@ const REAL_SCREENS = [
   // SF-55: C01 Coach today and A04 One account, every role.
   "mobile.coach.today",
   "mobile.workspaces",
+  // SF-61: C03 Fighters (roster and invitations) and C04 Fighter.
+  "mobile.coach.fighters",
+  "mobile.coach.fighters._fighter-id",
   // SF-59: FC1 My coaches and FC2 Coach relationship.
   "mobile.profile.coaches",
   "mobile.profile.coaches._relationship-id",
@@ -137,7 +140,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 20, catchAll: 1, placeholder: 121, deferred: 1 });
+    expect(counts).toEqual({ screen: 22, catchAll: 1, placeholder: 119, deferred: 1 });
     expect(routes).toHaveLength(143);
   });
 
