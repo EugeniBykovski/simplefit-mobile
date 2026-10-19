@@ -430,7 +430,9 @@
       "mobile/welcome/tour": "Wprowadzenie dla zawodnika",
       "mobile/workspaces": "Przestrzenie robocze",
       "mobile/profile/coaches": "Trenerzy",
-      "mobile/profile/coaches/_relationship-id": "Trener"
+      "mobile/profile/coaches/_relationship-id": "Trener",
+      "mobile/profile/coaches/invitations": "Zaproszenia",
+      "mobile/profile/coaches/invitations/_invitation-id": "Zaproszenie"
     }
   },
   "shells": {
@@ -1197,6 +1199,158 @@
       "failed": "Nie udało się zakończyć relacji. Nic się nie zmieniło. Spróbuj ponownie.",
       "ended": "{name} nie widzi już Twojego profilu.",
       "unavailable": "Ta relacja nie jest już dostępna. Twoja lista trenerów jest aktualna."
+    },
+    "invitations": {
+      "title": "Zaproszenia",
+      "body": "Od trenerów, którzy zaprosili Twój adres e-mail",
+      "open": "Otwiera zaproszenia od trenerów"
+    }
+  },
+  "fighterInvitations": {
+    "intro": "Zaproszenia wysłane przez trenerów na zweryfikowany przez Ciebie adres e-mail. Nic nie jest udostępniane, dopóki nie przyjmiesz.",
+    "loading": "Wczytywanie zaproszeń",
+    "more": "Pokaż więcej",
+    "loadingMore": "Wczytywanie…",
+    "fallbackName": "Twój trener",
+    "status": {
+      "pending": "Oczekuje",
+      "accepted": "Przyjęte",
+      "declined": "Odrzucone",
+      "cancelled": "Anulowane",
+      "expired": "Wygasło"
+    },
+    "row": {
+      "pendingBrand": "{brand} · wygasa {date}",
+      "pending": "Wygasa {date}",
+      "accepted": "Przyjęte {date}",
+      "declined": "Odrzucone {date}",
+      "cancelled": "Anulowane {date}",
+      "expired": "Wygasło {date}",
+      "open": "Otwiera zaproszenie"
+    },
+    "empty": {
+      "title": "Brak zaproszeń",
+      "body": "Gdy trener zaprosi zweryfikowany przez Ciebie adres e-mail, zaproszenie pojawi się tutaj."
+    },
+    "sharing": {
+      "title": "Zaproszenia są niedostępne",
+      "body": "Połączenia z trenerami nie są jeszcze otwarte. Nikomu nic nie jest udostępniane."
+    },
+    "profile": {
+      "title": "Dokończ konto, aby zobaczyć zaproszenia",
+      "body": "Najpierw dane konta. Po drodze nic nie zostanie przyjęte."
+    },
+    "failed": {
+      "title": "Nie udało się wczytać zaproszeń.",
+      "body": "Sprawdź połączenie i spróbuj ponownie.",
+      "retry": "Spróbuj ponownie"
+    },
+    "review": {
+      "loading": "Wczytywanie zaproszenia",
+      "title": "{name} zaprasza Cię do połączenia w SimpleFit.",
+      "expires": "Wygasa {date}",
+      "note": "„{note}” — {name}",
+      "sees": "Jeśli przyjmiesz, {name} zobaczy",
+      "neverTitle": "Nigdy nie udostępniane",
+      "never": {
+        "goals": "Cele",
+        "next_fight": "Najbliższa walka",
+        "weight": "Waga",
+        "height": "Wzrost",
+        "account_name": "Nazwa konta",
+        "date_of_birth": "Data urodzenia",
+        "email": "Adres e-mail",
+        "other_coaches": "Wszystko, co udostępniasz innym trenerom"
+      },
+      "fields": {
+        "display_name": "Wyświetlana nazwa",
+        "username": "Nazwa użytkownika",
+        "country_code": "Kraj",
+        "city": "Miasto",
+        "experience_level": "Poziom doświadczenia",
+        "stance": "Pozycja",
+        "amateur_bout_count": "Walki amatorskie"
+      },
+      "document": "Informacja · {version} · {language}",
+      "readFull": "Przeczytaj pełną informację",
+      "closeFull": "Zamknij",
+      "accept": "Przyjmij zaproszenie",
+      "accepting": "Przyjmowanie…",
+      "decline": "Odrzuć",
+      "declining": "Odrzucanie…",
+      "acceptHint": "Przyjęcie jest nieaktywne, dopóki nie zaznaczysz pola. Relację możesz zakończyć w każdej chwili w sekcji Trenerzy.",
+      "continueSetup": "Kontynuuj konfigurację",
+      "retry": "Spróbuj ponownie",
+      "problems": {
+        "language": {
+          "title": "Ta informacja nie jest jeszcze dostępna w Twoim języku.",
+          "body": "Zatwierdzone języki: {languages}. Zmień język aplikacji, aby ją przeczytać i zdecydować. Nadal możesz odrzucić zaproszenie."
+        },
+        "document": {
+          "title": "Przyjęcie nie jest jeszcze dostępne.",
+          "body": "Informacja o połączeniach z trenerami nie została jeszcze opublikowana. Nadal możesz odrzucić zaproszenie."
+        },
+        "stale": {
+          "title": "Zmieniło się to, co byś udostępniał.",
+          "body": "Sprawdź, co zobaczyłby trener, i zgódź się ponownie. Nic nie zostało udostępnione."
+        },
+        "tooYoung": {
+          "title": "Połączenia z trenerami są dla zawodników, którzy ukończyli 18 lat.",
+          "body": "Nie możesz przyjąć tego zaproszenia. Nic nie zostało udostępnione, a trener nie dowie się dlaczego."
+        },
+        "profile": {
+          "title": "Uzupełnij profil, aby odpowiedzieć.",
+          "body": "Najpierw dane konta i profil zawodnika. Potem wrócisz tutaj; po drodze nic nie zostanie przyjęte."
+        },
+        "limited": {
+          "title": "Zbyt wiele prób.",
+          "body": "Spróbuj ponownie za kilka minut."
+        },
+        "failed": {
+          "title": "Nie udało się.",
+          "body": "Nic się nie zmieniło. Spróbuj ponownie."
+        }
+      },
+      "outcome": {
+        "sharing": {
+          "title": "Połączenia z trenerami są teraz niedostępne.",
+          "body": "Nic nie zostało udostępnione. Nadal możesz odrzucić to zaproszenie.",
+          "action": "Wróć do zaproszeń"
+        },
+        "unavailable": {
+          "title": "To zaproszenie jest niedostępne",
+          "body": "Mogło wygasnąć, zostać rozpatrzone lub anulowane. Poproś trenera o wysłanie nowego.",
+          "action": "Wróć do zaproszeń"
+        },
+        "failed": {
+          "title": "Nie udało się wczytać zaproszenia.",
+          "body": "Sprawdź połączenie i spróbuj ponownie.",
+          "action": "Wróć do zaproszeń"
+        },
+        "accepted": {
+          "title": "Masz połączenie z {name}.",
+          "body": "{name} widzi teraz dane, na których udostępnienie się zgodziłeś. Możesz to zakończyć w każdej chwili w sekcji Trenerzy.",
+          "action": "Przejdź do trenerów"
+        },
+        "already": {
+          "title": "Masz już połączenie z {name}.",
+          "body": "Nic się nie zmieniło: {name} nadal widzi to, na co zgodziłeś się wcześniej.",
+          "action": "Przejdź do trenerów"
+        },
+        "declined": {
+          "title": "Zaproszenie odrzucone",
+          "body": "Nic nie zostało udostępnione {name}.",
+          "action": "Wróć do zaproszeń"
+        }
+      },
+      "declineSheet": {
+        "title": "Odrzucić zaproszenie od {name}?",
+        "body": "Nic nie zostanie udostępnione {name}. Aby połączyć się później, trener musi wysłać nowe zaproszenie.",
+        "confirm": "Odrzuć",
+        "pending": "Odrzucanie…",
+        "keep": "Zachowaj",
+        "failed": "Nie udało się. Nic się nie zmieniło. Spróbuj ponownie."
+      }
     }
   },
   "coachFighters": {

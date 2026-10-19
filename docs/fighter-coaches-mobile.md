@@ -1,9 +1,10 @@
-# Fighter mobile coaches (SF-59)
+# Fighter mobile coaches (SF-59, SF-76)
 
-The fighter's coaching relationships in the app, against Claude Design
-**Version 99** (`1792069267-b198`), on the SF-56 fighter endpoints
-(`listMyCoaches`, `endMyCoachRelationship`). Coach invitations are **not** in
-the app yet (see [Invitations](#invitations-deferred)).
+The fighter's coaching relationships and incoming coach invitations in the
+app, against Claude Design **Version 103** (`1792432236-08da`), on the SF-56
+fighter endpoints (`listMyCoaches`, `getMyCoachRelationship` (SF-74),
+`endMyCoachRelationship`) and the SF-73 incoming-invitation endpoints with the
+SF-72 acceptance policy.
 
 ## Design reconciliation
 
@@ -11,15 +12,17 @@ Up to Version 98 there was no fighter-side coaches screen, and INV1
 (`InviteCoach`) joined the coach's team straight after sign-in, with invented
 team stats and the invite in a route. With approval, SF-59 reconciled them:
 
-| Artboard                   | Source                                 | Route                              | Production                | Status  |
-| -------------------------- | -------------------------------------- | ---------------------------------- | ------------------------- | ------- |
-| F18 Profile · Coaches row  | `Profile.dc.html`                      | `/profile`                         | `ProfileScreen`           | current |
-| FC1 My coaches             | `FighterCoaches.dc.html` screen=list   | `/profile/coaches` (`?view=ended`) | `MyCoachesScreen`         | current |
-| FC2 Coach relationship     | `FighterCoaches.dc.html` screen=detail | `/profile/coaches/:relationshipId` | `CoachRelationshipScreen` | current |
-| End relationship (confirm) | `FighterCoaches.dc.html` dialog=…      | modal on FC2                       | `EndRelationshipButton`   | current |
-| INV1 Coach invites fighter | `InviteCoach.dc.html`                  | `/invite/:code` (placeholder)      | —                         | FUTURE  |
+| Artboard                   | Source                                  | Route                                        | Production                | Status  |
+| -------------------------- | --------------------------------------- | -------------------------------------------- | ------------------------- | ------- |
+| F18 Profile · Coaches row  | `Profile.dc.html`                       | `/profile`                                   | `ProfileScreen`           | current |
+| FC1 My coaches             | `FighterCoaches.dc.html` screen=list    | `/profile/coaches` (`?view=ended`)           | `MyCoachesScreen`         | current |
+| FC2 Coach relationship     | `FighterCoaches.dc.html` screen=detail  | `/profile/coaches/:relationshipId`           | `CoachRelationshipScreen` | current |
+| End relationship (confirm) | `FighterCoaches.dc.html` dialog=…       | modal on FC2                                 | `EndRelationshipButton`   | current |
+| FCI1 Invitations (SF-76)   | `FighterCoaches.dc.html` screen=invites | `/profile/coaches/invitations`               | `InvitationsScreen`       | current |
+| FCI2 Invitation (SF-76)    | `FighterCoaches.dc.html` screen=invite  | `/profile/coaches/invitations/:invitationId` | `InvitationReviewScreen`  | current |
+| INV1 Coach invites fighter | `InviteCoach.dc.html`                   | `/invite/:code` (placeholder)                | —                         | FUTURE  |
 
-FC1 and FC2 share one artboard: the design artifact holds its maximum of 511
+FC1, FC2, FCI1 and FCI2 share one artboard (SF-76 added FCI1, FCI2 and FC2 `state=ended` with approval, Version 103): the design artifact holds its maximum of 511
 files, so the frozen `TimerDone` preview was removed (T06 now points at
 `TimerLive.dc.html` with `phase=done`, as the registry's query already said).
 
@@ -36,29 +39,55 @@ files, so the frozen `TimerDone` preview was removed (T06 now points at
 
 ## Coach relationship (FC2)
 
-- Fighters have no single-relationship read, so the id is looked up in the
-  fighter's own active list (at most 10 pages of 100). An ended, foreign or
-  unknown id is one "not available" state. The route parameter authorizes
-  nothing.
-- **SF-74 replacement (backend ready, not yet wired):**
-  `getMyCoachRelationship` (`GET /api/v1/me/coaches/{relationship_id}`;
-  generated `getMyCoachRelationship(relationshipId)`,
-  `useGetMyCoachRelationship`, `getGetMyCoachRelationshipQueryKey`) returns
-  `{relationship: MyCoachRelationship}` for one of the fighter's own
-  relationships, active or ended, in one request; foreign, unknown or
-  malformed ids answer `404`. SF-59 completion replaces the page scan
-  (`DETAIL_PAGES` in `entities/coach-relationship/model/coach-relationship.ts`)
-  and decides how an ended relationship is shown.
-- Shows the coach's public identity, what that coach sees (`disclosed_fields`)
-  and what is never shared.
+- **Data:** one direct read, `getMyCoachRelationship(relationshipId)` (SF-74,
+  `GET /api/v1/me/coaches/{id}` → `{relationship}`), on every entry and on
+  return to the foreground. The SF-59 page scan is gone. An id that is not a
+  UUID is never sent (the generated client puts it into the path unencoded);
+  foreign, unknown and malformed ids are the backend's `404`: one
+  not-available state.
+- **Active:** the coach's public identity, what that coach sees
+  (`disclosed_fields`) and what is never shared, and End relationship.
+- **Ended** (from a stale screen or an old link; FC1 opens none): the
+  not-available card with the FC1 ended row and note (`state=ended`), never
+  the disclosure or an end action.
 - **End relationship:** a confirmation; the request runs once (confirm is
   disabled while pending, the dialog cannot be dismissed); a failure keeps
   the dialog open and changes nothing. Only the backend's `204` is reported as
-  ended ("{coach} no longer sees your profile."). A `404` proves nothing about
-  this request: a neutral "no longer available" without the coach's name.
-  Either answer drops the cached relationship and refetches every list.
-  Only that relationship's id is sent; the fighter's other coaches are
-  untouched.
+  ended; a `404` is a neutral "no longer available". Either answer drops the
+  cached relationship and refetches every list. Only that relationship's id
+  is sent; the fighter's other coaches are untouched.
+
+## Invitations (FCI1, FCI2; SF-76)
+
+- **FCI1** `/profile/coaches/invitations`, from the Invitations row on FC1:
+  `listMyIncomingCoachInvitations`, newest first, cursor pages of 50, with the
+  backend's status (pending, accepted, declined, cancelled, expired). Only
+  pending rows open FCI2. Loading, empty, unavailable (`404`: sharing is off;
+  never shown as empty), account registration first (`422`) and failure are
+  separate states. Only the coach's public identity is shown; no token,
+  address or digest reaches the app.
+- **FCI2** `/profile/coaches/invitations/:invitationId`:
+  `previewMyIncomingCoachInvitation?language=<app language>` (never cached
+  once left). Coach identity, note, expiry, the fields the coach would see,
+  what is never shared, and the backend's disclosure: version, the language
+  of the approved text, title, summary and the full text in a sheet. The
+  approved confirmation sits next to an unticked box; Accept stays disabled
+  until it is ticked and sends exactly that `disclosure_version` and
+  `document_language` (`acceptMyIncomingCoachInvitation`). Without an approved
+  text in the app language, or with no published disclosure, the fighter can
+  only decline (never another language). Decline is confirmed first and
+  allowed while sharing is off.
+- **Outcomes** come only from the backend: created / already connected (FC1
+  refetched), declined (`204`), not available (`410`: unknown, someone else's,
+  answered, cancelled or expired), sharing off (`404`, decline still offered),
+  stale disclosure or language (`409`, the preview is read again and the box
+  unticked), under 18 or profile first (`422`), rate limit (`429`), failure.
+- **Links:** the E08 email link stays the web's (WFI1). The app answers by
+  invitation id from its own inbox; no token ever enters an app route, log or
+  storage. INV1 and a native token handoff stay `DEFERRED` until verified
+  Universal Links / Android App Links exist
+  (`D-MOBILE-FIGHTER-COACH-INVITATIONS`). Production disclosure texts are not
+  approved, so in production the inbox shows "Invitations aren't available".
 
 ## Session and privacy
 
@@ -68,51 +97,30 @@ files, so the frozen `TimerDone` preview was removed (T06 now points at
 - Only the fighter's own `/api/v1/me/coaches` endpoints are called; no coach
   profile is fetched, and nothing about relationships is stored on the device.
 
-## Invitations (deferred)
-
-`D-MOBILE-FIGHTER-COACH-INVITATIONS`. Three dependencies are missing:
-
-1. **The inbox and its review UI are not built.** The contract exists:
-   `listMyIncomingCoachInvitations` (SF-73), and by id
-   `previewMyIncomingCoachInvitation?language=<app language>` (the approved
-   disclosure text in `document`, metadata only when that language has no
-   approved variant), `acceptMyIncomingCoachInvitation` (`disclosure_version`
-   and `document_language` of the text shown; `422 coaching_age: too_young`
-   under 18; `409 document_language: unavailable`) and
-   `declineMyIncomingCoachInvitation` (SF-72 shared policy, ADR 0022).
-   Responding by id needs no token, so no native link handoff, at the cost
-   recorded in ADR 0021 (a stolen session is enough to accept). Every answer
-   is `404` until approved documents are published.
-2. **No secure native handoff.** The E08 link is the web's
-   (`{WEB_APP_URL}/invite/coach#token=…`; its web review page does not exist
-   yet either, `GAP-WEB-COACH-FIGHTER-INVITE`). The app has only the
-   `simplefit` scheme; a custom-scheme or route parameter would expose the
-   token. A native flow needs: a verified HTTPS domain with
-   `apple-app-site-association` and `assetlinks.json`, iOS Associated Domains
-   and Android App Links (`autoVerify`) for `/invite/coach`, the fragment
-   read in memory only (never Expo Router params, logs, analytics or
-   storage), bound to the signed-in account at review time and dropped on a
-   session change, the browser as fallback when the app is not installed,
-   and verification on a real development build.
-3. **Legal texts.** Sharing is off until the approved disclosure and coach
-   data-rules texts and versions exist; the app must not invent them.
-
-Accepting is never automatic: neither sign-in nor onboarding completion
-accepts anything, and accounts without a verified email identity for the
-invited address (Google / Apple only) cannot accept until verified-email
-linking exists.
-
 ## Verification
 
-- Unit: `widgets/fighter-coaches/ui/fighter-coaches.test.tsx` (list, empty vs
-  unavailable vs failure, ended rows, cursor paging, detail lookup across
-  pages, not available, end on 204, 404 neutral, failure, single request,
-  two coaches independent), `providers/session-cache.test.tsx` (coaches
-  cleared at a session boundary), `providers/router.test.tsx` (canonical
-  routes), the registry and skeleton tests.
-- Real backend: a contract smoke against Phoenix and PostgreSQL on a
-  throwaway database with sharing off (the production default): both lists,
-  public identity only, no fighter private data, cursor paging, foreign and
-  unknown ids `404` and untouched, end `204`, idempotent repeat, the other
-  coach untouched, unauthenticated `401`, and invitation preview `404`.
-- Native: not verified on a simulator in SF-59 (see the ticket report).
+- Unit: `widgets/fighter-coaches/ui/fighter-coaches.test.tsx` (FC1 states,
+  cursor paging, FC2 direct read in one request, ended history, `404`,
+  malformed ids never sent, end on 204 / 404 / failure, one request at a
+  time), `widgets/fighter-coach-invitations/ui/fighter-coach-invitations.test.tsx`
+  (inbox statuses, empty vs sharing off vs account first vs failure, paging,
+  review, explicit consent with the exact version and language, already
+  connected, language and document unavailable, stale, under 18, profile,
+  limit, failure, `410` / `404` endings, decline confirmation and outcomes,
+  sharing-off decline, malformed ids), `providers/session-cache.test.tsx`
+  (coaches, invitations and previews cleared at a session boundary),
+  `shared/lib/ids.test.ts`, `providers/router.test.tsx`, registry and
+  skeleton tests (tab roots titled).
+- Real backend (SF-76): Phoenix and PostgreSQL on a throwaway database with
+  the test-fixture legal registry: 34 API checks (two active coaches, direct
+  read, IDOR, inbox isolation per verified email, OAuth-only empty inbox,
+  language and version conflicts, under 18, already connected, decline) and
+  8 with sharing off (inbox / preview / accept `404`, decline allowed, own
+  relationships still readable, no leak).
+- Native (SF-76): EAS iOS development build on iOS 18.5 simulators against
+  that backend: sign-in, FC1, FC2 (direct read), FCI1, FCI2, full text,
+  accept, decline, ending one of three coaches, ended history by link,
+  sharing-off states, language unavailable (German), account switch, revoked
+  session, network failure, cold restart; dark and light at 390 × 844;
+  XCTest accessibility audit with no app findings. See the SF-76 report for
+  what was not verified.

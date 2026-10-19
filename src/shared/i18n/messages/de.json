@@ -430,7 +430,9 @@
       "mobile/welcome/tour": "Einführung für Fighter",
       "mobile/workspaces": "Arbeitsbereiche",
       "mobile/profile/coaches": "Coaches",
-      "mobile/profile/coaches/_relationship-id": "Coach"
+      "mobile/profile/coaches/_relationship-id": "Coach",
+      "mobile/profile/coaches/invitations": "Einladungen",
+      "mobile/profile/coaches/invitations/_invitation-id": "Einladung"
     }
   },
   "shells": {
@@ -1197,6 +1199,158 @@
       "failed": "Wir konnten die Beziehung nicht beenden. Es hat sich nichts geändert. Versuche es erneut.",
       "ended": "{name} sieht dein Profil nicht mehr.",
       "unavailable": "Diese Beziehung ist nicht mehr verfügbar. Deine Coach-Liste ist aktuell."
+    },
+    "invitations": {
+      "title": "Einladungen",
+      "body": "Von Coaches, die deine E-Mail-Adresse eingeladen haben",
+      "open": "Öffnet deine Coach-Einladungen"
+    }
+  },
+  "fighterInvitations": {
+    "intro": "Einladungen, die Coaches an eine von dir bestätigte E-Mail-Adresse gesendet haben. Bis du annimmst, wird nichts geteilt.",
+    "loading": "Deine Einladungen werden geladen",
+    "more": "Mehr anzeigen",
+    "loadingMore": "Wird geladen…",
+    "fallbackName": "Dein Coach",
+    "status": {
+      "pending": "Offen",
+      "accepted": "Angenommen",
+      "declined": "Abgelehnt",
+      "cancelled": "Zurückgezogen",
+      "expired": "Abgelaufen"
+    },
+    "row": {
+      "pendingBrand": "{brand} · läuft ab am {date}",
+      "pending": "Läuft ab am {date}",
+      "accepted": "Angenommen am {date}",
+      "declined": "Abgelehnt am {date}",
+      "cancelled": "Zurückgezogen am {date}",
+      "expired": "Abgelaufen am {date}",
+      "open": "Öffnet die Einladung"
+    },
+    "empty": {
+      "title": "Keine Einladungen",
+      "body": "Wenn ein Coach eine von dir bestätigte E-Mail-Adresse einlädt, erscheint die Einladung hier."
+    },
+    "sharing": {
+      "title": "Einladungen sind nicht verfügbar",
+      "body": "Coach-Verbindungen sind noch nicht geöffnet. Mit niemandem wird etwas geteilt."
+    },
+    "profile": {
+      "title": "Schließe dein Konto ab, um Einladungen zu sehen",
+      "body": "Zuerst kommen deine Kontodaten. Unterwegs wird nichts angenommen."
+    },
+    "failed": {
+      "title": "Wir konnten deine Einladungen nicht laden.",
+      "body": "Prüfe deine Verbindung und versuche es erneut.",
+      "retry": "Erneut versuchen"
+    },
+    "review": {
+      "loading": "Die Einladung wird geladen",
+      "title": "{name} hat dich eingeladen, dich auf SimpleFit zu verbinden.",
+      "expires": "Läuft ab am {date}",
+      "note": "„{note}“ — {name}",
+      "sees": "Wenn du annimmst, sieht {name}",
+      "neverTitle": "Nie geteilt",
+      "never": {
+        "goals": "Ziele",
+        "next_fight": "Nächster Kampf",
+        "weight": "Gewicht",
+        "height": "Größe",
+        "account_name": "Kontoname",
+        "date_of_birth": "Geburtsdatum",
+        "email": "E-Mail-Adresse",
+        "other_coaches": "Alles, was du mit anderen Coaches teilst"
+      },
+      "fields": {
+        "display_name": "Anzeigename",
+        "username": "Benutzername",
+        "country_code": "Land",
+        "city": "Stadt",
+        "experience_level": "Erfahrung",
+        "stance": "Auslage",
+        "amateur_bout_count": "Amateurkämpfe"
+      },
+      "document": "Information · {version} · {language}",
+      "readFull": "Vollständige Information lesen",
+      "closeFull": "Schließen",
+      "accept": "Einladung annehmen",
+      "accepting": "Wird angenommen…",
+      "decline": "Ablehnen",
+      "declining": "Wird abgelehnt…",
+      "acceptHint": "Annehmen bleibt aus, bis du das Kästchen ankreuzt. Unter Coaches kannst du die Beziehung jederzeit beenden.",
+      "continueSetup": "Einrichtung fortsetzen",
+      "retry": "Erneut versuchen",
+      "problems": {
+        "language": {
+          "title": "Diese Information ist in deiner Sprache noch nicht verfügbar.",
+          "body": "Freigegebene Sprachen: {languages}. Wechsle die Sprache der App, um sie zu lesen und zu entscheiden. Ablehnen kannst du trotzdem."
+        },
+        "document": {
+          "title": "Annehmen ist noch nicht möglich.",
+          "body": "Die Information zu Coach-Verbindungen ist noch nicht veröffentlicht. Ablehnen kannst du trotzdem."
+        },
+        "stale": {
+          "title": "Was du teilen würdest, hat sich geändert.",
+          "body": "Prüfe, was dein Coach sehen würde, und stimme erneut zu. Es wurde nichts geteilt."
+        },
+        "tooYoung": {
+          "title": "Coach-Verbindungen sind für Fighter ab 18 Jahren.",
+          "body": "Du kannst diese Einladung nicht annehmen. Nichts wurde geteilt, und dein Coach erfährt den Grund nicht."
+        },
+        "profile": {
+          "title": "Schließe dein Profil ab, um zu antworten.",
+          "body": "Zuerst kommen deine Kontodaten und dein Kämpferprofil. Danach kommst du hierher zurück; unterwegs wird nichts angenommen."
+        },
+        "limited": {
+          "title": "Zu viele Versuche.",
+          "body": "Versuche es in ein paar Minuten erneut."
+        },
+        "failed": {
+          "title": "Das hat nicht geklappt.",
+          "body": "Es hat sich nichts geändert. Versuche es erneut."
+        }
+      },
+      "outcome": {
+        "sharing": {
+          "title": "Coach-Verbindungen sind gerade nicht verfügbar.",
+          "body": "Es wurde nichts geteilt. Diese Einladung kannst du trotzdem ablehnen.",
+          "action": "Zurück zu den Einladungen"
+        },
+        "unavailable": {
+          "title": "Diese Einladung ist nicht verfügbar",
+          "body": "Sie ist vielleicht abgelaufen, wurde beantwortet oder zurückgezogen. Bitte deinen Coach, eine neue zu senden.",
+          "action": "Zurück zu den Einladungen"
+        },
+        "failed": {
+          "title": "Wir konnten die Einladung nicht laden.",
+          "body": "Prüfe deine Verbindung und versuche es erneut.",
+          "action": "Zurück zu den Einladungen"
+        },
+        "accepted": {
+          "title": "Du bist mit {name} verbunden.",
+          "body": "{name} sieht jetzt die Angaben, denen du zugestimmt hast. Unter Coaches kannst du das jederzeit beenden.",
+          "action": "Zu den Coaches"
+        },
+        "already": {
+          "title": "Du bist bereits mit {name} verbunden.",
+          "body": "Es hat sich nichts geändert: {name} sieht weiterhin, was du zuvor freigegeben hast.",
+          "action": "Zu den Coaches"
+        },
+        "declined": {
+          "title": "Einladung abgelehnt",
+          "body": "Mit {name} wurde nichts geteilt.",
+          "action": "Zurück zu den Einladungen"
+        }
+      },
+      "declineSheet": {
+        "title": "Einladung von {name} ablehnen?",
+        "body": "Mit {name} wird nichts geteilt. Für eine spätere Verbindung muss dein Coach dir eine neue Einladung senden.",
+        "confirm": "Ablehnen",
+        "pending": "Wird abgelehnt…",
+        "keep": "Behalten",
+        "failed": "Das hat nicht geklappt. Es hat sich nichts geändert. Versuche es erneut."
+      }
     }
   },
   "coachFighters": {

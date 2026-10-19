@@ -2,6 +2,7 @@ import { CancelledError, QueryClient } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react-native";
 
 import { myCoachKey, myCoachesKey } from "@/entities/coach-relationship";
+import { incomingInvitationsKey, invitationPreviewKey } from "@/entities/incoming-coach-invitation";
 import { completeAuthentication, refresh, signOut } from "@/entities/session";
 import { resetSessionForTests } from "@/entities/session/model/session";
 import { jsonResponse, mockFetch } from "@/test/render";
@@ -55,6 +56,19 @@ describe("session-scoped query cache (SF-26, SF-28)", () => {
     await act(() => signOut());
     await waitFor(() => expect(client.getQueryData(myCoachesKey("active"))).toBeUndefined());
     expect(client.getQueryData(myCoachKey("rel-1"))).toBeUndefined();
+  });
+
+  it("clears another account's incoming invitations and previews (SF-76)", async () => {
+    const client = new QueryClient();
+    signedInAs("user-a");
+    await completeAuthentication(TOKENS);
+    await renderHook(() => useSessionScopedCache(client));
+    client.setQueryData(incomingInvitationsKey, { pages: [{ invitations: [{}] }] });
+    client.setQueryData(invitationPreviewKey("inv-1", "en"), { disclosure: {} });
+
+    await act(() => signOut());
+    await waitFor(() => expect(client.getQueryData(incomingInvitationsKey)).toBeUndefined());
+    expect(client.getQueryData(invitationPreviewKey("inv-1", "en"))).toBeUndefined();
   });
 
   it("clears it when a sign-in starts a new session, and keeps it across a refresh", async () => {

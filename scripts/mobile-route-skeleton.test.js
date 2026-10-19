@@ -82,6 +82,8 @@ const TAB_SECTIONS = {
       "mobile.achievements",
       "mobile.profile.coaches",
       "mobile.profile.coaches._relationship-id",
+      "mobile.profile.coaches.invitations",
+      "mobile.profile.coaches.invitations._invitation-id",
     ],
   },
   "mobile.coach": {
@@ -140,8 +142,8 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 22, catchAll: 1, placeholder: 119, deferred: 1 });
-    expect(routes).toHaveLength(143);
+    expect(counts).toEqual({ screen: 24, catchAll: 1, placeholder: 119, deferred: 1 });
+    expect(routes).toHaveLength(145);
   });
 
   it("makes placeholder files exactly the canonical placeholder module for their own route", () => {
@@ -380,5 +382,21 @@ describe("native authentication and app identity (regression)", () => {
     expect(config).toContain("usesAppleSignIn: true");
     expect(config).toContain('"expo-router"');
     expect(JSON.parse(read("eas.json")).cli).toBeDefined();
+  });
+});
+
+describe("tab stack roots", () => {
+  it("have a route title, which names the back button of the screens pushed over them", () => {
+    const { execSync } = require("node:child_process");
+    const layouts = execSync(`grep -rl "<TabStack root" ${APP}`, { cwd: root, encoding: "utf8" })
+      .trim()
+      .split("\n");
+    const titles = JSON.parse(read("src/shared/i18n/messages/en.json")).routes.titles;
+    const missing = layouts
+      .map((file) => read(file).match(/initialRouteName: "([^"]+)"/)[1])
+      .map((name) => `mobile/${name.replace(/\/index$/, "")}`)
+      .filter((key) => !titles[key]);
+    expect(layouts.length).toBeGreaterThan(0);
+    expect(missing).toEqual([]);
   });
 });
