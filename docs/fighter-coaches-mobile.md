@@ -63,14 +63,13 @@ files, so the frozen `TimerDone` preview was removed (T06 now points at
 
 `D-MOBILE-FIGHTER-COACH-INVITATIONS`. Three dependencies are missing:
 
-1. **No fighter invitation contract.** SF-57 offers `previewCoachInvitation`
-   (anonymous) and `acceptCoachInvitation` / `declineCoachInvitation` by the
-   one-time token from the E08 link, but no list of a fighter's incoming
-   invitations. A future backend task would add, for example,
-   `GET /api/v1/me/coach-invitations` (pending invitations addressed to the
-   viewer's verified email identities: coach public identity, note, expiry,
-   an opaque invitation id, never the token) and accept / decline by that id
-   with the same recipient binding and disclosure version.
+1. **Responding by invitation id is not decided.** SF-73 added the read-only
+   inbox `listMyIncomingCoachInvitations` (`GET /api/v1/me/coach-invitations`:
+   invitations addressed to the viewer's verified email identities, coach
+   public identity, note, effective status and dates, an opaque invitation
+   id, never the token; `404` while sharing is off). Accept / decline still
+   need the one-time token from the E08 link; responding by id awaits
+   approval (ADR 0021, SF-73 amendment).
 2. **No secure native handoff.** The E08 link is the web's
    (`{WEB_APP_URL}/invite/coach#token=…`; its web review page does not exist
    yet either, `GAP-WEB-COACH-FIGHTER-INVITE`). The app has only the
