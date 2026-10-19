@@ -430,7 +430,9 @@
       "mobile/welcome/tour": "Fighter introduction",
       "mobile/workspaces": "Workspaces",
       "mobile/profile/coaches": "Coaches",
-      "mobile/profile/coaches/_relationship-id": "Coach"
+      "mobile/profile/coaches/_relationship-id": "Coach",
+      "mobile/profile/coaches/invitations": "Invitations",
+      "mobile/profile/coaches/invitations/_invitation-id": "Invitation"
     }
   },
   "shells": {
@@ -1197,6 +1199,158 @@
       "failed": "We couldn’t end the relationship. Nothing changed. Try again.",
       "ended": "{name} no longer sees your profile.",
       "unavailable": "This relationship is no longer available. Your coaches list is up to date."
+    },
+    "invitations": {
+      "title": "Invitations",
+      "body": "From coaches who invited your email address",
+      "open": "Opens your coach invitations"
+    }
+  },
+  "fighterInvitations": {
+    "intro": "Invitations coaches sent to an email address you verified. Nothing is shared until you accept.",
+    "loading": "Loading your invitations",
+    "more": "Show more",
+    "loadingMore": "Loading more…",
+    "fallbackName": "Your coach",
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "row": {
+      "pendingBrand": "{brand} · expires {date}",
+      "pending": "Expires {date}",
+      "accepted": "Accepted {date}",
+      "declined": "Declined {date}",
+      "cancelled": "Cancelled {date}",
+      "expired": "Expired {date}",
+      "open": "Opens the invitation"
+    },
+    "empty": {
+      "title": "No invitations",
+      "body": "When a coach invites an email address you verified, the invitation appears here."
+    },
+    "sharing": {
+      "title": "Invitations aren’t available",
+      "body": "Coach connections aren’t open yet. Nothing is shared with anyone."
+    },
+    "profile": {
+      "title": "Finish your account to see invitations",
+      "body": "Your account details come first. Nothing is accepted on the way."
+    },
+    "failed": {
+      "title": "We couldn’t load your invitations.",
+      "body": "Check your connection and try again.",
+      "retry": "Try again"
+    },
+    "review": {
+      "loading": "Loading the invitation",
+      "title": "{name} invited you to connect on SimpleFit.",
+      "expires": "Expires {date}",
+      "note": "“{note}” — {name}",
+      "sees": "If you accept, {name} sees",
+      "neverTitle": "Never shared",
+      "never": {
+        "goals": "Goals",
+        "next_fight": "Next fight",
+        "weight": "Weight",
+        "height": "Height",
+        "account_name": "Account name",
+        "date_of_birth": "Date of birth",
+        "email": "Email address",
+        "other_coaches": "Anything you share with other coaches"
+      },
+      "fields": {
+        "display_name": "Display name",
+        "username": "Username",
+        "country_code": "Country",
+        "city": "City",
+        "experience_level": "Experience level",
+        "stance": "Stance",
+        "amateur_bout_count": "Amateur bouts"
+      },
+      "document": "Disclosure · {version} · {language}",
+      "readFull": "Read the full disclosure",
+      "closeFull": "Close",
+      "accept": "Accept invitation",
+      "accepting": "Accepting…",
+      "decline": "Decline",
+      "declining": "Declining…",
+      "acceptHint": "Accept stays off until you tick the box. You can end the relationship any time from Coaches.",
+      "continueSetup": "Continue setup",
+      "retry": "Try again",
+      "problems": {
+        "language": {
+          "title": "This disclosure isn’t available in your language yet.",
+          "body": "Approved languages: {languages}. Change the app language to read it and decide. You can still decline."
+        },
+        "document": {
+          "title": "Accepting isn’t available yet.",
+          "body": "The disclosure for coach connections isn’t published yet. You can still decline."
+        },
+        "stale": {
+          "title": "What you would share has changed.",
+          "body": "Review what your coach would see and agree again. Nothing was shared."
+        },
+        "tooYoung": {
+          "title": "Coach connections are for fighters aged 18 and over.",
+          "body": "You can’t accept this invitation. Nothing was shared, and your coach isn’t told why."
+        },
+        "profile": {
+          "title": "Finish your profile to respond.",
+          "body": "Your account details and fighter profile come first. You return here afterwards; nothing is accepted on the way."
+        },
+        "limited": {
+          "title": "Too many attempts.",
+          "body": "Try again in a few minutes."
+        },
+        "failed": {
+          "title": "That didn’t work.",
+          "body": "Nothing changed. Try again."
+        }
+      },
+      "outcome": {
+        "sharing": {
+          "title": "Coach connections aren’t available right now.",
+          "body": "Nothing was shared. You can still decline this invitation.",
+          "action": "Back to invitations"
+        },
+        "unavailable": {
+          "title": "This invitation isn’t available",
+          "body": "It may have expired, been answered or cancelled. Ask your coach to send a new one.",
+          "action": "Back to invitations"
+        },
+        "failed": {
+          "title": "We couldn’t load the invitation.",
+          "body": "Check your connection and try again.",
+          "action": "Back to invitations"
+        },
+        "accepted": {
+          "title": "You’re connected with {name}.",
+          "body": "{name} now sees the fields you agreed to share. You can end this any time from Coaches.",
+          "action": "Go to Coaches"
+        },
+        "already": {
+          "title": "You’re already connected with {name}.",
+          "body": "Nothing changed: {name} keeps seeing what you agreed to share before.",
+          "action": "Go to Coaches"
+        },
+        "declined": {
+          "title": "Invitation declined",
+          "body": "Nothing was shared with {name}.",
+          "action": "Back to invitations"
+        }
+      },
+      "declineSheet": {
+        "title": "Decline the invitation from {name}?",
+        "body": "Nothing is shared with {name}. To connect later, they have to send you a new invitation.",
+        "confirm": "Decline",
+        "pending": "Declining…",
+        "keep": "Keep",
+        "failed": "That didn’t work. Nothing changed. Try again."
+      }
     }
   },
   "coachFighters": {

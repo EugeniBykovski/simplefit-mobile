@@ -49,10 +49,14 @@ const active = (id: string, display: string | null, brand: string | null, extra 
   coach_display_name_at_end: null,
   ...extra,
 });
-const MAREK = active("rel-1", "Coach Marek", "Marek Boxing");
-const ALEX = active("rel-2", "Alex Novak", null);
+const R1 = "11111111-1111-4111-8111-111111111111";
+const R2 = "22222222-2222-4222-8222-222222222222";
+const R9 = "99999999-9999-4999-8999-999999999999";
+const FOREIGN = "f0f0f0f0-f0f0-4f0f-8f0f-f0f0f0f0f0f0";
+const MAREK = active(R1, "Coach Marek", "Marek Boxing");
+const ALEX = active(R2, "Alex Novak", null);
 const ENDED = {
-  ...active("rel-9", null, null),
+  ...active(R9, null, null),
   status: "ended",
   ended_at: "2026-10-02T10:00:00Z",
   ended_by: "fighter",
@@ -122,7 +126,7 @@ describe("My coaches (FC1)", () => {
     expect(mockSetOptions).toHaveBeenCalledWith({ title: "Coaches" });
 
     await user.press(marek);
-    expect(mockRouter.push).toHaveBeenCalledWith("/profile/coaches/rel-1");
+    expect(mockRouter.push).toHaveBeenCalledWith(`/profile/coaches/${R1}`);
     const read = calls.find((call) => call.path === COACHES);
     expect(read?.query.get("status")).toBe("active");
   });
@@ -180,10 +184,12 @@ describe("My coaches (FC1)", () => {
   });
 });
 
+const one = (relationship: unknown) => jsonResponse({ relationship });
+
 describe("Coach relationship (FC2)", () => {
-  it("shows one active relationship found in the fighter's own list", async () => {
-    const calls = backend({ [`GET ${COACHES}`]: byStatus({ active: [ALEX, MAREK] }) });
-    await renderWithProviders(<CoachRelationshipScreen relationshipId="rel-1" />);
+  it("reads one active relationship directly, in one request (SF-74)", async () => {
+    const calls = backend({ [`GET ${COACHES}/${R1}`]: one(MAREK) });
+    await renderWithProviders(<CoachRelationshipScreen relationshipId={R1} />);
 
     expect(await screen.findByRole("header", { name: "Coach Marek" })).toBeOnTheScreen();
     expect(screen.getByText("Marek Boxing")).toBeOnTheScreen();
@@ -194,42 +200,68 @@ describe("Coach relationship (FC2)", () => {
     expect(screen.queryByText("City")).toBeNull();
     expect(screen.getByText("Weight, height, goals and next fight")).toBeOnTheScreen();
     expect(screen.queryByText(/coach@private|600 000/)).toBeNull();
-    // Only the fighter's own list is read: no coach profile, no other endpoint.
-    expect(calls.every((call) => call.path === COACHES || call.path === "/api/me")).toBe(true);
-    expect(calls.find((call) => call.path === COACHES)?.query.get("status")).toBe("active");
+    // One direct read: no list scan, no coach profile, no other endpoint.
+    expect(calls.filter((call) => call.path !== "/api/me").map((call) => call.path)).toEqual([
+      `${COACHES}/${R1}`,
+    ]);
   });
 
-  it("finds a relationship on a later page", async () => {
-    backend({
-      [`GET ${COACHES}`]: ({ query }) =>
-        query.get("cursor") === "c2" ? page([MAREK]) : page([ALEX], "c2"),
-    });
-    await renderWithProviders(<CoachRelationshipScreen relationshipId="rel-1" />);
-    expect(await screen.findByRole("header", { name: "Coach Marek" })).toBeOnTheScreen();
-  });
-
-  it.each([
-    ["an ended relationship", { active: [ALEX], ended: [ENDED] }, "rel-9"],
-    ["someone else's or an unknown id", { active: [ALEX] }, "rel-foreign"],
-  ])("shows one not-available state for %s", async (_case, lists, id) => {
-    const calls = backend({ [`GET ${COACHES}`]: byStatus(lists) });
-    await renderWithProviders(<CoachRelationshipScreen relationshipId={id} />);
+  it("shows an ended relationship as history, with no disclosure and no end action", async () => {
+    backend({ [`GET ${COACHES}/${R9}`]: one(ENDED) });
+    await renderWithProviders(<CoachRelationshipScreen relationshipId={R9} />);
     expect(await screen.findByText("This coach isn’t available")).toBeOnTheScreen();
+    expect(screen.getByLabelText(/^Sam R\., Ended .* · by you$/)).toBeOnTheScreen();
+    expect(screen.getByText(/An ended relationship can’t be restarted\./)).toBeOnTheScreen();
+    expect(screen.queryByText(/sees$/)).toBeNull();
+    expect(screen.queryByRole("button", { name: "End relationship" })).toBeNull();
+  });
+
+  it("shows one not-available state for someone else's or an unknown id (404)", async () => {
+    const calls = backend({ [`GET ${COACHES}/${FOREIGN}`]: error(404, "not_found") });
+    await renderWithProviders(<CoachRelationshipScreen relationshipId={FOREIGN} />);
+    expect(await screen.findByText("This coach isn’t available")).toBeOnTheScreen();
+    expect(screen.queryByTestId("fighter-coach:ended")).toBeNull();
     expect(screen.queryByRole("button", { name: "End relationship" })).toBeNull();
     expect(calls.some((call) => call.method !== "GET")).toBe(false);
+    await user.press(screen.getByRole("button", { name: "Back to coaches" }));
+    expect(mockRouter.replace).toHaveBeenCalledWith("/profile/coaches");
+  });
+
+  it.each(["", "rel-1", `${R1}/end`, "../me"])(
+    "never sends a malformed id (%j) to the API",
+    async (id) => {
+      const calls = backend({});
+      await renderWithProviders(<CoachRelationshipScreen relationshipId={id} />);
+      expect(await screen.findByText("This coach isn’t available")).toBeOnTheScreen();
+      expect(calls.filter((call) => call.path !== "/api/me")).toEqual([]);
+    },
+  );
+
+  it("never shows 'not available' when the read failed, and retries", async () => {
+    let fail = true;
+    backend({
+      [`GET ${COACHES}/${R1}`]: () => (fail ? error(500, "internal_error") : one(MAREK)),
+    });
+    await renderWithProviders(<CoachRelationshipScreen relationshipId={R1} />);
+    expect(await screen.findByText(/We couldn’t load your coaches\./)).toBeOnTheScreen();
+    expect(screen.queryByText("This coach isn’t available")).toBeNull();
+    fail = false;
+    await user.press(screen.getByRole("button", { name: "Try again" }));
+    expect(await screen.findByRole("header", { name: "Coach Marek" })).toBeOnTheScreen();
   });
 
   it("ends only after confirmation and the backend's 204, leaving other coaches untouched", async () => {
     let ended = false;
     const calls = backend({
+      [`GET ${COACHES}/${R1}`]: () => one(ended ? { ...ENDED, relationship_id: R1 } : MAREK),
       [`GET ${COACHES}`]: () => page(ended ? [ALEX] : [MAREK, ALEX]),
-      [`POST ${COACHES}/rel-1/end`]: () => {
+      [`POST ${COACHES}/${R1}/end`]: () => {
         ended = true;
         return new Response(null, { status: 204 });
       },
     });
     const { queryClient } = await renderWithProviders(
-      <CoachRelationshipScreen relationshipId="rel-1" />,
+      <CoachRelationshipScreen relationshipId={R1} />,
     );
     await user.press(await screen.findByRole("button", { name: "End relationship" }));
     expect(await screen.findByText("End your relationship with Coach Marek?")).toBeOnTheScreen();
@@ -243,18 +275,19 @@ describe("Coach relationship (FC2)", () => {
     await waitFor(() => expect(mockRouter.back).toHaveBeenCalled());
     expect(await screen.findByText("Coach Marek no longer sees your profile.")).toBeOnTheScreen();
     expect(calls.filter((call) => call.method === "POST").map((call) => call.path)).toEqual([
-      `${COACHES}/rel-1/end`,
+      `${COACHES}/${R1}/end`,
     ]);
-    expect(queryClient.getQueryData(myCoachKey("rel-1"))).toBeUndefined();
+    // The ended relationship is never served from the cache.
+    expect(queryClient.getQueryData(myCoachKey(R1))).toBeUndefined();
   });
 
   it("never reports an end the backend did not confirm (404)", async () => {
     backend({
-      [`GET ${COACHES}`]: page([MAREK]),
-      [`POST ${COACHES}/rel-1/end`]: error(404, "not_found"),
+      [`GET ${COACHES}/${R1}`]: one(MAREK),
+      [`POST ${COACHES}/${R1}/end`]: error(404, "not_found"),
     });
     const { queryClient } = await renderWithProviders(
-      <CoachRelationshipScreen relationshipId="rel-1" />,
+      <CoachRelationshipScreen relationshipId={R1} />,
     );
     await user.press(await screen.findByRole("button", { name: "End relationship" }));
     const confirm = await screen.findAllByRole("button", { name: "End relationship" });
@@ -266,17 +299,17 @@ describe("Coach relationship (FC2)", () => {
       ),
     ).toBeOnTheScreen();
     expect(screen.queryByText(/no longer sees your profile/)).toBeNull();
-    expect(queryClient.getQueryData(myCoachKey("rel-1"))).toBeUndefined();
+    expect(queryClient.getQueryData(myCoachKey(R1))).toBeUndefined();
     expect(mockRouter.back).toHaveBeenCalled();
   });
 
   it("keeps the relationship on a failure and sends one request at a time", async () => {
     let answer: (response: Response) => void = () => undefined;
     const calls = backend({
-      [`GET ${COACHES}`]: page([MAREK]),
-      [`POST ${COACHES}/rel-1/end`]: () => new Promise<Response>((resolve) => (answer = resolve)),
+      [`GET ${COACHES}/${R1}`]: one(MAREK),
+      [`POST ${COACHES}/${R1}/end`]: () => new Promise<Response>((resolve) => (answer = resolve)),
     });
-    await renderWithProviders(<CoachRelationshipScreen relationshipId="rel-1" />);
+    await renderWithProviders(<CoachRelationshipScreen relationshipId={R1} />);
     await user.press(await screen.findByRole("button", { name: "End relationship" }));
     const confirm = await screen.findAllByRole("button", { name: "End relationship" });
     await user.press(confirm[confirm.length - 1]!);

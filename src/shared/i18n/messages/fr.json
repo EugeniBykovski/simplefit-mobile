@@ -430,7 +430,9 @@
       "mobile/welcome/tour": "Découverte boxeur",
       "mobile/workspaces": "Espaces de travail",
       "mobile/profile/coaches": "Coachs",
-      "mobile/profile/coaches/_relationship-id": "Coach"
+      "mobile/profile/coaches/_relationship-id": "Coach",
+      "mobile/profile/coaches/invitations": "Invitations",
+      "mobile/profile/coaches/invitations/_invitation-id": "Invitation"
     }
   },
   "shells": {
@@ -1197,6 +1199,158 @@
       "failed": "Impossible de mettre fin à la relation. Rien n’a changé. Réessaie.",
       "ended": "{name} ne voit plus ton profil.",
       "unavailable": "Cette relation n’est plus disponible. Ta liste de coachs est à jour."
+    },
+    "invitations": {
+      "title": "Invitations",
+      "body": "De coachs qui ont invité ton adresse e-mail",
+      "open": "Ouvre tes invitations de coachs"
+    }
+  },
+  "fighterInvitations": {
+    "intro": "Invitations envoyées par des coachs à une adresse e-mail que tu as vérifiée. Rien n’est partagé tant que tu n’acceptes pas.",
+    "loading": "Chargement de tes invitations",
+    "more": "Afficher plus",
+    "loadingMore": "Chargement…",
+    "fallbackName": "Ton coach",
+    "status": {
+      "pending": "En attente",
+      "accepted": "Acceptée",
+      "declined": "Refusée",
+      "cancelled": "Annulée",
+      "expired": "Expirée"
+    },
+    "row": {
+      "pendingBrand": "{brand} · expire le {date}",
+      "pending": "Expire le {date}",
+      "accepted": "Acceptée le {date}",
+      "declined": "Refusée le {date}",
+      "cancelled": "Annulée le {date}",
+      "expired": "Expirée le {date}",
+      "open": "Ouvre l’invitation"
+    },
+    "empty": {
+      "title": "Aucune invitation",
+      "body": "Quand un coach invite une adresse e-mail que tu as vérifiée, l’invitation apparaît ici."
+    },
+    "sharing": {
+      "title": "Les invitations ne sont pas disponibles",
+      "body": "Les connexions avec un coach ne sont pas encore ouvertes. Rien n’est partagé avec personne."
+    },
+    "profile": {
+      "title": "Termine ton compte pour voir les invitations",
+      "body": "Les informations de ton compte passent d’abord. Rien n’est accepté en chemin."
+    },
+    "failed": {
+      "title": "Impossible de charger tes invitations.",
+      "body": "Vérifie ta connexion et réessaie.",
+      "retry": "Réessayer"
+    },
+    "review": {
+      "loading": "Chargement de l’invitation",
+      "title": "{name} t’invite à te connecter sur SimpleFit.",
+      "expires": "Expire le {date}",
+      "note": "« {note} » — {name}",
+      "sees": "Si tu acceptes, {name} voit",
+      "neverTitle": "Jamais partagé",
+      "never": {
+        "goals": "Objectifs",
+        "next_fight": "Prochain combat",
+        "weight": "Poids",
+        "height": "Taille",
+        "account_name": "Nom du compte",
+        "date_of_birth": "Date de naissance",
+        "email": "Adresse e-mail",
+        "other_coaches": "Tout ce que tu partages avec d’autres coachs"
+      },
+      "fields": {
+        "display_name": "Nom affiché",
+        "username": "Nom d’utilisateur",
+        "country_code": "Pays",
+        "city": "Ville",
+        "experience_level": "Niveau d’expérience",
+        "stance": "Garde",
+        "amateur_bout_count": "Combats amateurs"
+      },
+      "document": "Information · {version} · {language}",
+      "readFull": "Lire l’information complète",
+      "closeFull": "Fermer",
+      "accept": "Accepter l’invitation",
+      "accepting": "Acceptation…",
+      "decline": "Refuser",
+      "declining": "Refus…",
+      "acceptHint": "Accepter reste désactivé tant que la case n’est pas cochée. Tu peux mettre fin à la relation à tout moment depuis Coachs.",
+      "continueSetup": "Poursuivre la configuration",
+      "retry": "Réessayer",
+      "problems": {
+        "language": {
+          "title": "Cette information n’est pas encore disponible dans ta langue.",
+          "body": "Langues approuvées : {languages}. Change la langue de l’app pour la lire et décider. Tu peux quand même refuser."
+        },
+        "document": {
+          "title": "Accepter n’est pas encore possible.",
+          "body": "L’information sur les connexions avec un coach n’est pas encore publiée. Tu peux quand même refuser."
+        },
+        "stale": {
+          "title": "Ce que tu partagerais a changé.",
+          "body": "Vérifie ce que ton coach verrait et accepte à nouveau. Rien n’a été partagé."
+        },
+        "tooYoung": {
+          "title": "Les connexions avec un coach sont réservées aux combattants de 18 ans et plus.",
+          "body": "Tu ne peux pas accepter cette invitation. Rien n’a été partagé et ton coach ne saura pas pourquoi."
+        },
+        "profile": {
+          "title": "Termine ton profil pour répondre.",
+          "body": "Les informations de ton compte et ton profil de boxeur passent d’abord. Tu reviens ici ensuite ; rien n’est accepté en chemin."
+        },
+        "limited": {
+          "title": "Trop de tentatives.",
+          "body": "Réessaie dans quelques minutes."
+        },
+        "failed": {
+          "title": "Ça n’a pas fonctionné.",
+          "body": "Rien n’a changé. Réessaie."
+        }
+      },
+      "outcome": {
+        "sharing": {
+          "title": "Les connexions avec un coach ne sont pas disponibles pour le moment.",
+          "body": "Rien n’a été partagé. Tu peux quand même refuser cette invitation.",
+          "action": "Retour aux invitations"
+        },
+        "unavailable": {
+          "title": "Cette invitation n’est pas disponible",
+          "body": "Elle a peut-être expiré, reçu une réponse ou été annulée. Demande à ton coach d’en envoyer une nouvelle.",
+          "action": "Retour aux invitations"
+        },
+        "failed": {
+          "title": "Impossible de charger l’invitation.",
+          "body": "Vérifie ta connexion et réessaie.",
+          "action": "Retour aux invitations"
+        },
+        "accepted": {
+          "title": "Tu es connecté avec {name}.",
+          "body": "{name} voit maintenant les informations que tu as accepté de partager. Tu peux y mettre fin à tout moment depuis Coachs.",
+          "action": "Aller aux coachs"
+        },
+        "already": {
+          "title": "Tu es déjà connecté avec {name}.",
+          "body": "Rien n’a changé : {name} continue de voir ce que tu avais accepté de partager.",
+          "action": "Aller aux coachs"
+        },
+        "declined": {
+          "title": "Invitation refusée",
+          "body": "Rien n’a été partagé avec {name}.",
+          "action": "Retour aux invitations"
+        }
+      },
+      "declineSheet": {
+        "title": "Refuser l’invitation de {name} ?",
+        "body": "Rien n’est partagé avec {name}. Pour vous connecter plus tard, ton coach devra t’envoyer une nouvelle invitation.",
+        "confirm": "Refuser",
+        "pending": "Refus…",
+        "keep": "Garder",
+        "failed": "Ça n’a pas fonctionné. Rien n’a changé. Réessaie."
+      }
     }
   },
   "coachFighters": {

@@ -282,7 +282,8 @@ async function signIn(
                     : url.includes("/api/v1/me/coaches") ||
                         url.includes("/api/v1/me/coach/fighters")
                       ? jsonResponse({ relationships: [], next_cursor: null })
-                      : url.includes("/api/v1/me/coach/invitations")
+                      : url.includes("/api/v1/me/coach/invitations") ||
+                          url.includes("/api/v1/me/coach-invitations")
                         ? jsonResponse({ invitations: [], next_cursor: null })
                         : jsonResponse({
                             user: {

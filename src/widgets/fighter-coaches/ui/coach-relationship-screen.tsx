@@ -17,18 +17,20 @@ import { Spinner } from "@/shared/ui/spinner";
 import { Text } from "@/shared/ui/text";
 import { useToast } from "@/shared/ui/toast";
 
-import { coachName } from "./my-coaches-screen";
+import { EndedRow, coachName } from "./my-coaches-screen";
 
 /*
- * FC2 Coach relationship (`mobile.profile.coaches._relationship-id`, SF-59;
- * Claude Design FighterCoaches screen=detail, version 1792069267-b198).
+ * FC2 Coach relationship (`mobile.profile.coaches._relationship-id`, SF-59,
+ * SF-76; Claude Design FighterCoaches screen=detail, version 1792155768-3179).
  *
- * One active relationship, verified against the backend on every entry (the
- * id must be in the fighter's active list; the route parameter authorizes
- * nothing). It shows the coach's public identity, what that coach sees
- * (the disclosed fields) and what is never shared, and ends the
- * relationship after confirmation. An ended, foreign or unknown id is one
- * not-available state, with no detail of which.
+ * One of the fighter's own relationships, read directly on every entry
+ * (`getMyCoachRelationship`, SF-74; the route parameter authorizes nothing).
+ * Active: the coach's public identity, what that coach sees (the disclosed
+ * fields), what is never shared, and End relationship after confirmation.
+ * Ended (reached from a stale screen or an old link; FC1 opens none): the
+ * not-available card with the FC1 ended row, never the disclosure or an end
+ * action. A foreign, unknown or malformed id is the plain not-available
+ * state, with no detail of which.
  */
 
 const NEVER = ["body", "account", "others"] as const;
@@ -70,11 +72,14 @@ export function CoachRelationshipScreen({ relationshipId }: { relationshipId: st
     );
   }
   if (relationship.isError || relationship.data === null) return <NotAvailable />;
+  if (relationship.data.status === "ended") return <NotAvailable ended={relationship.data} />;
   return <Relationship coach={relationship.data} />;
 }
 
-function NotAvailable() {
+function NotAvailable({ ended }: { ended?: MyCoach }) {
   const t = useTranslations("fighterCoaches.detail.unavailable");
+  const coaches = useTranslations("fighterCoaches");
+  const endedNote = coaches("endedNote");
   const router = useRouter();
   return (
     <Screen>
@@ -87,6 +92,14 @@ function NotAvailable() {
         <Text variant="h3">{t("title")}</Text>
         <Text color="mutedForeground">{t("body")}</Text>
       </View>
+      {ended ? (
+        <View className="gap-2.5" testID="fighter-coach:ended">
+          <EndedRow coach={ended} />
+          <Text variant="caption" color="faintForeground">
+            {endedNote}
+          </Text>
+        </View>
+      ) : null}
       <Button
         label={t("back")}
         variant="quiet"

@@ -1,5 +1,5 @@
 import { useNavigation, useRouter } from "expo-router";
-import { ChevronRight, CircleAlert, Lock, UserRound } from "lucide-react-native";
+import { ChevronRight, CircleAlert, Lock, Mail, UserRound } from "lucide-react-native";
 import { useLayoutEffect } from "react";
 import { FlatList, Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -30,8 +30,8 @@ import { Text } from "@/shared/ui/text";
  * public identity and start and open FC2; ended rows show only the coach's
  * name at the end, the date and who ended it, and open nothing. Loading,
  * an empty list, unavailable (`404`: no completed fighter profile) and a
- * failure are four different states. There is no invitation inbox: the API
- * offers none (D-MOBILE-FIGHTER-COACH-INVITATIONS).
+ * failure are four different states. The Invitations row opens FCI1, the
+ * incoming coach invitations (SF-76).
  */
 
 export function MyCoachesScreen({ view }: { view: MyCoachStatus }) {
@@ -52,6 +52,7 @@ export function MyCoachesScreen({ view }: { view: MyCoachStatus }) {
   const header = (
     <View className="gap-4 pb-1">
       <Text color="mutedForeground">{t("intro")}</Text>
+      <InvitationsEntry />
       <SegmentedControl
         label={t("views")}
         value={view}
@@ -178,6 +179,35 @@ function Message({
   );
 }
 
+/** FC1's entry to FCI1, the incoming coach invitations (SF-76). */
+function InvitationsEntry() {
+  const t = useTranslations("fighterCoaches.invitations");
+  const router = useRouter();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${t("title")}, ${t("body")}`}
+      accessibilityHint={t("open")}
+      onPress={() => router.push(routeHref("mobile.profile.coaches.invitations"))}
+      className="min-h-14 flex-row items-center gap-3 rounded-3xl border border-border bg-surface px-3.5 py-2 active:bg-muted"
+      testID="fighter-coaches:invitations"
+    >
+      <View className="size-9 items-center justify-center rounded-xl bg-accent">
+        <Icon icon={Mail} size={18} color="highlight" />
+      </View>
+      <View className="flex-1 gap-0.5">
+        <Text variant="bodySm" weight="extrabold">
+          {t("title")}
+        </Text>
+        <Text variant="caption" color="mutedForeground">
+          {t("body")}
+        </Text>
+      </View>
+      <Icon icon={ChevronRight} size={16} color="faintForeground" />
+    </Pressable>
+  );
+}
+
 /** The coach's name as the fighter sees it: display name, else brand. */
 export function coachName(coach: MyCoach["coach"], fallback: string): string {
   return coach?.display_name ?? coach?.brand_name ?? fallback;
@@ -222,7 +252,8 @@ function ActiveRow({ coach }: { coach: MyCoach }) {
   );
 }
 
-function EndedRow({ coach }: { coach: MyCoach }) {
+/** An ended relationship: the coach's name at the end, the date and who ended it (FC1). */
+export function EndedRow({ coach }: { coach: MyCoach }) {
   const t = useTranslations("fighterCoaches");
   const format = useFormatter();
   const name = coach.coach_display_name_at_end ?? t("fallbackName");

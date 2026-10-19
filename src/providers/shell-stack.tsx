@@ -4,6 +4,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { Pressable } from "react-native";
 import { useTranslations } from "use-intl";
 
+import type { Messages } from "@/shared/i18n/messages";
 import { Icon } from "@/shared/ui/icon";
 
 /** Header defaults of every stack: the root stack and each shell's stack. */
@@ -61,9 +62,20 @@ function ParentBack() {
  * visible and a back button to the root.
  */
 export function TabStack({ root }: { root: string }) {
+  const titles = useTranslations("routes.titles");
   return (
     <Stack screenOptions={stackScreenOptions}>
-      <Stack.Screen name={root} options={{ headerShown: false }} />
+      {/* The root has no header, but its title names the back button of the
+          screens pushed over it (VoiceOver read the route name, "profile"). */}
+      <Stack.Screen
+        name={root}
+        options={{
+          headerShown: false,
+          title: titles(
+            `mobile/${root.replace(/\/index$/, "")}` as keyof Messages["routes"]["titles"],
+          ),
+        }}
+      />
     </Stack>
   );
 }

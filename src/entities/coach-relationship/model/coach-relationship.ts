@@ -3,6 +3,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { callWithSession } from "@/entities/session";
 import {
   getListMyCoachesQueryKey,
+  getMyCoachRelationship,
   listMyCoaches,
 } from "@/shared/api/generated/endpoints/coaching/coaching";
 import type {
@@ -10,6 +11,7 @@ import type {
   MyCoachRelationshipDisclosedFieldsItem,
 } from "@/shared/api/generated/model";
 import { isApiError } from "@/shared/api/http/api-error";
+import { isResourceId } from "@/shared/lib/ids";
 
 /**
  * The signed-in fighter's coaching relationships (SF-56; simplefit-api ADR
@@ -26,8 +28,6 @@ export type MyCoachStatus = "active" | "ended";
 export type DisclosedField = MyCoachRelationshipDisclosedFieldsItem;
 
 const PAGE_SIZE = 50;
-/** The detail scans at most this many pages of 100 active relationships. */
-const DETAIL_PAGES = 10;
 
 /** Every query of this entity: invalidated after an end. */
 export const myCoachesRootKey = getListMyCoachesQueryKey().slice(0, 1);
@@ -59,29 +59,21 @@ export function useMyCoaches(status: MyCoachStatus) {
 }
 
 /**
- * One active relationship, verified against the backend. Fighters have no
- * single-relationship read, so the id is looked up in the active list; an id
- * that is not there (ended, someone else's, unknown) resolves to `null`.
- * The route parameter alone never authorizes anything.
+ * One of the fighter's own relationships, active or ended, in one request
+ * (`GET /api/v1/me/coaches/{id}`, SF-74). Someone else's, an unknown and a
+ * malformed id are all `404` (`isUnavailable`); an id that is not a UUID is
+ * not sent at all and resolves to `null`. The route parameter alone never
+ * authorizes anything: only the backend's answer is shown.
  */
-export function useMyCoach(relationshipId: string) {
+export function useMyCoach(relationshipId: string | undefined) {
   return useQuery({
-    queryKey: myCoachKey(relationshipId),
+    queryKey: myCoachKey(relationshipId ?? ""),
     queryFn: async ({ signal }): Promise<MyCoach | null> => {
-      let cursor: string | null = null;
-      for (let page = 0; page < DETAIL_PAGES; page += 1) {
-        const { relationships, next_cursor } = await callWithSession((init) =>
-          listMyCoaches(
-            { status: "active", limit: 100, ...(cursor ? { cursor } : {}) },
-            { ...init, signal },
-          ),
-        );
-        const found = relationships.find((item) => item.relationship_id === relationshipId);
-        if (found) return found;
-        if (next_cursor === null) return null;
-        cursor = next_cursor;
-      }
-      return null;
+      if (!isResourceId(relationshipId)) return null;
+      const { relationship } = await callWithSession((init) =>
+        getMyCoachRelationship(relationshipId, { ...init, signal }),
+      );
+      return relationship;
     },
     retry: false,
     staleTime: 0,

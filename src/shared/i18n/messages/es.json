@@ -430,7 +430,9 @@
       "mobile/welcome/tour": "Introducción para boxeadores",
       "mobile/workspaces": "Espacios de trabajo",
       "mobile/profile/coaches": "Entrenadores",
-      "mobile/profile/coaches/_relationship-id": "Entrenador"
+      "mobile/profile/coaches/_relationship-id": "Entrenador",
+      "mobile/profile/coaches/invitations": "Invitaciones",
+      "mobile/profile/coaches/invitations/_invitation-id": "Invitación"
     }
   },
   "shells": {
@@ -1197,6 +1199,158 @@
       "failed": "No pudimos finalizar la relación. No cambió nada. Inténtalo de nuevo.",
       "ended": "{name} ya no ve tu perfil.",
       "unavailable": "Esta relación ya no está disponible. Tu lista de entrenadores está actualizada."
+    },
+    "invitations": {
+      "title": "Invitaciones",
+      "body": "De entrenadores que invitaron tu correo electrónico",
+      "open": "Abre tus invitaciones de entrenadores"
+    }
+  },
+  "fighterInvitations": {
+    "intro": "Invitaciones que los entrenadores enviaron a un correo electrónico que verificaste. No se comparte nada hasta que aceptes.",
+    "loading": "Cargando tus invitaciones",
+    "more": "Mostrar más",
+    "loadingMore": "Cargando más…",
+    "fallbackName": "Tu entrenador",
+    "status": {
+      "pending": "Pendiente",
+      "accepted": "Aceptada",
+      "declined": "Rechazada",
+      "cancelled": "Cancelada",
+      "expired": "Caducada"
+    },
+    "row": {
+      "pendingBrand": "{brand} · caduca el {date}",
+      "pending": "Caduca el {date}",
+      "accepted": "Aceptada el {date}",
+      "declined": "Rechazada el {date}",
+      "cancelled": "Cancelada el {date}",
+      "expired": "Caducó el {date}",
+      "open": "Abre la invitación"
+    },
+    "empty": {
+      "title": "No hay invitaciones",
+      "body": "Cuando un entrenador invite un correo electrónico que verificaste, la invitación aparecerá aquí."
+    },
+    "sharing": {
+      "title": "Las invitaciones no están disponibles",
+      "body": "Las conexiones con entrenadores aún no están abiertas. No se comparte nada con nadie."
+    },
+    "profile": {
+      "title": "Completa tu cuenta para ver invitaciones",
+      "body": "Primero van los datos de tu cuenta. No se acepta nada por el camino."
+    },
+    "failed": {
+      "title": "No pudimos cargar tus invitaciones.",
+      "body": "Revisa tu conexión e inténtalo de nuevo.",
+      "retry": "Reintentar"
+    },
+    "review": {
+      "loading": "Cargando la invitación",
+      "title": "{name} te ha invitado a conectar en SimpleFit.",
+      "expires": "Caduca el {date}",
+      "note": "«{note}» — {name}",
+      "sees": "Si aceptas, {name} ve",
+      "neverTitle": "Nunca se comparte",
+      "never": {
+        "goals": "Objetivos",
+        "next_fight": "Próximo combate",
+        "weight": "Peso",
+        "height": "Altura",
+        "account_name": "Nombre de la cuenta",
+        "date_of_birth": "Fecha de nacimiento",
+        "email": "Correo electrónico",
+        "other_coaches": "Todo lo que compartes con otros entrenadores"
+      },
+      "fields": {
+        "display_name": "Nombre visible",
+        "username": "Usuario",
+        "country_code": "País",
+        "city": "Ciudad",
+        "experience_level": "Nivel de experiencia",
+        "stance": "Guardia",
+        "amateur_bout_count": "Combates amateur"
+      },
+      "document": "Información · {version} · {language}",
+      "readFull": "Leer la información completa",
+      "closeFull": "Cerrar",
+      "accept": "Aceptar invitación",
+      "accepting": "Aceptando…",
+      "decline": "Rechazar",
+      "declining": "Rechazando…",
+      "acceptHint": "Aceptar sigue desactivado hasta que marques la casilla. Puedes finalizar la relación cuando quieras desde Entrenadores.",
+      "continueSetup": "Continuar configuración",
+      "retry": "Reintentar",
+      "problems": {
+        "language": {
+          "title": "Esta información aún no está disponible en tu idioma.",
+          "body": "Idiomas aprobados: {languages}. Cambia el idioma de la app para leerla y decidir. Aun así puedes rechazar."
+        },
+        "document": {
+          "title": "Todavía no se puede aceptar.",
+          "body": "La información sobre las conexiones con entrenadores aún no está publicada. Aun así puedes rechazar."
+        },
+        "stale": {
+          "title": "Lo que compartirías ha cambiado.",
+          "body": "Revisa lo que vería tu entrenador y vuelve a aceptar. No se compartió nada."
+        },
+        "tooYoung": {
+          "title": "Las conexiones con entrenadores son para peleadores de 18 años o más.",
+          "body": "No puedes aceptar esta invitación. No se compartió nada y tu entrenador no sabrá el motivo."
+        },
+        "profile": {
+          "title": "Completa tu perfil para responder.",
+          "body": "Primero van los datos de tu cuenta y tu perfil de boxeador. Después vuelves aquí; no se acepta nada por el camino."
+        },
+        "limited": {
+          "title": "Demasiados intentos.",
+          "body": "Inténtalo de nuevo en unos minutos."
+        },
+        "failed": {
+          "title": "No funcionó.",
+          "body": "No cambió nada. Inténtalo de nuevo."
+        }
+      },
+      "outcome": {
+        "sharing": {
+          "title": "Las conexiones con entrenadores no están disponibles ahora.",
+          "body": "No se compartió nada. Aun así puedes rechazar esta invitación.",
+          "action": "Volver a invitaciones"
+        },
+        "unavailable": {
+          "title": "Esta invitación no está disponible",
+          "body": "Puede que haya caducado, se haya respondido o cancelado. Pide a tu entrenador que te envíe una nueva.",
+          "action": "Volver a invitaciones"
+        },
+        "failed": {
+          "title": "No pudimos cargar la invitación.",
+          "body": "Revisa tu conexión e inténtalo de nuevo.",
+          "action": "Volver a invitaciones"
+        },
+        "accepted": {
+          "title": "Estás conectado con {name}.",
+          "body": "{name} ve ahora los datos que aceptaste compartir. Puedes finalizarlo cuando quieras desde Entrenadores.",
+          "action": "Ir a Entrenadores"
+        },
+        "already": {
+          "title": "Ya estás conectado con {name}.",
+          "body": "No cambió nada: {name} sigue viendo lo que aceptaste compartir antes.",
+          "action": "Ir a Entrenadores"
+        },
+        "declined": {
+          "title": "Invitación rechazada",
+          "body": "No se compartió nada con {name}.",
+          "action": "Volver a invitaciones"
+        }
+      },
+      "declineSheet": {
+        "title": "¿Rechazar la invitación de {name}?",
+        "body": "No se comparte nada con {name}. Para conectar más adelante, tendrá que enviarte una nueva invitación.",
+        "confirm": "Rechazar",
+        "pending": "Rechazando…",
+        "keep": "Mantener",
+        "failed": "No funcionó. No cambió nada. Inténtalo de nuevo."
+      }
     }
   },
   "coachFighters": {
