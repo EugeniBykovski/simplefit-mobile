@@ -40,6 +40,15 @@ files, so the frozen `TimerDone` preview was removed (T06 now points at
   fighter's own active list (at most 10 pages of 100). An ended, foreign or
   unknown id is one "not available" state. The route parameter authorizes
   nothing.
+- **SF-74 replacement (backend ready, not yet wired):**
+  `getMyCoachRelationship` (`GET /api/v1/me/coaches/{relationship_id}`;
+  generated `getMyCoachRelationship(relationshipId)`,
+  `useGetMyCoachRelationship`, `getGetMyCoachRelationshipQueryKey`) returns
+  `{relationship: MyCoachRelationship}` for one of the fighter's own
+  relationships, active or ended, in one request; foreign, unknown or
+  malformed ids answer `404`. SF-59 completion replaces the page scan
+  (`DETAIL_PAGES` in `entities/coach-relationship/model/coach-relationship.ts`)
+  and decides how an ended relationship is shown.
 - Shows the coach's public identity, what that coach sees (`disclosed_fields`)
   and what is never shared.
 - **End relationship:** a confirmation; the request runs once (confirm is
