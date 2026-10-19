@@ -1314,8 +1314,10 @@
       }
     },
     "rules": {
-      "body": "Bevor du einlädst, bestätige die aktuellen Coach-Datenregeln: Du siehst nur, was jeder Kämpfer zu teilen zustimmt, und nutzt es nur fürs Coaching.",
-      "agree": "Ich bestätige die Coach-Datenregeln (Version {version}).",
+      "readFull": "Vollständige Regeln lesen",
+      "hideFull": "Vollständige Regeln ausblenden",
+      "version": "Version {version}",
+      "language": "Die Datenregeln für Coaches sind in deiner App-Sprache noch nicht verfügbar. Freigegebene Sprachen: {languages}. Ändere die App-Sprache, um sie zu lesen und zu bestätigen.",
       "acknowledge": "Bestätigen",
       "pending": "Wird gespeichert…",
       "later": "Nicht jetzt",

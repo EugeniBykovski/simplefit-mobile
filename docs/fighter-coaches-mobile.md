@@ -72,17 +72,17 @@ files, so the frozen `TimerDone` preview was removed (T06 now points at
 
 `D-MOBILE-FIGHTER-COACH-INVITATIONS`. Three dependencies are missing:
 
-1. **Responding by invitation id is off until SF-72.** SF-73 added the
-   inbox `listMyIncomingCoachInvitations` (`GET /api/v1/me/coach-invitations`:
-   invitations addressed to the viewer's verified email identities, coach
-   public identity, note, effective status and dates, an opaque invitation
-   id, never the token; `404` while sharing is off) and responses by id
-   (`previewMyIncomingCoachInvitation`, `acceptMyIncomingCoachInvitation`,
-   `declineMyIncomingCoachInvitation`). Preview and accept by id answer `404`
-   until SF-72 enforces 18+ and the approved document language; decline by
-   id works. Responding by id needs no token, so it removes the need for the
-   native link handoff below, at the cost recorded in ADR 0021 (a stolen
-   session is enough to accept).
+1. **The inbox and its review UI are not built.** The contract exists:
+   `listMyIncomingCoachInvitations` (SF-73), and by id
+   `previewMyIncomingCoachInvitation?language=<app language>` (the approved
+   disclosure text in `document`, metadata only when that language has no
+   approved variant), `acceptMyIncomingCoachInvitation` (`disclosure_version`
+   and `document_language` of the text shown; `422 coaching_age: too_young`
+   under 18; `409 document_language: unavailable`) and
+   `declineMyIncomingCoachInvitation` (SF-72 shared policy, ADR 0022).
+   Responding by id needs no token, so no native link handoff, at the cost
+   recorded in ADR 0021 (a stolen session is enough to accept). Every answer
+   is `404` until approved documents are published.
 2. **No secure native handoff.** The E08 link is the web's
    (`{WEB_APP_URL}/invite/coach#token=…`; its web review page does not exist
    yet either, `GAP-WEB-COACH-FIGHTER-INVITE`). The app has only the

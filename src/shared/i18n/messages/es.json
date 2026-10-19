@@ -1314,8 +1314,10 @@
       }
     },
     "rules": {
-      "body": "Antes de invitar, acepta las reglas de datos vigentes para entrenadores: solo ves lo que cada boxeador acepta compartir y lo usas solo para entrenar.",
-      "agree": "Acepto las reglas de datos para entrenadores (versión {version}).",
+      "readFull": "Leer las reglas completas",
+      "hideFull": "Ocultar las reglas completas",
+      "version": "Versión {version}",
+      "language": "Las reglas de datos para entrenadores aún no están disponibles en el idioma de la app. Idiomas aprobados: {languages}. Cambia el idioma de la app para leerlas y confirmarlas.",
       "acknowledge": "Aceptar",
       "pending": "Guardando…",
       "later": "Ahora no",

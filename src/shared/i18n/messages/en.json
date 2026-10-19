@@ -1314,8 +1314,10 @@
       }
     },
     "rules": {
-      "body": "Before inviting, acknowledge the current coach data rules: you see only what each fighter agrees to share, and use it only for coaching.",
-      "agree": "I acknowledge the coach data rules (version {version}).",
+      "readFull": "Read the full rules",
+      "hideFull": "Hide the full rules",
+      "version": "Version {version}",
+      "language": "The coach data rules are not available in your app language yet. Approved languages: {languages}. Change the app language to read and acknowledge them.",
       "acknowledge": "Acknowledge",
       "pending": "Saving…",
       "later": "Not now",

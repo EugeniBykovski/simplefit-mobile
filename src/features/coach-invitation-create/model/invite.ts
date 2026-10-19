@@ -6,6 +6,7 @@ import {
   acknowledgeMyCoachDataRules,
   createMyCoachInvitation,
 } from "@/shared/api/generated/endpoints/coaching/coaching";
+import type { CoachDataRulesAcknowledgeRequestDocumentLanguage } from "@/shared/api/generated/model";
 import { isApiError } from "@/shared/api/http/api-error";
 
 /**
@@ -66,21 +67,38 @@ export function useCreateInvitation() {
   });
 }
 
-/** What acknowledging answered: done, a newer version is current, or not available. */
-export type AcknowledgeOutcome = "acknowledged" | "stale" | "blocked";
+/**
+ * What acknowledging answered: done, a newer version is current, the text's
+ * language has no approved variant (any more), or not available.
+ */
+export type AcknowledgeOutcome = "acknowledged" | "stale" | "language" | "blocked";
 
-/** `POST …/data-rules/acknowledge` with exactly the version the coach was shown. */
+/**
+ * `POST …/data-rules/acknowledge` with exactly the version and the language of
+ * the text the coach was shown (SF-72).
+ */
 export function useAcknowledgeDataRules() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async (version: string): Promise<AcknowledgeOutcome> => {
+    mutationFn: async ({
+      version,
+      language,
+    }: {
+      version: string;
+      language: CoachDataRulesAcknowledgeRequestDocumentLanguage;
+    }): Promise<AcknowledgeOutcome> => {
       try {
         await callWithSession((init) =>
-          acknowledgeMyCoachDataRules({ document_version: version }, init),
+          acknowledgeMyCoachDataRules(
+            { document_version: version, document_language: language },
+            init,
+          ),
         );
         return "acknowledged";
       } catch (error) {
-        if (isApiError(error) && error.status === 409) return "stale";
+        if (isApiError(error) && error.status === 409) {
+          return error.details["document_language"] === "unavailable" ? "language" : "stale";
+        }
         if (isApiError(error) && error.status === 404) return "blocked";
         throw error;
       }
