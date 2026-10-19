@@ -1314,8 +1314,10 @@
       }
     },
     "rules": {
-      "body": "Avant d’inviter, accepte les règles de données des coachs en vigueur : tu ne vois que ce que chaque boxeur accepte de partager, et seulement pour le coaching.",
-      "agree": "J’accepte les règles de données des coachs (version {version}).",
+      "readFull": "Lire les règles complètes",
+      "hideFull": "Masquer les règles complètes",
+      "version": "Version {version}",
+      "language": "Les règles relatives aux données pour les coachs ne sont pas encore disponibles dans la langue de l’app. Langues approuvées : {languages}. Change la langue de l’app pour les lire et les confirmer.",
       "acknowledge": "Accepter",
       "pending": "Enregistrement…",
       "later": "Pas maintenant",

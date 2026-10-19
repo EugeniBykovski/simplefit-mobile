@@ -42,11 +42,16 @@ Sessions stays Soon (no session domain, SF-62 / SF-65).
 
 ## Inviting (C03 sheet)
 
-- The coach data rules come first when the backend asks for them: the exact
-  version it serves, with an unticked acknowledgement
-  (`acknowledgeMyCoachDataRules`); a `409 stale` asks again. No legal text is
-  invented: a document link comes with SF-71 / SF-72. With no version
-  configured, or sharing off, inviting is truthfully blocked.
+- The coach data rules come first when the backend asks for them (SF-72):
+  `getMyCoachDataRules?language=<app language>` returns the approved text of
+  the version it serves; the sheet shows its summary, the full text on demand
+  and its own confirmation next to an unticked checkbox, then
+  `acknowledgeMyCoachDataRules` with that version and `document_language`. A
+  `409 stale` (or `document_language: unavailable`) reloads and asks again.
+  Without an approved text in the app language there is nothing to
+  acknowledge here (never another language). With no version published, or
+  sharing off, inviting is truthfully blocked; no document is approved yet,
+  so production stays blocked.
 - Then the email (email keyboard, no autocorrect) and an optional note
   (≤ 500 characters, one paragraph). Validation is for usability only; the
   backend's field codes are mapped (`invalid` is the coach's own address).

@@ -3,10 +3,17 @@ import { useState } from "react";
 import { View } from "react-native";
 import { useFormatter, useTranslations } from "use-intl";
 
-import { useCoachDataRules, type CoachInvitation } from "@/entities/coach-invitation";
+import {
+  useCoachDataRules,
+  type CoachDataRules,
+  type CoachInvitation,
+} from "@/entities/coach-invitation";
+import { isLocale, localeName } from "@/shared/i18n/locales";
+import { fillLegalPlaceholders } from "@/shared/lib/legal-text";
 import { Button } from "@/shared/ui/button";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Input } from "@/shared/ui/input";
+import { LegalText } from "@/shared/ui/legal-text";
 import { Notice } from "@/shared/ui/notice";
 import { Sheet } from "@/shared/ui/sheet";
 import { Spinner } from "@/shared/ui/spinner";
@@ -23,10 +30,13 @@ import {
 /*
  * "Invite fighter" (C03 sheet=rules|invite|…, Claude Design
  * 1792155768-3179): the coach data rules first when the backend asks for
- * them, then the email and an optional note. The data rules show exactly the
- * version the backend serves, with an unticked acknowledgement; no legal
- * text is invented (a document link comes with SF-71/72). While no version
- * is configured, or sharing is off, inviting is truthfully blocked.
+ * them, then the email and an optional note. The data rules are the
+ * backend's approved text of exactly the version it serves, in the app
+ * language (SF-72): its summary, the full text on demand and its own
+ * confirmation next to an unticked checkbox; the app writes no legal text.
+ * Without an approved text in the app language the coach cannot
+ * acknowledge here (never another language instead). While no version is
+ * published, or sharing is off, inviting is truthfully blocked.
  * Success says only that an invitation to the address is pending: the
  * backend answers a reused pending invitation like a new one, and no email
  * is claimed as sent.
@@ -64,7 +74,11 @@ function Composer({ onClose, onBusy }: { onClose: () => void; onBusy: (busy: boo
   const [blocked, setBlocked] = useState(false);
 
   if (sent) return <Pending invitation={sent} onClose={onClose} />;
-  if (rules.isError || blocked || (rules.data && rules.data.document_version === null)) {
+  if (
+    rules.isError ||
+    blocked ||
+    (rules.data && (rules.data.document_version === null || rules.data.document === null))
+  ) {
     return (
       <View className="gap-3.5" testID="invite:blocked">
         <Notice tone="amber" icon={CircleAlert}>
@@ -84,7 +98,8 @@ function Composer({ onClose, onBusy }: { onClose: () => void; onBusy: (busy: boo
   if (rules.data.acknowledged_at === null) {
     return (
       <Rules
-        version={rules.data.document_version ?? ""}
+        rules={rules.data}
+        onChanged={() => void rules.refetch()}
         onBlocked={() => setBlocked(true)}
         onBusy={onBusy}
         onClose={onClose}
@@ -103,12 +118,14 @@ function Composer({ onClose, onBusy }: { onClose: () => void; onBusy: (busy: boo
 }
 
 function Rules({
-  version,
+  rules,
+  onChanged,
   onBlocked,
   onBusy,
   onClose,
 }: {
-  version: string;
+  rules: CoachDataRules;
+  onChanged: () => void;
   onBlocked: () => void;
   onBusy: (busy: boolean) => void;
   onClose: () => void;
@@ -116,13 +133,42 @@ function Rules({
   const t = useTranslations("coachFighters.rules");
   const [agreed, setAgreed] = useState(false);
   const [stale, setStale] = useState(false);
+  const [full, setFull] = useState(false);
   const acknowledge = useAcknowledgeDataRules();
   const pending = acknowledge.isPending;
+  const document = rules.document;
+
+  if (document === null) return null;
+  const { language, summary, checkbox } = document;
+  if (language === null || summary === null || checkbox === null) {
+    const available = document.available_languages
+      .map((code) => (isLocale(code) ? localeName(code) : code))
+      .join(", ");
+    return (
+      <View className="gap-3.5" testID="invite:rules:language">
+        <View accessibilityRole="alert">
+          <Notice tone="amber" icon={CircleAlert}>
+            {t("language", { languages: available })}
+          </Notice>
+        </View>
+        <Button label={t("later")} variant="quiet" onPress={onClose} />
+      </View>
+    );
+  }
 
   return (
     <View className="gap-3.5" testID="invite:rules">
-      <Text variant="bodySm" color="mutedForeground">
-        {t("body")}
+      <LegalText text={summary} testID="invite:rules:summary" />
+      <Button
+        label={full ? t("hideFull") : t("readFull")}
+        variant="quiet"
+        onPress={() => setFull((open) => !open)}
+      />
+      {full && document.full !== null ? (
+        <LegalText text={document.full} testID="invite:rules:full" />
+      ) : null}
+      <Text variant="caption" color="faintForeground">
+        {t("version", { version: document.version })}
       </Text>
       {stale ? (
         <View accessibilityRole="alert">
@@ -139,7 +185,7 @@ function Rules({
         </View>
       ) : null}
       <Checkbox
-        label={t("agree", { version })}
+        label={fillLegalPlaceholders(checkbox, { version: document.version })}
         checked={agreed}
         disabled={pending}
         onChange={setAgreed}
@@ -151,17 +197,22 @@ function Rules({
         onPress={() => {
           setStale(false);
           onBusy(true);
-          acknowledge.mutate(version, {
-            onSuccess: (outcome) => {
-              if (outcome === "blocked") onBlocked();
-              if (outcome === "stale") {
-                // A newer version is current: review it and agree again.
-                setAgreed(false);
-                setStale(true);
-              }
+          acknowledge.mutate(
+            { version: document.version, language },
+            {
+              onSuccess: (outcome) => {
+                if (outcome === "blocked") onBlocked();
+                if (outcome === "stale" || outcome === "language") {
+                  // A newer version (or a withdrawn language) is current:
+                  // review what the backend serves now and agree again.
+                  setAgreed(false);
+                  setStale(true);
+                  onChanged();
+                }
+              },
+              onSettled: () => onBusy(false),
             },
-            onSettled: () => onBusy(false),
-          });
+          );
         }}
       />
       <Button label={t("later")} variant="quiet" disabled={pending} onPress={onClose} />

@@ -1314,8 +1314,10 @@
       }
     },
     "rules": {
-      "body": "Zanim zaprosisz, potwierdź aktualne zasady danych dla trenerów: widzisz tylko to, co każdy zawodnik zgodzi się udostępnić, i używasz tego wyłącznie do treningu.",
-      "agree": "Potwierdzam zasady danych dla trenerów (wersja {version}).",
+      "readFull": "Przeczytaj pełne zasady",
+      "hideFull": "Ukryj pełne zasady",
+      "version": "Wersja {version}",
+      "language": "Zasady dotyczące danych dla trenerów nie są jeszcze dostępne w języku aplikacji. Zatwierdzone języki: {languages}. Zmień język aplikacji, aby je przeczytać i potwierdzić.",
       "acknowledge": "Potwierdź",
       "pending": "Zapisywanie…",
       "later": "Nie teraz",

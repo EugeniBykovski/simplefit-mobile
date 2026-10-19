@@ -109,11 +109,28 @@ const page = (relationships: unknown[], next_cursor: string | null = null) =>
 const invitations = (items: unknown[]) => jsonResponse({ invitations: items, next_cursor: null });
 const error = (status: number, code: string, details: Record<string, unknown> = {}, headers = {}) =>
   jsonResponse({ error: { code, message: "x", details, request_id: "r" } }, { status, headers });
-const rules = (version: string | null, acknowledged: boolean) =>
+// The backend's approved text (SF-72): test fixtures, never legal copy.
+const document = (version: string, language: string | null = "en") => ({
+  document_id: "coach-data-rules",
+  version,
+  status: "published",
+  effective_at: "2026-01-01T00:00:00Z",
+  published_at: "2026-01-01T00:00:00Z",
+  requested_language: "en",
+  language,
+  available_languages: ["en", "pl"],
+  content_sha256: language === null ? null : "a".repeat(64),
+  title: language === null ? null : "Fixture rules",
+  summary: language === null ? null : "Fixture summary of the rules.",
+  checkbox: language === null ? null : "I will follow fixture rules {version}.",
+  full: language === null ? null : "# Fixture rules\n\nFull fixture text.\n\n- First fixture item",
+});
+const rules = (version: string | null, acknowledged: boolean, language: string | null = "en") =>
   jsonResponse({
     data_rules: {
       document_version: version,
       acknowledged_at: acknowledged ? "2026-10-01T10:00:00Z" : null,
+      document: version === null ? null : document(version, language),
     },
   });
 const byStatus =
@@ -280,17 +297,33 @@ describe("Invite fighter sheet", () => {
         return rules("coach-data-rules-v1", true);
       },
     });
-    const consent = await screen.findByRole("checkbox", {
-      name: "I acknowledge the coach data rules (version coach-data-rules-v1).",
+    expect(await screen.findByText("Fixture summary of the rules.")).toBeOnTheScreen();
+    const consent = screen.getByRole("checkbox", {
+      name: "I will follow fixture rules coach-data-rules-v1.",
     });
     expect(consent).not.toBeChecked();
+    await user.press(screen.getByRole("button", { name: "Read the full rules" }));
+    expect(screen.getByText("Full fixture text.")).toBeOnTheScreen();
+    expect(screen.getByText("First fixture item")).toBeOnTheScreen();
     expect(screen.getByRole("button", { name: "Acknowledge" })).toBeDisabled();
     await user.press(consent);
     await user.press(screen.getByRole("button", { name: "Acknowledge" }));
     expect(await screen.findByTestId("invite:form")).toBeOnTheScreen();
     expect(calls.find((call) => call.path === `${RULES}/acknowledge`)?.body).toEqual({
       document_version: "coach-data-rules-v1",
+      document_language: "en",
     });
+    expect(calls.find((call) => call.path === RULES)?.query.get("language")).toBe("en");
+  });
+
+  it("never acknowledges a text in another language: unavailable in the app language", async () => {
+    const calls = await openSheet({
+      [`GET ${RULES}`]: rules("coach-data-rules-v1", false, null),
+    });
+    expect(await screen.findByTestId("invite:rules:language")).toBeOnTheScreen();
+    expect(screen.getByText(/Approved languages: English, Polski\./)).toBeOnTheScreen();
+    expect(screen.queryByRole("checkbox")).toBeNull();
+    expect(calls.some((call) => call.method === "POST")).toBe(false);
   });
 
   it("asks again when the version changed (409 stale)", async () => {
@@ -358,7 +391,7 @@ describe("Invite fighter sheet", () => {
     await user.type(await screen.findByLabelText("Email"), "fighter@example.com");
     await user.press(screen.getByRole("button", { name: "Send invitation" }));
     expect(await screen.findByTestId("invite:rules")).toBeOnTheScreen();
-    expect(screen.getByRole("checkbox", { name: /version coach-data-rules-v2/ })).not.toBeChecked();
+    expect(screen.getByRole("checkbox", { name: /coach-data-rules-v2/ })).not.toBeChecked();
   });
 });
 
