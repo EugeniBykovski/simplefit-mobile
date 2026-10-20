@@ -48,6 +48,11 @@ const REAL_SCREENS = [
   // SF-59: FC1 My coaches and FC2 Coach relationship.
   "mobile.profile.coaches",
   "mobile.profile.coaches._relationship-id",
+  // SF-65: CT1 Sessions, CT2 New session, CT3 Session and CT4 Edit session.
+  "mobile.coach.sessions",
+  "mobile.coach.sessions.new",
+  "mobile.coach.sessions._session-id",
+  "mobile.coach.sessions._session-id.edit",
 ];
 
 const placeholderSource = (id) => `import { placeholderRoute } from "@/widgets/feature-placeholder";
@@ -89,6 +94,7 @@ const TAB_SECTIONS = {
   "mobile.coach": {
     today: ["mobile.coach.today", "mobile.coach.activity", "mobile.coach.challenge._challenge-id"],
     fighters: ["mobile.coach.fighters"],
+    sessions: ["mobile.coach.sessions"],
     board: ["mobile.coach.board"],
     requests: ["mobile.coach.requests", "mobile.coach.sparring"],
   },
@@ -142,8 +148,8 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 24, catchAll: 1, placeholder: 119, deferred: 1 });
-    expect(routes).toHaveLength(145);
+    expect(counts).toEqual({ screen: 28, catchAll: 1, placeholder: 119, deferred: 1 });
+    expect(routes).toHaveLength(149);
   });
 
   it("makes placeholder files exactly the canonical placeholder module for their own route", () => {

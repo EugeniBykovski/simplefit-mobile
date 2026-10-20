@@ -52,16 +52,24 @@ jest.mock("expo-apple-authentication", () => ({
 }));
 
 jest.mock("expo-crypto", () => {
-  const { createHash, randomBytes } = require("node:crypto");
+  const { createHash, randomBytes, randomUUID } = require("node:crypto");
   return {
     CryptoDigestAlgorithm: { SHA256: "SHA-256" },
     CryptoEncoding: { HEX: "hex" },
     getRandomBytes: jest.fn((count: number) => new Uint8Array(randomBytes(count))),
+    randomUUID: jest.fn(() => randomUUID()),
     digestStringAsync: jest.fn(async (_algorithm: string, data: string) =>
       createHash("sha256").update(data).digest("hex"),
     ),
   };
 });
+
+// The native date and time pickers (SF-65): a test renders the iOS picker as
+// a view carrying its props, and drives the Android dialog through
+// `DateTimePickerAndroid.open`. Real pickers are verified on a simulator.
+jest.mock("@react-native-community/datetimepicker", () =>
+  require("./src/test/date-time-picker-mock"),
+);
 
 jest.mock("expo-localization", () => ({
   getLocales: jest.fn(() => [{ languageTag: "en-US", languageCode: "en" }]),

@@ -330,6 +330,10 @@
       "mobile/coach/promote/results": "Werbeergebnisse",
       "mobile/coach/requests": "Anfragen",
       "mobile/coach/services": "Leistungen",
+      "mobile/coach/sessions": "Einheiten",
+      "mobile/coach/sessions/new": "Neue Einheit",
+      "mobile/coach/sessions/_session-id": "Einheit",
+      "mobile/coach/sessions/_session-id/edit": "Einheit bearbeiten",
       "mobile/coach/sessions/_session-id/live": "Trainingssteuerung",
       "mobile/coach/sessions/_session-id/roster": "Teilnehmer und Anwesenheit",
       "mobile/coach/shared/_shared-session-id": "Teilnehmer des gemeinsamen Trainings",
@@ -1083,27 +1087,22 @@
     },
     "fills": {
       "title": "Was diesen Bildschirm füllt",
-      "unavailable": "Noch nicht verfügbar",
       "fighters": {
-        "label": "Fighter",
-        "when": "sobald Fighter dir beitreten können"
+        "label": "Fighter"
       },
       "sessions": {
-        "label": "Einheiten",
-        "when": "sobald du Einheiten planen kannst"
+        "label": "Einheiten"
       },
       "invitations": {
-        "label": "Einladungen",
-        "when": "sobald du Fighter einladen kannst"
+        "label": "Einladungen"
       },
       "open": "Öffnen",
-      "note": "Kämpfer und Einladungen findest du unter Kämpfer. Einheiten folgen später."
+      "note": "Kämpfer und Einladungen findest du unter Kämpfer, die geplanten Einheiten unter Einheiten."
     },
     "setup": {
       "eyebrow": "Coach-Einrichtung",
       "title": "Mach deinen Coaching-Bereich bereit",
       "done": "Erledigt",
-      "unavailable": "Noch nicht verfügbar",
       "profile": {
         "title": "Coach-Profil",
         "line": "Gespeichert · du kannst es später ändern"
@@ -1114,7 +1113,7 @@
       },
       "session": {
         "title": "Plane deine erste Einheit",
-        "line": "Einheiten, die du mit deinen Fightern leitest"
+        "line": "Unter Einheiten · für einen Kämpfer, der angenommen hat"
       }
     },
     "note": {
@@ -1514,6 +1513,224 @@
       "failed": "Wir konnten die Beziehung nicht beenden. Es hat sich nichts geändert. Versuche es erneut.",
       "ended": "Deine Beziehung mit {name} ist beendet.",
       "unavailable": "Diese Beziehung ist nicht mehr verfügbar. Deine Kämpferliste ist aktuell."
+    }
+  },
+  "coachSessions": {
+    "title": "Einheiten",
+    "new": "Neue Einheit",
+    "back": "Zurück zu den Einheiten",
+    "planner": {
+      "views": "Einheiten",
+      "tabs": {
+        "upcoming": "Anstehend",
+        "history": "Verlauf"
+      },
+      "filter": "Anzeigen",
+      "filters": {
+        "all": "Alle",
+        "completed": "Erledigt",
+        "cancelled": "Abgesagt"
+      },
+      "loading": "Deine Einheiten werden geladen",
+      "more": "Mehr anzeigen",
+      "loadingMore": "Mehr wird geladen…",
+      "minutes": "{minutes} Min.",
+      "fighterNotShared": "Kämpfer nicht geteilt",
+      "open": "Öffnet die Einheit",
+      "note": "Eine Einheit gilt für einen Kämpfer, den du coachst. Der Kämpfer bestätigt, wenn er sie gemacht hat. Zeiten stehen in der Zeitzone der jeweiligen Einheit."
+    },
+    "empty": {
+      "upcoming": {
+        "title": "Keine anstehenden Einheiten",
+        "body": "Plane mit der +-Taste eine Einheit für einen deiner Kämpfer. Sie erscheint hier und in seinem Training."
+      },
+      "history": {
+        "title": "Noch keine vergangenen Einheiten",
+        "body": "Erledigte, abgesagte und vergangene Einheiten erscheinen hier."
+      },
+      "completed": {
+        "title": "Noch keine erledigten Einheiten",
+        "body": "Einheiten, die deine Kämpfer bestätigt haben, erscheinen hier."
+      },
+      "cancelled": {
+        "title": "Keine abgesagten Einheiten",
+        "body": "Einheiten, die du oder das System abgesagt habt, erscheinen hier."
+      }
+    },
+    "unavailable": {
+      "title": "Einheiten sind noch nicht verfügbar",
+      "body": "Das Planen von Training startet zusammen mit dem Coaching von Kämpfern, sobald die Datenregeln für Coaches und das, was Kämpfer teilen, veröffentlicht sind. Es gibt einfach noch nichts anzuzeigen."
+    },
+    "failed": {
+      "title": "Wir konnten deine Einheiten nicht laden.",
+      "body": "Prüfe deine Verbindung und versuche es erneut.",
+      "retry": "Erneut versuchen",
+      "more": "Wir konnten keine weiteren Einheiten laden. Versuche es erneut."
+    },
+    "status": {
+      "planned": "Geplant",
+      "completed": "Erledigt",
+      "cancelled": "Abgesagt"
+    },
+    "types": {
+      "technical": "Technik",
+      "sparring": "Sparring",
+      "pads": "Pratzen",
+      "strength_conditioning": "Kraft & Kondition",
+      "roadwork": "Laufen"
+    },
+    "form": {
+      "fighter": {
+        "label": "Kämpfer",
+        "placeholder": "Kämpfer wählen",
+        "choose": "Kämpfer wählen",
+        "open": "Öffnet die Liste deiner Kämpfer",
+        "search": "Kämpfer suchen",
+        "empty": "Kein Kämpfer passt.",
+        "hint": "Kämpfer, die deine Einladung angenommen haben.",
+        "fixed": "Der Kämpfer einer Einheit kann nicht geändert werden.",
+        "required": "Wähle einen Kämpfer.",
+        "notShared": "Kämpfer (Name nicht geteilt)",
+        "since": "Seit {date}"
+      },
+      "title": {
+        "label": "Titel",
+        "invalid": "Gib einen Titel mit bis zu 80 Zeichen ein."
+      },
+      "type": {
+        "label": "Trainingsart",
+        "required": "Wähle eine Trainingsart."
+      },
+      "date": {
+        "label": "Datum",
+        "placeholder": "Wählen",
+        "open": "Öffnet die Datumsauswahl",
+        "required": "Wähle ein Datum."
+      },
+      "time": {
+        "label": "Beginn",
+        "placeholder": "Wählen",
+        "open": "Öffnet die Uhrzeitauswahl",
+        "required": "Wähle eine Startzeit.",
+        "window": "Wähle einen Beginn zwischen gestern und in einem Jahr.",
+        "invalid": "Diese Startzeit kann nicht verwendet werden. Prüfe Datum, Uhrzeit und Zeitzone."
+      },
+      "zone": {
+        "label": "Zeitzone",
+        "open": "Öffnet die Liste der Zeitzonen",
+        "search": "Zeitzonen suchen",
+        "empty": "Keine Zeitzone passt.",
+        "device": "{offset} · dieses Gerät",
+        "hint": "Wird als genauer Zeitpunkt in dieser Zeitzone gespeichert und bleibt so auch über Zeitumstellungen hinweg richtig.",
+        "invalid": "Diese Zeitzone wird nicht unterstützt. Wähle eine andere."
+      },
+      "duration": {
+        "label": "Dauer",
+        "unit": "Min.",
+        "hint": "5 bis 600 Minuten.",
+        "invalid": "Gib eine ganze Zahl von 5 bis 600 Minuten ein."
+      },
+      "notes": {
+        "label": "Notizen für den Kämpfer · optional",
+        "hint": "Bis zu 2.000 Zeichen. Der Kämpfer sieht sie.",
+        "invalid": "Halte die Notizen bei höchstens 2.000 Zeichen."
+      },
+      "gap": {
+        "title": "Diese Uhrzeit gibt es an diesem Tag nicht.",
+        "body": "Die Uhren in {zone} überspringen diese Zeit, wenn die Sommerzeit beginnt. Wähle eine andere Startzeit."
+      },
+      "overlap": {
+        "title": "Diese Uhrzeit gibt es an diesem Tag zweimal.",
+        "body": "Die Uhren in {zone} werden zurückgestellt und wiederholen sie. Wähle, welches {time} du meinst:",
+        "first": "Erstes · UTC{offset}",
+        "second": "Zweites · UTC{offset}",
+        "required": "Wähle, welche der beiden Zeiten du meinst."
+      },
+      "notices": {
+        "failed": {
+          "title": "Wir konnten die Einheit nicht speichern.",
+          "create": "Prüfe deine Verbindung und versuche es erneut; ein erneuter Versuch legt nie eine zweite Einheit an.",
+          "edit": "Es wurde nichts geändert. Prüfe deine Verbindung und versuche es erneut."
+        },
+        "conflict": {
+          "title": "Diese Einheit kann nicht mehr geändert werden.",
+          "body": "Der Kämpfer hat sie erledigt, oder sie wurde abgesagt. Deine Änderungen wurden nicht gespeichert."
+        },
+        "unavailable": {
+          "title": "Du kannst für diesen Kämpfer nicht mehr planen.",
+          "body": "Die Coaching-Beziehung wurde beendet oder ist nicht verfügbar. Es wurde nichts gespeichert."
+        },
+        "reused": {
+          "title": "Ein früherer Versuch wurde bereits gespeichert.",
+          "body": "Bevor die Verbindung abbrach, hat er eine Einheit für einen anderen Kämpfer geplant. Es wurde nichts Neues angelegt; sieh in Einheiten nach, bevor du erneut planst."
+        },
+        "earlier": {
+          "title": "Ein früherer Versuch wurde bereits gespeichert.",
+          "body": "Bevor die Verbindung abbrach, wurde „{title}“ mit den damaligen Angaben geplant. Deine späteren Änderungen wurden nicht übernommen und nichts Neues wurde angelegt. Öffne die Einheit, um sie zu prüfen oder zu bearbeiten."
+        },
+        "earlierOpen": "Gespeicherte Einheit öffnen"
+      },
+      "noFighters": {
+        "title": "Noch keine Kämpfer zum Planen",
+        "body": "Du kannst Einheiten für Kämpfer planen, die deine Einladung angenommen haben. Lade zuerst unter Kämpfer einen Kämpfer ein.",
+        "action": "Zu Kämpfer"
+      },
+      "loading": "Formular wird geladen",
+      "more": "Tippe weiter, um die Liste einzugrenzen.",
+      "close": "Schließen",
+      "done": "Fertig",
+      "create": "Einheit zuweisen",
+      "save": "Änderungen speichern",
+      "saving": "Wird gespeichert…",
+      "saved": {
+        "created": "Einheit geplant.",
+        "updated": "Änderungen gespeichert."
+      }
+    },
+    "detail": {
+      "loading": "Einheit wird geladen",
+      "edit": "Bearbeiten",
+      "facts": {
+        "fighter": "Kämpfer",
+        "type": "Trainingsart",
+        "starts": "Beginn",
+        "yourTime": "Deine Zeit",
+        "duration": "Dauer",
+        "notes": "Notizen",
+        "completed": "Erledigt",
+        "cancelled": "Abgesagt"
+      },
+      "startsValue": "{when} · {zone} (UTC{offset})",
+      "sameZone": "{time} · gleiche Zeitzone",
+      "otherZone": "{when} · {zone}",
+      "noNotes": "Keine Notizen",
+      "cancelledByCoach": "{when} · von dir",
+      "cancelledBySystem": "{when} · die Coaching-Beziehung wurde beendet",
+      "aside": {
+        "planned": "Geplante Einheiten können bearbeitet oder abgesagt werden, bis der Kämpfer sie erledigt.",
+        "completed": "Der Kämpfer hat diese Einheit bestätigt. Erledigte Einheiten können nicht bearbeitet oder abgesagt werden.",
+        "cancelled": "Abgesagte Einheiten bleiben im Verlauf. Um wieder zu trainieren, lege eine neue Einheit an."
+      },
+      "missing": {
+        "title": "Diese Einheit ist nicht verfügbar",
+        "body": "Sie gehört vielleicht zu einem Kämpfer, den du nicht mehr coachst, oder der Link ist falsch."
+      },
+      "failed": {
+        "title": "Wir konnten diese Einheit nicht laden.",
+        "body": "Prüfe deine Verbindung und versuche es erneut."
+      }
+    },
+    "cancelDialog": {
+      "title": "Diese Einheit absagen?",
+      "body": "{name} sieht sie als abgesagt. Eine abgesagte Einheit kann nicht erneut geplant werden; lege stattdessen eine neue an.",
+      "bodyUnnamed": "Der Kämpfer sieht sie als abgesagt. Eine abgesagte Einheit kann nicht erneut geplant werden; lege stattdessen eine neue an.",
+      "failed": "Wir konnten die Einheit nicht absagen. Es wurde nichts geändert. Versuche es erneut.",
+      "keep": "Einheit behalten",
+      "confirm": "Einheit absagen",
+      "pending": "Wird abgesagt…",
+      "cancelled": "Die Einheit ist abgesagt.",
+      "changed": "Diese Einheit kann nicht mehr abgesagt werden: Der Kämpfer hat sie erledigt.",
+      "unavailable": "Diese Einheit ist nicht mehr verfügbar."
     }
   }
 }

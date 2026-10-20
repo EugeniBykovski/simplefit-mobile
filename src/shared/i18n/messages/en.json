@@ -330,6 +330,10 @@
       "mobile/coach/promote/results": "Promotion results",
       "mobile/coach/requests": "Requests",
       "mobile/coach/services": "Services",
+      "mobile/coach/sessions": "Sessions",
+      "mobile/coach/sessions/new": "New session",
+      "mobile/coach/sessions/_session-id": "Session",
+      "mobile/coach/sessions/_session-id/edit": "Edit session",
       "mobile/coach/sessions/_session-id/live": "Session control",
       "mobile/coach/sessions/_session-id/roster": "Roster and attendance",
       "mobile/coach/shared/_shared-session-id": "Shared training roster",
@@ -1083,27 +1087,22 @@
     },
     "fills": {
       "title": "What fills this screen",
-      "unavailable": "Not available yet",
       "fighters": {
-        "label": "Fighters",
-        "when": "when fighters can join you"
+        "label": "Fighters"
       },
       "sessions": {
-        "label": "Sessions",
-        "when": "when you can plan sessions"
+        "label": "Sessions"
       },
       "invitations": {
-        "label": "Invitations",
-        "when": "when you can invite fighters"
+        "label": "Invitations"
       },
       "open": "Open",
-      "note": "Fighters and invitations live in Fighters. Sessions arrive later."
+      "note": "Fighters and invitations live in Fighters; the sessions you plan in Sessions."
     },
     "setup": {
       "eyebrow": "Coach setup",
       "title": "Get your coaching space ready",
       "done": "Done",
-      "unavailable": "Not available yet",
       "profile": {
         "title": "Coach profile",
         "line": "Saved · you can change it later"
@@ -1114,7 +1113,7 @@
       },
       "session": {
         "title": "Plan your first session",
-        "line": "Sessions you run with your fighters"
+        "line": "In Sessions · for a fighter who accepted"
       }
     },
     "note": {
@@ -1514,6 +1513,224 @@
       "failed": "We couldn’t end the relationship. Nothing changed. Try again.",
       "ended": "Your relationship with {name} has ended.",
       "unavailable": "This relationship is no longer available. Your fighters list is up to date."
+    }
+  },
+  "coachSessions": {
+    "title": "Sessions",
+    "new": "New session",
+    "back": "Back to sessions",
+    "planner": {
+      "views": "Sessions",
+      "tabs": {
+        "upcoming": "Upcoming",
+        "history": "History"
+      },
+      "filter": "Show",
+      "filters": {
+        "all": "All",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "loading": "Loading your sessions",
+      "more": "Show more",
+      "loadingMore": "Loading more…",
+      "minutes": "{minutes} min",
+      "fighterNotShared": "Fighter not shared",
+      "open": "Opens the session",
+      "note": "One session is for one fighter you coach. The fighter confirms when they did it. Times show in each session’s time zone."
+    },
+    "empty": {
+      "upcoming": {
+        "title": "No upcoming sessions",
+        "body": "Plan a session for one of your fighters with the + button. It appears here and in their training."
+      },
+      "history": {
+        "title": "No past sessions yet",
+        "body": "Completed, cancelled and past sessions appear here."
+      },
+      "completed": {
+        "title": "No completed sessions yet",
+        "body": "Sessions your fighters confirmed appear here."
+      },
+      "cancelled": {
+        "title": "No cancelled sessions",
+        "body": "Sessions you or the system cancelled appear here."
+      }
+    },
+    "unavailable": {
+      "title": "Sessions aren’t available yet",
+      "body": "Planning training opens together with coaching fighters, once the coach data rules and what fighters share are published. There is simply nothing to show yet."
+    },
+    "failed": {
+      "title": "We couldn’t load your sessions.",
+      "body": "Check your connection and try again.",
+      "retry": "Try again",
+      "more": "We couldn’t load more sessions. Try again."
+    },
+    "status": {
+      "planned": "Planned",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "types": {
+      "technical": "Technical",
+      "sparring": "Sparring",
+      "pads": "Pads",
+      "strength_conditioning": "S&C",
+      "roadwork": "Roadwork"
+    },
+    "form": {
+      "fighter": {
+        "label": "Fighter",
+        "placeholder": "Choose a fighter",
+        "choose": "Choose a fighter",
+        "open": "Opens the list of your fighters",
+        "search": "Search fighters",
+        "empty": "No fighter matches.",
+        "hint": "Fighters who accepted your invitation.",
+        "fixed": "The fighter of a session can’t change.",
+        "required": "Choose a fighter.",
+        "notShared": "Fighter (name not shared)",
+        "since": "Since {date}"
+      },
+      "title": {
+        "label": "Title",
+        "invalid": "Enter a title of up to 80 characters."
+      },
+      "type": {
+        "label": "Training type",
+        "required": "Choose a training type."
+      },
+      "date": {
+        "label": "Date",
+        "placeholder": "Choose",
+        "open": "Opens the date picker",
+        "required": "Choose a date."
+      },
+      "time": {
+        "label": "Start time",
+        "placeholder": "Choose",
+        "open": "Opens the time picker",
+        "required": "Choose a start time.",
+        "window": "Choose a start between yesterday and one year from now.",
+        "invalid": "This start time can’t be used. Check the date, time and time zone."
+      },
+      "zone": {
+        "label": "Time zone",
+        "open": "Opens the list of time zones",
+        "search": "Search time zones",
+        "empty": "No time zone matches.",
+        "device": "{offset} · this device",
+        "hint": "Saved as an exact moment in this time zone, so it stays right across daylight-saving changes.",
+        "invalid": "This time zone isn’t supported. Choose another one."
+      },
+      "duration": {
+        "label": "Duration",
+        "unit": "min",
+        "hint": "5 to 600 minutes.",
+        "invalid": "Enter a whole number of minutes from 5 to 600."
+      },
+      "notes": {
+        "label": "Notes for the fighter · optional",
+        "hint": "Up to 2,000 characters. The fighter sees them.",
+        "invalid": "Keep notes to 2,000 characters."
+      },
+      "gap": {
+        "title": "This time doesn’t exist on that day.",
+        "body": "The clocks in {zone} skip this time when daylight saving starts. Choose another start time."
+      },
+      "overlap": {
+        "title": "This time happens twice on that day.",
+        "body": "The clocks in {zone} go back and repeat it. Choose which {time}:",
+        "first": "First · UTC{offset}",
+        "second": "Second · UTC{offset}",
+        "required": "Choose which of the two times you mean."
+      },
+      "notices": {
+        "failed": {
+          "title": "We couldn’t save the session.",
+          "create": "Check your connection and try again; trying again never creates a second session.",
+          "edit": "Nothing changed. Check your connection and try again."
+        },
+        "conflict": {
+          "title": "This session can’t be changed any more.",
+          "body": "The fighter completed it, or it was cancelled. Your changes were not saved."
+        },
+        "unavailable": {
+          "title": "You can’t plan for this fighter any more.",
+          "body": "The coaching relationship ended or isn’t available. Nothing was saved."
+        },
+        "reused": {
+          "title": "An earlier attempt was already saved.",
+          "body": "Before the connection dropped, it planned a session for another fighter. Nothing new was created; check Sessions before planning again."
+        },
+        "earlier": {
+          "title": "An earlier attempt was already saved.",
+          "body": "Before the connection dropped, “{title}” was planned with the details you had then. Your later changes were not applied and nothing new was created. Open it to check or edit it."
+        },
+        "earlierOpen": "Open the saved session"
+      },
+      "noFighters": {
+        "title": "No fighters to plan for yet",
+        "body": "You can plan sessions for fighters who accepted your invitation. Invite a fighter from Fighters first.",
+        "action": "Go to Fighters"
+      },
+      "loading": "Loading the form",
+      "more": "Keep typing to narrow the list.",
+      "close": "Close",
+      "done": "Done",
+      "create": "Assign session",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "saved": {
+        "created": "Session planned.",
+        "updated": "Changes saved."
+      }
+    },
+    "detail": {
+      "loading": "Loading the session",
+      "edit": "Edit",
+      "facts": {
+        "fighter": "Fighter",
+        "type": "Training type",
+        "starts": "Starts",
+        "yourTime": "Your time",
+        "duration": "Duration",
+        "notes": "Notes",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "startsValue": "{when} · {zone} (UTC{offset})",
+      "sameZone": "{time} · same time zone",
+      "otherZone": "{when} · {zone}",
+      "noNotes": "No notes",
+      "cancelledByCoach": "{when} · by you",
+      "cancelledBySystem": "{when} · the coaching relationship ended",
+      "aside": {
+        "planned": "Planned sessions can be edited or cancelled until the fighter completes them.",
+        "completed": "The fighter confirmed this session. Completed sessions can’t be edited or cancelled.",
+        "cancelled": "Cancelled sessions stay in history. To train again, create a new session."
+      },
+      "missing": {
+        "title": "This session isn’t available",
+        "body": "It may belong to a fighter you no longer coach, or the link is wrong."
+      },
+      "failed": {
+        "title": "We couldn’t load this session.",
+        "body": "Check your connection and try again."
+      }
+    },
+    "cancelDialog": {
+      "title": "Cancel this session?",
+      "body": "{name} sees it as cancelled. A cancelled session can’t be planned again; create a new one instead.",
+      "bodyUnnamed": "The fighter sees it as cancelled. A cancelled session can’t be planned again; create a new one instead.",
+      "failed": "We couldn’t cancel the session. Nothing changed. Try again.",
+      "keep": "Keep session",
+      "confirm": "Cancel session",
+      "pending": "Cancelling…",
+      "cancelled": "The session is cancelled.",
+      "changed": "This session can’t be cancelled any more: the fighter completed it.",
+      "unavailable": "This session isn’t available any more."
     }
   }
 }

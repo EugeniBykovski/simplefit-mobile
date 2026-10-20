@@ -1,4 +1,4 @@
-import { Redirect, usePathname } from "expo-router";
+import { Redirect, usePathname, type Href } from "expo-router";
 import type { ReactNode } from "react";
 import { View } from "react-native";
 
@@ -45,10 +45,11 @@ export function CapabilityGate({
   const entry =
     applies && query.data !== undefined && isKnownEntry(query.data) ? query.data : undefined;
   const held: readonly string[] = entry?.capabilities ?? [];
-  const redirect =
-    entry !== undefined && capability !== null && !held.includes(capability)
-      ? entryHref(entry)
-      : undefined;
+  // Assigned rather than a conditional expression: `Href | undefined` from a
+  // ternary is a union the typed-routes `Href` makes too complex for tsc.
+  let redirect: Href | undefined;
+  if (entry !== undefined && capability !== null && !held.includes(capability))
+    redirect = entryHref(entry);
   const failed = applies && (query.isError || unknown);
   const covered = applies && (failed || entry === undefined || redirect !== undefined);
 

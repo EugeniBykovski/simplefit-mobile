@@ -1,4 +1,4 @@
-import { Redirect, useGlobalSearchParams, usePathname } from "expo-router";
+import { Redirect, useGlobalSearchParams, usePathname, type Href } from "expo-router";
 import { useState, type ReactNode } from "react";
 import { View } from "react-native";
 
@@ -67,7 +67,10 @@ export function OnboardingGate({
     (gated !== onRegistration ||
       // O05 is also the mobile Sponsor application (`sponsor_application` maps here).
       (onSelection && destinationRoute(entry.destination) !== ROLE_SELECTION));
-  const redirect = misplaced ? entryHref(entry, continuation) : undefined;
+  // Assigned rather than a conditional expression: `Href | undefined` from a
+  // ternary is a union the typed-routes `Href` makes too complex for tsc.
+  let redirect: Href | undefined;
+  if (misplaced) redirect = entryHref(entry, continuation);
   const failed = applies && (query.isError || unknown);
   const covered = applies && (failed || entry === undefined || redirect !== undefined);
 

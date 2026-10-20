@@ -29,7 +29,8 @@
     "quality": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm api:check && pnpm expo:check && pnpm config:check && pnpm expo:doctor && pnpm bundle:check",
     "prepare": "husky",
     "routes:generate": "node scripts/generate-mobile-routes.mjs",
-    "countries:generate": "node scripts/generate-countries.mjs"
+    "countries:generate": "node scripts/generate-countries.mjs",
+    "time-zones:generate": "node scripts/generate-time-zones.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/jetbrains-mono": "0.4.1",
@@ -37,6 +38,7 @@
     "@expo-google-fonts/unbounded": "0.4.1",
     "@hookform/resolvers": "5.9.1",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/datetimepicker": "9.1.0",
     "@react-native-google-signin/google-signin": "16.1.5",
     "@tanstack/react-query": "5.104.1",
     "expo": "~57.0.30",

@@ -21,15 +21,19 @@ import { Text } from "@/shared/ui/text";
  * version 1791994719-673f, 390 pt), the first screen of the Coach app.
  *
  * - Only real data: the CoachProfile (SF-50). Fighters and invitations
- *   open the Fighters tab (SF-61, Claude Design 1792155768-3179) without
- *   counts; sessions have no domain yet: a dash, never a zero.
+ *   open the Fighters tab (SF-61, Claude Design 1792155768-3179) and
+ *   sessions the Sessions tab (SF-65, Claude Design 1792504884-2e4e), all
+ *   without counts.
  * - The identity pill opens A04, "One account, every role" (the context
  *   switcher sheet). Behind the Coach CapabilityGate (COACH from the entry).
  */
 
-/** What fills this screen: Fighters and Invitations open the Fighters tab (SF-61); sessions do not exist yet. */
-const OPEN_FILLS = { fighters: {}, invitations: { view: "invitations" } } as const;
-const LATER_STEPS = ["session"] as const;
+/** What fills this screen: each tile opens its tab (SF-61 Fighters, SF-65 Sessions). */
+const OPEN_FILLS = {
+  fighters: ["mobile.coach.fighters", {}],
+  sessions: ["mobile.coach.sessions", {}],
+  invitations: ["mobile.coach.fighters", { view: "invitations" }],
+} as const;
 
 export function CoachTodayScreen() {
   const t = useTranslations("coachHome");
@@ -111,52 +115,28 @@ function TodayView({ profile }: { profile: CoachProfile }) {
             {t("fills.title")}
           </Text>
           <View className="flex-row gap-2">
-            {(["fighters", "sessions", "invitations"] as const).map((fill) =>
-              fill === "sessions" ? (
-                <View
-                  key={fill}
-                  accessible
-                  accessibilityLabel={`${t("fills.sessions.label")}: ${t("fills.unavailable")}`}
-                  className="flex-1 gap-1 rounded-2xl border border-border bg-background p-2.5"
+            {(["fighters", "sessions", "invitations"] as const).map((fill) => (
+              <Pressable
+                key={fill}
+                accessibilityRole="link"
+                accessibilityLabel={`${t(`fills.${fill}.label`)}: ${t("fills.open")}`}
+                onPress={() => router.push(routeHref(OPEN_FILLS[fill][0], {}, OPEN_FILLS[fill][1]))}
+                className="flex-1 gap-1 rounded-2xl border border-accent-border bg-background p-2.5 active:bg-muted"
+              >
+                <Text
+                  variant="label"
+                  color="highlight"
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.75}
                 >
-                  <Text
-                    variant="label"
-                    color="faintForeground"
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    minimumFontScale={0.75}
-                  >
-                    {t("fills.sessions.label")}
-                  </Text>
-                  <Text variant="title" color="faintForeground">
-                    {t("profile.none")}
-                  </Text>
-                </View>
-              ) : (
-                <Pressable
-                  key={fill}
-                  accessibilityRole="link"
-                  accessibilityLabel={`${t(`fills.${fill}.label`)}: ${t("fills.open")}`}
-                  onPress={() =>
-                    router.push(routeHref("mobile.coach.fighters", {}, OPEN_FILLS[fill]))
-                  }
-                  className="flex-1 gap-1 rounded-2xl border border-accent-border bg-background p-2.5 active:bg-muted"
-                >
-                  <Text
-                    variant="label"
-                    color="highlight"
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    minimumFontScale={0.75}
-                  >
-                    {t(`fills.${fill}.label`)}
-                  </Text>
-                  <Text variant="bodySm" weight="extrabold">
-                    {t("fills.open")}
-                  </Text>
-                </Pressable>
-              ),
-            )}
+                  {t(`fills.${fill}.label`)}
+                </Text>
+                <Text variant="bodySm" weight="extrabold">
+                  {t("fills.open")}
+                </Text>
+              </Pressable>
+            ))}
           </View>
           <Text variant="caption" color="mutedForeground">
             {t("fills.note")}
@@ -204,24 +184,23 @@ function TodayView({ profile }: { profile: CoachProfile }) {
             </View>
             <Icon icon={ChevronRight} size={16} color="faintForeground" />
           </Pressable>
-          {LATER_STEPS.map((step) => (
-            <View
-              key={step}
-              accessible
-              accessibilityLabel={`${t(`setup.${step}.title`)}, ${t("setup.unavailable")}`}
-              className="min-h-14 flex-row items-center gap-3 border-t border-border py-1.5"
-            >
-              <View className="size-6.5 rounded-full border-2 border-dashed border-accent-border" />
-              <View className="flex-1 gap-0.5">
-                <Text variant="body" weight="extrabold" color="mutedForeground">
-                  {t(`setup.${step}.title`)}
-                </Text>
-                <Text variant="caption" color="faintForeground">
-                  {t("setup.unavailable")}
-                </Text>
-              </View>
+          <Pressable
+            accessibilityRole="link"
+            accessibilityLabel={`${t("setup.session.title")}, ${t("setup.session.line")}`}
+            onPress={() => router.push(routeHref("mobile.coach.sessions"))}
+            className="min-h-14 flex-row items-center gap-3 border-t border-border py-1.5 active:bg-muted"
+          >
+            <View className="size-6.5 rounded-full border-2 border-primary-muted" />
+            <View className="flex-1 gap-0.5">
+              <Text variant="body" weight="extrabold">
+                {t("setup.session.title")}
+              </Text>
+              <Text variant="caption" color="faintForeground">
+                {t("setup.session.line")}
+              </Text>
             </View>
-          ))}
+            <Icon icon={ChevronRight} size={16} color="faintForeground" />
+          </Pressable>
         </View>
 
         <Notice tone="muted" icon={Info}>

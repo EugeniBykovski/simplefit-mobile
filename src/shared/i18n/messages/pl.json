@@ -330,6 +330,10 @@
       "mobile/coach/promote/results": "Wyniki promocji",
       "mobile/coach/requests": "Prośby",
       "mobile/coach/services": "Usługi",
+      "mobile/coach/sessions": "Sesje",
+      "mobile/coach/sessions/new": "Nowa sesja",
+      "mobile/coach/sessions/_session-id": "Sesja",
+      "mobile/coach/sessions/_session-id/edit": "Edytuj sesję",
       "mobile/coach/sessions/_session-id/live": "Prowadzenie treningu",
       "mobile/coach/sessions/_session-id/roster": "Lista i obecność",
       "mobile/coach/shared/_shared-session-id": "Uczestnicy wspólnego treningu",
@@ -1083,27 +1087,22 @@
     },
     "fills": {
       "title": "Co wypełni ten ekran",
-      "unavailable": "Jeszcze niedostępne",
       "fighters": {
-        "label": "Zawodnicy",
-        "when": "gdy zawodnicy będą mogli do Ciebie dołączyć"
+        "label": "Zawodnicy"
       },
       "sessions": {
-        "label": "Treningi",
-        "when": "gdy będziesz mógł planować treningi"
+        "label": "Treningi"
       },
       "invitations": {
-        "label": "Zaproszenia",
-        "when": "gdy będziesz mógł zapraszać zawodników"
+        "label": "Zaproszenia"
       },
       "open": "Otwórz",
-      "note": "Zawodnicy i zaproszenia są w sekcji Zawodnicy. Sesje pojawią się później."
+      "note": "Zawodnicy i zaproszenia są w sekcji Zawodnicy; planowane sesje w sekcji Sesje."
     },
     "setup": {
       "eyebrow": "Konfiguracja trenera",
       "title": "Przygotuj swoją przestrzeń trenerską",
       "done": "Gotowe",
-      "unavailable": "Jeszcze niedostępne",
       "profile": {
         "title": "Profil trenera",
         "line": "Zapisany · możesz go później zmienić"
@@ -1114,7 +1113,7 @@
       },
       "session": {
         "title": "Zaplanuj pierwszy trening",
-        "line": "Treningi, które prowadzisz z zawodnikami"
+        "line": "W sekcji Sesje · dla zawodnika, który przyjął zaproszenie"
       }
     },
     "note": {
@@ -1514,6 +1513,224 @@
       "failed": "Nie udało się zakończyć relacji. Nic się nie zmieniło. Spróbuj ponownie.",
       "ended": "Twoja relacja z {name} została zakończona.",
       "unavailable": "Ta relacja nie jest już dostępna. Twoja lista zawodników jest aktualna."
+    }
+  },
+  "coachSessions": {
+    "title": "Sesje",
+    "new": "Nowa sesja",
+    "back": "Wróć do sesji",
+    "planner": {
+      "views": "Sesje",
+      "tabs": {
+        "upcoming": "Nadchodzące",
+        "history": "Historia"
+      },
+      "filter": "Pokaż",
+      "filters": {
+        "all": "Wszystkie",
+        "completed": "Wykonane",
+        "cancelled": "Odwołane"
+      },
+      "loading": "Wczytywanie Twoich sesji",
+      "more": "Pokaż więcej",
+      "loadingMore": "Wczytywanie…",
+      "minutes": "{minutes} min",
+      "fighterNotShared": "Zawodnik nieudostępniony",
+      "open": "Otwiera sesję",
+      "note": "Jedna sesja jest dla jednego zawodnika, którego trenujesz. Zawodnik potwierdza, gdy ją wykona. Godziny są podane w strefie czasowej każdej sesji."
+    },
+    "empty": {
+      "upcoming": {
+        "title": "Brak nadchodzących sesji",
+        "body": "Zaplanuj sesję dla jednego ze swoich zawodników przyciskiem +. Pojawi się tutaj i w jego treningach."
+      },
+      "history": {
+        "title": "Brak minionych sesji",
+        "body": "Tutaj pojawią się sesje wykonane, odwołane i minione."
+      },
+      "completed": {
+        "title": "Brak wykonanych sesji",
+        "body": "Tutaj pojawią się sesje potwierdzone przez Twoich zawodników."
+      },
+      "cancelled": {
+        "title": "Brak odwołanych sesji",
+        "body": "Tutaj pojawią się sesje odwołane przez Ciebie lub przez system."
+      }
+    },
+    "unavailable": {
+      "title": "Sesje nie są jeszcze dostępne",
+      "body": "Planowanie treningów ruszy razem z prowadzeniem zawodników, gdy zostaną opublikowane zasady danych dla trenerów i to, co zawodnicy udostępniają. Po prostu nie ma jeszcze nic do pokazania."
+    },
+    "failed": {
+      "title": "Nie udało się wczytać Twoich sesji.",
+      "body": "Sprawdź połączenie i spróbuj ponownie.",
+      "retry": "Spróbuj ponownie",
+      "more": "Nie udało się wczytać kolejnych sesji. Spróbuj ponownie."
+    },
+    "status": {
+      "planned": "Zaplanowana",
+      "completed": "Wykonana",
+      "cancelled": "Odwołana"
+    },
+    "types": {
+      "technical": "Technika",
+      "sparring": "Sparing",
+      "pads": "Tarcze",
+      "strength_conditioning": "Siła i kondycja",
+      "roadwork": "Bieganie"
+    },
+    "form": {
+      "fighter": {
+        "label": "Zawodnik",
+        "placeholder": "Wybierz zawodnika",
+        "choose": "Wybierz zawodnika",
+        "open": "Otwiera listę Twoich zawodników",
+        "search": "Szukaj zawodników",
+        "empty": "Żaden zawodnik nie pasuje.",
+        "hint": "Zawodnicy, którzy przyjęli Twoje zaproszenie.",
+        "fixed": "Zawodnika sesji nie można zmienić.",
+        "required": "Wybierz zawodnika.",
+        "notShared": "Zawodnik (imię nieudostępnione)",
+        "since": "Od {date}"
+      },
+      "title": {
+        "label": "Tytuł",
+        "invalid": "Wpisz tytuł o długości do 80 znaków."
+      },
+      "type": {
+        "label": "Rodzaj treningu",
+        "required": "Wybierz rodzaj treningu."
+      },
+      "date": {
+        "label": "Data",
+        "placeholder": "Wybierz",
+        "open": "Otwiera wybór daty",
+        "required": "Wybierz datę."
+      },
+      "time": {
+        "label": "Godzina rozpoczęcia",
+        "placeholder": "Wybierz",
+        "open": "Otwiera wybór godziny",
+        "required": "Wybierz godzinę rozpoczęcia.",
+        "window": "Wybierz początek między wczoraj a rokiem od dziś.",
+        "invalid": "Tej godziny rozpoczęcia nie można użyć. Sprawdź datę, godzinę i strefę czasową."
+      },
+      "zone": {
+        "label": "Strefa czasowa",
+        "open": "Otwiera listę stref czasowych",
+        "search": "Szukaj stref czasowych",
+        "empty": "Żadna strefa czasowa nie pasuje.",
+        "device": "{offset} · to urządzenie",
+        "hint": "Zapisywana jako dokładna chwila w tej strefie czasowej, więc zgadza się także po zmianie czasu.",
+        "invalid": "Ta strefa czasowa nie jest obsługiwana. Wybierz inną."
+      },
+      "duration": {
+        "label": "Czas trwania",
+        "unit": "min",
+        "hint": "Od 5 do 600 minut.",
+        "invalid": "Wpisz pełną liczbę minut od 5 do 600."
+      },
+      "notes": {
+        "label": "Notatki dla zawodnika · opcjonalnie",
+        "hint": "Do 2000 znaków. Zawodnik je widzi.",
+        "invalid": "Notatki mogą mieć najwyżej 2000 znaków."
+      },
+      "gap": {
+        "title": "Tej godziny nie ma tego dnia.",
+        "body": "Zegary w strefie {zone} pomijają tę godzinę, gdy zaczyna się czas letni. Wybierz inną godzinę rozpoczęcia."
+      },
+      "overlap": {
+        "title": "Ta godzina występuje tego dnia dwa razy.",
+        "body": "Zegary w strefie {zone} cofają się i ją powtarzają. Wybierz, którą {time} masz na myśli:",
+        "first": "Pierwsza · UTC{offset}",
+        "second": "Druga · UTC{offset}",
+        "required": "Wybierz, którą z dwóch godzin masz na myśli."
+      },
+      "notices": {
+        "failed": {
+          "title": "Nie udało się zapisać sesji.",
+          "create": "Sprawdź połączenie i spróbuj ponownie; ponowna próba nigdy nie tworzy drugiej sesji.",
+          "edit": "Nic się nie zmieniło. Sprawdź połączenie i spróbuj ponownie."
+        },
+        "conflict": {
+          "title": "Tej sesji nie można już zmienić.",
+          "body": "Zawodnik ją wykonał albo została odwołana. Twoje zmiany nie zostały zapisane."
+        },
+        "unavailable": {
+          "title": "Nie możesz już planować dla tego zawodnika.",
+          "body": "Relacja trenerska zakończyła się lub jest niedostępna. Nic nie zostało zapisane."
+        },
+        "reused": {
+          "title": "Wcześniejsza próba została już zapisana.",
+          "body": "Zanim połączenie zostało przerwane, zaplanowała sesję dla innego zawodnika. Nic nowego nie utworzono; sprawdź Sesje, zanim zaplanujesz ponownie."
+        },
+        "earlier": {
+          "title": "Wcześniejsza próba została już zapisana.",
+          "body": "Zanim połączenie zostało przerwane, zaplanowano „{title}” z ówczesnymi danymi. Twoje późniejsze zmiany nie zostały zastosowane i nic nowego nie utworzono. Otwórz sesję, aby ją sprawdzić lub edytować."
+        },
+        "earlierOpen": "Otwórz zapisaną sesję"
+      },
+      "noFighters": {
+        "title": "Brak zawodników do planowania",
+        "body": "Możesz planować sesje dla zawodników, którzy przyjęli Twoje zaproszenie. Najpierw zaproś zawodnika w sekcji Zawodnicy.",
+        "action": "Przejdź do Zawodników"
+      },
+      "loading": "Wczytywanie formularza",
+      "more": "Pisz dalej, aby zawęzić listę.",
+      "close": "Zamknij",
+      "done": "Gotowe",
+      "create": "Przydziel sesję",
+      "save": "Zapisz zmiany",
+      "saving": "Zapisywanie…",
+      "saved": {
+        "created": "Sesja zaplanowana.",
+        "updated": "Zmiany zapisane."
+      }
+    },
+    "detail": {
+      "loading": "Wczytywanie sesji",
+      "edit": "Edytuj",
+      "facts": {
+        "fighter": "Zawodnik",
+        "type": "Rodzaj treningu",
+        "starts": "Początek",
+        "yourTime": "Twój czas",
+        "duration": "Czas trwania",
+        "notes": "Notatki",
+        "completed": "Wykonana",
+        "cancelled": "Odwołana"
+      },
+      "startsValue": "{when} · {zone} (UTC{offset})",
+      "sameZone": "{time} · ta sama strefa czasowa",
+      "otherZone": "{when} · {zone}",
+      "noNotes": "Brak notatek",
+      "cancelledByCoach": "{when} · przez Ciebie",
+      "cancelledBySystem": "{when} · relacja trenerska się zakończyła",
+      "aside": {
+        "planned": "Zaplanowane sesje można edytować lub odwołać, dopóki zawodnik ich nie wykona.",
+        "completed": "Zawodnik potwierdził tę sesję. Wykonanych sesji nie można edytować ani odwołać.",
+        "cancelled": "Odwołane sesje zostają w historii. Aby znów trenować, utwórz nową sesję."
+      },
+      "missing": {
+        "title": "Ta sesja jest niedostępna",
+        "body": "Może należeć do zawodnika, którego już nie trenujesz, albo link jest błędny."
+      },
+      "failed": {
+        "title": "Nie udało się wczytać tej sesji.",
+        "body": "Sprawdź połączenie i spróbuj ponownie."
+      }
+    },
+    "cancelDialog": {
+      "title": "Odwołać tę sesję?",
+      "body": "{name} zobaczy ją jako odwołaną. Odwołanej sesji nie można zaplanować ponownie; zamiast tego utwórz nową.",
+      "bodyUnnamed": "Zawodnik zobaczy ją jako odwołaną. Odwołanej sesji nie można zaplanować ponownie; zamiast tego utwórz nową.",
+      "failed": "Nie udało się odwołać sesji. Nic się nie zmieniło. Spróbuj ponownie.",
+      "keep": "Zachowaj sesję",
+      "confirm": "Odwołaj sesję",
+      "pending": "Odwoływanie…",
+      "cancelled": "Sesja jest odwołana.",
+      "changed": "Tej sesji nie można już odwołać: zawodnik ją wykonał.",
+      "unavailable": "Ta sesja nie jest już dostępna."
     }
   }
 }

@@ -26,6 +26,7 @@ export const REACT_NATIVE_PRELOAD = [
   "Platform",
   "Pressable",
   "ScrollView",
+  "SectionList",
   "Switch",
   "Text",
   "TextInput",
