@@ -23,7 +23,7 @@ them in place (no new files):
 | CoachTabs        | `CoachTabs.dc.html`        | Coach tab bar                   | `tabNavigation.coach` | current               |
 | C01 Coach today  | `CoachToday.dc.html`       | `/coach/today`                  | `CoachTodayScreen`    | current               |
 
-Sessions stays Soon (no session domain, SF-62 / SF-65).
+Sessions stayed Soon until SF-65 made it live (`docs/coach-sessions-mobile.md`).
 
 ## Fighters (C03)
 
@@ -76,8 +76,8 @@ required` returns to the data rules.
 ## Coach today (C01)
 
 The Fighters and Invites tiles and "Invite your first fighter" open the
-Fighters tab (no counts are shown: there is no count API); Sessions stays a
-dash.
+Fighters tab (no counts are shown: there is no count API); since SF-65 the
+Sessions tile opens the Sessions tab.
 
 ## Session and privacy
 

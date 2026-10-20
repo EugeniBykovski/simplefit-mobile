@@ -647,6 +647,15 @@ set, same as web's `lucide-react`; ISC / MIT; replaces `@expo/vector-icons`),
 `@expo-google-fonts/unbounded|manrope|jetbrains-mono` (SF-13: brand
 typefaces, SIL OFL; imported per weight).
 
+**Added in SF-65:** `@react-native-community/datetimepicker` 9.1.0 (MIT, the
+Expo SDK 57 bundled version, New Architecture, no install scripts). Problem:
+the coach chooses a session's date and start time (CT2/CT4). The app had no
+picker (birth dates are typed digits), React Native ships none, and a typed
+time is error-prone; the system pickers bring the platform's accessibility,
+locale and 12/24-hour handling. They run in UTC (`timeZoneName`), so they
+return a wall date and time that `shared/lib/time-zone` resolves in the
+session's own IANA zone. Native module: rebuild the development build.
+
 **Added in SF-23:** `expo-apple-authentication` 57.0.2 (MIT, first-party Expo
 SDK 57; AuthenticationServices with the `usesAppleSignIn` entitlement) for
 native Sign in with Apple, and `expo-crypto` 57.0.4 (MIT, first-party) for the
@@ -664,7 +673,7 @@ No install scripts.
 
 **Deferred until a ticket needs them:** FlashList, keyboard-controller,
 expo-image, haptics, Stripe, RevenueCat, Sentry,
-PostHog/analytics, Firebase, push notifications, camera/pickers, maps/location,
+PostHog/analytics, Firebase, push notifications, camera/media pickers, maps/location,
 WebSockets, rich text, charts/Skia, biometrics, health/wearables, uploads,
 sharing, feature flags, query cache persistence, Maestro/Detox, expo-updates.
 

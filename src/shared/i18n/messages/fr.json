@@ -330,6 +330,10 @@
       "mobile/coach/promote/results": "Résultats de la promotion",
       "mobile/coach/requests": "Demandes",
       "mobile/coach/services": "Prestations",
+      "mobile/coach/sessions": "Séances",
+      "mobile/coach/sessions/new": "Nouvelle séance",
+      "mobile/coach/sessions/_session-id": "Séance",
+      "mobile/coach/sessions/_session-id/edit": "Modifier la séance",
       "mobile/coach/sessions/_session-id/live": "Pilotage de la séance",
       "mobile/coach/sessions/_session-id/roster": "Participants et présence",
       "mobile/coach/shared/_shared-session-id": "Participants de l’entraînement partagé",
@@ -1083,27 +1087,22 @@
     },
     "fills": {
       "title": "Ce qui remplira cet écran",
-      "unavailable": "Pas encore disponible",
       "fighters": {
-        "label": "Boxeurs",
-        "when": "quand les boxeurs pourront te rejoindre"
+        "label": "Boxeurs"
       },
       "sessions": {
-        "label": "Séances",
-        "when": "quand tu pourras planifier des séances"
+        "label": "Séances"
       },
       "invitations": {
-        "label": "Invitations",
-        "when": "quand tu pourras inviter des boxeurs"
+        "label": "Invitations"
       },
       "open": "Ouvrir",
-      "note": "Les boxeurs et les invitations sont dans Boxeurs. Les séances arrivent plus tard."
+      "note": "Les boxeurs et les invitations sont dans Boxeurs ; les séances que tu planifies, dans Séances."
     },
     "setup": {
       "eyebrow": "Inscription coach",
       "title": "Prépare ton espace de coaching",
       "done": "Fait",
-      "unavailable": "Pas encore disponible",
       "profile": {
         "title": "Profil de coach",
         "line": "Enregistré · tu peux le modifier plus tard"
@@ -1114,7 +1113,7 @@
       },
       "session": {
         "title": "Planifie ta première séance",
-        "line": "Les séances que tu mènes avec tes boxeurs"
+        "line": "Dans Séances · pour un boxeur qui a accepté"
       }
     },
     "note": {
@@ -1514,6 +1513,224 @@
       "failed": "Impossible de mettre fin à la relation. Rien n’a changé. Réessaie.",
       "ended": "Ta relation avec {name} est terminée.",
       "unavailable": "Cette relation n’est plus disponible. Ta liste de boxeurs est à jour."
+    }
+  },
+  "coachSessions": {
+    "title": "Séances",
+    "new": "Nouvelle séance",
+    "back": "Retour aux séances",
+    "planner": {
+      "views": "Séances",
+      "tabs": {
+        "upcoming": "À venir",
+        "history": "Historique"
+      },
+      "filter": "Afficher",
+      "filters": {
+        "all": "Toutes",
+        "completed": "Terminées",
+        "cancelled": "Annulées"
+      },
+      "loading": "Chargement de tes séances",
+      "more": "Afficher plus",
+      "loadingMore": "Chargement…",
+      "minutes": "{minutes} min",
+      "fighterNotShared": "Boxeur non partagé",
+      "open": "Ouvre la séance",
+      "note": "Une séance concerne un boxeur que tu entraînes. Le boxeur confirme quand il l’a faite. Les heures sont affichées dans le fuseau horaire de chaque séance."
+    },
+    "empty": {
+      "upcoming": {
+        "title": "Aucune séance à venir",
+        "body": "Planifie une séance pour l’un de tes boxeurs avec le bouton +. Elle apparaît ici et dans son entraînement."
+      },
+      "history": {
+        "title": "Pas encore de séances passées",
+        "body": "Les séances terminées, annulées et passées apparaissent ici."
+      },
+      "completed": {
+        "title": "Pas encore de séances terminées",
+        "body": "Les séances confirmées par tes boxeurs apparaissent ici."
+      },
+      "cancelled": {
+        "title": "Aucune séance annulée",
+        "body": "Les séances annulées par toi ou par le système apparaissent ici."
+      }
+    },
+    "unavailable": {
+      "title": "Les séances ne sont pas encore disponibles",
+      "body": "La planification des entraînements ouvre en même temps que l’accompagnement des boxeurs, une fois publiées les règles de données pour les coachs et ce que les boxeurs partagent. Il n’y a simplement rien à afficher pour l’instant."
+    },
+    "failed": {
+      "title": "Impossible de charger tes séances.",
+      "body": "Vérifie ta connexion et réessaie.",
+      "retry": "Réessayer",
+      "more": "Impossible de charger plus de séances. Réessaie."
+    },
+    "status": {
+      "planned": "Planifiée",
+      "completed": "Terminée",
+      "cancelled": "Annulée"
+    },
+    "types": {
+      "technical": "Technique",
+      "sparring": "Sparring",
+      "pads": "Pattes d’ours",
+      "strength_conditioning": "Physique",
+      "roadwork": "Course"
+    },
+    "form": {
+      "fighter": {
+        "label": "Boxeur",
+        "placeholder": "Choisis un boxeur",
+        "choose": "Choisis un boxeur",
+        "open": "Ouvre la liste de tes boxeurs",
+        "search": "Rechercher des boxeurs",
+        "empty": "Aucun boxeur ne correspond.",
+        "hint": "Les boxeurs qui ont accepté ton invitation.",
+        "fixed": "Le boxeur d’une séance ne peut pas changer.",
+        "required": "Choisis un boxeur.",
+        "notShared": "Boxeur (nom non partagé)",
+        "since": "Depuis le {date}"
+      },
+      "title": {
+        "label": "Titre",
+        "invalid": "Saisis un titre de 80 caractères au maximum."
+      },
+      "type": {
+        "label": "Type d’entraînement",
+        "required": "Choisis un type d’entraînement."
+      },
+      "date": {
+        "label": "Date",
+        "placeholder": "Choisir",
+        "open": "Ouvre le sélecteur de date",
+        "required": "Choisis une date."
+      },
+      "time": {
+        "label": "Heure de début",
+        "placeholder": "Choisir",
+        "open": "Ouvre le sélecteur d’heure",
+        "required": "Choisis une heure de début.",
+        "window": "Choisis un début entre hier et dans un an.",
+        "invalid": "Cette heure de début ne peut pas être utilisée. Vérifie la date, l’heure et le fuseau horaire."
+      },
+      "zone": {
+        "label": "Fuseau horaire",
+        "open": "Ouvre la liste des fuseaux horaires",
+        "search": "Rechercher un fuseau horaire",
+        "empty": "Aucun fuseau horaire ne correspond.",
+        "device": "{offset} · cet appareil",
+        "hint": "Enregistré comme un instant exact dans ce fuseau horaire, il reste juste lors des changements d’heure.",
+        "invalid": "Ce fuseau horaire n’est pas pris en charge. Choisis-en un autre."
+      },
+      "duration": {
+        "label": "Durée",
+        "unit": "min",
+        "hint": "De 5 à 600 minutes.",
+        "invalid": "Saisis un nombre entier de minutes entre 5 et 600."
+      },
+      "notes": {
+        "label": "Notes pour le boxeur · facultatif",
+        "hint": "Jusqu’à 2 000 caractères. Le boxeur les voit.",
+        "invalid": "Limite les notes à 2 000 caractères."
+      },
+      "gap": {
+        "title": "Cette heure n’existe pas ce jour-là.",
+        "body": "Les horloges de {zone} sautent cette heure au passage à l’heure d’été. Choisis une autre heure de début."
+      },
+      "overlap": {
+        "title": "Cette heure a lieu deux fois ce jour-là.",
+        "body": "Les horloges de {zone} reculent et la répètent. Choisis quel {time} :",
+        "first": "Le premier · UTC{offset}",
+        "second": "Le second · UTC{offset}",
+        "required": "Choisis laquelle des deux heures tu veux dire."
+      },
+      "notices": {
+        "failed": {
+          "title": "Impossible d’enregistrer la séance.",
+          "create": "Vérifie ta connexion et réessaie ; réessayer ne crée jamais une deuxième séance.",
+          "edit": "Rien n’a changé. Vérifie ta connexion et réessaie."
+        },
+        "conflict": {
+          "title": "Cette séance ne peut plus être modifiée.",
+          "body": "Le boxeur l’a terminée, ou elle a été annulée. Tes modifications n’ont pas été enregistrées."
+        },
+        "unavailable": {
+          "title": "Tu ne peux plus planifier pour ce boxeur.",
+          "body": "La relation d’accompagnement a pris fin ou n’est pas disponible. Rien n’a été enregistré."
+        },
+        "reused": {
+          "title": "Une tentative précédente a déjà été enregistrée.",
+          "body": "Avant la coupure de connexion, elle a planifié une séance pour un autre boxeur. Rien de nouveau n’a été créé ; vérifie Séances avant de planifier à nouveau."
+        },
+        "earlier": {
+          "title": "Une tentative précédente a déjà été enregistrée.",
+          "body": "Avant la coupure de connexion, « {title} » a été planifiée avec les informations d’alors. Tes modifications suivantes n’ont pas été appliquées et rien de nouveau n’a été créé. Ouvre-la pour la vérifier ou la modifier."
+        },
+        "earlierOpen": "Ouvrir la séance enregistrée"
+      },
+      "noFighters": {
+        "title": "Pas encore de boxeurs pour qui planifier",
+        "body": "Tu peux planifier des séances pour les boxeurs qui ont accepté ton invitation. Invite d’abord un boxeur depuis Boxeurs.",
+        "action": "Aller à Boxeurs"
+      },
+      "loading": "Chargement du formulaire",
+      "more": "Continue à taper pour affiner la liste.",
+      "close": "Fermer",
+      "done": "OK",
+      "create": "Attribuer la séance",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "saved": {
+        "created": "Séance planifiée.",
+        "updated": "Modifications enregistrées."
+      }
+    },
+    "detail": {
+      "loading": "Chargement de la séance",
+      "edit": "Modifier",
+      "facts": {
+        "fighter": "Boxeur",
+        "type": "Type d’entraînement",
+        "starts": "Début",
+        "yourTime": "Ton heure",
+        "duration": "Durée",
+        "notes": "Notes",
+        "completed": "Terminée",
+        "cancelled": "Annulée"
+      },
+      "startsValue": "{when} · {zone} (UTC{offset})",
+      "sameZone": "{time} · même fuseau horaire",
+      "otherZone": "{when} · {zone}",
+      "noNotes": "Aucune note",
+      "cancelledByCoach": "{when} · par toi",
+      "cancelledBySystem": "{when} · la relation d’accompagnement a pris fin",
+      "aside": {
+        "planned": "Les séances planifiées peuvent être modifiées ou annulées jusqu’à ce que le boxeur les termine.",
+        "completed": "Le boxeur a confirmé cette séance. Les séances terminées ne peuvent être ni modifiées ni annulées.",
+        "cancelled": "Les séances annulées restent dans l’historique. Pour t’entraîner à nouveau, crée une nouvelle séance."
+      },
+      "missing": {
+        "title": "Cette séance n’est pas disponible",
+        "body": "Elle appartient peut-être à un boxeur que tu n’entraînes plus, ou le lien est incorrect."
+      },
+      "failed": {
+        "title": "Impossible de charger cette séance.",
+        "body": "Vérifie ta connexion et réessaie."
+      }
+    },
+    "cancelDialog": {
+      "title": "Annuler cette séance ?",
+      "body": "{name} la verra comme annulée. Une séance annulée ne peut pas être replanifiée ; crée-en une nouvelle à la place.",
+      "bodyUnnamed": "Le boxeur la verra comme annulée. Une séance annulée ne peut pas être replanifiée ; crée-en une nouvelle à la place.",
+      "failed": "Impossible d’annuler la séance. Rien n’a changé. Réessaie.",
+      "keep": "Garder la séance",
+      "confirm": "Annuler la séance",
+      "pending": "Annulation…",
+      "cancelled": "La séance est annulée.",
+      "changed": "Cette séance ne peut plus être annulée : le boxeur l’a terminée.",
+      "unavailable": "Cette séance n’est plus disponible."
     }
   }
 }
