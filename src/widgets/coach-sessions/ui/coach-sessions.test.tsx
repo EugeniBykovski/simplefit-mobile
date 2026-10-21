@@ -1,4 +1,4 @@
-import { screen, userEvent, waitFor } from "@testing-library/react-native";
+import { act, screen, userEvent, waitFor } from "@testing-library/react-native";
 import { getCalendars } from "expo-localization";
 
 import { completeAuthentication } from "@/entities/session";
@@ -179,6 +179,29 @@ describe("Sessions (CT1)", () => {
 });
 
 describe("Session (CT3)", () => {
+  it("keeps a shown session when reading it again fails, and replaces it only on 404 (SF-70)", async () => {
+    let reads = 0;
+    backend({
+      [`GET ${SESSIONS}/${ID}`]: () => {
+        reads += 1;
+        if (reads === 1) return one(session());
+        return reads === 2 ? error(503, "internal_error") : error(404, "not_found");
+      },
+    });
+    const { queryClient } = await renderWithProviders(<CoachSessionScreen sessionId={ID} />);
+    expect(await screen.findByRole("header", { name: "Pads with coach" })).toBeOnTheScreen();
+
+    await act(() => queryClient.refetchQueries({ queryKey: [`${SESSIONS}/${ID}`] }));
+    expect(reads).toBe(2);
+    expect(screen.getByRole("header", { name: "Pads with coach" })).toBeOnTheScreen();
+    expect(screen.queryByTestId("session:failed")).toBeNull();
+
+    await act(() => queryClient.refetchQueries({ queryKey: [`${SESSIONS}/${ID}`] }));
+    await waitFor(() =>
+      expect(screen.queryByRole("header", { name: "Pads with coach" })).toBeNull(),
+    );
+  });
+
   it("shows a planned session in its zone and the viewer's, with Edit and Cancel", async () => {
     jest.mocked(getCalendars).mockReturnValue([{ timeZone: "America/New_York" }] as never);
     backend({ [`GET ${SESSIONS}/${ID}`]: one(session()) });
