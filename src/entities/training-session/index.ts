@@ -1,4 +1,13 @@
 export {
+  coachIdentity,
+  myTrainingSessionKey,
+  myTrainingSessionsKey,
+  myTrainingSessionsRootKey,
+  useMyTrainingSession,
+  useMyTrainingSessions,
+  type MyTrainingSession,
+} from "./model/my-training-session";
+export {
   coachTrainingSessionKey,
   coachTrainingSessionsKey,
   coachTrainingSessionsRootKey,

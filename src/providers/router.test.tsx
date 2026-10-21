@@ -267,7 +267,9 @@ async function signIn(
                 ? jsonResponse({ coach_profile: coach })
                 : url.includes("/api/v1/me/first-run")
                   ? jsonResponse(firstRun(mobileFirstRun))
-                  : /\/api\/v1\/me\/coach\/(fighters|training-sessions)\/[^?]/.test(url)
+                  : /\/api\/v1\/me\/(coach\/fighters|coach\/training-sessions|training-sessions)\/[^?]/.test(
+                        url,
+                      )
                     ? jsonResponse(
                         {
                           error: {
@@ -282,7 +284,8 @@ async function signIn(
                     : url.includes("/api/v1/me/coaches") ||
                         url.includes("/api/v1/me/coach/fighters")
                       ? jsonResponse({ relationships: [], next_cursor: null })
-                      : url.includes("/api/v1/me/coach/training-sessions")
+                      : url.includes("/api/v1/me/coach/training-sessions") ||
+                          url.includes("/api/v1/me/training-sessions")
                         ? jsonResponse({ training_sessions: [], next_cursor: null })
                         : url.includes("/api/v1/me/coach/invitations") ||
                             url.includes("/api/v1/me/coach-invitations")
@@ -337,8 +340,9 @@ describe("canonical routes resolve", () => {
             : // The Coach workspace needs the COACH capability the entry reports (SF-53).
               route.shell === "mobile.coach"
               ? COACH_HOME
-              : // A04 shows while the entry answers a home or context_selection (SF-55).
-                route.id === "mobile.workspaces"
+              : // A04 shows while the entry answers a home or context_selection (SF-55);
+                // the Fighter workspace needs the FIGHTER capability (SF-66).
+                route.id === "mobile.workspaces" || route.shell === "mobile.fighter"
                 ? FIGHTER_HOME
                 : ROLE_SELECTION,
         );
@@ -367,7 +371,7 @@ describe("canonical routes resolve", () => {
   );
 
   it("passes dynamic parameters through unchanged", async () => {
-    await signIn();
+    await signIn(FIGHTER_HOME);
     const result = await renderApp("/gym/g-42/classes/c-7/book");
     expect(
       await screen.findByTestId(placeholderId("mobile.gym._gym-id.classes._class-id.book")),
@@ -560,7 +564,7 @@ describe("sign-out and session end (SF-28)", () => {
 
 describe("tab navigation", () => {
   it("shows the fighter tabs with the current tab selected, and switches tabs", async () => {
-    await signIn();
+    await signIn(FIGHTER_HOME);
     const result = await renderApp("/home");
     expect(await screen.findByRole("tab", { name: "Home", selected: true })).toBeOnTheScreen();
     expect(screen.getByLabelText("Fighter navigation")).toBeOnTheScreen();
@@ -629,7 +633,7 @@ describe("tab navigation", () => {
   });
 
   it("returns from a tab section to its tab root", async () => {
-    await signIn();
+    await signIn(FIGHTER_HOME);
     const result = await renderApp("/progress");
     await screen.findByRole("tab", { name: "Profile", selected: true });
     await act(async () => router.back());
@@ -638,14 +642,14 @@ describe("tab navigation", () => {
   });
 
   it("pushes detail screens above the tabs, without the tab bar", async () => {
-    await signIn();
+    await signIn(FIGHTER_HOME);
     await renderApp("/camp/weight");
     await screen.findByTestId(placeholderId("mobile.camp.weight"));
     expect(screen.queryByRole("tab", { name: "Home" })).toBeNull();
   });
 
   it("goes back from a pushed screen to the tab it was opened from", async () => {
-    await signIn();
+    await signIn(FIGHTER_HOME);
     const result = await renderApp("/profile");
     await screen.findByTestId("account-menu:profile");
     await act(async () => router.push("/achievements"));
@@ -672,6 +676,17 @@ function fileOf(route: MobileRoute): string {
 }
 
 describe("system states (SF-34)", () => {
+  it("never opens a Fighter route for someone without FIGHTER (SF-66): the entry decides", async () => {
+    await signIn(COACH_HOME);
+    const result = await renderApp("/training");
+    await waitFor(() => expect(result.getPathname()).toBe("/coach/today"));
+    // Nothing of the fighter's training is shown. (The navigator stays mounted
+    // under the gate, so the list may be asked for once; without a fighter
+    // profile the backend answers 404.)
+    expect(screen.queryByText("No upcoming training")).toBeNull();
+    expect(screen.queryByText("Training")).toBeNull();
+  });
+
   it("covers a gated route with the LD1 launch screen while the session is restored, in the same navigator", async () => {
     await setSecureItem("simplefit.session.refresh_token", "stored-refresh");
     let respond: (response: Response) => void = () => {};
@@ -680,14 +695,18 @@ describe("system states (SF-34)", () => {
       jest
         .fn()
         .mockImplementationOnce(() => new Promise<Response>((resolve) => (respond = resolve)))
-        .mockImplementation(() =>
+        .mockImplementation((url: string) =>
           Promise.resolve(
-            jsonResponse({
-              user: {
-                id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                created_at: "2026-10-01T10:00:00Z",
-              },
-            }),
+            url.includes("/api/v1/me/entry")
+              ? jsonResponse({ entry: { ...FIGHTER_HOME, intent: null } })
+              : url.includes("/api/v1/me/training-sessions")
+                ? jsonResponse({ training_sessions: [], next_cursor: null })
+                : jsonResponse({
+                    user: {
+                      id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                      created_at: "2026-10-01T10:00:00Z",
+                    },
+                  }),
           ),
         ),
     );
@@ -708,7 +727,8 @@ describe("system states (SF-34)", () => {
         }),
       ),
     );
-    expect(await screen.findByTestId(placeholderId("mobile.training"))).toBeOnTheScreen();
+    // SF-66: Training is the fighter's real schedule, behind the FIGHTER gate.
+    expect(await screen.findByText("No upcoming training")).toBeOnTheScreen();
     expect(screen.queryByLabelText("Loading SimpleFit")).toBeNull();
     expect(result.getPathname()).toBe("/training");
   });
