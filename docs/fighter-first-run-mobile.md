@@ -64,6 +64,31 @@ OF11 → SF-45 fighter_home → /home
   the card on the side with room, on screen. It records nothing and every
   opening starts at step 1. No animation when the system reduces motion.
 
+## Training card (SF-69)
+
+Claude Design `1792580627-132e` adds a Training card to FR4 under the Live
+Board card (`D-MOBILE-FIGHTER-HOME-TRAINING`; FR4 is now 390 × 1300). No
+SF-41 section moves: the header, greeting, checklist, Live Board and the FR5
+tour targets stay where they were.
+
+- **Next:** the first session of `listMyTrainingSessions?view=upcoming`
+  (the backend's order, earliest first): start time and day in the
+  session's zone, its city, type, coach (as on Training) and duration. It
+  opens FT2 (`/sessions/:sessionId`). Nothing scheduled is its own state.
+- **Latest completed:** the first three of
+  `view=history&status=completed`, each opening FT2. **All training** opens
+  the Training tab. No counts, totals or progress from a page.
+- **Same queries and cache as the Training tab** (`useMyTrainingSessions`):
+  a completion there invalidates both lists; Home reads them again on
+  focus, on return to the foreground (AppState) and when the network comes
+  back. The session boundary clears the cache, and a previous account's
+  late answer is discarded (SF-28).
+- **States per projection:** loading, ready, empty, failed (retry, never an
+  empty schedule) and not available (`404`). A failure stays in the card.
+- **First run untouched:** the card only reads. The checklist keeps all
+  five steps "Not available yet": completing an assigned session is not
+  logging training (FR7 stays deferred). F01 is FUTURE.
+
 ## Verification
 
 - Unit / component: `entities` via the screens, `fighter-home/model` (day

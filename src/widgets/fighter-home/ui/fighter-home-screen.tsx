@@ -18,6 +18,7 @@ import { Text } from "@/shared/ui/text";
 
 import { dayWithSimpleFit, headerDate } from "../model/home-date";
 import { HomeTour } from "./home-tour";
+import { HomeTraining } from "./home-training";
 
 /*
  * The Fighter home (`mobile.home`, SF-41; Claude Design 34a FR4 at 390 pt,
@@ -28,10 +29,14 @@ import { HomeTour } from "./home-tour";
  *   completed or skipped (here or on another device) this home shows; if
  *   Fighter onboarding is not complete (`unavailable`) the entry decides.
  * - Only real data: the Fighter's display name and the day since onboarding
- *   completed (FighterProfile). The checklist's steps belong to domains that
- *   do not exist yet (gym, bookings, round timer, training log, partners):
- *   none is ticked or linked, each says it is not available yet (as the web
- *   home). The Live Board is empty until training exists.
+ *   completed (FighterProfile) and, since SF-69, the Training card under the
+ *   Live Board (the next assigned session and the latest completed, from the
+ *   SF-63 projections). The checklist's steps belong to domains that do not
+ *   exist yet (gym, bookings, round timer, training log, partners): none is
+ *   ticked or linked, each says it is not available yet (as the web home);
+ *   completing an assigned session is not logging training. The Live Board
+ *   is empty until training exists. Training never touches the first-run
+ *   record.
  * - The identity pill opens A04, "One account, every role" (SF-55): the
  *   profile context switcher sheet.
  * - The tour (FR5) is help: Help (?) or the Live Board card opens it, it
@@ -259,6 +264,8 @@ function HomeView({ name, completedAt }: { name: string; completedAt: string | n
             </Text>
           </Pressable>
         </View>
+
+        <HomeTraining />
       </ScrollView>
       {touring ? <HomeTour onClose={() => setTouring(false)} /> : null}
       <ContextSwitcherSheet

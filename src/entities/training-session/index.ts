@@ -22,3 +22,4 @@ export {
   type TrainingSessionView,
   type TrainingType,
 } from "./model/training-session";
+export { useCoachLine, zoneCity } from "./ui/use-coach-line";
