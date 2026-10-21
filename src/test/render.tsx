@@ -29,7 +29,12 @@ export async function renderWithProviders(ui: ReactElement, options: Options = {
     jest.mocked(getLocales).mockReturnValue(options.deviceLocales as never);
   if (options.storedLocale) await setPreference("locale", options.storedLocale);
   const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false, gcTime: Infinity } },
+    // No garbage-collection timers: a finished mutation otherwise schedules a
+    // 5-minute one that keeps the Jest worker alive after the run.
+    defaultOptions: {
+      queries: { retry: false, gcTime: Infinity },
+      mutations: { gcTime: Infinity },
+    },
   });
   clients.add(queryClient);
 
