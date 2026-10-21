@@ -399,7 +399,7 @@
       "mobile/progress/video/_video-id": "Revisión de vídeo",
       "mobile/report": "Denunciar o bloquear",
       "mobile/search": "Buscar",
-      "mobile/sessions/_session-id": "Plan de sesión",
+      "mobile/sessions/_session-id": "Sesión",
       "mobile/sessions/_session-id/complete": "Entrenamiento completado",
       "mobile/sessions/_session-id/live": "Entrenamiento en vivo",
       "mobile/settings": "Ajustes",
@@ -1731,6 +1731,129 @@
       "cancelled": "La sesión está cancelada.",
       "changed": "Esta sesión ya no se puede cancelar: el boxeador la completó.",
       "unavailable": "Esta sesión ya no está disponible."
+    }
+  },
+  "fighterTraining": {
+    "title": "Entrenamiento",
+    "back": "Volver al entrenamiento",
+    "list": {
+      "views": "Entrenamiento",
+      "tabs": {
+        "upcoming": "Próximas",
+        "history": "Historial"
+      },
+      "filter": "Mostrar",
+      "filters": {
+        "all": "Todas",
+        "completed": "Completadas",
+        "cancelled": "Canceladas"
+      },
+      "loading": "Cargando tu entrenamiento",
+      "more": "Mostrar más",
+      "loadingMore": "Cargando más…",
+      "minutes": "{minutes} min",
+      "open": "Abre la sesión",
+      "note": "Sesiones que tus entrenadores planifican para ti. Las horas se muestran en la zona horaria de cada sesión. Marcas una sesión como completada cuando ya ha empezado."
+    },
+    "empty": {
+      "upcoming": {
+        "title": "No hay entrenamientos próximos",
+        "body": "Aquí aparecen las sesiones que tus entrenadores planifican para ti."
+      },
+      "history": {
+        "title": "Aún no hay entrenamientos pasados",
+        "body": "Aquí aparecen las sesiones completadas, canceladas y pasadas."
+      },
+      "completed": {
+        "title": "Aún no hay entrenamientos completados",
+        "body": "Aquí aparecen las sesiones que marcas como completadas."
+      },
+      "cancelled": {
+        "title": "No hay entrenamientos cancelados",
+        "body": "Aquí aparecen las sesiones que canceló un entrenador o que terminaron con una relación de entrenamiento."
+      }
+    },
+    "unavailable": {
+      "title": "El entrenamiento no está disponible",
+      "body": "Tu entrenamiento aparecerá aquí cuando tu perfil de boxeador esté completo."
+    },
+    "failed": {
+      "title": "No pudimos cargar tu entrenamiento.",
+      "body": "Revisa tu conexión e inténtalo de nuevo.",
+      "retry": "Reintentar",
+      "more": "No pudimos cargar más sesiones. Inténtalo de nuevo."
+    },
+    "status": {
+      "planned": "Planificada",
+      "completed": "Completada",
+      "cancelled": "Cancelada"
+    },
+    "types": {
+      "technical": "Técnica",
+      "sparring": "Sparring",
+      "pads": "Manoplas",
+      "strength_conditioning": "Fuerza y acond.",
+      "roadwork": "Carrera"
+    },
+    "coach": {
+      "notShared": "Entrenador no compartido",
+      "former": "Exentrenador · {name}",
+      "withBrand": "{name} · {brand}"
+    },
+    "detail": {
+      "loading": "Cargando la sesión",
+      "facts": {
+        "coach": "Entrenador",
+        "type": "Tipo de entrenamiento",
+        "starts": "Empieza",
+        "yourTime": "Tu hora",
+        "duration": "Duración",
+        "notes": "Notas de tu entrenador",
+        "completed": "Completada",
+        "cancelled": "Cancelada"
+      },
+      "startsValue": "{when} · {zone} (UTC{offset})",
+      "sameZone": "{time} · misma zona horaria",
+      "otherZone": "{when} · {zone}",
+      "noNotes": "Sin notas",
+      "cancelledByCoach": "{when} · por tu entrenador",
+      "cancelledBySystem": "{when} · la relación de entrenamiento terminó",
+      "aside": {
+        "planned": "Márcala como completada cuando la hayas hecho. Puedes hacerlo desde su hora de inicio, también más tarde.",
+        "ended": "La relación de entrenamiento terminó. Esta sesión ya había empezado, así que aún puedes marcarla como completada.",
+        "completed": "Confirmaste esta sesión. Las sesiones completadas no se pueden cambiar.",
+        "cancelled": "Las sesiones canceladas quedan en tu historial y no se pueden completar."
+      },
+      "missing": {
+        "title": "Esta sesión no está disponible",
+        "body": "No es una de tus sesiones, o el enlace es incorrecto."
+      },
+      "failed": {
+        "title": "No pudimos cargar esta sesión.",
+        "body": "Revisa tu conexión e inténtalo de nuevo."
+      }
+    },
+    "complete": {
+      "action": "Marcar como completada",
+      "title": "¿Marcar esta sesión como completada?",
+      "body": "{name} la verá como completada, con la hora en que la confirmes. Una sesión completada no se puede cambiar.",
+      "bodyUnnamed": "Tu entrenador la verá como completada, con la hora en que la confirmes. Una sesión completada no se puede cambiar.",
+      "confirm": "Marcar como completada",
+      "pending": "Guardando…",
+      "keep": "Todavía no",
+      "failed": "No pudimos conectar con SimpleFit. Puede que ya se haya guardado: la sesión muestra lo guardado. Inténtalo de nuevo; nunca se completa dos veces.",
+      "done": "Sesión marcada como completada.",
+      "unavailable": "Esta sesión ya no está disponible.",
+      "refused": {
+        "notStarted": {
+          "title": "Esta sesión aún no ha empezado.",
+          "body": "Puedes marcarla como completada desde su hora de inicio. No se guardó nada."
+        },
+        "cancelled": {
+          "title": "Esta sesión se canceló.",
+          "body": "Ya no se puede completar. No se guardó nada."
+        }
+      }
     }
   }
 }

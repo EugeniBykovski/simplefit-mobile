@@ -53,6 +53,9 @@ const REAL_SCREENS = [
   "mobile.coach.sessions.new",
   "mobile.coach.sessions._session-id",
   "mobile.coach.sessions._session-id.edit",
+  // SF-66: FT1 Training and FT2 Session.
+  "mobile.training",
+  "mobile.sessions._session-id",
 ];
 
 const placeholderSource = (id) => `import { placeholderRoute } from "@/widgets/feature-placeholder";
@@ -148,7 +151,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 28, catchAll: 1, placeholder: 119, deferred: 1 });
+    expect(counts).toEqual({ screen: 30, catchAll: 1, placeholder: 117, deferred: 1 });
     expect(routes).toHaveLength(149);
   });
 
