@@ -1453,7 +1453,7 @@
     "results": {
       "resent": "Invitación reenviada a {email}.",
       "cancelled": "Invitación a {email} cancelada.",
-      "cooldown": "Podrás reenviar en {seconds, plural, one {# segundo} other {# segundos}}.",
+      "cooldown": "Podrás reenviar en {seconds} s.",
       "noResends": "No quedan reenvíos para esta invitación.",
       "notPending": "Esta invitación ya fue respondida o caducó.",
       "failed": "No funcionó. Inténtalo de nuevo."
@@ -1476,7 +1476,7 @@
       "cancel": "Cancelar",
       "submit": "Enviar invitación",
       "sending": "Enviando…",
-      "limited": "Has enviado muchas invitaciones. Inténtalo de nuevo en {minutes, plural, one {# minuto} other {# minutos}}.",
+      "limited": "Has enviado muchas invitaciones. Inténtalo de nuevo en {minutes} min.",
       "pendingLimit": "Tienes 50 invitaciones pendientes. Cancela algunas antes de invitar a más.",
       "failed": "No pudimos enviar la invitación. No se creó nada. Inténtalo de nuevo.",
       "blocked": {
