@@ -4,14 +4,21 @@ The full report, with the coverage matrix, defects and verdicts, is in
 simplefit-platform `docs/investigations/sf70-coach-fighter-e2e-hardening.md`.
 The mobile-specific points:
 
-- **D1 (P1, open, needs approval).** On iOS, React Native's networking uses the
-  default `NSURLSession`. Its shared `NSURLCache` wrote the sign-in response,
-  which holds the access and refresh tokens, to
-  `Library/Caches/com.simplefit.boxing/Cache.db`. It did so even with
-  `Cache-Control: no-store` from the API. The tokens therefore live outside
-  SecureStore. The fix needs native configuration (a non-persistent session
-  configuration through a config plugin, plus a one-time purge of the existing
-  cache) and a new dev build.
+- **D1 (P1; fixed, awaiting build verification).** API responses, the
+  refresh response with both tokens included, were stored in
+  `Library/Caches/com.simplefit.boxing/Cache.db`, outside SecureStore. The
+  cache was written through two paths:
+  - the `expo/fetch` session's shared `URLCache` (`private` answers);
+  - in debug dev-client builds, Expo's network inspector, which stores even
+    `no-store` answers.
+
+  `modules/sensitive-http-cache` sets an `.ephemeral`, cache-less `expo/fetch`
+  session before React Native starts and purges the old cache once, behind a
+  versioned marker. It is proven on the iOS simulator with the module's own
+  code, but not yet in a build of the app, which needs Xcode 26 or EAS. See
+  the platform report, "D1 remediation", and
+  `docs/architecture/README.md#http-transport`.
+
 - **D2 (blocked).** The installed dev build predates
   `@react-native-community/datetimepicker`, so the native date and time pickers
   could not be exercised. A new build needs Xcode 26+ or EAS.
