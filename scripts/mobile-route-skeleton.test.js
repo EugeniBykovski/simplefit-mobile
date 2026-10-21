@@ -383,7 +383,7 @@ describe("native authentication and app identity (regression)", () => {
       "expo-apple-authentication": "57.0.2",
       "expo-crypto": "57.0.4",
       "expo-secure-store": "~57.0.4",
-      "expo-router": "~57.0.28",
+      "expo-router": "~57.0.29",
     });
     const config = read("app.config.ts");
     expect(config).toContain('scheme: "simplefit"');

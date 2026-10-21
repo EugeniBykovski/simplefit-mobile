@@ -1453,7 +1453,7 @@
     "results": {
       "resent": "Einladung erneut an {email} gesendet.",
       "cancelled": "Einladung an {email} zurückgezogen.",
-      "cooldown": "Du kannst in {seconds, plural, one {# Sekunde} other {# Sekunden}} erneut senden.",
+      "cooldown": "Du kannst in {seconds} s erneut senden.",
       "noResends": "Für diese Einladung sind keine weiteren Sendungen möglich.",
       "notPending": "Diese Einladung wurde bereits beantwortet oder ist abgelaufen.",
       "failed": "Das hat nicht geklappt. Versuche es erneut."
@@ -1476,7 +1476,7 @@
       "cancel": "Abbrechen",
       "submit": "Einladung senden",
       "sending": "Wird gesendet…",
-      "limited": "Du hast viele Einladungen gesendet. Versuche es in {minutes, plural, one {# Minute} other {# Minuten}} erneut.",
+      "limited": "Du hast viele Einladungen gesendet. Versuche es in {minutes} Min. erneut.",
       "pendingLimit": "Du hast 50 offene Einladungen. Ziehe einige zurück, bevor du weitere sendest.",
       "failed": "Wir konnten die Einladung nicht senden. Es wurde nichts erstellt. Versuche es erneut.",
       "blocked": {

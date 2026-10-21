@@ -70,6 +70,8 @@ the same rules; both generate their clients from the same artifact.
 simplefit-mobile/
 ├── app.config.ts              Expo config (identity, plugins, experiments)
 ├── eas.json                   EAS build profiles (no account IDs)
+├── modules/                   local Expo modules (native code autolinked from here)
+│   └── sensitive-http-cache/  iOS: keeps API responses out of the HTTP disk cache (SF-70)
 ├── openapi/simplefit.api.json verbatim snapshot of the backend contract
 ├── scripts/                   api-sync, api-check, commit convention
 └── src/
@@ -204,6 +206,21 @@ browser assumptions here: it targets `fetch` with our transport as mutator.
   `fieldErrors` for `validation_error`;
 - no business logic; no Axios (fetch is sufficient).
 
+**No HTTP disk cache (SF-70).** `fetch` is `expo/fetch` (Expo installs it
+as the global; `EXPO_PUBLIC_USE_RN_FETCH` must stay unset). On iOS its
+`URLSession` used `URLCache.shared`, which wrote API responses to
+`Library/Caches/<bundle id>/Cache.db`, the refresh response with both tokens
+included, even when marked `no-store` (in debug dev-client builds Expo's
+network inspector stores every response). The local module
+`modules/sensitive-http-cache` sets, before React Native starts, an
+`expo/fetch` session based on `.ephemeral` with a cache that holds nothing,
+and purges the HTTP cache once (`SimpleFitSensitiveHTTPCachePurgeVersion`
+in user defaults; bump `purgeVersion` to purge again). Images keep their own
+caches. In debug dev-client builds the network inspector no longer shows
+`fetch` traffic. The API also answers `Cache-Control: no-store` for every
+authenticated route. Android (OkHttp, 10 MB `cacheDir/http-cache`) honours
+`no-store` but is not verified on a device yet.
+
 Extension points, implemented by their tickets: auth header injection in
 `buildHeaders`, 401 handling/refresh before throwing, a client correlation
 header. SF-22 adds no authenticated product calls, so the session layer below
@@ -308,6 +325,7 @@ backend `validation_error` onto the form with
 | Sensitive (the session refresh token since SF-22, device credentials) | Keychain / Keystore via **expo-secure-store** | `@/shared/storage/secure-storage` |
 | Non-sensitive preferences (explicit locale today)                     | AsyncStorage (unencrypted)                    | `@/shared/storage/preferences`    |
 | Server data                                                           | TanStack Query (memory)                       | generated hooks                   |
+| HTTP responses                                                        | never on disk (SF-70; see HTTP transport)     | `modules/sensitive-http-cache`    |
 
 - **SecureStore is not a general database:** small string values only (well
   under 2 KB), no querying, slower than memory. Items are stored
@@ -620,6 +638,9 @@ Later:
 
 - No secrets in Git or in source; `EXPO_PUBLIC_*` is public.
 - Sensitive device data only in SecureStore; never AsyncStorage.
+- API responses never in the HTTP disk cache: the `expo/fetch` session has no
+  cache (iOS, `modules/sensitive-http-cache`) and the API marks authenticated
+  answers `no-store` (SF-70).
 - Never log tokens, credentials or API request/response bodies.
 - TLS required in production (`https://` enforced by env validation); never
   disable certificate validation or add cleartext exceptions for production.

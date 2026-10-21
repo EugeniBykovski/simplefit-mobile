@@ -1453,7 +1453,7 @@
     "results": {
       "resent": "Invitation sent again to {email}.",
       "cancelled": "Invitation to {email} cancelled.",
-      "cooldown": "You can resend in {seconds, plural, one {# second} other {# seconds}}.",
+      "cooldown": "You can resend in {seconds} s.",
       "noResends": "No resends left for this invitation.",
       "notPending": "This invitation was already answered or has expired.",
       "failed": "That didn’t work. Try again."
@@ -1476,7 +1476,7 @@
       "cancel": "Cancel",
       "submit": "Send invitation",
       "sending": "Sending…",
-      "limited": "You’ve sent a lot of invitations. Try again in {minutes, plural, one {# minute} other {# minutes}}.",
+      "limited": "You’ve sent a lot of invitations. Try again in {minutes} min.",
       "pendingLimit": "You have 50 pending invitations. Cancel some before inviting more.",
       "failed": "We couldn’t send the invitation. Nothing was created. Try again.",
       "blocked": {

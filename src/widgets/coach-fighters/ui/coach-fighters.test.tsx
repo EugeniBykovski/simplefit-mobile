@@ -267,7 +267,7 @@ describe("Fighters (C03) invitations", () => {
     });
     await renderWithProviders(<CoachFightersScreen view="invitations" />);
     await user.press(await screen.findByRole("button", { name: "Resend · 2 left" }));
-    expect(await screen.findByText("You can resend in 42 seconds.")).toBeOnTheScreen();
+    expect(await screen.findByText("You can resend in 42 s.")).toBeOnTheScreen();
     expect(calls.filter((call) => call.method === "POST")).toHaveLength(1);
   });
 });

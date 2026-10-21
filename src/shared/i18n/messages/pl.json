@@ -1453,7 +1453,7 @@
     "results": {
       "resent": "Zaproszenie wysłane ponownie do {email}.",
       "cancelled": "Zaproszenie do {email} anulowane.",
-      "cooldown": "Możesz wysłać ponownie za {seconds, plural, one {# sekundę} few {# sekundy} many {# sekund} other {# sekundy}}.",
+      "cooldown": "Możesz wysłać ponownie za {seconds} s.",
       "noResends": "Dla tego zaproszenia nie zostały już ponowne wysyłki.",
       "notPending": "To zaproszenie zostało już rozpatrzone lub wygasło.",
       "failed": "Nie udało się. Spróbuj ponownie."
@@ -1476,7 +1476,7 @@
       "cancel": "Anuluj",
       "submit": "Wyślij zaproszenie",
       "sending": "Wysyłanie…",
-      "limited": "Wysłano dużo zaproszeń. Spróbuj ponownie za {minutes, plural, one {# minutę} few {# minuty} many {# minut} other {# minuty}}.",
+      "limited": "Wysłano dużo zaproszeń. Spróbuj ponownie za {minutes} min.",
       "pendingLimit": "Masz 50 oczekujących zaproszeń. Anuluj część z nich, zanim zaprosisz kolejne osoby.",
       "failed": "Nie udało się wysłać zaproszenia. Nic nie zostało utworzone. Spróbuj ponownie.",
       "blocked": {
