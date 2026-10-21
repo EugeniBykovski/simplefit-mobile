@@ -181,8 +181,9 @@ function HomeView({ name, completedAt }: { name: string; completedAt: string | n
           ref={checklistTarget}
           className="gap-3 rounded-3xl border border-input bg-surface px-4.5 pb-2 pt-4.5"
         >
-          <View className="flex-row items-end justify-between gap-3">
-            <View className="gap-1">
+          {/* Wraps at accessibility text sizes: the count goes under the title instead of off the card. */}
+          <View className="flex-row flex-wrap items-end justify-between gap-x-3 gap-y-1">
+            <View className="flex-shrink gap-1">
               <Text variant="label" color="highlight">
                 {t("checklist.label")}
               </Text>
