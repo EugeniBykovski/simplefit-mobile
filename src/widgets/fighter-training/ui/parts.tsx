@@ -2,11 +2,7 @@ import type { LucideIcon } from "lucide-react-native";
 import { View } from "react-native";
 import { useTranslations } from "use-intl";
 
-import {
-  coachIdentity,
-  type MyTrainingSession,
-  type TrainingSessionStatus,
-} from "@/entities/training-session";
+import type { TrainingSessionStatus } from "@/entities/training-session";
 import { Badge } from "@/shared/ui/badge";
 import { Icon } from "@/shared/ui/icon";
 import { Text } from "@/shared/ui/text";
@@ -49,22 +45,4 @@ export function Message({
       <Text color="mutedForeground">{body}</Text>
     </View>
   );
-}
-
-/** `Europe/Warsaw` → `Warsaw`; `America/Argentina/Buenos_Aires` → `Buenos Aires`. */
-export const zoneCity = (zone: string) => (zone.split("/").pop() ?? zone).replace(/_/g, " ");
-
-/**
- * The coach line of a session: the display name (and brand) while the
- * relationship is active, "Former coach · name" after it ended, or "Coach not
- * shared" when no name was disclosed.
- */
-export function useCoachLine() {
-  const t = useTranslations("fighterTraining.coach");
-  return (session: Pick<MyTrainingSession, "coach" | "coach_display_name_at_end">) => {
-    const { name, brand, former } = coachIdentity(session);
-    if (name === null) return { line: t("notShared"), name: null };
-    if (former) return { line: t("former", { name }), name };
-    return { line: brand ? t("withBrand", { name, brand }) : name, name };
-  };
 }

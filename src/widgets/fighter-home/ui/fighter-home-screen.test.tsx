@@ -77,6 +77,9 @@ function backend(mobile: string) {
             ],
           }),
         );
+      // SF-69: the Training card's projections (nothing assigned here).
+      if (pathname === "/api/v1/me/training-sessions")
+        return Promise.resolve(jsonResponse({ training_sessions: [], next_cursor: null }));
       throw new Error(`unexpected request ${pathname}`);
     }),
   );

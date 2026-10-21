@@ -10,6 +10,8 @@ import {
   type MyTrainingSession,
   type TrainingSessionFilter,
   type TrainingSessionView,
+  useCoachLine,
+  zoneCity,
 } from "@/entities/training-session";
 import { pickerValue, wallTimeOf } from "@/shared/lib/time-zone";
 import { routeHref } from "@/shared/routes/routes";
@@ -21,7 +23,7 @@ import { SegmentedControl } from "@/shared/ui/segmented-control";
 import { Skeleton } from "@/shared/ui/skeleton";
 import { Text } from "@/shared/ui/text";
 
-import { Message, StatusBadge, useCoachLine, zoneCity } from "./parts";
+import { Message, StatusBadge } from "./parts";
 
 /*
  * FT1 Training (`mobile.training`, SF-66; Claude Design TrainingHub.dc.html

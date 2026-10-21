@@ -1002,7 +1002,30 @@
         }
       }
     },
-    "switchProfile": "{name}, boxeur. Changer de profil"
+    "switchProfile": "{name}, boxeur. Changer de profil",
+    "training": {
+      "title": "Entraînement",
+      "all": "Tout l’entraînement →",
+      "next": "Prochaine",
+      "when": "{date} · {zone}",
+      "empty": {
+        "title": "Aucun entraînement prévu pour l’instant",
+        "body": "Les séances que vos coachs planifient pour vous apparaîtront ici."
+      },
+      "recent": "Dernières terminées",
+      "recentEmpty": "Aucune séance terminée pour l’instant.",
+      "loading": "Chargement de votre entraînement",
+      "failed": {
+        "upcoming": "Impossible de charger votre entraînement. Vérifiez votre connexion et réessayez.",
+        "recent": "Impossible de charger vos séances terminées."
+      },
+      "retry": "Réessayer",
+      "unavailable": {
+        "title": "L’entraînement n’est pas disponible",
+        "body": "Votre entraînement apparaîtra ici une fois votre profil de boxeur complété."
+      },
+      "allLabel": "Tout l’entraînement"
+    }
   },
   "accountMenu": {
     "profileNote": "Votre profil arrive avec sa fonctionnalité. Les réglages et la déconnexion fonctionnent déjà.",

@@ -8,6 +8,7 @@ import {
   isUnavailable,
   useMyTrainingSession,
   type MyTrainingSession,
+  useCoachLine,
 } from "@/entities/training-session";
 import { CompleteSessionButton, type CompleteOutcome } from "@/features/training-session-complete";
 import { formatOffset, zoneOffsetMinutes } from "@/shared/lib/time-zone";
@@ -19,7 +20,7 @@ import { Spinner } from "@/shared/ui/spinner";
 import { Text } from "@/shared/ui/text";
 import { useToast } from "@/shared/ui/toast";
 
-import { Message, StatusBadge, useCoachLine } from "./parts";
+import { Message, StatusBadge } from "./parts";
 
 /*
  * FT2 Session (`mobile.sessions._session-id`, SF-66; Claude Design
