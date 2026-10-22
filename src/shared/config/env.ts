@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { parseAppLinkHost } from "./app-link-host";
+
 /**
  * Public runtime configuration.
  *
@@ -25,6 +27,11 @@ export type PublicEnv = {
    * it that hand-off is reported as unavailable.
    */
   webUrl?: string | undefined;
+  /**
+   * The domain whose E08 invitation links the app opens (SF-80, see
+   * `parseAppLinkHost`). Without it the app claims no domain.
+   */
+  appLinkHost?: string | undefined;
 };
 
 type PublicEnvSource = {
@@ -32,6 +39,7 @@ type PublicEnvSource = {
   EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID?: string | undefined;
   EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID?: string | undefined;
   EXPO_PUBLIC_WEB_URL?: string | undefined;
+  EXPO_PUBLIC_APP_LINK_HOST?: string | undefined;
 };
 
 /** A Google OAuth client ID (public, but validated so a typo fails loudly). */
@@ -93,6 +101,7 @@ export function parsePublicEnv(
     googleWebClientId: result.data.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
     googleIosClientId: result.data.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
     webUrl: result.data.EXPO_PUBLIC_WEB_URL,
+    appLinkHost: parseAppLinkHost(source.EXPO_PUBLIC_APP_LINK_HOST),
   };
 }
 
@@ -102,6 +111,7 @@ export const publicEnv: PublicEnv = parsePublicEnv(
     EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
     EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
     EXPO_PUBLIC_WEB_URL: process.env.EXPO_PUBLIC_WEB_URL,
+    EXPO_PUBLIC_APP_LINK_HOST: process.env.EXPO_PUBLIC_APP_LINK_HOST,
   },
   { production: !__DEV__ },
 );
