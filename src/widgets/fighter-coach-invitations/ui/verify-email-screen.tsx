@@ -1,6 +1,6 @@
 import { useNavigation, useRouter } from "expo-router";
-import { useLayoutEffect } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Keyboard, Platform, ScrollView, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 
@@ -46,15 +46,48 @@ export function VerifyEmailScreen() {
 
 const layout: LinkLayout = ({ body, actions }) => <Frame actions={actions}>{body}</Frame>;
 
-/** Body above the keyboard, the actions pinned over the home indicator. */
+/**
+ * How much of this view the iOS keyboard covers. The keyboard's height (not
+ * its reported position, which iOS re-sends wrongly when the app returns to
+ * the foreground with the keyboard up) minus the gap between this view and
+ * the bottom of the window (the tab bar under a pushed screen). Android
+ * resizes the window for the keyboard itself.
+ */
+function useKeyboardOverlap(view: React.RefObject<View | null>): number {
+  const [overlap, setOverlap] = useState(0);
+  const window = useWindowDimensions();
+  const windowHeight = useRef(window.height);
+  useEffect(() => {
+    windowHeight.current = window.height;
+  }, [window.height]);
+  useEffect(() => {
+    if (Platform.OS !== "ios") return;
+    const show = Keyboard.addListener("keyboardWillShow", (event) => {
+      view.current?.measureInWindow((_x, y, _width, height) => {
+        const gap = windowHeight.current - (y + height);
+        setOverlap(Math.max(event.endCoordinates.height - gap, 0));
+      });
+    });
+    const hide = Keyboard.addListener("keyboardWillHide", () => setOverlap(0));
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, [view]);
+  return overlap;
+}
+
+/** Body above the keyboard, the actions pinned over the home indicator or the keyboard. */
 function Frame({ children, actions }: { children: React.ReactNode; actions: React.ReactNode }) {
   const insets = useSafeAreaInsets();
+  const frame = useRef<View>(null);
+  const keyboard = useKeyboardOverlap(frame);
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      // Runtime: the opaque iOS navigation bar (44 pt) under the status bar.
-      keyboardVerticalOffset={Platform.OS === "ios" ? insets.top + 44 : 0}
+    <View
+      ref={frame}
       className="flex-1 bg-background"
+      // Runtime: the part of the screen the keyboard covers.
+      style={{ paddingBottom: keyboard }}
     >
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -65,11 +98,12 @@ function Frame({ children, actions }: { children: React.ReactNode; actions: Reac
       </ScrollView>
       <View
         className="gap-2.5 px-5 pt-3"
-        // Runtime inset: the artboard keeps the actions 34 pt above the bottom edge.
-        style={{ paddingBottom: Math.max(insets.bottom, 16) }}
+        // Runtime inset: the artboard keeps the actions 34 pt above the bottom
+        // edge; above the keyboard, the usual 16 pt.
+        style={{ paddingBottom: keyboard > 0 ? 16 : Math.max(insets.bottom, 16) }}
       >
         {actions}
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
