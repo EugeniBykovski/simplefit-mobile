@@ -32,6 +32,9 @@ import { Text } from "@/shared/ui/text";
  * empty), account registration first (`422`) and a failure are separate
  * states. Only the coach's public identity is shown: never a token, an
  * address or anything about the recipient.
+ *
+ * Under the list (or the empty state), "Missing an invitation?" opens FCI3
+ * to verify another email of the fighter (SF-79).
  */
 
 export function InvitationsScreen() {
@@ -63,19 +66,49 @@ export function InvitationsScreen() {
       renderItem={({ item }) => <InvitationRow invitation={item} />}
       ListEmptyComponent={<ListState list={list} />}
       ListFooterComponent={
-        list.isSuccess && list.hasNextPage ? (
-          <View className="pt-1">
-            <Button
-              label={list.isFetchingNextPage ? t("loadingMore") : t("more")}
-              variant="quiet"
-              loading={list.isFetchingNextPage}
-              disabled={list.isFetchingNextPage}
-              onPress={() => void list.fetchNextPage()}
-            />
+        list.isSuccess ? (
+          <View className="gap-2.5 pt-1">
+            {list.hasNextPage && (
+              <Button
+                label={list.isFetchingNextPage ? t("loadingMore") : t("more")}
+                variant="quiet"
+                loading={list.isFetchingNextPage}
+                disabled={list.isFetchingNextPage}
+                onPress={() => void list.fetchNextPage()}
+              />
+            )}
+            <MissingInvitation />
           </View>
         ) : null
       }
     />
+  );
+}
+
+/**
+ * FCI1 "Missing an invitation?" (SF-79, design 1792675284-1046): an
+ * invitation to another address of the fighter only appears once that
+ * address is an email identity of this account. FCI3 verifies it; nothing is
+ * accepted on the way.
+ */
+function MissingInvitation() {
+  const t = useTranslations("fighterInvitations.missing");
+  const router = useRouter();
+  return (
+    <View
+      className="gap-2.5 rounded-3xl border border-border bg-surface px-4.5 py-4"
+      testID="invitations:missing"
+    >
+      <Text variant="h3">{t("title")}</Text>
+      <Text variant="bodySm" color="mutedForeground">
+        {t("body")}
+      </Text>
+      <Button
+        label={t("action")}
+        variant="outline"
+        onPress={() => router.push(routeHref("mobile.profile.coaches.invitations.verify-email"))}
+      />
+    </View>
   );
 }
 

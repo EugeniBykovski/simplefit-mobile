@@ -436,7 +436,8 @@
       "mobile/profile/coaches": "Trenerzy",
       "mobile/profile/coaches/_relationship-id": "Trener",
       "mobile/profile/coaches/invitations": "Zaproszenia",
-      "mobile/profile/coaches/invitations/_invitation-id": "Zaproszenie"
+      "mobile/profile/coaches/invitations/_invitation-id": "Zaproszenie",
+      "mobile/profile/coaches/invitations/verify-email": "Potwierdź e-mail"
     }
   },
   "shells": {
@@ -1373,6 +1374,11 @@
         "keep": "Zachowaj",
         "failed": "Nie udało się. Nic się nie zmieniło. Spróbuj ponownie."
       }
+    },
+    "missing": {
+      "title": "Brakuje zaproszenia?",
+      "body": "Jeśli trener wysłał je na inny Twój adres, potwierdź ten adres. Twoje konto pozostaje bez zmian.",
+      "action": "Dodaj adres, na który je wysłano"
     }
   },
   "coachFighters": {
@@ -1878,5 +1884,58 @@
         }
       }
     }
+  },
+  "emailIdentityLink": {
+    "eyebrow": "Dodaj e-mail",
+    "email": {
+      "title": "Dodaj e-mail do tego konta",
+      "body": "Cały czas korzystasz z tego samego konta. Wyślemy 6-cyfrowy kod na ten adres, aby potwierdzić, że skrzynka należy do Ciebie. Po potwierdzeniu możesz też logować się nim kodem z e-maila.",
+      "label": "Adres e-mail",
+      "placeholder": "Adres, na który wysłano zaproszenie",
+      "invalid": "Wpisz prawidłowy adres e-mail.",
+      "limited": "Zbyt wiele prób. Spróbuj za chwilę.",
+      "error": "Coś poszło nie tak. Sprawdź połączenie i spróbuj ponownie.",
+      "send": "Wyślij kod",
+      "sending": "Wysyłanie…",
+      "note": "Po drodze nic nie jest akceptowane ani udostępniane. Zaproszenia wysłane na ten adres pojawią się w Twoich zaproszeniach po jego potwierdzeniu."
+    },
+    "code": {
+      "title": "Wpisz kod",
+      "body": "Wysłaliśmy 6-cyfrowy kod na <b>{email}</b>. Wygasa po {minutes} min.",
+      "label": "6-cyfrowy kod",
+      "submit": "Potwierdź e-mail",
+      "submitting": "Potwierdzanie…",
+      "sendNewCode": "Wyślij nowy kod",
+      "tryAgain": "Spróbuj ponownie",
+      "didntGetIt": "Nie dotarł?",
+      "resendIn": "Wyślij ponownie za {time}",
+      "resendUnavailable": "Ponowne wysłanie chwilowo niedostępne",
+      "wrongEmail": "Zły adres? <link>Użyj innego adresu e-mail</link>",
+      "neverShare": "Nigdy nie udostępniaj tego kodu. Pracownicy SimpleFit nigdy o niego nie poproszą.",
+      "switchAccount": "Wyloguj się i zmień konto",
+      "signIn": "Zaloguj się ponownie",
+      "notices": {
+        "sent": "Kod wysłany. Sprawdź spam, jeśli go nie widzisz.",
+        "resent": "Wysłaliśmy nowy kod. Wcześniejsze kody już nie działają.",
+        "invalid": "Ten kod jest nieprawidłowy. Sprawdź cyfry i spróbuj ponownie.",
+        "expired": "Ten kod już nie działa. Wyślij nowy.",
+        "throttled": "Zbyt wiele prób. Spróbuj za chwilę.",
+        "conflict": "Nie można dodać tego adresu: należy do innego konta SimpleFit. Konta nigdy nie są łączone. Aby użyć tego adresu, wyloguj się i zaloguj nim.",
+        "session": "Twoja sesja wygasła. Zaloguj się ponownie i poproś o nowy kod.",
+        "error": "Nie udało się potwierdzić kodu. Sprawdź połączenie i spróbuj ponownie."
+      }
+    },
+    "linked": {
+      "eyebrow": "E-mail potwierdzony",
+      "new": {
+        "title": "E-mail potwierdzony",
+        "body": "<b>{email}</b> jest teraz adresem tego konta. Możesz też logować się nim kodem z e-maila. Zaproszenia wysłane na ten adres pojawią się teraz w Twoich zaproszeniach."
+      },
+      "already": {
+        "title": "Ten e-mail jest już na Twoim koncie",
+        "body": "<b>{email}</b> był już potwierdzony dla tego konta. Nic się nie zmieniło."
+      }
+    },
+    "back": "Wróć do zaproszeń"
   }
 }
