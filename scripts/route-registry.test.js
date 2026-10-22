@@ -771,10 +771,15 @@ describe("documentation", () => {
 });
 
 describe("mobile router", () => {
+  // Expo Router's own files that are not routes: layouts, and the root
+  // `+native-intent` (SF-80: every system URL passes it before routing).
+  const NOT_ROUTES = new Set(["src/app/+native-intent.tsx"]);
+
   function* routeFiles(dir) {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const path = join(dir, entry.name);
       if (entry.isDirectory()) yield* routeFiles(path);
+      else if (NOT_ROUTES.has(relative(root, path).split(sep).join("/"))) continue;
       else if (/\.tsx?$/.test(entry.name) && !/^_layout\.|\.test\./.test(entry.name)) {
         yield relative(root, path).split(sep).join("/");
       }

@@ -895,7 +895,11 @@ src/app/
   are opaque and only fill their own segment (`routeHref` URL-encodes them).
   `returnTo` is only carried to sign-in, and the sign-in flow (SF-24) accepts
   it only under the §9 policy. Unknown paths and the
-  deferred `/sparring/find` land on `+not-found`.
+  deferred `/sparring/find` land on `+not-found`. Every system URL first
+  passes `src/app/+native-intent.tsx` (SF-80): a URL fragment never reaches
+  navigation state, and the E08 invitation link (`https://<app link host>/invite/coach`,
+  or `simplefit://invite/coach`) leads to sign-in with the inbox continuation
+  (`docs/invitation-app-links.md`).
 - **Boundaries.** SF-24 owns the auth UI, `returnTo` and the neutral entry;
   SF-25+ the entry's default-destination redirect. Until then `/` is still the
   SF-12 foundation home, so the role shells are reached by link or deep link. SF-34

@@ -26,10 +26,62 @@ function googleSignInPlugin(): [string, { iosUrlScheme: string }][] {
 }
 
 /**
+ * Verified invitation links (SF-80, docs/invitation-app-links.md): with
+ * EXPO_PUBLIC_APP_LINK_HOST set, iOS (Associated Domains) and Android
+ * (verified App Links) may open that domain's E08 invitation path,
+ * `/invite/coach`, and nothing else, in the app. The domain must publish
+ * `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json`
+ * for this app's Team ID and signing certificates (simplefit-platform), or the
+ * links keep opening the web page. Unset (the default): no domain is claimed.
+ * Changing it needs a new native build.
+ *
+ * Same rule as src/shared/config/app-link-host.ts (this file can only import
+ * JSON); src/shared/config/app-links.test.ts keeps the two in step.
+ */
+export function appLinkHost(value: string | undefined): string | undefined {
+  const host = value?.trim().toLowerCase() ?? "";
+  if (host === "") return undefined;
+  const labels = host.split(".");
+  const valid =
+    host.length <= 253 &&
+    labels.length >= 2 &&
+    labels.every((label) => /^(?!-)[a-z0-9-]{1,63}(?<!-)$/.test(label)) &&
+    !/^\d+$/.test(labels.at(-1) ?? "");
+  if (!valid) {
+    throw new Error(
+      "EXPO_PUBLIC_APP_LINK_HOST must be a domain name such as app.example.com (no scheme, port or path)",
+    );
+  }
+  return host;
+}
+
+/** The E08 invitation link path (simplefit-api `Coaching.Invitations`). */
+const INVITATION_LINK_PATH = "/invite/coach";
+
+function appLinks(host: string | undefined) {
+  if (host === undefined) return { ios: {}, android: {} };
+  return {
+    ios: { associatedDomains: [`applinks:${host}`] },
+    android: {
+      intentFilters: [
+        {
+          action: "VIEW",
+          autoVerify: true,
+          data: [{ scheme: "https", host, path: INVITATION_LINK_PATH }],
+          category: ["BROWSABLE", "DEFAULT"],
+        },
+      ],
+    },
+  };
+}
+
+/**
  * Expo app configuration. Identity values are permanent once published:
  * - bundle ID / package `com.simplefit.boxing` (chosen in SF-12),
  * - URL scheme `simplefit` (deep links: simplefit://app).
  */
+const links = appLinks(appLinkHost(process.env.EXPO_PUBLIC_APP_LINK_HOST));
+
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "SimpleFit Boxing",
@@ -45,11 +97,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supportsTablet: true,
     // Sign in with Apple entitlement (SF-23); needs a new native build.
     usesAppleSignIn: true,
+    ...links.ios,
   },
 
   android: {
     package: "com.simplefit.boxing",
     predictiveBackGestureEnabled: false,
+    ...links.android,
   },
 
   plugins: [

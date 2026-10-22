@@ -1,7 +1,17 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 
 import { router } from "expo-router";
-import { act, fireEvent, renderRouter, screen, waitFor } from "expo-router/testing-library";
+import {
+  act,
+  fireEvent,
+  renderRouter,
+  screen,
+  waitFor,
+  type MockContextConfig,
+} from "expo-router/testing-library";
+// The navigation state itself (SF-80 asserts no URL fragment ever reaches it).
+import { store } from "expo-router/build/global-state/router-store";
 
 import { completeAuthentication } from "@/entities/session";
 import { pending } from "@/features/email-auth/model/pending";
@@ -35,12 +45,33 @@ function TestRootLayout() {
   );
 }
 
+/**
+ * The src/app files as Metro's route context lists them (`./+native-intent.tsx`
+ * included, which Expo Router reads before any route), with the test root
+ * layout. Modules load on first use. (`renderRouter`'s `appDir` + `overrides`
+ * form strips the `./` and extension from every key, so Expo Router would
+ * take `+native-intent` for a route.)
+ */
+function appContext(overrides: Record<string, unknown> = {}): MockContextConfig {
+  const dir = join(__dirname, "../app");
+  const context: Record<string, unknown> = {};
+  for (const file of readdirSync(dir, { recursive: true, encoding: "utf8" })) {
+    if (!/\.tsx?$/.test(file) || /\.test\.tsx?$/.test(file) || file === "_layout.tsx") continue;
+    Object.defineProperty(context, file.replace(/\.tsx?$/, ""), {
+      enumerable: true,
+      get: () => jest.requireActual(join(dir, file)),
+    });
+  }
+  return Object.assign(
+    context,
+    { _layout: { default: TestRootLayout } },
+    overrides,
+  ) as MockContextConfig;
+}
+
 /** Renders the app at `url`; the result also reads the router's current location. */
 async function renderApp(url: string) {
-  const result = renderRouter(
-    { appDir: "src/app", overrides: { _layout: TestRootLayout } },
-    { initialUrl: url },
-  );
+  const result = renderRouter(appContext(), { initialUrl: url });
   // Testing Library's render is asynchronous; renderRouter attaches its readers to the promise.
   const rendered = await result;
   return {
@@ -401,6 +432,65 @@ describe("canonical routes resolve", () => {
   });
 });
 
+describe("verified invitation links (SF-80)", () => {
+  // As the E08 email carries it; src/app/+native-intent.tsx receives every
+  // system URL first (here Expo Router's own form of it, without the origin).
+  const TOKEN = "sfi_c2VjcmV0LWludml0YXRpb24tdG9rZW4";
+  const LINK = `/invite/coach#token=${TOKEN}`;
+  const INBOX = "/profile/coaches/invitations";
+
+  /** Nothing of the token anywhere in the navigation state. */
+  const expectNoToken = () => {
+    const state = JSON.stringify(store.navigationRef.current?.getRootState() ?? {});
+    expect(state).not.toContain(TOKEN);
+    expect(state).not.toContain("token=");
+    expect(state).not.toContain("%23");
+    expect(state).not.toContain('"#"');
+  };
+
+  it("sends a signed-out visitor to sign-in with the inbox continuation", async () => {
+    const result = await renderApp(LINK);
+    await waitFor(() => expect(result.getPathname()).toBe("/login"));
+    expect(result.getSearchParams()).toEqual({ returnTo: INBOX, intent: "fighter" });
+    expect(await screen.findByRole("button", { name: "Google" })).toBeOnTheScreen();
+    expectNoToken();
+  });
+
+  it("opens the inbox for a signed-in fighter; nothing is accepted on the way", async () => {
+    await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
+    const result = await renderApp(LINK);
+    await waitFor(() => expect(result.getPathname()).toBe(INBOX));
+    expect(await screen.findByText("No invitations")).toBeOnTheScreen();
+    expectNoToken();
+    const calls = (global.fetch as jest.Mock).mock.calls.map(
+      ([url, init]: [string, RequestInit | undefined]) => `${init?.method ?? "GET"} ${url}`,
+    );
+    expect(calls.filter((call) => !call.startsWith("GET "))).toEqual([]);
+  });
+
+  it("finishes Fighter onboarding first, carrying the continuation", async () => {
+    await signIn((intent) => (intent === "fighter" ? FIGHTER_ONBOARDING : ROLE_SELECTION));
+    const result = await renderApp(LINK);
+    await waitFor(() => expect(result.getPathname()).toBe("/onboarding/fighter"));
+    expect(result.getSearchParams()).toEqual({ returnTo: INBOX, intent: "fighter" });
+    expectNoToken();
+  });
+
+  it("finishes account registration first", async () => {
+    await signIn(ACCOUNT_REGISTRATION);
+    const result = await renderApp(LINK);
+    await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
+    expectNoToken();
+  });
+
+  it("never carries a fragment into returnTo (the gate copies every route param there)", async () => {
+    const result = await renderApp(`/camp/weight#token=${TOKEN}`);
+    await waitFor(() => expect(result.getPathname()).toBe("/login"));
+    expect(result.getSearchParams()).toEqual({ returnTo: "/camp/weight" });
+    expectNoToken();
+  });
+});
+
 describe("session access (UX only)", () => {
   it("sends a signed-out visitor of a signed-in route to sign-in with returnTo", async () => {
     const result = await renderApp("/camp/weight");
@@ -740,10 +830,7 @@ describe("system states (SF-34)", () => {
       throw new Error("db password=hunter2");
     }
     const result = renderRouter(
-      {
-        appDir: "src/app",
-        overrides: { _layout: { default: TestRootLayout, ErrorBoundary }, boom: Boom },
-      },
+      appContext({ _layout: { default: TestRootLayout, ErrorBoundary }, boom: Boom }),
       { initialUrl: "/boom" },
     );
     await result;
