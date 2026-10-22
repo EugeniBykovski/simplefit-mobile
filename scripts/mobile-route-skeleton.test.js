@@ -92,6 +92,7 @@ const TAB_SECTIONS = {
       "mobile.profile.coaches._relationship-id",
       "mobile.profile.coaches.invitations",
       "mobile.profile.coaches.invitations._invitation-id",
+      "mobile.profile.coaches.invitations.verify-email",
     ],
   },
   "mobile.coach": {
@@ -151,8 +152,8 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 30, catchAll: 1, placeholder: 117, deferred: 1 });
-    expect(routes).toHaveLength(149);
+    expect(counts).toEqual({ screen: 31, catchAll: 1, placeholder: 117, deferred: 1 });
+    expect(routes).toHaveLength(150);
   });
 
   it("makes placeholder files exactly the canonical placeholder module for their own route", () => {
