@@ -13,6 +13,9 @@ const entry = (overrides: Partial<Entry>): Entry => ({
   fighter_profile: "completed",
   coach_profile: "not_started",
   capabilities: ["FIGHTER"],
+  gym_id: null,
+  gym_workspaces: [],
+  gym_workspace_count: 0,
   ...overrides,
 });
 
