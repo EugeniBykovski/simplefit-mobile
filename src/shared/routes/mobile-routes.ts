@@ -2231,6 +2231,8 @@ export const mobileGuards = {
     coach_home: "mobile.coach.today",
     context_selection: "mobile.workspaces",
     gym_onboarding: "mobile.onboarding.gym",
+    gym_home: "mobile.gym.pulse",
+    gym_selection: "mobile.workspaces",
     sponsor_application: "mobile.onboarding.role",
   },
 } as const;
