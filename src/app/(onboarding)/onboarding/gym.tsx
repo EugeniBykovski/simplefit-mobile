@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { GymOnboardingScreen } from "@/widgets/gym-onboarding";
 
-export default placeholderRoute("mobile.onboarding.gym");
+export default function GymOnboardingRoute() {
+  return <GymOnboardingScreen />;
+}

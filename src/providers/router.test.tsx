@@ -283,6 +283,7 @@ async function signIn(
   fighter: object = FIGHTER_NOT_STARTED,
   mobileFirstRun = "completed",
   coach: object = coachProfile(),
+  gyms: GymFixture[] = [],
 ) {
   const resolve = (intent: string | null) => ({
     ...(typeof entry === "function" ? entry(intent) : entry),
@@ -291,45 +292,49 @@ async function signIn(
   mockFetch(
     jest.fn((url: string) =>
       Promise.resolve(
-        url.includes("/api/v1/me/entry")
-          ? jsonResponse({ entry: resolve(new URL(url).searchParams.get("intent")) })
-          : url.includes("/api/v1/me/account-profile")
-            ? jsonResponse({ account_profile: NOT_STARTED })
-            : url.includes("/api/v1/me/fighter-profile")
-              ? jsonResponse({ fighter_profile: fighter })
-              : url.includes("/api/v1/me/coach-profile")
-                ? jsonResponse({ coach_profile: coach })
-                : url.includes("/api/v1/me/first-run")
-                  ? jsonResponse(firstRun(mobileFirstRun))
-                  : /\/api\/v1\/me\/(coach\/fighters|coach\/training-sessions|training-sessions)\/[^?]/.test(
-                        url,
-                      )
-                    ? jsonResponse(
-                        {
-                          error: {
-                            code: "not_found",
-                            message: "Not found",
-                            details: {},
-                            request_id: "r",
-                          },
-                        },
-                        { status: 404 },
-                      )
-                    : url.includes("/api/v1/me/coaches") ||
-                        url.includes("/api/v1/me/coach/fighters")
-                      ? jsonResponse({ relationships: [], next_cursor: null })
-                      : url.includes("/api/v1/me/coach/training-sessions") ||
-                          url.includes("/api/v1/me/training-sessions")
-                        ? jsonResponse({ training_sessions: [], next_cursor: null })
-                        : url.includes("/api/v1/me/coach/invitations") ||
-                            url.includes("/api/v1/me/coach-invitations")
-                          ? jsonResponse({ invitations: [], next_cursor: null })
-                          : jsonResponse({
-                              user: {
-                                id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                                created_at: "2026-10-01T10:00:00Z",
+        url.includes("/api/v1/me/gyms")
+          ? jsonResponse({ gyms: gyms.map(gymSummary), next_cursor: null })
+          : /\/api\/v1\/gyms\/[^/]+\/setup/.test(url)
+            ? jsonResponse({ setup: gymSetup(gyms.find((gym) => url.includes(gym.id))) })
+            : url.includes("/api/v1/me/entry")
+              ? jsonResponse({ entry: resolve(new URL(url).searchParams.get("intent")) })
+              : url.includes("/api/v1/me/account-profile")
+                ? jsonResponse({ account_profile: NOT_STARTED })
+                : url.includes("/api/v1/me/fighter-profile")
+                  ? jsonResponse({ fighter_profile: fighter })
+                  : url.includes("/api/v1/me/coach-profile")
+                    ? jsonResponse({ coach_profile: coach })
+                    : url.includes("/api/v1/me/first-run")
+                      ? jsonResponse(firstRun(mobileFirstRun))
+                      : /\/api\/v1\/me\/(coach\/fighters|coach\/training-sessions|training-sessions)\/[^?]/.test(
+                            url,
+                          )
+                        ? jsonResponse(
+                            {
+                              error: {
+                                code: "not_found",
+                                message: "Not found",
+                                details: {},
+                                request_id: "r",
                               },
-                            }),
+                            },
+                            { status: 404 },
+                          )
+                        : url.includes("/api/v1/me/coaches") ||
+                            url.includes("/api/v1/me/coach/fighters")
+                          ? jsonResponse({ relationships: [], next_cursor: null })
+                          : url.includes("/api/v1/me/coach/training-sessions") ||
+                              url.includes("/api/v1/me/training-sessions")
+                            ? jsonResponse({ training_sessions: [], next_cursor: null })
+                            : url.includes("/api/v1/me/coach/invitations") ||
+                                url.includes("/api/v1/me/coach-invitations")
+                              ? jsonResponse({ invitations: [], next_cursor: null })
+                              : jsonResponse({
+                                  user: {
+                                    id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                                    created_at: "2026-10-01T10:00:00Z",
+                                  },
+                                }),
       ),
     ),
   );
@@ -339,6 +344,56 @@ async function signIn(
     refresh_token: "test-refresh",
   });
 }
+
+/** A gym the signed-in user owns (SF-83 / SF-85), as the gym fixtures of `signIn`. */
+type GymFixture = { id: string; name: string; status: "draft" | "completed"; located: boolean };
+const DRAFT_GYM: GymFixture = {
+  id: "5f0c3d0e-4a1b-4c2d-9e8f-0a1b2c3d4e5f",
+  name: "Praga Boxing",
+  status: "draft",
+  located: false,
+};
+const VIEWER_MEMBERSHIP = {
+  role: "owner",
+  permissions: [],
+  staff_membership_id: "7a1b2c3d-0000-4000-8000-000000000002",
+};
+const gymSummary = (gym: GymFixture) => ({
+  id: gym.id,
+  name: gym.name,
+  gym_type: "boxing_gym",
+  setup_status: gym.status,
+  inserted_at: "2026-10-27T10:00:00Z",
+  updated_at: "2026-10-27T10:00:00Z",
+  viewer: VIEWER_MEMBERSHIP,
+});
+const gymSetup = (gym: GymFixture | undefined) =>
+  gym === undefined
+    ? undefined
+    : {
+        gym_id: gym.id,
+        name: gym.name,
+        gym_type: "boxing_gym",
+        phone: null,
+        website: null,
+        tagline: null,
+        accent_color: null,
+        primary_location: gym.located
+          ? {
+              id: "0b6e1c2d-0000-4000-8000-0000000000aa",
+              name: "Warsaw",
+              country_code: "PL",
+              city: "Warsaw",
+              address_line: "ul. Ząbkowska 31",
+              entrance_note: null,
+              is_primary: true,
+            }
+          : null,
+        revision: 2,
+        setup_status: gym.status,
+        missing_requirements: gym.status === "completed" || gym.located ? [] : ["primary_location"],
+        viewer: VIEWER_MEMBERSHIP,
+      };
 
 /** A representative URL: every parameter gets a sample opaque id. */
 const sampleUrl = (route: MobileRoute) =>
@@ -1142,6 +1197,90 @@ describe("Coach journey (SF-53)", () => {
     ).toBeOnTheScreen();
     expect(screen.queryByRole("header", { name: "How will you use SimpleFit?" })).toBeNull();
     expect(screen.queryByRole("header", { name: /Welcome in/ })).toBeNull();
+  });
+});
+
+/*
+ * SF-87: the Gym owner journey on the SF-84 entry and the SF-83 / SF-85 gym
+ * setup, through the real routes and gates.
+ */
+const GYM_ONBOARDING: Entry = {
+  ...ROLE_SELECTION,
+  destination: "gym_onboarding",
+  reason: "gym_setup_not_started",
+};
+
+describe("Gym owner journey (SF-87)", () => {
+  it("choosing Gym enters OG1 without a GYM_WORKSPACE, and nothing is created", async () => {
+    await signIn((intent) => (intent === "gym" ? GYM_ONBOARDING : ROLE_SELECTION));
+    const result = await renderApp("/?intent=gym");
+    expect(await screen.findByRole("header", { name: "Gym name & type" })).toBeOnTheScreen();
+    expect(result.getPathname()).toBe("/onboarding/gym");
+    await waitFor(() => expect(result.getSearchParams()).toEqual({ intent: "gym", step: "type" }));
+    const writes = (jest.mocked(global.fetch).mock.calls as [string, RequestInit?][]).filter(
+      ([, init]) => (init?.method ?? "GET") !== "GET",
+    );
+    expect(writes).toEqual([]);
+  });
+
+  it("an incomplete account registration comes first, keeping the Gym intent", async () => {
+    await signIn(ACCOUNT_REGISTRATION);
+    const result = await renderApp("/onboarding/gym?intent=gym");
+    await waitFor(() => expect(result.getPathname()).toBe("/signup/consent"));
+    expect(result.getSearchParams()).toEqual({ intent: "gym" });
+  });
+
+  it("a draft resumes at OG2 from the backend; a link cannot skip to OG6b", async () => {
+    await signIn(
+      { ...GYM_ONBOARDING, reason: "gym_setup_in_progress", gym_id: DRAFT_GYM.id },
+      FIGHTER_NOT_STARTED,
+      "completed",
+      coachProfile(),
+      [DRAFT_GYM],
+    );
+    const result = await renderApp("/onboarding/gym?step=complete");
+    expect(await screen.findByRole("header", { name: "Location" })).toBeOnTheScreen();
+    await waitFor(() => expect(result.getSearchParams()).toEqual({ step: "location" }));
+  });
+
+  it("a completed Fighter choosing Gym keeps the Fighter profile and writes nothing", async () => {
+    await signIn(
+      (intent) =>
+        intent === "gym"
+          ? { ...GYM_ONBOARDING, fighter_profile: "completed", capabilities: ["FIGHTER"] }
+          : FIGHTER_HOME,
+      FIGHTER_COMPLETED,
+    );
+    const result = await renderApp("/?intent=gym");
+    expect(await screen.findByRole("header", { name: "Gym name & type" })).toBeOnTheScreen();
+    expect(result.getPathname()).toBe("/onboarding/gym");
+    const writes = (jest.mocked(global.fetch).mock.calls as [string, RequestInit?][]).filter(
+      ([, init]) => (init?.method ?? "GET") !== "GET",
+    );
+    expect(writes).toEqual([]);
+  });
+
+  it("with one completed gym the Gym intent opens the gym's home (gym_home)", async () => {
+    await signIn({
+      ...ROLE_SELECTION,
+      destination: "gym_home",
+      reason: "gym_workspace_completed",
+      gym_id: DRAFT_GYM.id,
+      capabilities: ["GYM_WORKSPACE"],
+    });
+    const result = await renderApp("/?intent=gym");
+    await waitFor(() => expect(result.getPathname()).toBe("/gym/pulse"));
+  });
+
+  it("several gyms open the workspace chooser", async () => {
+    await signIn({
+      ...ROLE_SELECTION,
+      destination: "gym_selection",
+      reason: "gym_choice_required",
+      capabilities: ["GYM_WORKSPACE"],
+    });
+    const result = await renderApp("/?intent=gym");
+    await waitFor(() => expect(result.getPathname()).toBe("/workspaces"));
   });
 });
 

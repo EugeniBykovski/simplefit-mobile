@@ -830,3 +830,27 @@ describe("mobile router", () => {
     expect(missing.map((entry) => entry.id)).toEqual([]);
   });
 });
+
+describe("mobile Gym owner registration (SF-87)", () => {
+  const route = routeById.get("mobile.onboarding.gym");
+  const og0 = screens.find((screen) => screen.id === "OG0");
+
+  it("needs a session only: the draft and its completion grant GYM_WORKSPACE, never the route", () => {
+    expect(route.access).toEqual({
+      session: "AUTHENTICATED",
+      capability: null,
+      phase: "ONBOARDING",
+    });
+    expect(route.status).toBe("IMPLEMENTED");
+    expect(route.discrepancies).toContain("D-MOBILE-GYM-ONBOARDING-FLOW");
+    expect(registry.guards.entryDestinations.gym_onboarding).toEqual({
+      web: "web.app.onboarding.gym",
+      mobile: "mobile.onboarding.gym",
+    });
+  });
+
+  it("keeps OG0, the superseded web handoff, as a DEFERRED gallery row", () => {
+    expect(og0?.status).toBe("DEFERRED");
+    expect(og0?.discrepancies).toEqual(["D-MOBILE-GYM-ONBOARDING-FLOW"]);
+  });
+});

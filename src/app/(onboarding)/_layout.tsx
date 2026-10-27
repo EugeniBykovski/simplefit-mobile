@@ -21,6 +21,8 @@ export default function OnboardingLayout() {
           <Stack.Screen name="onboarding/fighter" options={{ headerShown: false }} />
           {/* The Coach registration draws its own back button and progress (SF-53). */}
           <Stack.Screen name="onboarding/coach" options={{ headerShown: false }} />
+          {/* The Gym owner registration draws its own back button and progress (SF-87). */}
+          <Stack.Screen name="onboarding/gym" options={{ headerShown: false }} />
           {/* The Fighter first-run introduction draws its own header (SF-41). */}
           <Stack.Screen
             name="welcome/tour"

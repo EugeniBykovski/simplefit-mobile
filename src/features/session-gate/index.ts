@@ -1,6 +1,6 @@
 export { contextOptions, type ProfileContext } from "./model/contexts";
 export { chooseEntryContext } from "./model/entry-context";
-export { entryHref, isKnownEntry, type Entry, type KnownEntry } from "./model/entry";
+export { entryHref, fetchEntry, isKnownEntry, type Entry, type KnownEntry } from "./model/entry";
 export { CapabilityGate } from "./ui/capability-gate";
 export { ContextChooser, type ChooserMode } from "./ui/context-chooser";
 export { useContextSwitch, type ContextSwitchState } from "./ui/context-switch";
