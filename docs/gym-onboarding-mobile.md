@@ -19,6 +19,54 @@ the web OG content and every SF-86 approved difference. Claude Design is
 unchanged; its canvas is at the 512-file limit, so the mobile artboards are
 added separately (`D-MOBILE-GYM-ONBOARDING-FLOW`).
 
+### Audit (2026-10-27, version `1792675284-1046`)
+
+The live canvas is still `1792675284-1046` (494 boards; the project is at the
+512-file limit). Every Gym owner / staff board for a phone:
+
+| Board                                   | File                                        | Page       | Role in SF-87                      |
+| --------------------------------------- | ------------------------------------------- | ---------- | ---------------------------------- |
+| 1.6 · O05 · Choose your role            | `Onboarding.dc.html`                        | onboarding | "Gym / Club" links to OG0          |
+| 4.5 · OG0 · Gym owner · continue on web | `OnbGHandoff.dc.html`                       | onboarding | superseded by the mobile flow      |
+| 4.1–4.4, 4.6 · OS1–OS4, OS1b · staff    | `OnbSInvite` … `OnbSTour`, `OnbSInviteCode` | onboarding | staff invitations, not owner setup |
+| 1.10 · INV2 · Gym invites coach         | `InviteGymCoach.dc.html`                    | onboarding | superseded by OS1 (SF-82 C11)      |
+| 34.18–34.19 · GR1, GR2 · first run      | `FirstRunGPulse`, `FirstRunGCheckinTip*`    | onboarding | after OG6b, not built (SF-101)     |
+| 13.1–13.9 · G01–G09 · gym cockpit       | `GymPulse.dc.html` …                        | gym-mobile | G01 is "Go to gym"; a placeholder  |
+| Flow · Gym mobile + web                 | `FlowGym.dc.html`                           | gym-mobile | starts at A04, has no setup        |
+
+The owner setup itself exists only for the web (OG1–OG14, 1440 × 900, with
+the `GymSetupSteps` rail). No board shows OG1, OG2, OG3 or OG6b on a phone.
+
+### Discrepancies (production versus the design)
+
+| #   | Where         | Design                                                                                                      | Production (mobile)                                                                                                                                                                | Kind                         |
+| --- | ------------- | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| D1  | O05 → Gym     | "Gym / Club" opens OG0 (handoff to the web)                                                                 | Opens OG1 on the phone (entry `intent=gym` → `gym_onboarding`)                                                                                                                     | navigation (approved)        |
+| D2  | OG0           | Setup link by email, "code 4K7-Q2", "14 steps · about 20 minutes", Resend                                   | Not built; DEFERRED (SF-82 R3/C6 already removed link and code)                                                                                                                    | screen superseded            |
+| D3  | OG1–OG3 frame | None for mobile; web: 300 pt step rail, "STEP 1 OF 14", footer Back / Save & exit / Continue                | COACH · 3 frame: 44 pt Back, "Step n of 3 · Section", 3-segment progress, Continue pinned above the home indicator                                                                 | missing artboards (approved) |
+| D4  | Save & exit   | Web footer, text button                                                                                     | Header right, text action (Coach mobile has none)                                                                                                                                  | component placement          |
+| D5  | OG1           | Public handle "✓ free"; "nothing is public until step 11"; "Saved · just now"; "Signed in with Google as …" | No handle (C2); no step-11 copy; no save stamp; "This gym belongs to the account you're signed in with"                                                                            | content (SF-82 C2)           |
+| D6  | OG1 preview   | "How members see you" card with cover                                                                       | None (no room on a phone)                                                                                                                                                          | omitted aside                |
+| D7  | OG1 type      | Six pill chips, "✓" when chosen                                                                             | Same six chips (`Chip`, single choice)                                                                                                                                             | match                        |
+| D8  | OG2           | "Add another location", LOCATIONS list                                                                      | One location; "Adding more locations isn't available yet" (C3)                                                                                                                     | content (SF-82 C3)           |
+| D9  | OG3           | Preview "✓ verified", Public URL, "Book a free trial"; logo and cover upload                                | Logo tile in the accent with initials, cover "not available yet", 6 swatches, tagline; no preview (C4)                                                                             | content (SF-82 C4) + state   |
+| D10 | OG6b          | "Registration complete", trial / plan, "GET READY TO OPEN · 8 STEPS"                                        | "{name} is created.", "Get ready to open · coming later" list, one action "Go to gym" (C5 without "Continue setup": no checklist yet)                                              | content (SF-82 C5)           |
+| D11 | after OG6b    | GR1 opening-week pulse (mobile)                                                                             | G01 route, "Planned" placeholder (gym shell)                                                                                                                                       | later ticket                 |
+| D12 | states        | None drawn                                                                                                  | Loading, load failure, couldn't confirm + Retry, stale + "Save my changes", resumed, discarded/reused, rate limited, forbidden, gone + Start a new gym, session ended, another gym | undocumented states          |
+| D13 | Register      | SF-82 register files OS1, OS1b, INV2 and OG11 under "SF-87"                                                 | SF-87 became owner registration (mobile); the staff rows need a new ticket number                                                                                                  | register bookkeeping         |
+
+### Proposed canonical mobile owner board (not applied)
+
+One board, no new file: repurpose **OG0 `OnbGHandoff.dc.html`** (superseded
+by D1/D2) as **"4.5 · OG1–OG6b · Gym owner setup · mobile · step=type|location|branding|created ·
+state=ready|unconfirmed|stale|invalid"**, 390 × 844, the COACH · 3 frame with
+the web OG content and the SF-82 C2–C5 corrections, in the same variant style
+as A04 `Workspaces.dc.html` (`mode=…|state=…`). Then point O05 "Gym / Club"
+at it (`step=type`) and add "OG1m" to `FlowGym` before A04. This keeps the
+canvas at its file count and retires the handoff. Applying it changes Claude
+Design and needs explicit approval; until then
+`D-MOBILE-GYM-ONBOARDING-FLOW` and this document are the reference.
+
 ## Inventory
 
 | Artboard / screen       | Source                                   | `?step=`   | Production     | Backend                                          | Status                |
@@ -105,3 +153,31 @@ OG6b "Gym created" with "Go to gym"). Mobile only:
   Skip, missing location, completed elsewhere, another gym, Save & exit).
 - Routes: `providers/router.test.tsx` "Gym owner journey (SF-87)".
 - Registry: `scripts/route-registry.test.js` "mobile Gym owner registration".
+- Sign in with the keyboard up: `widgets/auth-screens/ui/auth-screens.test.tsx`
+  "O01b sign in with the keyboard up (SF-87)" (button and Send key, with
+  `intent=gym` and `returnTo` kept).
+
+### Native cross-device journeys (2026-10-27)
+
+iOS dev build on an iPhone 14 simulator (iOS, XCUITest), web build of
+simplefit-platform, a disposable API and PostgreSQL database
+(`simple_fit_sf87_e2e`); every result checked in the database.
+
+| Journey                                                                             | Result                                                                                                                                                      |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A · web OG1 + OG2, mobile resumes at OG3 and completes, web shows the gym dashboard | pass                                                                                                                                                        |
+| B · mobile OG1 + OG2, Save & exit, web resumes the same gym                         | pass: 1 gym, 1 creation request                                                                                                                             |
+| C · double tap Continue and the answer lost, Retry                                  | pass: 1 POST answered then lost, the retry replays (200); 1 gym, 1 owner membership                                                                         |
+| D · web saves the location while mobile edits                                       | pass: `409 revision: stale`, nothing written, edits kept; "Save my changes" writes revision 3                                                               |
+| E · force-close, web edit, restart                                                  | pass: same draft, the latest revision                                                                                                                       |
+| F · sign out, another account signs in                                              | pass: only that account's gym is read and shown                                                                                                             |
+| G · completion, SF-84 entry                                                         | pass: `gym_home` with the gym id, owner, completed                                                                                                          |
+| H · Fighter + Coach creates a gym                                                   | pass: both profiles kept; entry still reaches fighter, coach and gym homes                                                                                  |
+| I · another account's gym id; revoked session                                       | pass: API answers 404 to read, write, complete, discard and context; a gym id in the link is ignored; a revoked session ends on foreground with no gym data |
+
+### Not verified
+
+Android native runtime; manual VoiceOver and TalkBack; light theme
+screenshots; large-text passes beyond those already taken (the shared
+fixed-height `Input` clips at the largest Dynamic Type sizes and is tracked
+separately).
