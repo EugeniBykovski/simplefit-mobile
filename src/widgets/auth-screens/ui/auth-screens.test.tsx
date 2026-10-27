@@ -1,5 +1,5 @@
-import { act, screen, userEvent, waitFor } from "@testing-library/react-native";
-import { Linking, Platform } from "react-native";
+import { act, fireEvent, screen, userEvent, waitFor } from "@testing-library/react-native";
+import { Keyboard, Linking, Platform, type KeyboardEventName } from "react-native";
 
 import { pending } from "@/features/email-auth/model/pending";
 import { resetSessionForTests } from "@/entities/session/model/session";
@@ -150,6 +150,63 @@ describe("O01b sign in", () => {
 
     expect(await screen.findByText("Enter a valid email address.")).toBeOnTheScreen();
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
+
+describe("O01b sign in with the keyboard up (SF-87)", () => {
+  /** Captures the frame's keyboard listeners, so a test can show and hide the keyboard. */
+  function keyboard() {
+    const listeners = new Map<string, () => void>();
+    const spy = jest.spyOn(Keyboard, "addListener").mockImplementation((event, listener) => {
+      listeners.set(event, listener as () => void);
+      const subscription = { remove: () => void listeners.delete(event) };
+      return subscription as unknown as ReturnType<typeof Keyboard.addListener>;
+    });
+    const emit = (event: KeyboardEventName) => act(() => listeners.get(event)?.());
+    return { show: () => emit("keyboardWillShow"), hide: () => emit("keyboardWillHide"), spy };
+  }
+  const gymOwner = { intent: "gym", returnTo: "/camp/weight" };
+  const next = "/login/code?returnTo=%2Fcamp%2Fweight&intent=gym";
+
+  it("moves the Join link aside while typing, so the submit continues to the code (button)", async () => {
+    const { show, hide, spy } = keyboard();
+    mockParams.current = gymOwner;
+    const fetchMock = api({ "/api/auth/email/sign-in": [accepted] });
+    await renderWithProviders(<LoginScreen />);
+    expect(screen.getByRole("link", { name: "Join the boxing community" })).toBeOnTheScreen();
+
+    await userEvent.type(screen.getByLabelText("Email"), EMAIL);
+    await show();
+    // Pinned above the keyboard, the link covered the lower part of the submit.
+    expect(screen.queryByRole("link", { name: "Join the boxing community" })).toBeNull();
+    await userEvent.press(screen.getByRole("button", { name: "Email me a sign-in code" }));
+
+    await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith(next));
+    expect(mockRouter.replace).not.toHaveBeenCalled();
+    expect(sent(fetchMock)).toEqual([{ path: "/api/auth/email/sign-in", body: { email: EMAIL } }]);
+    await hide();
+    expect(screen.getByRole("link", { name: "Join the boxing community" })).toBeOnTheScreen();
+    spy.mockRestore();
+  });
+
+  it("submits from the keyboard's Send key with the gym intent and returnTo kept", async () => {
+    const { show, spy } = keyboard();
+    mockParams.current = gymOwner;
+    const fetchMock = api({ "/api/auth/email/sign-in": [accepted] });
+    await renderWithProviders(<LoginScreen />);
+
+    await userEvent.type(screen.getByLabelText("Email"), EMAIL);
+    await show();
+    await act(async () => {
+      fireEvent(screen.getByLabelText("Email"), "submitEditing");
+    });
+
+    await waitFor(() => expect(mockRouter.push).toHaveBeenCalledWith(next));
+    expect(mockRouter.push).toHaveBeenCalledTimes(1);
+    expect(mockRouter.replace).not.toHaveBeenCalled();
+    expect(sent(fetchMock)).toEqual([{ path: "/api/auth/email/sign-in", body: { email: EMAIL } }]);
+    expect(pending.get("signIn")).toMatchObject({ email: EMAIL });
+    spy.mockRestore();
   });
 });
 

@@ -11,8 +11,15 @@ import {
   UserCheck,
   type LucideIcon,
 } from "lucide-react-native";
-import { useCallback, useState, type ReactNode } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from "react-native";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle, Text as SvgText } from "react-native-svg";
 import { useTranslations } from "use-intl";
@@ -64,16 +71,41 @@ function useContinuation(): Continuation {
   return continuationOf(useLocalSearchParams());
 }
 
+/** Whether the software keyboard is shown (iOS reports it before it moves, Android after). */
+function useKeyboardShown(): boolean {
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const ios = Platform.OS === "ios";
+    const show = Keyboard.addListener(ios ? "keyboardWillShow" : "keyboardDidShow", () =>
+      setShown(true),
+    );
+    const hide = Keyboard.addListener(ios ? "keyboardWillHide" : "keyboardDidHide", () =>
+      setShown(false),
+    );
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
+  return shown;
+}
+
 /**
  * Frame of the designed auth screens: a 44 pt back button and the content on
  * 20 pt gutters, the main actions pinned above the home indicator. Insets are
  * runtime values (the only `style`).
+ *
+ * `secondaryActions`: the pinned row holds only navigation away (O01b "New
+ * here? Join") while the screen's submit scrolls with its field. The row then
+ * steps aside while the keyboard is up; pinned above the keyboard it would
+ * cover the lower part of that submit, and a tap meant for it would leave.
  */
 function AuthFrame({
   back,
   headerAction,
   children,
   actions,
+  secondaryActions = false,
   gutter = "px-5",
 }: {
   back?: Href;
@@ -81,11 +113,13 @@ function AuthFrame({
   headerAction?: ReactNode;
   children: ReactNode;
   actions?: ReactNode;
+  secondaryActions?: boolean;
   gutter?: "px-5" | "px-6";
 }) {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const t = useTranslations("auth.login");
+  const typing = useKeyboardShown();
 
   return (
     <KeyboardAvoidingView
@@ -117,7 +151,7 @@ function AuthFrame({
         )}
         {children}
       </ScrollView>
-      {actions !== undefined && (
+      {actions !== undefined && !(secondaryActions && typing) && (
         <View
           className={`gap-2.5 pt-3 ${gutter}`}
           // Runtime inset: the artboards keep the actions 34 pt above the bottom edge.
@@ -289,6 +323,7 @@ export function LoginScreen() {
   return (
     <AuthFrame
       back={withContinuation("mobile.welcome", continuation)}
+      secondaryActions
       actions={
         <TextLinks center>
           {`${t("newHere")} `}

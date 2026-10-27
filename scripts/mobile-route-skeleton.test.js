@@ -152,7 +152,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 31, catchAll: 1, placeholder: 117, deferred: 1 });
+    expect(counts).toEqual({ screen: 32, catchAll: 1, placeholder: 116, deferred: 1 });
     expect(routes).toHaveLength(150);
   });
 
