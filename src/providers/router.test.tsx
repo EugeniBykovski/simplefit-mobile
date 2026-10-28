@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { focusManager } from "@tanstack/react-query";
 import { router } from "expo-router";
 import {
   act,
@@ -138,6 +139,27 @@ const BOTH: Entry = {
   context: "fighter",
   coach_profile: "completed",
   capabilities: ["FIGHTER", "COACH"],
+};
+
+/** SF-89: one completed gym, remembered (`gym_home` with its id). */
+const GYM_HOME_ID = "8d2e4f60-1a2b-4c3d-8e9f-a0b1c2d3e4f5";
+const GYM_HOME: Entry = {
+  ...ROLE_SELECTION,
+  destination: "gym_home",
+  reason: "gym_workspace_completed",
+  gym_id: GYM_HOME_ID,
+  capabilities: ["GYM_WORKSPACE"],
+  gym_workspaces: [
+    {
+      gym_id: GYM_HOME_ID,
+      name: "Ring A Boxing",
+      role: "owner",
+      setup_status: "completed",
+      available_actions: ["enter"],
+      selected: true,
+    },
+  ],
+  gym_workspace_count: 1,
 };
 
 /** Account registration before its first save (SF-44), for O04. */
@@ -296,45 +318,47 @@ async function signIn(
           ? jsonResponse({ gyms: gyms.map(gymSummary), next_cursor: null })
           : /\/api\/v1\/gyms\/[^/]+\/setup/.test(url)
             ? jsonResponse({ setup: gymSetup(gyms.find((gym) => url.includes(gym.id))) })
-            : url.includes("/api/v1/me/entry")
-              ? jsonResponse({ entry: resolve(new URL(url).searchParams.get("intent")) })
-              : url.includes("/api/v1/me/account-profile")
-                ? jsonResponse({ account_profile: NOT_STARTED })
-                : url.includes("/api/v1/me/fighter-profile")
-                  ? jsonResponse({ fighter_profile: fighter })
-                  : url.includes("/api/v1/me/coach-profile")
-                    ? jsonResponse({ coach_profile: coach })
-                    : url.includes("/api/v1/me/first-run")
-                      ? jsonResponse(firstRun(mobileFirstRun))
-                      : /\/api\/v1\/me\/(coach\/fighters|coach\/training-sessions|training-sessions)\/[^?]/.test(
-                            url,
-                          )
-                        ? jsonResponse(
-                            {
-                              error: {
-                                code: "not_found",
-                                message: "Not found",
-                                details: {},
-                                request_id: "r",
+            : /\/api\/v1\/gyms\/[^/?]+$/.test(url)
+              ? gymResponse(gyms.find((gym) => url.endsWith(`/gyms/${gym.id}`)))
+              : url.includes("/api/v1/me/entry")
+                ? jsonResponse({ entry: resolve(new URL(url).searchParams.get("intent")) })
+                : url.includes("/api/v1/me/account-profile")
+                  ? jsonResponse({ account_profile: NOT_STARTED })
+                  : url.includes("/api/v1/me/fighter-profile")
+                    ? jsonResponse({ fighter_profile: fighter })
+                    : url.includes("/api/v1/me/coach-profile")
+                      ? jsonResponse({ coach_profile: coach })
+                      : url.includes("/api/v1/me/first-run")
+                        ? jsonResponse(firstRun(mobileFirstRun))
+                        : /\/api\/v1\/me\/(coach\/fighters|coach\/training-sessions|training-sessions)\/[^?]/.test(
+                              url,
+                            )
+                          ? jsonResponse(
+                              {
+                                error: {
+                                  code: "not_found",
+                                  message: "Not found",
+                                  details: {},
+                                  request_id: "r",
+                                },
                               },
-                            },
-                            { status: 404 },
-                          )
-                        : url.includes("/api/v1/me/coaches") ||
-                            url.includes("/api/v1/me/coach/fighters")
-                          ? jsonResponse({ relationships: [], next_cursor: null })
-                          : url.includes("/api/v1/me/coach/training-sessions") ||
-                              url.includes("/api/v1/me/training-sessions")
-                            ? jsonResponse({ training_sessions: [], next_cursor: null })
-                            : url.includes("/api/v1/me/coach/invitations") ||
-                                url.includes("/api/v1/me/coach-invitations")
-                              ? jsonResponse({ invitations: [], next_cursor: null })
-                              : jsonResponse({
-                                  user: {
-                                    id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                                    created_at: "2026-10-01T10:00:00Z",
-                                  },
-                                }),
+                              { status: 404 },
+                            )
+                          : url.includes("/api/v1/me/coaches") ||
+                              url.includes("/api/v1/me/coach/fighters")
+                            ? jsonResponse({ relationships: [], next_cursor: null })
+                            : url.includes("/api/v1/me/coach/training-sessions") ||
+                                url.includes("/api/v1/me/training-sessions")
+                              ? jsonResponse({ training_sessions: [], next_cursor: null })
+                              : url.includes("/api/v1/me/coach/invitations") ||
+                                  url.includes("/api/v1/me/coach-invitations")
+                                ? jsonResponse({ invitations: [], next_cursor: null })
+                                : jsonResponse({
+                                    user: {
+                                      id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                                      created_at: "2026-10-01T10:00:00Z",
+                                    },
+                                  }),
       ),
     ),
   );
@@ -345,14 +369,37 @@ async function signIn(
   });
 }
 
-/** A gym the signed-in user owns (SF-83 / SF-85), as the gym fixtures of `signIn`. */
-type GymFixture = { id: string; name: string; status: "draft" | "completed"; located: boolean };
+/** A gym the signed-in user works at (SF-83 / SF-85), as the gym fixtures of `signIn`. */
+type GymFixture = {
+  id: string;
+  name: string;
+  status: "draft" | "completed";
+  located: boolean;
+  role?: "owner" | "manager" | "coach" | "front_desk";
+};
 const DRAFT_GYM: GymFixture = {
   id: "5f0c3d0e-4a1b-4c2d-9e8f-0a1b2c3d4e5f",
   name: "Praga Boxing",
   status: "draft",
   located: false,
 };
+/** SF-89: a completed gym the user owns, with its primary location. */
+const COMPLETED_GYM: GymFixture = {
+  id: "8d2e4f60-1a2b-4c3d-8e9f-a0b1c2d3e4f5",
+  name: "Ring A Boxing",
+  status: "completed",
+  located: true,
+};
+/** The entry's gym workspace row of a gym fixture (SF-84). */
+const workspaceOf = (gym: GymFixture) => ({
+  gym_id: gym.id,
+  name: gym.name,
+  role: gym.role ?? "owner",
+  setup_status: gym.status,
+  available_actions:
+    gym.status === "completed" ? ["enter"] : gym.role === undefined ? ["continue_setup"] : [],
+  selected: false,
+});
 const VIEWER_MEMBERSHIP = {
   role: "owner",
   permissions: [],
@@ -365,8 +412,38 @@ const gymSummary = (gym: GymFixture) => ({
   setup_status: gym.status,
   inserted_at: "2026-10-27T10:00:00Z",
   updated_at: "2026-10-27T10:00:00Z",
-  viewer: VIEWER_MEMBERSHIP,
+  viewer: { ...VIEWER_MEMBERSHIP, role: gym.role ?? "owner" },
 });
+/** `GET /api/v1/gyms/{gym_id}` (SF-83): the gym for its staff, 404 for anyone else. */
+const gymResponse = (gym: GymFixture | undefined) =>
+  gym === undefined
+    ? jsonResponse(
+        { error: { code: "not_found", message: "Not found", details: {}, request_id: "r" } },
+        { status: 404 },
+      )
+    : jsonResponse({
+        gym: {
+          ...gymSummary(gym),
+          locations: gym.located
+            ? [
+                {
+                  id: "0b6e1c2d-0000-4000-8000-0000000000aa",
+                  name: "Warsaw",
+                  country_code: "PL",
+                  city: "Warsaw",
+                  address_line: "ul. Ząbkowska 31",
+                  entrance_note: null,
+                  is_primary: true,
+                },
+              ]
+            : [],
+          viewer: {
+            ...VIEWER_MEMBERSHIP,
+            role: gym.role ?? "owner",
+            permissions: (gym.role ?? "owner") === "owner" ? ["complete_setup", "edit_gym"] : [],
+          },
+        },
+      });
 const gymSetup = (gym: GymFixture | undefined) =>
   gym === undefined
     ? undefined
@@ -422,6 +499,11 @@ describe("canonical routes resolve", () => {
       // Fighter introduction only while its first run is pending (SF-41).
       if (route.id === "mobile.welcome.tour")
         await signIn(FIGHTER_HOME, FIGHTER_COMPLETED, "pending");
+      // The gym shell needs GYM_WORKSPACE and the backend's answer for the gym in the route (SF-89).
+      else if (route.shell === "mobile.gym")
+        await signIn(GYM_HOME, FIGHTER_NOT_STARTED, "completed", coachProfile(), [
+          { ...COMPLETED_GYM, id: "gymId-1" },
+        ]);
       else if (route.session === "AUTHENTICATED")
         await signIn(
           route.id === "mobile.signup.consent"
@@ -469,9 +551,12 @@ describe("canonical routes resolve", () => {
   });
 
   it("serves fighter and workspace routes that share the /gym and /coach prefixes", async () => {
-    await signIn();
-    await renderApp("/gym/pulse");
-    expect(await screen.findByTestId(placeholderId("mobile.gym.pulse"))).toBeOnTheScreen();
+    // SF-89: the gym shell is id-based (/gyms/:gymId/**); the member side keeps /gym/:gymId.
+    await signIn(GYM_HOME, FIGHTER_NOT_STARTED, "completed", coachProfile(), [COMPLETED_GYM]);
+    await renderApp(`/gyms/${COMPLETED_GYM.id}/check-in`);
+    expect(
+      await screen.findByTestId(placeholderId("mobile.gyms._gym-id.check-in")),
+    ).toBeOnTheScreen();
   });
 
   it("sends unknown and deferred paths to the not-found screen", async () => {
@@ -613,7 +698,7 @@ describe("session access (UX only)", () => {
 
   it("opens the routes whose capability is not checked yet for any signed-in user", async () => {
     await signIn();
-    for (const url of ["/home", "/gym/pulse", "/onboarding/fighter"]) {
+    for (const url of ["/home", "/onboarding/fighter"]) {
       const result = await renderApp(url);
       await waitFor(() => expect(result.getPathname()).toBe(url));
       await result.unmount();
@@ -751,16 +836,16 @@ describe("tab navigation", () => {
     expect(await screen.findByRole("tab", { name: "Today", selected: true })).toBeOnTheScreen();
   });
 
-  it("selects the gym tab of every gym tab route", async () => {
-    await signIn();
-    for (const [url, tab] of [
-      ["/gym/check-in", "QR check-in"],
-      ["/gym/staff/on-shift", "Staff"],
-    ] as const) {
-      const result = await renderApp(url);
-      expect(await screen.findByRole("tab", { name: tab, selected: true })).toBeOnTheScreen();
-      await result.unmount();
+  it("links the gym tab bar's Pulse only; the other gym tabs are Soon (SF-89)", async () => {
+    await signIn(GYM_HOME, FIGHTER_NOT_STARTED, "completed", coachProfile(), [COMPLETED_GYM]);
+    const result = await renderApp(`/gyms/${COMPLETED_GYM.id}/staff/on-shift`);
+    for (const tab of ["Classes", "QR check-in", "Members", "Staff"]) {
+      const soon = await screen.findByRole("tab", { name: `${tab}, not available yet` });
+      expect(soon).toBeDisabled();
     }
+    await fireEvent.press(screen.getByRole("tab", { name: "Pulse" }));
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${COMPLETED_GYM.id}/pulse`));
+    expect(await screen.findByRole("tab", { name: "Pulse", selected: true })).toBeOnTheScreen();
   });
 
   it("keeps the tab bar on the screens the design shows inside a tab, with that tab active", async () => {
@@ -770,8 +855,6 @@ describe("tab navigation", () => {
       ["/calendar", "Training"],
       ["/marketplace", "Community"],
       ["/coach/challenge/c-1", "Today"],
-      ["/gym/members/m-1", "Members"],
-      ["/gym/classes/c-1/roster", "Classes"],
     ] as const) {
       const result = await renderApp(url);
       expect(await screen.findByRole("tab", { name: tab, selected: true })).toBeOnTheScreen();
@@ -1269,10 +1352,11 @@ describe("Gym owner journey (SF-87)", () => {
       capabilities: ["GYM_WORKSPACE"],
     });
     const result = await renderApp("/?intent=gym");
-    await waitFor(() => expect(result.getPathname()).toBe("/gym/pulse"));
+    // SF-89: the id-based Gym pulse of the entry's gym_id.
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${DRAFT_GYM.id}/pulse`));
   });
 
-  it("several gyms open the workspace chooser", async () => {
+  it("several gyms open the gym chooser", async () => {
     await signIn({
       ...ROLE_SELECTION,
       destination: "gym_selection",
@@ -1280,7 +1364,7 @@ describe("Gym owner journey (SF-87)", () => {
       capabilities: ["GYM_WORKSPACE"],
     });
     const result = await renderApp("/?intent=gym");
-    await waitFor(() => expect(result.getPathname()).toBe("/workspaces"));
+    await waitFor(() => expect(result.getPathname()).toBe("/gyms"));
   });
 });
 
@@ -1438,5 +1522,405 @@ describe("Coach shell and context switching (SF-55)", () => {
       await screen.findByText("We couldn’t open that. Nothing changed. Try again."),
     ).toBeOnTheScreen();
     expect(result.getPathname()).toBe("/workspaces");
+  });
+});
+
+/*
+ * SF-89: the gym shell of the gym in the route (`/gyms/:gymId/**`), the gym
+ * rows of A04, the gym chooser and context switching, through the real
+ * routes and gates against a stateful account double: the entry, the gym
+ * reads and the context choice answer as the backend does (ADR 0026: 404 for
+ * anyone who is not active staff of that gym, `GYM_WORKSPACE` only from a
+ * completed gym).
+ */
+describe("Gym shell, context switching and navigation (SF-89)", () => {
+  const GYM_A: GymFixture = { ...COMPLETED_GYM, name: "Ring A Boxing" };
+  const GYM_B: GymFixture = {
+    id: "1c2d3e4f-5a6b-4c7d-8e9f-0a1b2c3d4e5f",
+    name: "Ring B Club",
+    status: "completed",
+    located: false,
+    role: "coach",
+  };
+  const FOREIGN_ID = "00000000-0000-4000-8000-00000000dead";
+
+  type Account = {
+    gyms: GymFixture[];
+    fighter?: boolean;
+    coach?: boolean;
+    /** The last explicit context: a profile, or a gym id. */
+    last?: "fighter" | "coach" | { gym: string };
+    revoked?: Set<string>;
+    /** Gym reads answered with this status instead of the gym. */
+    status?: Record<string, number>;
+    /** Gym reads that wait until released. */
+    hold?: Record<string, Promise<void>>;
+    /** More workspaces than the entry lists (the rest come from GET /api/v1/me/gyms). */
+    unlisted?: GymFixture[];
+    failChoice?: boolean;
+    offlineGyms?: boolean;
+  };
+
+  const notFound = () =>
+    jsonResponse(
+      { error: { code: "not_found", message: "Not found", details: {}, request_id: "r" } },
+      { status: 404 },
+    );
+
+  /** The account's entry now, as `GET /api/v1/me/entry` resolves it. */
+  function entryOf(account: Account): Entry {
+    const active = account.gyms.filter((gym) => !account.revoked?.has(gym.id));
+    const completedGyms = active.filter((gym) => gym.status === "completed");
+    const capabilities = [
+      ...(account.fighter ? ["FIGHTER" as const] : []),
+      ...(account.coach ? ["COACH" as const] : []),
+      ...(completedGyms.length > 0 ? ["GYM_WORKSPACE" as const] : []),
+    ];
+    const last = account.last;
+    const lastGym =
+      typeof last === "object" ? completedGyms.find((gym) => gym.id === last.gym) : undefined;
+    let destination: Entry["destination"] = "context_selection";
+    let gymId: string | null = null;
+    if (lastGym !== undefined) [destination, gymId] = ["gym_home", lastGym.id];
+    else if (last === "fighter" && account.fighter) destination = "fighter_home";
+    else if (last === "coach" && account.coach) destination = "coach_home";
+    else if (capabilities.length === 1 && completedGyms.length === 1)
+      [destination, gymId] = ["gym_home", completedGyms[0]!.id];
+    else if (capabilities.length === 1 && account.fighter) destination = "fighter_home";
+    const listed = [...completedGyms, ...active.filter((gym) => gym.status === "draft")];
+    return {
+      ...ROLE_SELECTION,
+      destination,
+      reason: "last_context",
+      gym_id: gymId,
+      fighter_profile: account.fighter ? "completed" : "not_started",
+      coach_profile: account.coach ? "completed" : "not_started",
+      capabilities,
+      gym_workspaces: listed.map((gym) => ({
+        ...workspaceOf(gym),
+        selected: gym.id === lastGym?.id,
+      })) as Entry["gym_workspaces"],
+      gym_workspace_count: listed.length + (account.unlisted?.length ?? 0),
+    };
+  }
+
+  async function signInAccount(account: Account) {
+    const fetchMock = mockFetch(
+      jest.fn(async (url: string, init?: RequestInit) => {
+        const method = init?.method ?? "GET";
+        const path = new URL(url).pathname;
+        if (path === "/api/v1/me/entry/context" && method === "PUT") {
+          if (account.failChoice)
+            return jsonResponse(
+              { error: { code: "internal_error", message: "x", details: {}, request_id: "r" } },
+              { status: 500 },
+            );
+          const body = JSON.parse(String(init?.body)) as { context: string; gym_id?: string };
+          if (body.context === "gym") {
+            const gym = [...account.gyms, ...(account.unlisted ?? [])].find(
+              (candidate) => candidate.id === body.gym_id && !account.revoked?.has(candidate.id),
+            );
+            if (gym === undefined) return notFound();
+            account.last = { gym: gym.id };
+          } else account.last = body.context as "fighter" | "coach";
+          return new Response(null, { status: 204 });
+        }
+        if (path === "/api/v1/me/entry") return jsonResponse({ entry: entryOf(account) });
+        if (path === "/api/v1/me/gyms")
+          return jsonResponse({
+            gyms: [...account.gyms, ...(account.unlisted ?? [])].map(gymSummary),
+            next_cursor: null,
+          });
+        const setup = path.match(/^\/api\/v1\/gyms\/([^/]+)\/setup$/);
+        if (setup)
+          return jsonResponse({ setup: gymSetup(account.gyms.find((gym) => gym.id === setup[1])) });
+        const read = path.match(/^\/api\/v1\/gyms\/([^/]+)$/);
+        if (read) {
+          const id = read[1]!;
+          await account.hold?.[id];
+          if (account.offlineGyms) throw new TypeError("Network request failed");
+          const status = account.status?.[id];
+          if (status !== undefined)
+            return jsonResponse(
+              {
+                error: {
+                  code: status === 403 ? "forbidden" : "internal_error",
+                  message: "x",
+                  details: {},
+                  request_id: "r",
+                },
+              },
+              { status },
+            );
+          if (account.revoked?.has(id)) return notFound();
+          return gymResponse(
+            [...account.gyms, ...(account.unlisted ?? [])].find((gym) => gym.id === id),
+          );
+        }
+        if (path === "/api/v1/me/fighter-profile")
+          return jsonResponse({
+            fighter_profile: account.fighter ? FIGHTER_COMPLETED : FIGHTER_NOT_STARTED,
+          });
+        if (path === "/api/v1/me/coach-profile")
+          return jsonResponse({
+            coach_profile: account.coach
+              ? coachProfile(
+                  { display_name: "Alex Coach", country_code: "PL", city: "Kraków" },
+                  true,
+                )
+              : coachProfile(),
+          });
+        if (path === "/api/v1/me/first-run")
+          return jsonResponse(firstRun("completed", "completed"));
+        if (path === "/api/v1/me/account-profile")
+          return jsonResponse({ account_profile: NOT_STARTED });
+        if (/training-sessions|coaches|coach\/fighters|invitations/.test(path))
+          return jsonResponse({
+            training_sessions: [],
+            relationships: [],
+            invitations: [],
+            next_cursor: null,
+          });
+        return jsonResponse({
+          user: { id: "8a6e0804-2bd0-4672-b79d-d97027f9071b", created_at: "2026-10-01T10:00:00Z" },
+        });
+      }),
+    );
+    await completeAuthentication({
+      access_token: "test-access",
+      access_token_expires_at: "2099-01-01T00:00:00Z",
+      refresh_token: "test-refresh",
+    });
+    return fetchMock;
+  }
+
+  /** The requests made, as `METHOD path` (bodies of the context choices included). */
+  const requests = (fetchMock: jest.Mock) =>
+    (fetchMock.mock.calls as [string, RequestInit?][]).map(([url, init]) =>
+      [init?.method ?? "GET", new URL(url).pathname, init?.body ?? ""].join(" ").trim(),
+    );
+  const visible = { includeHiddenElements: false } as const;
+
+  it("a cold start opens the remembered gym's Gym pulse with its real identity, nothing invented", async () => {
+    await signInAccount({ gyms: [GYM_A], last: { gym: GYM_A.id } });
+    const result = await renderApp("/");
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${GYM_A.id}/pulse`));
+    expect(await screen.findByRole("header", { name: "Gym pulse" })).toBeOnTheScreen();
+    expect(screen.getAllByText("Ring A Boxing", visible).length).toBeGreaterThan(0);
+    expect(screen.getByText("Boxing gym · Warsaw, Poland", visible)).toBeOnTheScreen();
+    // The owner's saved setup, read for this gym.
+    expect(await screen.findByText(/ul\. Ząbkowska 31/, visible)).toBeOnTheScreen();
+    expect(screen.getAllByRole("text", { name: "Setup complete" }).length).toBeGreaterThan(0);
+    // No fabricated metrics or unbuilt modules on screen.
+    for (const fake of [
+      /check-ins today/i,
+      /occupancy/i,
+      /failed payments/i,
+      /sales/i,
+      /classes today/i,
+    ])
+      expect(screen.queryByText(fake, visible)).toBeNull();
+  });
+
+  it("a coach at the gym sees the gym and a limited-access notice, never the owner's setup", async () => {
+    const fetchMock = await signInAccount({ gyms: [GYM_B], last: { gym: GYM_B.id } });
+    await renderApp(`/gyms/${GYM_B.id}/pulse`);
+    expect(
+      await screen.findByText(/The Coach dashboard isn’t available yet/, visible),
+    ).toBeOnTheScreen();
+    expect(screen.queryByText("Gym details", visible)).toBeNull();
+    expect(requests(fetchMock).some((request) => request.includes("/setup"))).toBe(false);
+  });
+
+  it("switches Gym A → Gym B from the identity pill: the choice is recorded, B's own data shows", async () => {
+    const fetchMock = await signInAccount({ gyms: [GYM_A, GYM_B], last: { gym: GYM_A.id } });
+    const result = await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Ring A Boxing, Owner. Switch gym or profile" }),
+    );
+    expect(
+      await screen.findByRole("button", {
+        name: "Ring A Boxing, Owner · Gym pulse",
+        selected: true,
+      }),
+    ).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole("button", { name: "Ring B Club, Coach · Gym pulse" }));
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${GYM_B.id}/pulse`));
+    expect(
+      await screen.findByText(/The Coach dashboard isn’t available yet/, visible),
+    ).toBeOnTheScreen();
+    expect(screen.queryByText("Ring A Boxing", visible)).toBeNull();
+    expect(requests(fetchMock)).toContain(
+      `PUT /api/v1/me/entry/context ${JSON.stringify({ context: "gym", gym_id: GYM_B.id })}`,
+    );
+  });
+
+  it("Gym → Fighter → Gym on one account: only context choices are written", async () => {
+    const fetchMock = await signInAccount({
+      gyms: [GYM_A],
+      fighter: true,
+      last: { gym: GYM_A.id },
+    });
+    const result = await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Ring A Boxing, Owner. Switch gym or profile" }),
+    );
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Fighter, Alex Rivera · Fighter home" }),
+    );
+    await waitFor(() => expect(result.getPathname()).toBe("/home"));
+    await act(async () => router.push("/workspaces"));
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Ring A Boxing, Owner · Gym pulse" }),
+    );
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${GYM_A.id}/pulse`));
+    const writes = requests(fetchMock).filter((request) => !request.startsWith("GET"));
+    expect(writes).toEqual([
+      'PUT /api/v1/me/entry/context {"context":"fighter"}',
+      `PUT /api/v1/me/entry/context ${JSON.stringify({ context: "gym", gym_id: GYM_A.id })}`,
+    ]);
+  });
+
+  it("a gym id the user does not work at is not available, without revealing the gym", async () => {
+    await signInAccount({ gyms: [GYM_A], last: { gym: GYM_A.id } });
+    const result = await renderApp(`/gyms/${FOREIGN_ID}/pulse`);
+    expect(
+      await screen.findByRole("header", { name: "This gym isn’t available" }),
+    ).toBeOnTheScreen();
+    expect(screen.queryByRole("header", { name: "Gym pulse" })).toBeNull();
+    await fireEvent.press(screen.getByRole("button", { name: "Your gyms" }));
+    // One gym: the chooser opens it at once.
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${GYM_A.id}/pulse`));
+  });
+
+  it("a 403 on the gym read shows the role-restricted state", async () => {
+    await signInAccount({ gyms: [GYM_A], last: { gym: GYM_A.id }, status: { [GYM_A.id]: 403 } });
+    await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    expect(
+      await screen.findByRole("header", { name: "Your role doesn’t include this" }),
+    ).toBeOnTheScreen();
+  });
+
+  it("a draft gym never opens as a workspace; its owner continues setup", async () => {
+    const draft: GymFixture = { ...DRAFT_GYM };
+    await signInAccount({ gyms: [GYM_A, draft], last: { gym: GYM_A.id } });
+    await renderApp(`/gyms/${draft.id}/pulse`);
+    expect(
+      await screen.findByRole("header", { name: "This gym isn’t set up yet" }),
+    ).toBeOnTheScreen();
+    expect(screen.getByRole("button", { name: "Continue setup" })).toBeOnTheScreen();
+  });
+
+  it("an account without a gym workspace never enters a gym shell: the entry decides", async () => {
+    await signInAccount({ gyms: [], fighter: true, last: "fighter" });
+    const result = await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    await waitFor(() => expect(result.getPathname()).toBe("/home"));
+  });
+
+  it("a signed-out visitor of a gym link signs in first, carrying the link", async () => {
+    const result = await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    await waitFor(() => expect(result.getPathname()).toBe("/login"));
+    expect(result.getSearchParams()).toEqual({ returnTo: `/gyms/${GYM_A.id}/pulse` });
+  });
+
+  it("a membership revoked while open is noticed on the next foreground read", async () => {
+    const account: Account = { gyms: [GYM_A, GYM_B], last: { gym: GYM_A.id }, revoked: new Set() };
+    await signInAccount(account);
+    await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    expect(await screen.findByRole("header", { name: "Gym pulse" })).toBeOnTheScreen();
+    account.revoked!.add(GYM_A.id);
+    await act(async () => {
+      focusManager.setFocused(false);
+      focusManager.setFocused(true);
+    });
+    expect(
+      await screen.findByRole("header", { name: "This gym isn’t available" }),
+    ).toBeOnTheScreen();
+    expect(screen.queryByRole("header", { name: "Gym pulse" })).toBeNull();
+    await act(async () => focusManager.setFocused(undefined));
+  });
+
+  it("a late answer for Gym A never shows inside Gym B", async () => {
+    let release = () => {};
+    const held = new Promise<void>((resolve) => (release = resolve));
+    await signInAccount({
+      gyms: [GYM_A, GYM_B],
+      last: { gym: GYM_A.id },
+      hold: { [GYM_A.id]: held },
+    });
+    const result = await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    // Gym A's read is still out: the gate shows its pending state.
+    expect(await screen.findByLabelText("Opening the gym…")).toBeOnTheScreen();
+    await act(async () => router.replace(`/gyms/${GYM_B.id}/pulse`));
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${GYM_B.id}/pulse`));
+    expect(
+      await screen.findByText(/The Coach dashboard isn’t available yet/, visible),
+    ).toBeOnTheScreen();
+    await act(async () => release());
+    expect(screen.queryByText("Ring A Boxing", visible)).toBeNull();
+    expect(screen.getAllByText("Ring B Club", visible).length).toBeGreaterThan(0);
+  });
+
+  it("the gym chooser lists gyms beyond the entry's workspaces, page by page", async () => {
+    const extra: GymFixture = {
+      ...GYM_B,
+      id: "2d3e4f5a-6b7c-4d8e-9f0a-1b2c3d4e5f60",
+      name: "Ring C Hall",
+      role: "manager",
+    };
+    await signInAccount({ gyms: [GYM_A, GYM_B], unlisted: [extra] });
+    const result = await renderApp("/gyms");
+    expect(
+      await screen.findByRole("header", { name: "Which gym do you want to open?" }),
+    ).toBeOnTheScreen();
+    expect(
+      await screen.findByRole("button", { name: "Ring C Hall, Manager · Gym pulse" }),
+    ).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole("button", { name: "Ring C Hall, Manager · Gym pulse" }));
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${extra.id}/pulse`));
+    expect(
+      await screen.findByText(/The Manager dashboard isn’t available yet/, visible),
+    ).toBeOnTheScreen();
+  });
+
+  it("a failed gym choice keeps the user where they are", async () => {
+    await signInAccount({ gyms: [GYM_A, GYM_B], last: { gym: GYM_A.id }, failChoice: true });
+    const result = await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Ring A Boxing, Owner. Switch gym or profile" }),
+    );
+    await fireEvent.press(
+      await screen.findByRole("button", { name: "Ring B Club, Coach · Gym pulse" }),
+    );
+    expect(
+      await screen.findByText(
+        "We couldn’t switch. You’re still in your current profile. Try again.",
+      ),
+    ).toBeOnTheScreen();
+    expect(result.getPathname()).toBe(`/gyms/${GYM_A.id}/pulse`);
+  });
+
+  it("offline before the first answer shows the offline state, never an empty gym", async () => {
+    await signInAccount({ gyms: [GYM_A], last: { gym: GYM_A.id }, offlineGyms: true });
+    await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    expect(await screen.findByText("You’re offline")).toBeOnTheScreen();
+    expect(screen.queryByRole("header", { name: "Gym pulse" })).toBeNull();
+  });
+
+  it("signing out and in as another account shows only that account's gym", async () => {
+    await signInAccount({ gyms: [GYM_A], last: { gym: GYM_A.id } });
+    const result = await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    expect(await screen.findByRole("header", { name: "Gym pulse" })).toBeOnTheScreen();
+    await fireEvent.press(screen.getByRole("button", { name: "Settings" }));
+    await waitFor(() => expect(result.getPathname()).toBe("/settings"));
+    await fireEvent.press(await screen.findByRole("button", { name: "Sign out" }));
+    await waitFor(() => expect(result.getPathname()).toBe("/welcome"));
+    await signInAccount({ gyms: [GYM_B], last: { gym: GYM_B.id } });
+    await act(async () => router.replace("/"));
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${GYM_B.id}/pulse`));
+    expect(
+      await screen.findByText(/The Coach dashboard isn’t available yet/, visible),
+    ).toBeOnTheScreen();
+    expect(screen.queryByText("Ring A Boxing", visible)).toBeNull();
   });
 });

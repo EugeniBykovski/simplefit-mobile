@@ -353,15 +353,15 @@
       "mobile/gym/_gym-id/memberships": "Abonnements de la salle",
       "mobile/gym/_gym-id/memberships/_membership-id": "Abonnement",
       "mobile/gym/_gym-id/store": "Boutique de la salle",
-      "mobile/gym/announcements/new": "Nouvelle annonce",
-      "mobile/gym/check-in": "Pointage QR",
-      "mobile/gym/classes": "Cours",
-      "mobile/gym/classes/_class-id/roster": "Participants du cours",
-      "mobile/gym/incidents/new": "Signaler un incident",
-      "mobile/gym/members": "Membres",
-      "mobile/gym/members/_member-id": "Membre",
-      "mobile/gym/pulse": "Pouls",
-      "mobile/gym/staff/on-shift": "Personnel en service",
+      "mobile/gyms/_gym-id/announcements/new": "Nouvelle annonce",
+      "mobile/gyms/_gym-id/check-in": "Pointage QR",
+      "mobile/gyms/_gym-id/classes": "Cours",
+      "mobile/gyms/_gym-id/classes/_class-id/roster": "Participants du cours",
+      "mobile/gyms/_gym-id/incidents/new": "Signaler un incident",
+      "mobile/gyms/_gym-id/members": "Membres",
+      "mobile/gyms/_gym-id/members/_member-id": "Membre",
+      "mobile/gyms/_gym-id/pulse": "Pouls",
+      "mobile/gyms/_gym-id/staff/on-shift": "Personnel en service",
       "mobile/home": "Accueil",
       "mobile/invite/_code": "Invitation",
       "mobile/invite/coach/_token": "Invitation de coach par une salle",
@@ -1335,13 +1335,21 @@
     "choose": {
       "eyebrow": "Tes profils",
       "title": "Où veux-tu aller ?",
-      "lead": "Tu as un profil de boxeur et un profil de coach sur un seul compte."
+      "lead": "Tu as un profil de boxeur et un profil de coach sur un seul compte.",
+      "leadMixed": "Tes profils et tes salles sont sur un seul compte."
     },
     "setup": {
       "eyebrow": "Ton inscription",
       "title": "Quelle inscription veux-tu reprendre ?",
-      "lead": "Tu en as commencé plus d’une. Choisis-en une ; l’autre t’attend."
-    }
+      "lead": "Tu en as commencé plus d’une. Choisis-en une ; l’autre t’attend.",
+      "leadMixed": "Choisis-en un ; le reste t’attend."
+    },
+    "gyms": "Tes salles",
+    "gymLine": "{role} · pouls de la salle",
+    "gymSetup": "Reprendre la configuration de la salle",
+    "gymDraftLine": "{name} · pas encore configurée",
+    "allGyms": "Toutes les salles ({count})",
+    "allGymsLine": "Toutes les salles où tu travailles"
   },
   "coachHome": {
     "loading": "Chargement de ton profil de coach…",
@@ -2188,5 +2196,108 @@
       }
     },
     "back": "Retour aux invitations"
+  },
+  "gymShell": {
+    "announcement": "{name}, pouls de la salle",
+    "opening": "Ouverture de la salle…",
+    "identity": "{name}, {role}. Changer de salle ou de profil",
+    "settings": "Paramètres",
+    "roles": {
+      "owner": "Propriétaire",
+      "manager": "Manager",
+      "coach": "Coach",
+      "front_desk": "Accueil"
+    },
+    "pulse": {
+      "title": "Pouls de la salle",
+      "eyebrow": "{date} · {where}",
+      "allLocations": "Tous les sites",
+      "summary": {
+        "title": "Ta salle",
+        "completed": "Configuration terminée"
+      },
+      "details": {
+        "title": "Infos de la salle",
+        "address": "Adresse",
+        "phone": "Téléphone",
+        "website": "Site web",
+        "tagline": "Slogan",
+        "accent": "Couleur d’accent",
+        "none": "Non renseigné",
+        "loading": "Chargement des infos de la salle",
+        "failed": "Impossible de charger les infos de la salle. Le reste de la page est à jour.",
+        "restricted": "Ton rôle ne comprend pas les infos de la salle.",
+        "retry": "Réessayer"
+      },
+      "access": {
+        "title": "Ton accès",
+        "note": "SimpleFit vérifie chaque action pour cette salle. Aucun rôle de salle ne lit les données d’entraînement privées.",
+        "roles": {
+          "owner": "Cette salle t’appartient : ses infos, sa configuration et, plus tard, son équipe et ses membres.",
+          "manager": "Tu aides à gérer cette salle : ses infos, ses sites, son équipe et ses membres.",
+          "coach": "Tu coaches dans cette salle : tes cours et leurs listes de participants.",
+          "front_desk": "Tu tiens l’accueil : les check-ins, les réservations et les membres à l’accueil."
+        }
+      },
+      "limited": {
+        "title": "Ton tableau de bord",
+        "body": "Le tableau de bord du rôle {role} n’est pas encore disponible. Tu peux ouvrir cette salle ; ses outils arrivent avec leurs fonctionnalités."
+      },
+      "later": {
+        "title": "Bientôt dans ta salle",
+        "badge": "Plus tard",
+        "members": {
+          "title": "Membres",
+          "body": "Invite des membres et vois qui s’entraîne ici."
+        },
+        "schedule": {
+          "title": "Cours et planning",
+          "body": "Planifie les cours de ta semaine."
+        },
+        "attendance": {
+          "title": "Réservations et check-ins",
+          "body": "Réservations et check-ins de chaque cours."
+        },
+        "staff": {
+          "title": "Coachs et équipe",
+          "body": "Invite ton équipe et donne un rôle à chacun."
+        }
+      }
+    },
+    "states": {
+      "eyebrow": "Salle",
+      "notAvailable": {
+        "title": "Cette salle n’est pas disponible",
+        "body": "Elle n’existe pas, ou tu n’y travailles pas. Ouvre plutôt l’une de tes salles.",
+        "action": "Tes salles"
+      },
+      "restricted": {
+        "title": "Ton rôle ne comprend pas cela",
+        "body": "Tu travailles dans cette salle, mais cette partie ne fait pas partie de ton rôle. Demande au propriétaire de la salle si tu en as besoin.",
+        "action": "Retour au pouls de la salle"
+      },
+      "draft": {
+        "title": "Cette salle n’est pas encore configurée",
+        "body": "Elle s’ouvre une fois la configuration terminée. Reprends là où tu t’es arrêté.",
+        "bodyStaff": "Elle s’ouvre une fois que le propriétaire a terminé la configuration.",
+        "action": "Reprendre la configuration"
+      }
+    },
+    "chooser": {
+      "eyebrow": "Tes salles",
+      "title": "Quelle salle veux-tu ouvrir ?",
+      "lead": "Toutes les salles où tu travailles, sur un seul compte. Chacune ouvre son propre pouls.",
+      "gyms": "Salles",
+      "setup": "Configuration en cours",
+      "draftLine": "Pas encore configurée · seule la configuration continue",
+      "profiles": "Tes profils",
+      "more": "Afficher plus de salles ({count} au total)",
+      "moreFailed": "Impossible de charger d’autres salles. Réessaie.",
+      "empty": {
+        "title": "Tu ne travailles encore dans aucune salle",
+        "lead": "Inscris ta salle pour l’ouvrir ici. Les salles qui t’invitent apparaîtront ici.",
+        "action": "Inscrire ma salle"
+      }
+    }
   }
 }

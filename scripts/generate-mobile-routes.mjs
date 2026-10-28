@@ -4,7 +4,7 @@
  * registry (docs/route-registry.json, SF-31): the mobile routes with their
  * path, parameters, shell, parent, navigation type, status and complete
  * access (session, capability, phase, restrictedAccount), the shells'
- * navigation items, the mobile guards and the capabilities' mobile home and
+ * parameters and navigation items, the mobile guards and the capabilities' mobile home and
  * onboarding routes. Application code links through this module, never
  * through handwritten paths (route-architecture §14).
  *
@@ -49,6 +49,8 @@ export async function renderMobileRoutes(registry) {
     .map((shell) => ({
       id: shell.id,
       parent: shell.parent,
+      // The parameters an id-based shell supplies to its routes (the gym shell's gymId, SF-89).
+      params: shell.params ?? [],
       navItems: (shell.navItems ?? []).map((item) => ({
         key: item.key,
         route: item.route,

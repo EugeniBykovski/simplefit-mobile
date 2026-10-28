@@ -1,5 +1,5 @@
 import { CircleAlert } from "lucide-react-native";
-import { Modal, Pressable, View } from "react-native";
+import { Modal, Pressable, ScrollView, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 
@@ -8,9 +8,9 @@ import { Notice } from "@/shared/ui/notice";
 import { Spinner } from "@/shared/ui/spinner";
 import { Text } from "@/shared/ui/text";
 
-import type { ProfileContext } from "../model/contexts";
 import { isKnownEntry } from "../model/entry";
 import { ContextChooser } from "./context-chooser";
+import type { SwitchTarget } from "./context-switch";
 import { useEntry } from "./entry-redirect";
 
 const NO_CONTINUATION = {};
@@ -19,7 +19,8 @@ const NO_CONTINUATION = {};
  * A04 "One account, every role" (Claude Design Workspaces, mode `switch`,
  * version 1791994719-673f): the bottom sheet a home's identity pill opens.
  * It reads the entry fresh each time it opens, lists the account's profile
- * contexts with `current` checked, and closes with the backdrop, the current
+ * contexts and gym workspaces (SF-89) with `current` checked (a profile, or
+ * `gym:<id>` from a Gym pulse), and closes with the backdrop, the current
  * row, the Android back button or the iOS dismiss gesture. Choosing another
  * context leaves through the SF-51 entry (useContextSwitch).
  */
@@ -29,11 +30,12 @@ export function ContextSwitcherSheet({
   onClose,
 }: {
   visible: boolean;
-  current: ProfileContext;
+  current: SwitchTarget;
   onClose: () => void;
 }) {
   const t = useTranslations("contextSwitcher");
   const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
 
   return (
     <Modal
@@ -53,8 +55,12 @@ export function ContextSwitcherSheet({
         <View
           accessibilityViewIsModal
           className="gap-3.5 rounded-t-4xl border-t border-border-strong bg-surface px-5 pt-3"
-          // Runtime safe-area inset below the sheet's content.
-          style={{ paddingBottom: Math.max(insets.bottom, 16) + 18 }}
+          // Runtime safe-area insets: below the content, and the sheet never
+          // taller than the window under the status bar (its rows scroll).
+          style={{
+            paddingBottom: Math.max(insets.bottom, 16) + 18,
+            maxHeight: height - insets.top - 16,
+          }}
         >
           <View className="h-1.5 w-10 self-center rounded-full bg-border-strong" />
           <View className="gap-1.5 pt-1">
@@ -65,14 +71,16 @@ export function ContextSwitcherSheet({
               {t("switch.lead")}
             </Text>
           </View>
-          {visible ? <SheetBody current={current} onClose={onClose} /> : null}
+          <ScrollView className="flex-shrink" contentContainerClassName="gap-3.5">
+            {visible ? <SheetBody current={current} onClose={onClose} /> : null}
+          </ScrollView>
         </View>
       </View>
     </Modal>
   );
 }
 
-function SheetBody({ current, onClose }: { current: ProfileContext; onClose: () => void }) {
+function SheetBody({ current, onClose }: { current: SwitchTarget; onClose: () => void }) {
   const t = useTranslations("contextSwitcher");
   const query = useEntry(NO_CONTINUATION);
   const entry = query.data;

@@ -58,6 +58,9 @@ const entry = (destination: string, intent: string | null = null) =>
       fighter_profile: "not_started",
       coach_profile: "not_started",
       capabilities: [],
+      gym_id: null,
+      gym_workspaces: [],
+      gym_workspace_count: 0,
     },
   });
 const validation = (field_codes: Record<string, string[]>) =>

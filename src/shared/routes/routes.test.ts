@@ -12,7 +12,7 @@ import {
 describe("routeHref", () => {
   it("resolves static routes to their canonical path", () => {
     expect(routeHref("mobile.home")).toBe("/home");
-    expect(routeHref("mobile.gym.staff.on-shift")).toBe("/gym/staff/on-shift");
+    expect(routeHref("mobile.gyms")).toBe("/gyms");
     expect(routeHref("mobile.root")).toBe("/");
   });
 
@@ -51,7 +51,10 @@ describe("matchMobileRoute", () => {
     expect(matchMobileRoute("/coach/c1/services/s1")?.id).toBe(
       "mobile.coach._coach-id.services._service-id",
     );
-    expect(matchMobileRoute("/gym/pulse")?.id).toBe("mobile.gym.pulse");
+    // SF-89: the gym shell is id-based; the member side keeps /gym/:gymId (SF-91).
+    expect(matchMobileRoute("/gyms/g1/pulse")?.id).toBe("mobile.gyms._gym-id.pulse");
+    expect(matchMobileRoute("/gyms")?.id).toBe("mobile.gyms");
+    expect(matchMobileRoute("/gym/pulse")).toBeUndefined();
     expect(matchMobileRoute("/gym/g1/store")?.id).toBe("mobile.gym._gym-id.store");
     expect(matchMobileRoute("/shared-session/new")?.id).toBe("mobile.shared-session.new");
     expect(matchMobileRoute("/shared-session/s1")?.id).toBe(
@@ -71,11 +74,13 @@ describe("matchMobileRoute", () => {
 });
 
 describe("navigation items", () => {
-  it("only target routes that exist and need no parameters", () => {
+  it("only target routes that exist and need no parameters the shell does not supply", () => {
     for (const shell of mobileShells) {
       for (const item of shell.navItems) {
         const route = mobileRoutes.find((candidate) => candidate.id === item.route);
-        expect(route?.params).toEqual([]);
+        // The id-based gym shell supplies its routes' gymId (SF-89).
+        const supplied: readonly string[] = shell.params;
+        expect(route?.params.filter((param) => !supplied.includes(param))).toEqual([]);
         expect(route?.status).toBe("IMPLEMENTED");
       }
     }
@@ -85,7 +90,7 @@ describe("navigation items", () => {
 describe("isTabRoute", () => {
   it("is true only for a shell's own tab routes", () => {
     expect(isTabRoute("mobile.home")).toBe(true);
-    expect(isTabRoute("mobile.gym.staff.on-shift")).toBe(true);
+    expect(isTabRoute("mobile.gyms._gym-id.staff.on-shift")).toBe(true);
     expect(isTabRoute("mobile.camp")).toBe(false);
     // The coach Inbox targets the shared /messages, which is pushed above the tabs.
     expect(isTabRoute("mobile.messages")).toBe(false);

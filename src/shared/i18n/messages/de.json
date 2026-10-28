@@ -353,15 +353,15 @@
       "mobile/gym/_gym-id/memberships": "Gym-Mitgliedschaften",
       "mobile/gym/_gym-id/memberships/_membership-id": "Mitgliedschaft",
       "mobile/gym/_gym-id/store": "Gym-Shop",
-      "mobile/gym/announcements/new": "Neue Ankündigung",
-      "mobile/gym/check-in": "QR-Check-in",
-      "mobile/gym/classes": "Kurse",
-      "mobile/gym/classes/_class-id/roster": "Kursteilnehmer",
-      "mobile/gym/incidents/new": "Vorfall melden",
-      "mobile/gym/members": "Mitglieder",
-      "mobile/gym/members/_member-id": "Mitglied",
-      "mobile/gym/pulse": "Puls",
-      "mobile/gym/staff/on-shift": "Personal im Dienst",
+      "mobile/gyms/_gym-id/announcements/new": "Neue Ankündigung",
+      "mobile/gyms/_gym-id/check-in": "QR-Check-in",
+      "mobile/gyms/_gym-id/classes": "Kurse",
+      "mobile/gyms/_gym-id/classes/_class-id/roster": "Kursteilnehmer",
+      "mobile/gyms/_gym-id/incidents/new": "Vorfall melden",
+      "mobile/gyms/_gym-id/members": "Mitglieder",
+      "mobile/gyms/_gym-id/members/_member-id": "Mitglied",
+      "mobile/gyms/_gym-id/pulse": "Puls",
+      "mobile/gyms/_gym-id/staff/on-shift": "Personal im Dienst",
       "mobile/home": "Start",
       "mobile/invite/_code": "Einladung",
       "mobile/invite/coach/_token": "Trainer-Einladung vom Gym",
@@ -1335,13 +1335,21 @@
     "choose": {
       "eyebrow": "Deine Profile",
       "title": "Wohin möchtest du?",
-      "lead": "Du hast ein Fighter- und ein Coach-Profil in einem Konto."
+      "lead": "Du hast ein Fighter- und ein Coach-Profil in einem Konto.",
+      "leadMixed": "Deine Profile und Gyms liegen in einem Konto."
     },
     "setup": {
       "eyebrow": "Deine Einrichtung",
       "title": "Welche Einrichtung möchtest du fortsetzen?",
-      "lead": "Du hast mehr als eine begonnen. Wähle eine; die andere wartet auf dich."
-    }
+      "lead": "Du hast mehr als eine begonnen. Wähle eine; die andere wartet auf dich.",
+      "leadMixed": "Wähl eins; alles andere wartet auf dich."
+    },
+    "gyms": "Deine Gyms",
+    "gymLine": "{role} · Gym-Puls",
+    "gymSetup": "Gym-Einrichtung fortsetzen",
+    "gymDraftLine": "{name} · noch nicht eingerichtet",
+    "allGyms": "Alle Gyms ({count})",
+    "allGymsLine": "Jedes Gym, in dem du arbeitest"
   },
   "coachHome": {
     "loading": "Dein Coach-Profil wird geladen…",
@@ -2188,5 +2196,108 @@
       }
     },
     "back": "Zurück zu den Einladungen"
+  },
+  "gymShell": {
+    "announcement": "{name}, Gym-Puls",
+    "opening": "Gym wird geöffnet…",
+    "identity": "{name}, {role}. Gym oder Profil wechseln",
+    "settings": "Einstellungen",
+    "roles": {
+      "owner": "Inhaber",
+      "manager": "Manager",
+      "coach": "Coach",
+      "front_desk": "Empfang"
+    },
+    "pulse": {
+      "title": "Gym-Puls",
+      "eyebrow": "{date} · {where}",
+      "allLocations": "Alle Standorte",
+      "summary": {
+        "title": "Dein Gym",
+        "completed": "Einrichtung abgeschlossen"
+      },
+      "details": {
+        "title": "Gym-Angaben",
+        "address": "Adresse",
+        "phone": "Telefon",
+        "website": "Website",
+        "tagline": "Slogan",
+        "accent": "Akzentfarbe",
+        "none": "Nicht angegeben",
+        "loading": "Gym-Angaben werden geladen",
+        "failed": "Die Gym-Angaben konnten nicht geladen werden. Der Rest der Seite ist aktuell.",
+        "restricted": "Deine Rolle umfasst die Gym-Angaben nicht.",
+        "retry": "Erneut versuchen"
+      },
+      "access": {
+        "title": "Dein Zugang",
+        "note": "SimpleFit prüft jede Aktion für dieses Gym. Keine Gym-Rolle liest private Trainingsdaten.",
+        "roles": {
+          "owner": "Dir gehört dieses Gym: seine Angaben, die Einrichtung und später sein Team und seine Mitglieder.",
+          "manager": "Du leitest dieses Gym mit: seine Angaben, Standorte, das Team und die Mitglieder.",
+          "coach": "Du trainierst in diesem Gym: deine Kurse und ihre Teilnehmerlisten.",
+          "front_desk": "Du betreust den Empfang: Check-ins, Buchungen und Mitglieder am Empfang."
+        }
+      },
+      "limited": {
+        "title": "Dein Dashboard",
+        "body": "Das Dashboard für die Rolle {role} ist noch nicht verfügbar. Du kannst dieses Gym öffnen; seine Werkzeuge kommen mit ihren Funktionen."
+      },
+      "later": {
+        "title": "Bald in deinem Gym",
+        "badge": "Später",
+        "members": {
+          "title": "Mitglieder",
+          "body": "Lade Mitglieder ein und sieh, wer hier trainiert."
+        },
+        "schedule": {
+          "title": "Kurse & Stundenplan",
+          "body": "Plane Kurse für die ganze Woche."
+        },
+        "attendance": {
+          "title": "Buchungen & Check-ins",
+          "body": "Buchungen und Check-ins für jeden Kurs."
+        },
+        "staff": {
+          "title": "Coaches & Team",
+          "body": "Lade dein Team ein und gib jeder Person eine Rolle."
+        }
+      }
+    },
+    "states": {
+      "eyebrow": "Gym",
+      "notAvailable": {
+        "title": "Dieses Gym ist nicht verfügbar",
+        "body": "Es existiert nicht, oder du arbeitest dort nicht. Öffne stattdessen eines deiner Gyms.",
+        "action": "Deine Gyms"
+      },
+      "restricted": {
+        "title": "Deine Rolle umfasst das nicht",
+        "body": "Du arbeitest in diesem Gym, aber dieser Bereich gehört nicht zu deiner Rolle. Frag den Gym-Inhaber, wenn du ihn brauchst.",
+        "action": "Zurück zum Gym-Puls"
+      },
+      "draft": {
+        "title": "Dieses Gym ist noch nicht eingerichtet",
+        "body": "Es öffnet sich, sobald die Einrichtung abgeschlossen ist. Mach dort weiter, wo du aufgehört hast.",
+        "bodyStaff": "Es öffnet sich, sobald der Inhaber die Einrichtung abschließt.",
+        "action": "Einrichtung fortsetzen"
+      }
+    },
+    "chooser": {
+      "eyebrow": "Deine Gyms",
+      "title": "Welches Gym möchtest du öffnen?",
+      "lead": "Jedes Gym, in dem du arbeitest, in einem Konto. Jedes öffnet seinen eigenen Gym-Puls.",
+      "gyms": "Gyms",
+      "setup": "Einrichtung läuft",
+      "draftLine": "Noch nicht eingerichtet · nur die Einrichtung geht weiter",
+      "profiles": "Deine Profile",
+      "more": "Weitere Gyms anzeigen ({count} insgesamt)",
+      "moreFailed": "Weitere Gyms konnten nicht geladen werden. Versuch es noch einmal.",
+      "empty": {
+        "title": "Du arbeitest noch in keinem Gym",
+        "lead": "Registriere dein Gym, um es hier zu öffnen. Gyms, zu denen du eingeladen wirst, erscheinen hier.",
+        "action": "Gym registrieren"
+      }
+    }
   }
 }

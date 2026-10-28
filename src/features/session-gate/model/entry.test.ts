@@ -132,3 +132,34 @@ describe("SF-51 destinations (SF-52)", () => {
     expect(isKnownEntry(entry({ destination: "coach_onboarding" }))).toBe(true);
   });
 });
+
+describe("gym destinations (SF-89, ADR 0026 D-G23)", () => {
+  const GYM = "8d2e4f60-1a2b-4c3d-8e9f-a0b1c2d3e4f5";
+  const gymHome = entry({
+    destination: "gym_home",
+    reason: "last_context",
+    gym_id: GYM,
+    capabilities: ["GYM_WORKSPACE"],
+  });
+
+  it("opens the Gym pulse of the entry's gym_id", () => {
+    expect(isKnownEntry(gymHome)).toBe(true);
+    expect(entryHref(gymHome)).toBe(`/gyms/${GYM}/pulse`);
+    expect(entryHref(gymHome, { intent: "gym" })).toBe(`/gyms/${GYM}/pulse`);
+  });
+
+  it("never maps a gym_home without a gym id (a controlled failure, never a guess)", () => {
+    expect(isKnownEntry({ ...gymHome, gym_id: null })).toBe(false);
+  });
+
+  it("lands gym_selection on the gym chooser", () => {
+    expect(entryHref(entry({ destination: "gym_selection" }))).toBe("/gyms");
+  });
+
+  it("keeps a usable gym returnTo only while the entry reports GYM_WORKSPACE", () => {
+    const fighter = entry({ destination: "fighter_home", capabilities: ["FIGHTER"] });
+    expect(entryHref(fighter, { returnTo: `/gyms/${GYM}/pulse` })).toBe("/home");
+    const both = { ...fighter, capabilities: ["FIGHTER" as const, "GYM_WORKSPACE" as const] };
+    expect(entryHref(both, { returnTo: `/gyms/${GYM}/pulse` })).toBe(`/gyms/${GYM}/pulse`);
+  });
+});

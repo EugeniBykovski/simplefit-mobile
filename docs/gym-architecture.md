@@ -114,3 +114,15 @@ stale`); reread and retry. Completion and discard take no revision.
 
 Not in the contract yet: gym size and features (OG4/OG5, future with plans)
 and logo/cover uploads (waiting for a storage attachment mechanism).
+
+## SF-89: mobile gym shell
+
+The gym UI of the mobile app (`docs/gym-shell-mobile.md`): the id-based gym
+tabs `/gyms/:gymId/**` (D-G23) behind the GYM_WORKSPACE capability and the
+gym gate (`GET /api/v1/gyms/{gym_id}`: 404 not available, 403
+role-restricted, draft continues setup), G01 Gym pulse with real data only,
+gym rows in A04 (sheet and `/workspaces`), and the gym chooser `/gyms`
+(MGC1) where `gym_selection` lands. The profile-context type stays
+`fighter` / `coach`; a gym is a switch target `gym:<id>` and is opened by
+recording `PUT /api/v1/me/entry/context` with its `gym_id`. No API, model or
+storage change.
