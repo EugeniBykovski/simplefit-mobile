@@ -353,15 +353,15 @@
       "mobile/gym/_gym-id/memberships": "Gym memberships",
       "mobile/gym/_gym-id/memberships/_membership-id": "Membership",
       "mobile/gym/_gym-id/store": "Gym store",
-      "mobile/gym/announcements/new": "New announcement",
-      "mobile/gym/check-in": "QR check-in",
-      "mobile/gym/classes": "Classes",
-      "mobile/gym/classes/_class-id/roster": "Class roster",
-      "mobile/gym/incidents/new": "Report an incident",
-      "mobile/gym/members": "Members",
-      "mobile/gym/members/_member-id": "Member",
-      "mobile/gym/pulse": "Pulse",
-      "mobile/gym/staff/on-shift": "Staff on shift",
+      "mobile/gyms/_gym-id/announcements/new": "New announcement",
+      "mobile/gyms/_gym-id/check-in": "QR check-in",
+      "mobile/gyms/_gym-id/classes": "Classes",
+      "mobile/gyms/_gym-id/classes/_class-id/roster": "Class roster",
+      "mobile/gyms/_gym-id/incidents/new": "Report an incident",
+      "mobile/gyms/_gym-id/members": "Members",
+      "mobile/gyms/_gym-id/members/_member-id": "Member",
+      "mobile/gyms/_gym-id/pulse": "Pulse",
+      "mobile/gyms/_gym-id/staff/on-shift": "Staff on shift",
       "mobile/home": "Home",
       "mobile/invite/_code": "Invitation",
       "mobile/invite/coach/_token": "Coach invitation from a gym",
@@ -1335,13 +1335,21 @@
     "choose": {
       "eyebrow": "Your profiles",
       "title": "Where do you want to go?",
-      "lead": "You have a fighter and a coach profile on one account."
+      "lead": "You have a fighter and a coach profile on one account.",
+      "leadMixed": "Your profiles and gyms live on one account."
     },
     "setup": {
       "eyebrow": "Your setup",
       "title": "Which setup do you want to continue?",
-      "lead": "You started more than one. Pick one; the other waits for you."
-    }
+      "lead": "You started more than one. Pick one; the other waits for you.",
+      "leadMixed": "Pick one; everything else waits for you."
+    },
+    "gyms": "Your gyms",
+    "gymLine": "{role} · Gym pulse",
+    "gymSetup": "Continue gym setup",
+    "gymDraftLine": "{name} · not set up yet",
+    "allGyms": "All gyms ({count})",
+    "allGymsLine": "Every gym you work at"
   },
   "coachHome": {
     "loading": "Loading your coach profile…",
@@ -2188,5 +2196,108 @@
       }
     },
     "back": "Back to invitations"
+  },
+  "gymShell": {
+    "announcement": "{name}, Gym pulse",
+    "opening": "Opening the gym…",
+    "identity": "{name}, {role}. Switch gym or profile",
+    "settings": "Settings",
+    "roles": {
+      "owner": "Owner",
+      "manager": "Manager",
+      "coach": "Coach",
+      "front_desk": "Front desk"
+    },
+    "pulse": {
+      "title": "Gym pulse",
+      "eyebrow": "{date} · {where}",
+      "allLocations": "All locations",
+      "summary": {
+        "title": "Your gym",
+        "completed": "Setup complete"
+      },
+      "details": {
+        "title": "Gym details",
+        "address": "Address",
+        "phone": "Phone",
+        "website": "Website",
+        "tagline": "Tagline",
+        "accent": "Accent colour",
+        "none": "Not added",
+        "loading": "Loading the gym details",
+        "failed": "We couldn’t load the gym details. The rest of the page is up to date.",
+        "restricted": "Your role doesn’t include the gym details.",
+        "retry": "Try again"
+      },
+      "access": {
+        "title": "Your access",
+        "note": "Each action is checked by SimpleFit for this gym. No gym role reads anyone’s private training data.",
+        "roles": {
+          "owner": "You own this gym: its details, setup and, later, its team and members.",
+          "manager": "You help run this gym: its details, locations, team and members.",
+          "coach": "You coach at this gym: your classes and their rosters.",
+          "front_desk": "You run the front desk: check-ins, bookings and members at the desk."
+        }
+      },
+      "limited": {
+        "title": "Your dashboard",
+        "body": "The {role} dashboard isn’t available yet. You can open this gym; its tools arrive with their features."
+      },
+      "later": {
+        "title": "Coming to your gym",
+        "badge": "Later",
+        "members": {
+          "title": "Members",
+          "body": "Invite members and see who trains here."
+        },
+        "schedule": {
+          "title": "Classes & timetable",
+          "body": "Plan classes across your week."
+        },
+        "attendance": {
+          "title": "Bookings & check-ins",
+          "body": "Bookings and check-ins for each class."
+        },
+        "staff": {
+          "title": "Coaches & staff",
+          "body": "Invite your team and give each person a role."
+        }
+      }
+    },
+    "states": {
+      "eyebrow": "Gym",
+      "notAvailable": {
+        "title": "This gym isn’t available",
+        "body": "It doesn’t exist, or you don’t work there. Open one of your own gyms instead.",
+        "action": "Your gyms"
+      },
+      "restricted": {
+        "title": "Your role doesn’t include this",
+        "body": "You work at this gym, but this part of it isn’t part of your role. Ask the gym owner if you need it.",
+        "action": "Back to Gym pulse"
+      },
+      "draft": {
+        "title": "This gym isn’t set up yet",
+        "body": "It opens once setup is complete. Continue where you left off.",
+        "bodyStaff": "It opens once the owner completes setup.",
+        "action": "Continue setup"
+      }
+    },
+    "chooser": {
+      "eyebrow": "Your gyms",
+      "title": "Which gym do you want to open?",
+      "lead": "Every gym you work at, on one account. Each opens its own Gym pulse.",
+      "gyms": "Gyms",
+      "setup": "Setup in progress",
+      "draftLine": "Not set up yet · only setup continues",
+      "profiles": "Your profiles",
+      "more": "Show more gyms ({count} in total)",
+      "moreFailed": "We couldn’t load more gyms. Try again.",
+      "empty": {
+        "title": "You don’t work at a gym yet",
+        "lead": "Register your gym to open it here. Gyms you are invited to will appear here.",
+        "action": "Register your gym"
+      }
+    }
   }
 }

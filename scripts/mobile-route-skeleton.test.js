@@ -56,6 +56,9 @@ const REAL_SCREENS = [
   // SF-66: FT1 Training and FT2 Session.
   "mobile.training",
   "mobile.sessions._session-id",
+  // SF-89: G01 Gym pulse and the gym chooser (MGC1).
+  "mobile.gyms._gym-id.pulse",
+  "mobile.gyms",
 ];
 
 const placeholderSource = (id) => `import { placeholderRoute } from "@/widgets/feature-placeholder";
@@ -103,11 +106,11 @@ const TAB_SECTIONS = {
     requests: ["mobile.coach.requests", "mobile.coach.sparring"],
   },
   "mobile.gym": {
-    pulse: ["mobile.gym.pulse"],
-    classes: ["mobile.gym.classes", "mobile.gym.classes._class-id.roster"],
-    checkin: ["mobile.gym.check-in"],
-    members: ["mobile.gym.members", "mobile.gym.members._member-id"],
-    staff: ["mobile.gym.staff.on-shift"],
+    pulse: ["mobile.gyms._gym-id.pulse"],
+    classes: ["mobile.gyms._gym-id.classes", "mobile.gyms._gym-id.classes._class-id.roster"],
+    checkin: ["mobile.gyms._gym-id.check-in"],
+    members: ["mobile.gyms._gym-id.members", "mobile.gyms._gym-id.members._member-id"],
+    staff: ["mobile.gyms._gym-id.staff.on-shift"],
   },
 };
 const tabOf = (route) =>
@@ -152,8 +155,8 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 32, catchAll: 1, placeholder: 116, deferred: 1 });
-    expect(routes).toHaveLength(150);
+    expect(counts).toEqual({ screen: 34, catchAll: 1, placeholder: 115, deferred: 1 });
+    expect(routes).toHaveLength(151);
   });
 
   it("makes placeholder files exactly the canonical placeholder module for their own route", () => {
@@ -404,7 +407,13 @@ describe("tab stack roots", () => {
     const titles = JSON.parse(read("src/shared/i18n/messages/en.json")).routes.titles;
     const missing = layouts
       .map((file) => read(file).match(/initialRouteName: "([^"]+)"/)[1])
-      .map((name) => `mobile/${name.replace(/\/index$/, "")}`)
+      // A parameter segment reads as in the route id: gyms/[gymId]/pulse -> gyms/_gym-id/pulse.
+      .map((name) =>
+        `mobile/${name.replace(/\/index$/, "")}`.replace(
+          /\[([^\]]+)\]/g,
+          (_match, param) => `_${param.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`,
+        ),
+      )
       .filter((key) => !titles[key]);
     expect(layouts.length).toBeGreaterThan(0);
     expect(missing).toEqual([]);

@@ -1,12 +1,19 @@
 export { contextOptions, type ProfileContext } from "./model/contexts";
 export { chooseEntryContext } from "./model/entry-context";
 export { entryHref, fetchEntry, isKnownEntry, type Entry, type KnownEntry } from "./model/entry";
+export { gymWorkspaceOptions, type GymWorkspace } from "./model/gyms";
 export { CapabilityGate } from "./ui/capability-gate";
 export { ContextChooser, type ChooserMode } from "./ui/context-chooser";
-export { useContextSwitch, type ContextSwitchState } from "./ui/context-switch";
+export {
+  gymTarget,
+  useContextSwitch,
+  type ContextSwitchState,
+  type SwitchTarget,
+} from "./ui/context-switch";
 export { ContextSwitcherSheet } from "./ui/context-switcher-sheet";
 export { useEntryChoice, type EntryChoiceState } from "./ui/entry-choice";
 export { EntryRedirect, useEntry, useEntryFailure } from "./ui/entry-redirect";
+export { GymChooser } from "./ui/gym-chooser";
 export { OnboardingGate } from "./ui/onboarding-gate";
 export { SessionGate } from "./ui/session-gate";
 export { ContextSelection } from "./ui/context-selection";

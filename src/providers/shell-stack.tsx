@@ -56,6 +56,20 @@ function ParentBack() {
 }
 
 /**
+ * The route-title key of a tab root: its route id's segments, so the gym
+ * tabs' `gyms/[gymId]/pulse` reads `mobile/gyms/_gym-id/pulse`.
+ */
+export function rootTitleKey(root: string) {
+  const path = root
+    .replace(/\/index$/, "")
+    .replace(
+      /\[([^\]]+)\]/g,
+      (_match, name: string) => `_${name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`,
+    );
+  return `mobile/${path}` as keyof Messages["routes"]["titles"];
+}
+
+/**
  * The stack of one tab (`(<shell>)/(tabs)/(<tab>)/_layout.tsx`): the tab's
  * root route without a header (the tab bar is its navigation) and the
  * screens the design shows inside that tab, pushed with the tab bar still
@@ -71,9 +85,7 @@ export function TabStack({ root }: { root: string }) {
         name={root}
         options={{
           headerShown: false,
-          title: titles(
-            `mobile/${root.replace(/\/index$/, "")}` as keyof Messages["routes"]["titles"],
-          ),
+          title: titles(rootTitleKey(root)),
         }}
       />
     </Stack>

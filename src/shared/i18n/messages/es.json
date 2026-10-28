@@ -353,15 +353,15 @@
       "mobile/gym/_gym-id/memberships": "Membresías del gimnasio",
       "mobile/gym/_gym-id/memberships/_membership-id": "Membresía",
       "mobile/gym/_gym-id/store": "Tienda del gimnasio",
-      "mobile/gym/announcements/new": "Nuevo anuncio",
-      "mobile/gym/check-in": "Registro con QR",
-      "mobile/gym/classes": "Clases",
-      "mobile/gym/classes/_class-id/roster": "Lista de la clase",
-      "mobile/gym/incidents/new": "Informar de un incidente",
-      "mobile/gym/members": "Miembros",
-      "mobile/gym/members/_member-id": "Miembro",
-      "mobile/gym/pulse": "Pulso",
-      "mobile/gym/staff/on-shift": "Personal en turno",
+      "mobile/gyms/_gym-id/announcements/new": "Nuevo anuncio",
+      "mobile/gyms/_gym-id/check-in": "Registro con QR",
+      "mobile/gyms/_gym-id/classes": "Clases",
+      "mobile/gyms/_gym-id/classes/_class-id/roster": "Lista de la clase",
+      "mobile/gyms/_gym-id/incidents/new": "Informar de un incidente",
+      "mobile/gyms/_gym-id/members": "Miembros",
+      "mobile/gyms/_gym-id/members/_member-id": "Miembro",
+      "mobile/gyms/_gym-id/pulse": "Pulso",
+      "mobile/gyms/_gym-id/staff/on-shift": "Personal en turno",
       "mobile/home": "Inicio",
       "mobile/invite/_code": "Invitación",
       "mobile/invite/coach/_token": "Invitación de gimnasio para entrenador",
@@ -1335,13 +1335,21 @@
     "choose": {
       "eyebrow": "Tus perfiles",
       "title": "¿A dónde quieres ir?",
-      "lead": "Tienes un perfil de boxeador y otro de entrenador en una sola cuenta."
+      "lead": "Tienes un perfil de boxeador y otro de entrenador en una sola cuenta.",
+      "leadMixed": "Tus perfiles y gimnasios están en una sola cuenta."
     },
     "setup": {
       "eyebrow": "Tu registro",
       "title": "¿Qué registro quieres continuar?",
-      "lead": "Empezaste más de uno. Elige uno; el otro te espera."
-    }
+      "lead": "Empezaste más de uno. Elige uno; el otro te espera.",
+      "leadMixed": "Elige uno; lo demás te espera."
+    },
+    "gyms": "Tus gimnasios",
+    "gymLine": "{role} · pulso del gimnasio",
+    "gymSetup": "Continuar la configuración del gimnasio",
+    "gymDraftLine": "{name} · aún sin configurar",
+    "allGyms": "Todos los gimnasios ({count})",
+    "allGymsLine": "Todos los gimnasios en los que trabajas"
   },
   "coachHome": {
     "loading": "Cargando tu perfil de entrenador…",
@@ -2188,5 +2196,108 @@
       }
     },
     "back": "Volver a las invitaciones"
+  },
+  "gymShell": {
+    "announcement": "{name}, pulso del gimnasio",
+    "opening": "Abriendo el gimnasio…",
+    "identity": "{name}, {role}. Cambiar de gimnasio o de perfil",
+    "settings": "Ajustes",
+    "roles": {
+      "owner": "Propietario",
+      "manager": "Gerente",
+      "coach": "Entrenador",
+      "front_desk": "Recepción"
+    },
+    "pulse": {
+      "title": "Pulso del gimnasio",
+      "eyebrow": "{date} · {where}",
+      "allLocations": "Todas las sedes",
+      "summary": {
+        "title": "Tu gimnasio",
+        "completed": "Configuración completa"
+      },
+      "details": {
+        "title": "Datos del gimnasio",
+        "address": "Dirección",
+        "phone": "Teléfono",
+        "website": "Sitio web",
+        "tagline": "Eslogan",
+        "accent": "Color de acento",
+        "none": "Sin añadir",
+        "loading": "Cargando los datos del gimnasio",
+        "failed": "No pudimos cargar los datos del gimnasio. El resto de la página está al día.",
+        "restricted": "Tu rol no incluye los datos del gimnasio.",
+        "retry": "Intentar de nuevo"
+      },
+      "access": {
+        "title": "Tu acceso",
+        "note": "SimpleFit comprueba cada acción para este gimnasio. Ningún rol del gimnasio lee datos de entrenamiento privados.",
+        "roles": {
+          "owner": "Eres el propietario de este gimnasio: sus datos, su configuración y, más adelante, su equipo y sus miembros.",
+          "manager": "Ayudas a dirigir este gimnasio: sus datos, sedes, equipo y miembros.",
+          "coach": "Entrenas en este gimnasio: tus clases y sus listas.",
+          "front_desk": "Llevas la recepción: check-ins, reservas y miembros en recepción."
+        }
+      },
+      "limited": {
+        "title": "Tu panel",
+        "body": "El panel del rol {role} aún no está disponible. Puedes abrir este gimnasio; sus herramientas llegan con sus funciones."
+      },
+      "later": {
+        "title": "Pronto en tu gimnasio",
+        "badge": "Más adelante",
+        "members": {
+          "title": "Miembros",
+          "body": "Invita a miembros y mira quién entrena aquí."
+        },
+        "schedule": {
+          "title": "Clases y horario",
+          "body": "Planifica las clases de toda la semana."
+        },
+        "attendance": {
+          "title": "Reservas y check-ins",
+          "body": "Reservas y check-ins de cada clase."
+        },
+        "staff": {
+          "title": "Entrenadores y equipo",
+          "body": "Invita a tu equipo y da un rol a cada persona."
+        }
+      }
+    },
+    "states": {
+      "eyebrow": "Gimnasio",
+      "notAvailable": {
+        "title": "Este gimnasio no está disponible",
+        "body": "No existe o no trabajas en él. Abre uno de tus gimnasios.",
+        "action": "Tus gimnasios"
+      },
+      "restricted": {
+        "title": "Tu rol no incluye esto",
+        "body": "Trabajas en este gimnasio, pero esta parte no forma parte de tu rol. Pídesela al propietario del gimnasio si la necesitas.",
+        "action": "Volver al pulso del gimnasio"
+      },
+      "draft": {
+        "title": "Este gimnasio aún no está configurado",
+        "body": "Se abre cuando termine la configuración. Continúa donde lo dejaste.",
+        "bodyStaff": "Se abre cuando el propietario termine la configuración.",
+        "action": "Continuar la configuración"
+      }
+    },
+    "chooser": {
+      "eyebrow": "Tus gimnasios",
+      "title": "¿Qué gimnasio quieres abrir?",
+      "lead": "Todos los gimnasios en los que trabajas, en una sola cuenta. Cada uno abre su propio pulso.",
+      "gyms": "Gimnasios",
+      "setup": "Configuración en curso",
+      "draftLine": "Aún sin configurar · solo continúa la configuración",
+      "profiles": "Tus perfiles",
+      "more": "Mostrar más gimnasios ({count} en total)",
+      "moreFailed": "No pudimos cargar más gimnasios. Inténtalo de nuevo.",
+      "empty": {
+        "title": "Todavía no trabajas en ningún gimnasio",
+        "lead": "Registra tu gimnasio para abrirlo aquí. Los gimnasios que te inviten aparecerán aquí.",
+        "action": "Registrar mi gimnasio"
+      }
+    }
   }
 }

@@ -19,12 +19,14 @@ describe("FeaturePlaceholder", () => {
   });
 
   it("offers no controls, links or data", async () => {
-    await renderWithProviders(<FeaturePlaceholder routeId="mobile.gym.members._member-id" />);
+    await renderWithProviders(
+      <FeaturePlaceholder routeId="mobile.gyms._gym-id.members._member-id" />,
+    );
 
     expect(screen.queryAllByRole("button")).toEqual([]);
     expect(screen.queryAllByRole("link")).toEqual([]);
     expect(screen.queryAllByRole("textbox")).toEqual([]);
-    expect(screen.getByLabelText("Route: /gym/members/:memberId")).toBeOnTheScreen();
+    expect(screen.getByLabelText("Route: /gyms/:gymId/members/:memberId")).toBeOnTheScreen();
   });
 
   it("is localized", async () => {

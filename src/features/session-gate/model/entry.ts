@@ -48,9 +48,14 @@ export function knowsDestination(destination: string): destination is KnownDesti
   return Object.hasOwn(mobileGuards.entryDestinations, destination);
 }
 
-/** Whether this client maps the entry's destination (see `knowsDestination`). */
+/**
+ * Whether this client maps the entry's destination (see `knowsDestination`)
+ * and the entry names what that route needs: `gym_home` opens the Gym pulse
+ * of the entry's `gym_id` (SF-89), so a `gym_home` without one is not mapped.
+ */
 export function isKnownEntry(entry: Entry): entry is KnownEntry {
-  return knowsDestination(entry.destination);
+  if (!knowsDestination(entry.destination)) return false;
+  return destinationParams(entry as KnownEntry) !== undefined;
 }
 
 /**
@@ -61,6 +66,21 @@ export function isKnownEntry(entry: Entry): entry is KnownEntry {
  */
 export function destinationRoute(destination: KnownDestination): MobileRouteId {
   return mobileGuards.entryDestinations[destination];
+}
+
+/**
+ * The route parameters of the entry's destination: the gym shell is
+ * id-based (`/gyms/:gymId/pulse`, ADR 0026 D-G23) and names the entry's
+ * `gym_id`. Undefined when the entry lacks a parameter its route needs.
+ */
+export function destinationParams(entry: KnownEntry): Record<string, string> | undefined {
+  const needed: readonly string[] = mobileRoute(destinationRoute(entry.destination)).params;
+  const params: Record<string, string> = {};
+  for (const name of needed) {
+    if (name !== "gymId" || entry.gym_id === null) return undefined;
+    params[name] = entry.gym_id;
+  }
+  return params;
 }
 
 /**
@@ -104,7 +124,11 @@ export function entryHref(entry: KnownEntry, continuation: Continuation = {}): H
   }
 
   const carries = mobileRoute(target).phase === "ONBOARDING";
-  return routeHref(target, {}, carries ? continuationQuery(continuation) : {});
+  return routeHref(
+    target,
+    destinationParams(entry) ?? {},
+    carries ? continuationQuery(continuation) : {},
+  );
 }
 
 /** The resolver request for a continuation: only its validated intent is sent. */

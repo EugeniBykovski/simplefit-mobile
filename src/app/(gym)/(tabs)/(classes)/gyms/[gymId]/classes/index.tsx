@@ -1,3 +1,3 @@
 import { placeholderRoute } from "@/widgets/feature-placeholder";
 
-export default placeholderRoute("mobile.gym.check-in");
+export default placeholderRoute("mobile.gyms._gym-id.classes");

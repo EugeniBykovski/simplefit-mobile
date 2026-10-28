@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useGlobalSearchParams, useRouter } from "expo-router";
 import type { LucideIcon } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,7 +18,8 @@ type ShellMessageKey = {
 
 /**
  * The floating tab bar of a role shell (FighterTabs, CoachTabs, GymTabs).
- * Items and targets are the registry's `navItems`. Each tab is a stack
+ * Items and targets are the registry's `navItems` (or the shell's production
+ * bar, `items`). Each tab is a stack
  * group named after its item key (`(tabs)/(profile)`), so the active item is
  * the focused tab group: the tab root or any screen the design shows inside
  * that tab. An item whose route lives in another shell (the coach Inbox
@@ -31,6 +32,15 @@ export function ShellTabBar({ shell, focusedTab }: { shell: TabShell; focusedTab
   const insets = useSafeAreaInsets();
   const config = tabNavigation[shell];
   const active = focusedTab?.match(/^\((.+)\)$/)?.[1];
+  // An id-based shell (the gym shell's gymId, SF-89) links its tabs with the
+  // parameters of the focused route: the tabs stay inside the same gym.
+  const search = useGlobalSearchParams();
+  const params = Object.fromEntries(
+    mobileShell(config.shell).params.flatMap((name) => {
+      const value = search[name];
+      return typeof value === "string" ? [[name, value]] : [];
+    }),
+  );
 
   return (
     <View
@@ -63,7 +73,7 @@ export function ShellTabBar({ shell, focusedTab }: { shell: TabShell; focusedTab
                   : () =>
                       // A route of another shell (the shared Settings) is pushed above the tabs.
                       mobileRoute(route).shell === config.shell
-                        ? router.navigate(routeHref(route))
+                        ? router.navigate(routeHref(route, params))
                         : router.push(routeHref(route))
               }
             />
@@ -116,6 +126,10 @@ function TabItem({
           className="absolute bottom-0.5"
           importantForAccessibility="no"
           accessibilityElementsHidden
+          // Decorative (the button is announced as not available): it never
+          // outgrows the 48 pt button at large text sizes.
+          numberOfLines={1}
+          maxFontSizeMultiplier={1}
         >
           {soonBadge}
         </Text>

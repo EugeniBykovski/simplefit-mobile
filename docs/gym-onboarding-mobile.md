@@ -111,7 +111,8 @@ stale` writes nothing, re-reads the setup and keeps the edits; only "Save my
   what was saved). OG6b shows only after the API answered `completed` in this
   session. "Go to gym" records `PUT /me/entry/context` (`context: gym`,
   `gym_id`) and asks the entry with `intent=gym`, which opens `gym_home`
-  (`/gym/pulse`, the gym shell's current placeholder). A gym completed
+  (the Gym pulse of that gym, `/gyms/:gymId/pulse`, since SF-89:
+  `docs/gym-shell-mobile.md`). A gym completed
   elsewhere leaves through the entry on the next foreground re-read.
 - **Save & exit** (the header's text action) saves every step's unsaved
   edits, never completes or discards, then asks the entry where to go; when

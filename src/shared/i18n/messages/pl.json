@@ -353,15 +353,15 @@
       "mobile/gym/_gym-id/memberships": "Karnety klubu",
       "mobile/gym/_gym-id/memberships/_membership-id": "Karnet",
       "mobile/gym/_gym-id/store": "Sklep klubu",
-      "mobile/gym/announcements/new": "Nowe ogłoszenie",
-      "mobile/gym/check-in": "Wejście z kodem QR",
-      "mobile/gym/classes": "Zajęcia",
-      "mobile/gym/classes/_class-id/roster": "Lista uczestników zajęć",
-      "mobile/gym/incidents/new": "Zgłoś incydent",
-      "mobile/gym/members": "Członkowie",
-      "mobile/gym/members/_member-id": "Członek",
-      "mobile/gym/pulse": "Puls",
-      "mobile/gym/staff/on-shift": "Personel na zmianie",
+      "mobile/gyms/_gym-id/announcements/new": "Nowe ogłoszenie",
+      "mobile/gyms/_gym-id/check-in": "Wejście z kodem QR",
+      "mobile/gyms/_gym-id/classes": "Zajęcia",
+      "mobile/gyms/_gym-id/classes/_class-id/roster": "Lista uczestników zajęć",
+      "mobile/gyms/_gym-id/incidents/new": "Zgłoś incydent",
+      "mobile/gyms/_gym-id/members": "Członkowie",
+      "mobile/gyms/_gym-id/members/_member-id": "Członek",
+      "mobile/gyms/_gym-id/pulse": "Puls",
+      "mobile/gyms/_gym-id/staff/on-shift": "Personel na zmianie",
       "mobile/home": "Start",
       "mobile/invite/_code": "Zaproszenie",
       "mobile/invite/coach/_token": "Zaproszenie trenera do klubu",
@@ -1335,13 +1335,21 @@
     "choose": {
       "eyebrow": "Twoje profile",
       "title": "Dokąd chcesz przejść?",
-      "lead": "Masz profil zawodnika i profil trenera na jednym koncie."
+      "lead": "Masz profil zawodnika i profil trenera na jednym koncie.",
+      "leadMixed": "Twoje profile i kluby są na jednym koncie."
     },
     "setup": {
       "eyebrow": "Twoja rejestracja",
       "title": "Którą rejestrację chcesz dokończyć?",
-      "lead": "Zacząłeś więcej niż jedną. Wybierz jedną; druga na Ciebie poczeka."
-    }
+      "lead": "Zacząłeś więcej niż jedną. Wybierz jedną; druga na Ciebie poczeka.",
+      "leadMixed": "Wybierz jedno; reszta na Ciebie poczeka."
+    },
+    "gyms": "Twoje kluby",
+    "gymLine": "{role} · puls klubu",
+    "gymSetup": "Dokończ konfigurację klubu",
+    "gymDraftLine": "{name} · jeszcze nieskonfigurowany",
+    "allGyms": "Wszystkie kluby ({count})",
+    "allGymsLine": "Każdy klub, w którym pracujesz"
   },
   "coachHome": {
     "loading": "Wczytujemy Twój profil trenera…",
@@ -2188,5 +2196,108 @@
       }
     },
     "back": "Wróć do zaproszeń"
+  },
+  "gymShell": {
+    "announcement": "{name}, puls klubu",
+    "opening": "Otwieramy klub…",
+    "identity": "{name}, {role}. Zmień klub lub profil",
+    "settings": "Ustawienia",
+    "roles": {
+      "owner": "Właściciel",
+      "manager": "Menedżer",
+      "coach": "Trener",
+      "front_desk": "Recepcja"
+    },
+    "pulse": {
+      "title": "Puls klubu",
+      "eyebrow": "{date} · {where}",
+      "allLocations": "Wszystkie lokalizacje",
+      "summary": {
+        "title": "Twój klub",
+        "completed": "Konfiguracja zakończona"
+      },
+      "details": {
+        "title": "Dane klubu",
+        "address": "Adres",
+        "phone": "Telefon",
+        "website": "Strona internetowa",
+        "tagline": "Hasło",
+        "accent": "Kolor akcentu",
+        "none": "Nie dodano",
+        "loading": "Wczytywanie danych klubu",
+        "failed": "Nie udało się wczytać danych klubu. Reszta strony jest aktualna.",
+        "restricted": "Twoja rola nie obejmuje danych klubu.",
+        "retry": "Spróbuj ponownie"
+      },
+      "access": {
+        "title": "Twój dostęp",
+        "note": "SimpleFit sprawdza każde działanie dla tego klubu. Żadna rola w klubie nie odczytuje prywatnych danych treningowych.",
+        "roles": {
+          "owner": "Jesteś właścicielem tego klubu: jego danych, konfiguracji, a później także zespołu i członków.",
+          "manager": "Pomagasz prowadzić ten klub: jego dane, lokalizacje, zespół i członków.",
+          "coach": "Trenujesz w tym klubie: swoje zajęcia i ich listy uczestników.",
+          "front_desk": "Prowadzisz recepcję: wejścia, rezerwacje i członków przy recepcji."
+        }
+      },
+      "limited": {
+        "title": "Twój panel",
+        "body": "Panel dla roli {role} nie jest jeszcze dostępny. Możesz otworzyć ten klub; jego narzędzia pojawią się wraz z ich funkcjami."
+      },
+      "later": {
+        "title": "Wkrótce w Twoim klubie",
+        "badge": "Później",
+        "members": {
+          "title": "Członkowie",
+          "body": "Zapraszaj członków i sprawdzaj, kto tu trenuje."
+        },
+        "schedule": {
+          "title": "Zajęcia i grafik",
+          "body": "Planuj zajęcia na cały tydzień."
+        },
+        "attendance": {
+          "title": "Rezerwacje i wejścia",
+          "body": "Rezerwacje i wejścia na każde zajęcia."
+        },
+        "staff": {
+          "title": "Trenerzy i personel",
+          "body": "Zaproś zespół i nadaj każdemu rolę."
+        }
+      }
+    },
+    "states": {
+      "eyebrow": "Klub",
+      "notAvailable": {
+        "title": "Ten klub jest niedostępny",
+        "body": "Nie istnieje albo w nim nie pracujesz. Otwórz jeden ze swoich klubów.",
+        "action": "Twoje kluby"
+      },
+      "restricted": {
+        "title": "Twoja rola tego nie obejmuje",
+        "body": "Pracujesz w tym klubie, ale ta część nie należy do Twojej roli. Jeśli jej potrzebujesz, zapytaj właściciela klubu.",
+        "action": "Wróć do pulsu klubu"
+      },
+      "draft": {
+        "title": "Ten klub nie jest jeszcze skonfigurowany",
+        "body": "Otworzy się po zakończeniu konfiguracji. Kontynuuj tam, gdzie skończyłeś.",
+        "bodyStaff": "Otworzy się, gdy właściciel zakończy konfigurację.",
+        "action": "Kontynuuj konfigurację"
+      }
+    },
+    "chooser": {
+      "eyebrow": "Twoje kluby",
+      "title": "Który klub chcesz otworzyć?",
+      "lead": "Każdy klub, w którym pracujesz, na jednym koncie. Każdy ma własny puls klubu.",
+      "gyms": "Kluby",
+      "setup": "Konfiguracja w toku",
+      "draftLine": "Jeszcze nieskonfigurowany · można tylko dokończyć konfigurację",
+      "profiles": "Twoje profile",
+      "more": "Pokaż więcej klubów (łącznie {count})",
+      "moreFailed": "Nie udało się wczytać kolejnych klubów. Spróbuj ponownie.",
+      "empty": {
+        "title": "Nie pracujesz jeszcze w żadnym klubie",
+        "lead": "Zarejestruj swój klub, aby otworzyć go tutaj. Kluby, do których zostaniesz zaproszony, pojawią się tutaj.",
+        "action": "Zarejestruj klub"
+      }
+    }
   }
 }

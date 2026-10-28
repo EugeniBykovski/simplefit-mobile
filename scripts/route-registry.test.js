@@ -670,16 +670,17 @@ describe("entry resolution (SF-45, design 1791448557-b0b9)", () => {
       web: "web.app.onboarding.account",
       mobile: "mobile.signup.consent",
     });
-    // SF-84: the gym home is the GYM_WORKSPACE home: on the web the id-based
-    // console of the entry's gym_id (SF-88, D-G23). The gym chooser is the web
-    // gym chooser (SF-88) and A04 on mobile.
+    // SF-84: the gym home is the GYM_WORKSPACE home of the entry's gym_id,
+    // id-based on both platforms (ADR 0026 D-G23): the web console (SF-88) and
+    // the mobile Gym pulse (SF-89). The gym chooser is each platform's gym
+    // chooser (WGC1, MGC1).
     expect(entryDestinations.gym_home).toEqual({
       web: "web.app.gyms._gym-id",
-      mobile: "mobile.gym.pulse",
+      mobile: "mobile.gyms._gym-id.pulse",
     });
     expect(entryDestinations.gym_selection).toEqual({
       web: "web.app.gyms",
-      mobile: entryDestinations.context_selection.mobile,
+      mobile: "mobile.gyms",
     });
     expect(entryDestinations.role_selection).toEqual({
       web: "web.app.onboarding.role",
@@ -727,6 +728,7 @@ describe("entry resolution (SF-45, design 1791448557-b0b9)", () => {
       ["web.app.home", "FIGHTER"],
       ["web.app.coach", "COACH"],
       ["web.app.gyms._gym-id", "GYM_WORKSPACE"],
+      ["mobile.gyms._gym-id.pulse", "GYM_WORKSPACE"],
       ["mobile.home", "FIGHTER"],
     ]) {
       expect(routeById.get(id).access.capability).toBe(capability);
@@ -743,12 +745,11 @@ describe("entry resolution (SF-45, design 1791448557-b0b9)", () => {
     expect(o05.screens).toEqual(["O05"]);
   });
 
-  it("resolves to the mobile chooser (A04) only for context_selection and gym_selection", () => {
-    // SF-55: A04 is the Fighter / Coach context chooser; no other destination opens it.
-    // SF-84: gym_selection is the workspace chooser of route-architecture rule 7
-    // (several gym workspaces); every other destination stays out of it.
+  it("resolves to the mobile chooser (A04) only for context_selection", () => {
+    // SF-55: A04 is the context chooser; no other destination opens it.
+    // SF-89: gym_selection opens the gym chooser (mobile.gyms), as on the web.
     const targets = DESTINATIONS.filter(
-      (destination) => destination !== "context_selection" && destination !== "gym_selection",
+      (destination) => destination !== "context_selection",
     ).flatMap((destination) =>
       PLATFORMS.map((platform) => entryDestinations[destination][platform]),
     );
@@ -862,5 +863,60 @@ describe("mobile Gym owner registration (SF-87)", () => {
   it("keeps OG0, the superseded web handoff, as a DEFERRED gallery row", () => {
     expect(og0?.status).toBe("DEFERRED");
     expect(og0?.discrepancies).toEqual(["D-MOBILE-GYM-ONBOARDING-FLOW"]);
+  });
+});
+
+describe("mobile gym shell (SF-89, ADR 0026 D-G23)", () => {
+  const gymRoutes = routes.filter(
+    (route) => route.platform === "mobile" && route.shell === "mobile.gym",
+  );
+
+  it("is id-based: every gym shell route is /gyms/:gymId/**, gated on GYM_WORKSPACE", () => {
+    expect(gymRoutes.map((route) => route.id).sort()).toEqual([
+      "mobile.gyms._gym-id.announcements.new",
+      "mobile.gyms._gym-id.check-in",
+      "mobile.gyms._gym-id.classes",
+      "mobile.gyms._gym-id.classes._class-id.roster",
+      "mobile.gyms._gym-id.incidents.new",
+      "mobile.gyms._gym-id.members",
+      "mobile.gyms._gym-id.members._member-id",
+      "mobile.gyms._gym-id.pulse",
+      "mobile.gyms._gym-id.staff.on-shift",
+    ]);
+    for (const route of gymRoutes) {
+      expect([route.id, route.path.startsWith("/gyms/:gymId/"), route.params[0]]).toEqual([
+        route.id,
+        true,
+        "gymId",
+      ]);
+      expect(route.access).toEqual({
+        session: "AUTHENTICATED",
+        capability: "GYM_WORKSPACE",
+        phase: "ACTIVE",
+      });
+    }
+    expect(shellById.get("mobile.gym").params).toEqual(["gymId"]);
+  });
+
+  it("keeps the member side of a gym under /gym/:gymId until SF-91, never inside the gym shell", () => {
+    const member = routes.filter(
+      (route) => route.platform === "mobile" && route.path.startsWith("/gym/"),
+    );
+    expect(member.length).toBeGreaterThan(0);
+    expect(member.every((route) => route.shell === "mobile.fighter")).toBe(true);
+  });
+
+  it("lands gym_selection on the account-level gym chooser and lists it as MGC1", () => {
+    const chooser = routeById.get("mobile.gyms");
+    expect(chooser.path).toBe("/gyms");
+    expect(chooser.access).toEqual({ session: "AUTHENTICATED", capability: null, phase: null });
+    expect(chooser.screens).toEqual(["MGC1"]);
+    expect(registry.capabilities.GYM_WORKSPACE.home.mobile).toBe("mobile.gyms");
+  });
+
+  it("records the reduced shell as a discrepancy", () => {
+    const entry = discrepancies.find((candidate) => candidate.id === "D-MOBILE-GYM-SHELL-MVP");
+    expect(entry.status).toBe("DEFERRED");
+    expect(entry.routes).toEqual(["mobile.workspaces", "mobile.gyms", "mobile.gyms._gym-id.pulse"]);
   });
 });

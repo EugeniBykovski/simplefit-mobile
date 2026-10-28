@@ -1,3 +1,3 @@
 import { placeholderRoute } from "@/widgets/feature-placeholder";
 
-export default placeholderRoute("mobile.gym.pulse");
+export default placeholderRoute("mobile.gyms._gym-id.members");
