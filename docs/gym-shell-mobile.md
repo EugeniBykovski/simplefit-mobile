@@ -31,21 +31,21 @@ the staff surface only. `gym_home` maps to the Pulse of the entry's
 
 ## Screen inventory (Claude Design `1792675284-1046`, read-only)
 
-| Screen                        | Structured source                           | Route id                               | API source                               | Access           | Class                      |
-| ----------------------------- | ------------------------------------------- | -------------------------------------- | ---------------------------------------- | ---------------- | -------------------------- |
-| G01 Gym pulse                 | `GymPulse.dc.html`                          | `mobile.gyms._gym-id.pulse`            | `getGym`, `getGymSetup` (owner)          | staff of the gym | MVP, reduced               |
-| GymTabs                       | `GymTabs.dc.html`                           | shell `mobile.gym`                     | —                                        | —                | MVP, Pulse only linked     |
-| A04 One account, every role   | `Workspaces.dc.html`                        | `mobile.workspaces` + sheet            | `resolveMyEntry`, `chooseMyEntryContext` | session          | MVP, gym rows added        |
-| MGC1 Choose a gym             | A04 rows (no artboard)                      | `mobile.gyms`                          | `resolveMyEntry`, `listMyGyms`           | session          | MVP, design gap            |
-| GR1 Gym pulse · opening week  | `FirstRunGPulse.dc.html`                    | pulse `?state=opening-week`            | first-run (SF-101)                       | —                | FUTURE (SF-101)            |
-| GR2 Check-in tour             | `FirstRunGCheckinTip*.dc.html`              | pulse `?tip=`                          | first-run (SF-101)                       | —                | FUTURE (SF-101)            |
-| G02 QR check-in               | `CheckIn.dc.html`                           | `…check-in`                            | none (SF-96/97)                          | —                | BLOCKED                    |
-| G03 Class roster, G08 Classes | `ClassRoster.dc.html`, `GymClasses.dc.html` | `…classes…`                            | none (SF-93+)                            | —                | BLOCKED                    |
-| G04 Member card, G09 Members  | `MemberCard.dc.html`, `GymMembers.dc.html`  | `…members…`                            | none (SF-90/91)                          | —                | BLOCKED                    |
-| G05 Staff on shift            | `Staff.dc.html`                             | `…staff.on-shift`                      | shifts (none)                            | —                | FUTURE                     |
-| G06 Incidents, G07 Announce   | `Incidents.dc.html`, `Announce.dc.html`     | `…incidents.new`, `…announcements.new` | none                                     | —                | FUTURE                     |
-| OG6b → Gym pulse handoff      | SF-87 frame                                 | `mobile.onboarding.gym` → pulse        | entry `intent=gym`                       | owner            | MVP (unchanged flow)       |
-| RouteGym, FlowGym             | `RouteGym.dc.html`, `FlowGym.dc.html`       | —                                      | —                                        | —                | reference only (web paths) |
+| Screen                          | Structured source                           | Route id                               | API source                               | Access           | Class                                 |
+| ------------------------------- | ------------------------------------------- | -------------------------------------- | ---------------------------------------- | ---------------- | ------------------------------------- |
+| G01 Gym pulse                   | `GymPulse.dc.html`                          | `mobile.gyms._gym-id.pulse`            | `getGym`, `getGymSetup` (owner)          | staff of the gym | MVP, reduced                          |
+| GymTabs                         | `GymTabs.dc.html`                           | shell `mobile.gym`                     | —                                        | —                | MVP, Pulse only linked                |
+| A04 One account, every role     | `Workspaces.dc.html`                        | `mobile.workspaces` + sheet            | `resolveMyEntry`, `chooseMyEntryContext` | session          | MVP, gym rows added                   |
+| MGC1 Choose a gym               | A04 rows (no artboard)                      | `mobile.gyms`                          | `resolveMyEntry`, `listMyGyms`           | session          | MVP, design gap                       |
+| GR1 Gym pulse · owner first run | `FirstRunGPulse.dc.html` (v112)             | pulse                                  | `getGymFirstRun` (SF-90)                 | owner            | MVP (SF-92)                           |
+| GR2 Owner tour (4 steps)        | `FirstRunGCheckinTip*.dc.html` (v112)       | pulse (overlay)                        | start / complete / dismiss (SF-90)       | owner            | MVP (SF-92); 6 FUTURE steps not built |
+| G02 QR check-in                 | `CheckIn.dc.html`                           | `…check-in`                            | none (SF-96/97)                          | —                | BLOCKED                               |
+| G03 Class roster, G08 Classes   | `ClassRoster.dc.html`, `GymClasses.dc.html` | `…classes…`                            | none (SF-93+)                            | —                | BLOCKED                               |
+| G04 Member card, G09 Members    | `MemberCard.dc.html`, `GymMembers.dc.html`  | `…members…`                            | none (SF-90/91)                          | —                | BLOCKED                               |
+| G05 Staff on shift              | `Staff.dc.html`                             | `…staff.on-shift`                      | shifts (none)                            | —                | FUTURE                                |
+| G06 Incidents, G07 Announce     | `Incidents.dc.html`, `Announce.dc.html`     | `…incidents.new`, `…announcements.new` | none                                     | —                | FUTURE                                |
+| OG6b → Gym pulse handoff        | SF-87 frame                                 | `mobile.onboarding.gym` → pulse        | entry `intent=gym`                       | owner            | MVP (unchanged flow)                  |
+| RouteGym, FlowGym               | `RouteGym.dc.html`, `FlowGym.dc.html`       | —                                      | —                                        | —                | reference only (web paths)            |
 
 G08 and G09 are gym tab roots in the design; their domains (classes,
 members) do not exist, so their tabs are Soon. No board for a staff-specific
@@ -112,7 +112,7 @@ holds Settings (ST1: the account and Sign out).
 | M5  | new: MGC1            | Gym chooser board (several, completed + draft, draft only, none, pending, failed)                                                                                                                                         |
 | M6  | new                  | Staff limited-access home (manager, coach, front desk) and the role-restricted state                                                                                                                                      |
 | M7  | new                  | Gym not available (unknown, foreign, revoked) and draft states for the gym shell                                                                                                                                          |
-| M8  | FirstRunGPulse (GR1) | Checklist from real state only when SF-101 lands (no "live in Discover", payouts or invite funnel)                                                                                                                        |
+| M8  | FirstRunGPulse (GR1) | Done in Claude Design 112; built by SF-92 (`docs/gym-first-run-mobile.md`)                                                                                                                                                |
 | M9  | RouteGym, FlowGym    | Paths `/gyms/:gymId/…` (staff) and `/me/gyms/:gymId/…` (member)                                                                                                                                                           |
 
 ## Verification

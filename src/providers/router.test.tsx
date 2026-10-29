@@ -1559,7 +1559,27 @@ describe("Gym shell, context switching and navigation (SF-89)", () => {
     unlisted?: GymFixture[];
     failChoice?: boolean;
     offlineGyms?: boolean;
+    /** SF-92: the owner's first run per gym id (its gyms then grant manage_first_run). */
+    firstRuns?: Record<string, string>;
   };
+
+  /** The SF-90 first-run answer of a gym. */
+  const firstRunOf = (gymId: string, status: string) => ({
+    first_run: {
+      gym_id: gymId,
+      status,
+      started_at: status === "not_started" ? null : "2026-10-28T09:00:00Z",
+      completed_at: status === "completed" ? "2026-10-28T09:05:00Z" : null,
+      dismissed_at: status === "dismissed" ? "2026-10-28T09:05:00Z" : null,
+      checklist: [
+        { key: "create_gym", status: "completed" },
+        { key: "add_class", status: "coming_later" },
+        { key: "invite_staff", status: "coming_later" },
+        { key: "invite_members", status: "coming_later" },
+        { key: "first_check_in", status: "coming_later" },
+      ],
+    },
+  });
 
   const notFound = () =>
     jsonResponse(
@@ -1631,6 +1651,33 @@ describe("Gym shell, context switching and navigation (SF-89)", () => {
             gyms: [...account.gyms, ...(account.unlisted ?? [])].map(gymSummary),
             next_cursor: null,
           });
+        const run = path.match(
+          /^\/api\/v1\/gyms\/([^/]+)\/first-run(?:\/(start|complete|dismiss))?$/,
+        );
+        if (run) {
+          const [, id, action] = run as unknown as [string, string, string | undefined];
+          const current = account.firstRuns?.[id];
+          if (current === undefined) return notFound();
+          const final = current === "completed" || current === "dismissed";
+          if (action !== undefined && account.firstRuns) {
+            const next =
+              action === "start" ? "in_progress" : `${action}${action === "dismiss" ? "ed" : "d"}`;
+            if (final && next !== current)
+              return jsonResponse(
+                {
+                  error: {
+                    code: "conflict",
+                    message: "x",
+                    details: { first_run: current },
+                    request_id: "r",
+                  },
+                },
+                { status: 409 },
+              );
+            if (!final) account.firstRuns[id] = next;
+          }
+          return jsonResponse(firstRunOf(id, account.firstRuns![id]!));
+        }
         const setup = path.match(/^\/api\/v1\/gyms\/([^/]+)\/setup$/);
         if (setup)
           return jsonResponse({ setup: gymSetup(account.gyms.find((gym) => gym.id === setup[1])) });
@@ -1653,9 +1700,17 @@ describe("Gym shell, context switching and navigation (SF-89)", () => {
               { status },
             );
           if (account.revoked?.has(id)) return notFound();
-          return gymResponse(
+          const response = gymResponse(
             [...account.gyms, ...(account.unlisted ?? [])].find((gym) => gym.id === id),
           );
+          if (account.firstRuns?.[id] === undefined) return response;
+          // SF-90: the owner's projection grants manage_first_run.
+          const body = (await response.json()) as {
+            gym: { viewer: { role: string; permissions: string[] } };
+          };
+          if (body.gym.viewer.role === "owner")
+            body.gym.viewer.permissions = [...body.gym.viewer.permissions, "manage_first_run"];
+          return jsonResponse(body);
         }
         if (path === "/api/v1/me/fighter-profile")
           return jsonResponse({
@@ -1922,5 +1977,96 @@ describe("Gym shell, context switching and navigation (SF-89)", () => {
       await screen.findByText(/The Coach dashboard isn’t available yet/, visible),
     ).toBeOnTheScreen();
     expect(screen.queryByText("Ring A Boxing", visible)).toBeNull();
+  });
+
+  /* SF-92: the gym owner's mobile first run (GR1, GR2) on the real route tree. */
+
+  it("SF-92: an owner's not-started first run shows GR1 on Gym pulse above the gym tab bar", async () => {
+    await signInAccount({
+      gyms: [GYM_A],
+      last: { gym: GYM_A.id },
+      firstRuns: { [GYM_A.id]: "not_started" },
+    });
+    const result = await renderApp("/");
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${GYM_A.id}/pulse`));
+    expect(await screen.findByRole("header", { name: "Welcome to your gym" })).toBeOnTheScreen();
+    expect(screen.getByRole("header", { name: "Your gym is ready" })).toBeOnTheScreen();
+    expect(screen.getByLabelText("Gym navigation")).toBeOnTheScreen();
+    expect(screen.queryByText("Gym details", visible)).toBeNull();
+  });
+
+  it("SF-92: Start records in_progress and opens the tour; Finish records completed", async () => {
+    const account = {
+      gyms: [GYM_A],
+      last: { gym: GYM_A.id },
+      firstRuns: { [GYM_A.id]: "not_started" },
+    };
+    const fetchMock = await signInAccount(account);
+    await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    await fireEvent.press(await screen.findByRole("button", { name: "Start the tour" }));
+    expect(await screen.findByRole("header", { name: "Your opening checklist" })).toBeOnTheScreen();
+    expect(account.firstRuns[GYM_A.id]).toBe("in_progress");
+    for (let step = 0; step < 3; step += 1)
+      await fireEvent.press(screen.getByRole("button", { name: "Next" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Finish" }));
+    expect(
+      await screen.findByRole("header", { name: "You know your way around" }),
+    ).toBeOnTheScreen();
+    expect(account.firstRuns[GYM_A.id]).toBe("completed");
+    expect(requests(fetchMock).filter((request) => request.startsWith("POST"))).toEqual([
+      // Empty bodies, as the SF-90 contract requires.
+      `POST /api/v1/gyms/${GYM_A.id}/first-run/start {}`,
+      `POST /api/v1/gyms/${GYM_A.id}/first-run/complete {}`,
+    ]);
+  });
+
+  it.each(["completed", "dismissed"])(
+    "SF-92: a cold start with a %s first run opens G01, never the introduction",
+    async (status) => {
+      const fetchMock = await signInAccount({
+        gyms: [GYM_A],
+        last: { gym: GYM_A.id },
+        firstRuns: { [GYM_A.id]: status },
+      });
+      const result = await renderApp("/");
+      await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${GYM_A.id}/pulse`));
+      expect(await screen.findByText("Gym details", visible)).toBeOnTheScreen();
+      expect(screen.queryByRole("header", { name: "Welcome to your gym" })).toBeNull();
+      expect(requests(fetchMock)).toContain(`GET /api/v1/gyms/${GYM_A.id}/first-run`);
+      expect(requests(fetchMock).filter((request) => request.startsWith("POST"))).toEqual([]);
+    },
+  );
+
+  it("SF-92: a deep link to Gym pulse offers to resume a first run started on another client", async () => {
+    await signInAccount({
+      gyms: [GYM_A],
+      last: { gym: GYM_A.id },
+      firstRuns: { [GYM_A.id]: "in_progress" },
+    });
+    await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    expect(
+      await screen.findByRole("header", { name: "Pick up the introduction" }),
+    ).toBeOnTheScreen();
+    expect(screen.getByRole("button", { name: "Resume tour" })).toBeOnTheScreen();
+  });
+
+  it("SF-92: staff without manage_first_run never ask for it; Gym A's tour never reaches Gym B", async () => {
+    const fetchMock = await signInAccount({
+      gyms: [GYM_A, GYM_B],
+      last: { gym: GYM_A.id },
+      firstRuns: { [GYM_A.id]: "not_started" },
+    });
+    const result = await renderApp(`/gyms/${GYM_A.id}/pulse`);
+    await fireEvent.press(await screen.findByRole("button", { name: "Start the tour" }));
+    expect(await screen.findByText("Tour · 1 of 4")).toBeOnTheScreen();
+    await act(async () => router.replace(`/gyms/${GYM_B.id}/pulse`));
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${GYM_B.id}/pulse`));
+    expect(
+      await screen.findByText(/The Coach dashboard isn’t available yet/, visible),
+    ).toBeOnTheScreen();
+    expect(screen.queryByText("Tour · 1 of 4")).toBeNull();
+    expect(
+      requests(fetchMock).filter((request) => request.includes(`${GYM_B.id}/first-run`)),
+    ).toEqual([]);
   });
 });

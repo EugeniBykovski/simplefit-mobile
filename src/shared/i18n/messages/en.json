@@ -2298,6 +2298,141 @@
         "lead": "Register your gym to open it here. Gyms you are invited to will appear here.",
         "action": "Register your gym"
       }
+    },
+    "firstRun": {
+      "loading": "Loading your introduction and checklist",
+      "intro": {
+        "eyebrow": "Owner introduction",
+        "eyebrowInProgress": "Owner introduction · in progress",
+        "title": "Welcome to your gym",
+        "body": "A short tour of what works today. Take it now, later on any device, or skip it.",
+        "resumeTitle": "Pick up the introduction",
+        "resumeBody": "You started it on {date}. Tour steps aren’t saved, so it starts from the first step here.",
+        "resumeBodyUndated": "You started it on another device. Tour steps aren’t saved, so it starts from the first step here.",
+        "start": "Start the tour",
+        "resume": "Resume tour",
+        "starting": "Starting…",
+        "retry": "Try again",
+        "skip": "Skip",
+        "failedBody": "The tour didn’t start.",
+        "failed": "We couldn’t save that. Nothing changed.",
+        "completed": {
+          "title": "Introduction finished.",
+          "body": "It won’t open again on any device. Your checklist keeps following what your gym really does."
+        },
+        "dismissed": {
+          "title": "Introduction skipped.",
+          "body": "It won’t open again on any device. Skipping didn’t change your checklist or your gym."
+        }
+      },
+      "unavailable": {
+        "title": "We couldn’t load your introduction.",
+        "body": "Gym pulse works without it. Nothing was changed.",
+        "offlineTitle": "You’re offline.",
+        "offlineBody": "The introduction and checklist load when you’re back. Nothing was changed.",
+        "retry": "Try again"
+      },
+      "checklist": {
+        "eyebrow": "Opening checklist",
+        "title": "Your gym’s checklist",
+        "readyTitle": "Your gym is ready",
+        "readyBody": "Gym identity and location are saved.",
+        "moreTitle": "More tools are coming",
+        "moreBody": "They open when their features launch. They aren’t missing steps.",
+        "badges": {
+          "completed": "Done",
+          "available": "Available",
+          "coming_later": "Later"
+        },
+        "items": {
+          "create_gym": {
+            "title": "Create your gym",
+            "completed": "Name, type and location saved",
+            "available": "Finish setup to create your gym",
+            "coming_later": "Coming later"
+          },
+          "add_class": {
+            "title": "Add your first class",
+            "completed": "Your first class is on the timetable",
+            "available": "Add a class to your timetable",
+            "coming_later": "With classes and the timetable"
+          },
+          "invite_staff": {
+            "title": "Invite your staff",
+            "completed": "A staff member accepted an invitation",
+            "available": "Send your first staff invitation",
+            "coming_later": "With staff invitations"
+          },
+          "invite_members": {
+            "title": "Invite members",
+            "completed": "A member joined your gym",
+            "available": "Send your first member invitation",
+            "coming_later": "With member invitations"
+          },
+          "first_check_in": {
+            "title": "Record a first check-in",
+            "completed": "A first check-in was recorded",
+            "available": "Check a member in at the desk",
+            "coming_later": "With QR check-in"
+          }
+        }
+      },
+      "skip": {
+        "title": "Skip the introduction?",
+        "body": "It won’t open again on this phone or on the web. Your checklist stays exactly as it is: skipping completes nothing.",
+        "confirm": "Skip introduction",
+        "keep": "Keep it",
+        "failed": "We couldn’t save that. Nothing changed. Try again."
+      },
+      "tour": {
+        "step": "Tour · {step} of {total}",
+        "complete": "Introduction finished",
+        "end": "End tour",
+        "back": "Back",
+        "next": "Next",
+        "finish": "Finish",
+        "tryAgain": "Try again",
+        "failed": "Couldn’t reach SimpleFit. Nothing changed.",
+        "toPulse": "Back to Gym pulse",
+        "finishing": {
+          "title": "Finishing…",
+          "body": "Saving that you finished the introduction. Nothing else changes.",
+          "button": "Finishing…"
+        },
+        "finishFailed": {
+          "title": "We couldn’t save that",
+          "body": "The introduction stays open and nothing changed. Try again, or finish later on any device."
+        },
+        "confirm": {
+          "label": "End introduction",
+          "title": "End the introduction?",
+          "body": "It won’t open again on this phone or on the web. Your checklist stays as it is: ending completes nothing.",
+          "keep": "Keep going",
+          "end": "End introduction"
+        },
+        "steps": {
+          "checklist": {
+            "title": "Your opening checklist",
+            "body": "One step is done: your gym exists. Classes, staff, members and check-ins show as coming later until they launch. None is counted as missing."
+          },
+          "gym": {
+            "title": "Your gym",
+            "body": "Name, type and location come straight from your setup. Your role and access are on Gym pulse, for this gym only."
+          },
+          "tabs": {
+            "title": "Tools arrive in these tabs",
+            "body": "Pulse works today. Classes, QR check-in, members and staff are marked Soon and open when they launch."
+          },
+          "switcher": {
+            "title": "One account, every role",
+            "body": "You own {name}. Switch gyms or open your fighter or coach profile here, with no second sign-in. Each gym keeps its own data and its own introduction."
+          },
+          "done": {
+            "title": "You know your way around",
+            "body": "Saved for this gym on this phone and on the web: it won’t open again. Your checklist keeps following what your gym really does."
+          }
+        }
+      }
     }
   }
 }

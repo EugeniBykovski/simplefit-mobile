@@ -31,6 +31,8 @@ export function ShellTabBar({ shell, focusedTab }: { shell: TabShell; focusedTab
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const config = tabNavigation[shell];
+  // The whole bar is a spotlight target too (the gym introduction points at its Soon items, SF-92).
+  const bar = useSpotlightTarget("tabs:bar");
   const active = focusedTab?.match(/^\((.+)\)$/)?.[1];
   // An id-based shell (the gym shell's gymId, SF-89) links its tabs with the
   // parameters of the focused route: the tabs stay inside the same gym.
@@ -49,6 +51,7 @@ export function ShellTabBar({ shell, focusedTab }: { shell: TabShell; focusedTab
       style={{ paddingBottom: Math.max(insets.bottom, 16) }}
     >
       <View
+        ref={bar}
         accessibilityRole="tablist"
         accessibilityLabel={label("label")}
         className="flex-row items-center justify-between rounded-full border border-border-strong bg-surface-elevated px-2 py-2.5"

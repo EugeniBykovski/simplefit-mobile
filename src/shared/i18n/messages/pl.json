@@ -2298,6 +2298,141 @@
         "lead": "Zarejestruj swój klub, aby otworzyć go tutaj. Kluby, do których zostaniesz zaproszony, pojawią się tutaj.",
         "action": "Zarejestruj klub"
       }
+    },
+    "firstRun": {
+      "loading": "Wczytywanie wprowadzenia i listy",
+      "intro": {
+        "eyebrow": "Wprowadzenie dla właściciela",
+        "eyebrowInProgress": "Wprowadzenie dla właściciela · w toku",
+        "title": "Witaj w swoim klubie",
+        "body": "Krótki przewodnik po tym, co już działa. Teraz, później na dowolnym urządzeniu albo wcale.",
+        "resumeTitle": "Wróć do wprowadzenia",
+        "resumeBody": "Zaczęto je {date}. Kroki przewodnika nie są zapisywane, więc tutaj zaczyna się od pierwszego.",
+        "resumeBodyUndated": "Zaczęto je na innym urządzeniu. Kroki przewodnika nie są zapisywane, więc tutaj zaczyna się od pierwszego.",
+        "start": "Zacznij przewodnik",
+        "resume": "Wznów przewodnik",
+        "starting": "Uruchamianie…",
+        "retry": "Spróbuj ponownie",
+        "skip": "Pomiń",
+        "failedBody": "Przewodnik się nie uruchomił.",
+        "failed": "Nie udało się tego zapisać. Nic się nie zmieniło.",
+        "completed": {
+          "title": "Wprowadzenie ukończone.",
+          "body": "Nie otworzy się ponownie na żadnym urządzeniu. Lista nadal odzwierciedla to, co naprawdę robi twój klub."
+        },
+        "dismissed": {
+          "title": "Wprowadzenie pominięte.",
+          "body": "Nie otworzy się ponownie na żadnym urządzeniu. Pominięcie nie zmieniło listy ani klubu."
+        }
+      },
+      "unavailable": {
+        "title": "Nie udało się wczytać wprowadzenia.",
+        "body": "Puls klubu działa bez niego. Nic się nie zmieniło.",
+        "offlineTitle": "Jesteś offline.",
+        "offlineBody": "Wprowadzenie i lista wczytają się po powrocie do sieci. Nic się nie zmieniło.",
+        "retry": "Spróbuj ponownie"
+      },
+      "checklist": {
+        "eyebrow": "Lista otwarcia",
+        "title": "Lista twojego klubu",
+        "readyTitle": "Twój klub jest gotowy",
+        "readyBody": "Tożsamość i lokalizacja klubu są zapisane.",
+        "moreTitle": "Kolejne narzędzia w drodze",
+        "moreBody": "Otworzą się wraz z uruchomieniem ich funkcji. To nie są brakujące kroki.",
+        "badges": {
+          "completed": "Gotowe",
+          "available": "Dostępne",
+          "coming_later": "Później"
+        },
+        "items": {
+          "create_gym": {
+            "title": "Utwórz klub",
+            "completed": "Nazwa, typ i lokalizacja zapisane",
+            "available": "Dokończ konfigurację, aby utworzyć klub",
+            "coming_later": "Wkrótce"
+          },
+          "add_class": {
+            "title": "Dodaj pierwsze zajęcia",
+            "completed": "Pierwsze zajęcia są w grafiku",
+            "available": "Dodaj zajęcia do grafiku",
+            "coming_later": "Razem z zajęciami i grafikiem"
+          },
+          "invite_staff": {
+            "title": "Zaproś zespół",
+            "completed": "Osoba z zespołu przyjęła zaproszenie",
+            "available": "Wyślij pierwsze zaproszenie dla zespołu",
+            "coming_later": "Razem z zaproszeniami dla zespołu"
+          },
+          "invite_members": {
+            "title": "Zaproś członków",
+            "completed": "Członek dołączył do twojego klubu",
+            "available": "Wyślij pierwsze zaproszenie dla członków",
+            "coming_later": "Razem z zaproszeniami dla członków"
+          },
+          "first_check_in": {
+            "title": "Zarejestruj pierwsze wejście",
+            "completed": "Zarejestrowano pierwsze wejście",
+            "available": "Zarejestruj wejście członka w recepcji",
+            "coming_later": "Razem z wejściem przez kod QR"
+          }
+        }
+      },
+      "skip": {
+        "title": "Pominąć wprowadzenie?",
+        "body": "Nie otworzy się ponownie ani na tym telefonie, ani w przeglądarce. Lista zostaje dokładnie taka sama: pominięcie niczego nie kończy.",
+        "confirm": "Pomiń wprowadzenie",
+        "keep": "Zostaw",
+        "failed": "Nie udało się tego zapisać. Nic się nie zmieniło. Spróbuj ponownie."
+      },
+      "tour": {
+        "step": "Przewodnik · {step} z {total}",
+        "complete": "Wprowadzenie ukończone",
+        "end": "Zakończ przewodnik",
+        "back": "Wstecz",
+        "next": "Dalej",
+        "finish": "Zakończ",
+        "tryAgain": "Spróbuj ponownie",
+        "failed": "Nie można połączyć się z SimpleFit. Nic się nie zmieniło.",
+        "toPulse": "Wróć do pulsu",
+        "finishing": {
+          "title": "Kończenie…",
+          "body": "Zapisujemy, że ukończono wprowadzenie. Nic więcej się nie zmienia.",
+          "button": "Kończenie…"
+        },
+        "finishFailed": {
+          "title": "Nie udało się tego zapisać",
+          "body": "Wprowadzenie pozostaje otwarte i nic się nie zmieniło. Spróbuj ponownie albo dokończ je później na dowolnym urządzeniu."
+        },
+        "confirm": {
+          "label": "Zakończ wprowadzenie",
+          "title": "Zakończyć wprowadzenie?",
+          "body": "Nie otworzy się ponownie ani na tym telefonie, ani w przeglądarce. Lista zostaje taka sama: zakończenie niczego nie odhacza.",
+          "keep": "Kontynuuj",
+          "end": "Zakończ wprowadzenie"
+        },
+        "steps": {
+          "checklist": {
+            "title": "Twoja lista otwarcia",
+            "body": "Jeden krok jest gotowy: twój klub istnieje. Zajęcia, zespół, członkowie i wejścia są oznaczone jako „później”, dopóki nie wystartują. Żaden nie liczy się jako brakujący."
+          },
+          "gym": {
+            "title": "Twój klub",
+            "body": "Nazwa, typ i lokalizacja pochodzą prosto z konfiguracji. Twoja rola i dostęp są w pulsie klubu, tylko dla tego klubu."
+          },
+          "tabs": {
+            "title": "Narzędzia pojawią się w tych kartach",
+            "body": "Puls już działa. Zajęcia, wejście QR, członkowie i zespół mają oznaczenie „Wkrótce” i otworzą się po starcie."
+          },
+          "switcher": {
+            "title": "Jedno konto, każda rola",
+            "body": "Jesteś właścicielem {name}. Tutaj przełączasz kluby albo otwierasz profil zawodnika lub trenera, bez ponownego logowania. Każdy klub ma własne dane i własne wprowadzenie."
+          },
+          "done": {
+            "title": "Znasz już drogę",
+            "body": "Zapisano dla tego klubu na tym telefonie i w przeglądarce: nie otworzy się ponownie. Lista nadal odzwierciedla to, co naprawdę robi twój klub."
+          }
+        }
+      }
     }
   }
 }
