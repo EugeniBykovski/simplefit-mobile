@@ -2298,6 +2298,141 @@
         "lead": "Inscris ta salle pour l’ouvrir ici. Les salles qui t’invitent apparaîtront ici.",
         "action": "Inscrire ma salle"
       }
+    },
+    "firstRun": {
+      "loading": "Chargement de ton introduction et de ta liste",
+      "intro": {
+        "eyebrow": "Introduction du propriétaire",
+        "eyebrowInProgress": "Introduction du propriétaire · en cours",
+        "title": "Bienvenue dans ta salle",
+        "body": "Une courte visite de ce qui fonctionne déjà. Fais-la maintenant, plus tard sur n’importe quel appareil, ou passe-la.",
+        "resumeTitle": "Reprendre l’introduction",
+        "resumeBody": "Tu l’as commencée le {date}. Les étapes ne sont pas enregistrées : ici, elle reprend à la première.",
+        "resumeBodyUndated": "Tu l’as commencée sur un autre appareil. Les étapes ne sont pas enregistrées : ici, elle reprend à la première.",
+        "start": "Commencer la visite",
+        "resume": "Reprendre la visite",
+        "starting": "Démarrage…",
+        "retry": "Réessayer",
+        "skip": "Passer",
+        "failedBody": "La visite n’a pas démarré.",
+        "failed": "Impossible d’enregistrer. Rien n’a changé.",
+        "completed": {
+          "title": "Introduction terminée.",
+          "body": "Elle ne s’ouvrira plus sur aucun appareil. Ta liste continue de refléter ce que ta salle fait vraiment."
+        },
+        "dismissed": {
+          "title": "Introduction passée.",
+          "body": "Elle ne s’ouvrira plus sur aucun appareil. La passer n’a modifié ni ta liste ni ta salle."
+        }
+      },
+      "unavailable": {
+        "title": "Impossible de charger ton introduction.",
+        "body": "Le pouls de la salle fonctionne sans elle. Rien n’a changé.",
+        "offlineTitle": "Tu es hors ligne.",
+        "offlineBody": "L’introduction et la liste se chargeront à ton retour. Rien n’a changé.",
+        "retry": "Réessayer"
+      },
+      "checklist": {
+        "eyebrow": "Liste d’ouverture",
+        "title": "La liste de ta salle",
+        "readyTitle": "Ta salle est prête",
+        "readyBody": "L’identité et l’adresse de la salle sont enregistrées.",
+        "moreTitle": "D’autres outils arrivent",
+        "moreBody": "Ils s’ouvriront avec leurs fonctionnalités. Ce ne sont pas des étapes manquantes.",
+        "badges": {
+          "completed": "Fait",
+          "available": "Disponible",
+          "coming_later": "Plus tard"
+        },
+        "items": {
+          "create_gym": {
+            "title": "Créer ta salle",
+            "completed": "Nom, type et adresse enregistrés",
+            "available": "Termine la configuration pour créer ta salle",
+            "coming_later": "Plus tard"
+          },
+          "add_class": {
+            "title": "Ajouter ton premier cours",
+            "completed": "Ton premier cours est au planning",
+            "available": "Ajoute un cours à ton planning",
+            "coming_later": "Avec les cours et le planning"
+          },
+          "invite_staff": {
+            "title": "Inviter ton équipe",
+            "completed": "Un membre de l’équipe a accepté une invitation",
+            "available": "Envoie ta première invitation d’équipe",
+            "coming_later": "Avec les invitations d’équipe"
+          },
+          "invite_members": {
+            "title": "Inviter des membres",
+            "completed": "Un membre a rejoint ta salle",
+            "available": "Envoie ta première invitation de membre",
+            "coming_later": "Avec les invitations de membres"
+          },
+          "first_check_in": {
+            "title": "Enregistrer un premier check-in",
+            "completed": "Un premier check-in a été enregistré",
+            "available": "Enregistre l’arrivée d’un membre à l’accueil",
+            "coming_later": "Avec le check-in par QR"
+          }
+        }
+      },
+      "skip": {
+        "title": "Passer l’introduction ?",
+        "body": "Elle ne s’ouvrira plus sur ce téléphone ni sur le web. Ta liste reste exactement la même : la passer ne termine rien.",
+        "confirm": "Passer l’introduction",
+        "keep": "La garder",
+        "failed": "Impossible d’enregistrer. Rien n’a changé. Réessaie."
+      },
+      "tour": {
+        "step": "Visite · {step} sur {total}",
+        "complete": "Introduction terminée",
+        "end": "Terminer la visite",
+        "back": "Retour",
+        "next": "Suivant",
+        "finish": "Terminer",
+        "tryAgain": "Réessayer",
+        "failed": "Impossible de joindre SimpleFit. Rien n’a changé.",
+        "toPulse": "Retour au pouls",
+        "finishing": {
+          "title": "Finalisation…",
+          "body": "Nous enregistrons que tu as terminé l’introduction. Rien d’autre ne change.",
+          "button": "Finalisation…"
+        },
+        "finishFailed": {
+          "title": "Impossible d’enregistrer",
+          "body": "L’introduction reste ouverte et rien n’a changé. Réessaie, ou termine-la plus tard sur n’importe quel appareil."
+        },
+        "confirm": {
+          "label": "Terminer l’introduction",
+          "title": "Terminer l’introduction ?",
+          "body": "Elle ne s’ouvrira plus sur ce téléphone ni sur le web. Ta liste reste la même : terminer ne coche rien.",
+          "keep": "Continuer",
+          "end": "Terminer l’introduction"
+        },
+        "steps": {
+          "checklist": {
+            "title": "Ta liste d’ouverture",
+            "body": "Une étape est faite : ta salle existe. Cours, équipe, membres et check-ins apparaissent « plus tard » jusqu’à leur lancement. Aucun ne compte comme manquant."
+          },
+          "gym": {
+            "title": "Ta salle",
+            "body": "Le nom, le type et l’adresse viennent de ta configuration. Ton rôle et ton accès sont sur le pouls, pour cette salle seulement."
+          },
+          "tabs": {
+            "title": "Les outils arrivent dans ces onglets",
+            "body": "Le pouls fonctionne déjà. Cours, check-in QR, membres et équipe sont marqués « Bientôt » et s’ouvriront à leur lancement."
+          },
+          "switcher": {
+            "title": "Un compte, tous les rôles",
+            "body": "Tu es propriétaire de {name}. Change de salle ou ouvre ton profil de combattant ou de coach ici, sans te reconnecter. Chaque salle garde ses propres données et sa propre introduction."
+          },
+          "done": {
+            "title": "Tu connais les lieux",
+            "body": "Enregistré pour cette salle sur ce téléphone et sur le web : elle ne s’ouvrira plus. Ta liste continue de refléter ce que ta salle fait vraiment."
+          }
+        }
+      }
     }
   }
 }

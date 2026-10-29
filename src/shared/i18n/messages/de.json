@@ -2298,6 +2298,141 @@
         "lead": "Registriere dein Gym, um es hier zu öffnen. Gyms, zu denen du eingeladen wirst, erscheinen hier.",
         "action": "Gym registrieren"
       }
+    },
+    "firstRun": {
+      "loading": "Einführung und Checkliste werden geladen",
+      "intro": {
+        "eyebrow": "Einführung für Inhaber",
+        "eyebrowInProgress": "Einführung für Inhaber · begonnen",
+        "title": "Willkommen in deinem Gym",
+        "body": "Eine kurze Tour durch das, was heute schon funktioniert. Jetzt, später auf einem beliebigen Gerät oder gar nicht.",
+        "resumeTitle": "Einführung fortsetzen",
+        "resumeBody": "Du hast sie am {date} begonnen. Tour-Schritte werden nicht gespeichert, daher beginnt sie hier beim ersten Schritt.",
+        "resumeBodyUndated": "Du hast sie auf einem anderen Gerät begonnen. Tour-Schritte werden nicht gespeichert, daher beginnt sie hier beim ersten Schritt.",
+        "start": "Tour starten",
+        "resume": "Tour fortsetzen",
+        "starting": "Wird gestartet…",
+        "retry": "Erneut versuchen",
+        "skip": "Überspringen",
+        "failedBody": "Die Tour wurde nicht gestartet.",
+        "failed": "Das konnten wir nicht speichern. Nichts wurde geändert.",
+        "completed": {
+          "title": "Einführung abgeschlossen.",
+          "body": "Sie öffnet sich auf keinem Gerät wieder. Deine Checkliste folgt weiter dem, was dein Gym wirklich tut."
+        },
+        "dismissed": {
+          "title": "Einführung übersprungen.",
+          "body": "Sie öffnet sich auf keinem Gerät wieder. Das Überspringen hat weder deine Checkliste noch dein Gym verändert."
+        }
+      },
+      "unavailable": {
+        "title": "Deine Einführung konnte nicht geladen werden.",
+        "body": "Gym-Puls funktioniert auch ohne sie. Nichts wurde geändert.",
+        "offlineTitle": "Du bist offline.",
+        "offlineBody": "Einführung und Checkliste laden, sobald du wieder online bist. Nichts wurde geändert.",
+        "retry": "Erneut versuchen"
+      },
+      "checklist": {
+        "eyebrow": "Eröffnungs-Checkliste",
+        "title": "Checkliste deines Gyms",
+        "readyTitle": "Dein Gym ist bereit",
+        "readyBody": "Identität und Standort des Gyms sind gespeichert.",
+        "moreTitle": "Weitere Werkzeuge folgen",
+        "moreBody": "Sie öffnen sich, wenn ihre Funktionen starten. Es sind keine fehlenden Schritte.",
+        "badges": {
+          "completed": "Erledigt",
+          "available": "Verfügbar",
+          "coming_later": "Später"
+        },
+        "items": {
+          "create_gym": {
+            "title": "Gym erstellen",
+            "completed": "Name, Art und Standort gespeichert",
+            "available": "Schließe die Einrichtung ab, um dein Gym zu erstellen",
+            "coming_later": "Kommt später"
+          },
+          "add_class": {
+            "title": "Ersten Kurs anlegen",
+            "completed": "Dein erster Kurs steht im Stundenplan",
+            "available": "Lege einen Kurs im Stundenplan an",
+            "coming_later": "Mit Kursen und Stundenplan"
+          },
+          "invite_staff": {
+            "title": "Team einladen",
+            "completed": "Ein Teammitglied hat eine Einladung angenommen",
+            "available": "Verschicke deine erste Team-Einladung",
+            "coming_later": "Mit Team-Einladungen"
+          },
+          "invite_members": {
+            "title": "Mitglieder einladen",
+            "completed": "Ein Mitglied ist deinem Gym beigetreten",
+            "available": "Verschicke deine erste Mitglieder-Einladung",
+            "coming_later": "Mit Mitglieder-Einladungen"
+          },
+          "first_check_in": {
+            "title": "Ersten Check-in erfassen",
+            "completed": "Ein erster Check-in wurde erfasst",
+            "available": "Checke ein Mitglied am Empfang ein",
+            "coming_later": "Mit dem QR-Check-in"
+          }
+        }
+      },
+      "skip": {
+        "title": "Einführung überspringen?",
+        "body": "Sie öffnet sich weder auf diesem Handy noch im Web wieder. Deine Checkliste bleibt genau, wie sie ist: Überspringen erledigt nichts.",
+        "confirm": "Einführung überspringen",
+        "keep": "Behalten",
+        "failed": "Das konnten wir nicht speichern. Nichts wurde geändert. Versuche es erneut."
+      },
+      "tour": {
+        "step": "Tour · {step} von {total}",
+        "complete": "Einführung abgeschlossen",
+        "end": "Tour beenden",
+        "back": "Zurück",
+        "next": "Weiter",
+        "finish": "Abschließen",
+        "tryAgain": "Erneut versuchen",
+        "failed": "SimpleFit nicht erreichbar. Nichts wurde geändert.",
+        "toPulse": "Zurück zum Gym-Puls",
+        "finishing": {
+          "title": "Wird abgeschlossen…",
+          "body": "Wir speichern, dass du die Einführung abgeschlossen hast. Sonst ändert sich nichts.",
+          "button": "Wird abgeschlossen…"
+        },
+        "finishFailed": {
+          "title": "Das konnten wir nicht speichern",
+          "body": "Die Einführung bleibt offen und nichts wurde geändert. Versuche es erneut oder schließe sie später auf einem beliebigen Gerät ab."
+        },
+        "confirm": {
+          "label": "Einführung beenden",
+          "title": "Einführung beenden?",
+          "body": "Sie öffnet sich weder auf diesem Handy noch im Web wieder. Deine Checkliste bleibt, wie sie ist: Beenden erledigt nichts.",
+          "keep": "Weitermachen",
+          "end": "Einführung beenden"
+        },
+        "steps": {
+          "checklist": {
+            "title": "Deine Eröffnungs-Checkliste",
+            "body": "Ein Schritt ist erledigt: Dein Gym existiert. Kurse, Team, Mitglieder und Check-ins erscheinen als „später“, bis sie starten. Nichts davon zählt als fehlend."
+          },
+          "gym": {
+            "title": "Dein Gym",
+            "body": "Name, Art und Standort stammen direkt aus deiner Einrichtung. Deine Rolle und dein Zugang stehen im Gym-Puls, nur für dieses Gym."
+          },
+          "tabs": {
+            "title": "Werkzeuge kommen in diese Tabs",
+            "body": "Puls funktioniert schon. Kurse, QR-Check-in, Mitglieder und Team sind mit „Bald“ markiert und öffnen sich zum Start."
+          },
+          "switcher": {
+            "title": "Ein Konto, jede Rolle",
+            "body": "Du bist Inhaber von {name}. Wechsle hier Gyms oder öffne dein Kämpfer- oder Trainerprofil, ohne dich erneut anzumelden. Jedes Gym behält seine eigenen Daten und seine eigene Einführung."
+          },
+          "done": {
+            "title": "Du kennst dich aus",
+            "body": "Für dieses Gym auf diesem Handy und im Web gespeichert: Sie öffnet sich nicht wieder. Deine Checkliste folgt weiter dem, was dein Gym wirklich tut."
+          }
+        }
+      }
     }
   }
 }

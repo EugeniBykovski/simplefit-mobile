@@ -115,11 +115,11 @@ stale`); reread and retry. Completion and discard take no revision.
 Not in the contract yet: gym size and features (OG4/OG5, future with plans)
 and logo/cover uploads (waiting for a storage attachment mechanism).
 
-## SF-90: gym first run and setup checklist API (no screens yet)
+## SF-90: gym first run and setup checklist API
 
 The generated client adds the owner's gym first run (ADR 0026, SF-90
-amendment). There are no screens yet; GRW1/GR1 and the GRW2/GR2 tours are
-SF-101.
+amendment). The screens are SF-91 on the web (GRW1, GRW2) and SF-92 on
+mobile (GR1, GR2; `docs/gym-first-run-mobile.md`).
 
 - `getGymFirstRun` returns the introduction's `status` (`unavailable` for a
   draft, then `not_started`, `in_progress`, `completed`, `dismissed`), its
@@ -150,3 +150,14 @@ gym rows in A04 (sheet and `/workspaces`), and the gym chooser `/gyms`
 `fighter` / `coach`; a gym is a switch target `gym:<id>` and is opened by
 recording `PUT /api/v1/me/entry/context` with its `gym_id`. No API, model or
 storage change.
+
+## SF-92: mobile owner first run (GR1, GR2)
+
+`entities/gym-first-run` wraps the SF-90 client: one query per gym
+(`gymFirstRunQueryKey`), read only with `manage_first_run`, and the start,
+complete and dismiss transitions, which resolve with the state the backend
+keeps (a `409`, or a lost answer to an ending, is reconciled by reading it
+again). Gym pulse (`widgets/gym-workspace`) renders GR1 and the four-step
+GR2 tour of Claude Design 112 from that state only, on the shared
+`Spotlight`; the tour step stays on the phone. See
+`docs/gym-first-run-mobile.md` (`D-MOBILE-GYM-FIRST-RUN`).

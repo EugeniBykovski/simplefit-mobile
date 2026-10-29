@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ChevronDown, CircleAlert, Clock, SlidersHorizontal } from "lucide-react-native";
-import { useState, type ReactNode } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { useCallback, useRef, useState, type ReactNode, type Ref, type RefObject } from "react";
+import { Pressable, ScrollView, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFormatter, useLocale, useTranslations } from "use-intl";
 
@@ -19,9 +19,12 @@ import { Button } from "@/shared/ui/button";
 import { Icon } from "@/shared/ui/icon";
 import { Notice } from "@/shared/ui/notice";
 import { Skeleton } from "@/shared/ui/skeleton";
+import { useSpotlightTarget, useSpotlightTargets } from "@/shared/ui/spotlight";
 import { Text } from "@/shared/ui/text";
 
+import { GYM_TOUR_TARGETS, type GymTourStep } from "../model/tour";
 import { useGymWorkspace } from "./gym-gate";
+import { useOwnerFirstRun } from "./owner-first-run";
 
 /*
  * G01 Gym pulse (`mobile.gyms._gym-id.pulse`, SF-89; Claude Design GymPulse,
@@ -39,8 +42,12 @@ import { useGymWorkspace } from "./gym-gate";
  *   later.
  *
  * Location chips, QR check-in, the KPI tiles and today's classes are hidden
- * until their domains exist, never shown as zero (SF-82 R5/C7). GR1/GR2
- * (first run) stay with SF-101.
+ * until their domains exist, never shown as zero (SF-82 R5/C7).
+ *
+ * SF-92 (Claude Design 112): for the owner, while the first run is not
+ * started or in progress, GR1 replaces the details and coming-later cards:
+ * the introduction and the API's checklist above the gym and access cards;
+ * Start opens GR2, the four-step tour on this screen's real UI.
  */
 
 /** The OG3 swatch names in `gymOnboarding`, in the contract's order of `accent_color` (as SF-87). */
@@ -59,7 +66,8 @@ export function GymPulseScreen() {
   const gym = useGymWorkspace(gymId);
   // The gym gate covers this screen until it has this gym's answer.
   if (gym === undefined) return null;
-  return <GymPulseView gym={gym} />;
+  // One instance per gym: a switch never carries an open tour or sheet into another gym.
+  return <GymPulseView key={gym.id} gym={gym} />;
 }
 
 export function GymPulseView({ gym }: { gym: Gym }) {
@@ -76,13 +84,26 @@ export function GymPulseView({ gym }: { gym: Gym }) {
     gym.locations.length === 1 && location !== null ? location.name : t("pulse.allLocations");
   const today = format.dateTime(new Date(), { weekday: "short", month: "short", day: "numeric" });
   const role = t(`roles.${gym.viewer.role}`);
+  const identityTarget = useSpotlightTarget(GYM_TOUR_TARGETS.switcher);
+  const summaryTarget = useSpotlightTarget(GYM_TOUR_TARGETS.gym);
+  const checklistTarget = useSpotlightTarget(GYM_TOUR_TARGETS.checklist);
+  const scroll = useRef<ScrollView>(null);
+  const reveal = useReveal(scroll, insets.top);
+  const firstRun = useOwnerFirstRun(gym, { checklistRef: checklistTarget, reveal: reveal.to });
+  const grw = firstRun.mode !== "off";
 
   return (
     // Runtime inset: content scrolls below the status bar, never under it.
     <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
-      <ScrollView contentContainerClassName="gap-4 px-5 pb-6 pt-3">
+      <ScrollView
+        ref={scroll}
+        onScroll={reveal.onScroll}
+        scrollEventThrottle={16}
+        contentContainerClassName="gap-4 px-5 pb-6 pt-3"
+      >
         <View className="flex-row items-center justify-between gap-2.5">
           <Pressable
+            ref={identityTarget}
             accessibilityRole="button"
             accessibilityLabel={t("identity", { name: gym.name, role })}
             onPress={() => setSwitching(true)}
@@ -118,13 +139,15 @@ export function GymPulseView({ gym }: { gym: Gym }) {
           </Text>
         </View>
 
+        {firstRun.panel}
         <Card
           title={t("pulse.summary.title")}
           aside={<Badge variant="accent" label={t("pulse.summary.completed")} />}
+          targetRef={summaryTarget}
         >
           <Summary gym={gym} accent={saved?.accent_color ?? null} />
         </Card>
-        {owner ? (
+        {grw ? null : owner ? (
           <Card title={t("pulse.details.title")}>
             <Details
               setup={saved}
@@ -153,50 +176,103 @@ export function GymPulseView({ gym }: { gym: Gym }) {
             {t("pulse.access.note")}
           </Text>
         </Card>
-        <Card title={t("pulse.later.title")}>
-          <View>
-            {LATER.map((area, index) => (
-              <View
-                key={area}
-                accessible
-                accessibilityLabel={`${t(`pulse.later.${area}.title`)}, ${t(`pulse.later.${area}.body`)}, ${t("pulse.later.badge")}`}
-                className={`min-h-14 flex-row items-center gap-3 py-2 ${index > 0 ? "border-t border-border" : ""}`}
-              >
-                <Icon icon={Clock} size={16} color="faintForeground" />
-                <View className="flex-1 gap-0.5">
-                  <Text variant="bodySm" weight="extrabold">
-                    {t(`pulse.later.${area}.title`)}
-                  </Text>
-                  <Text variant="caption" color="mutedForeground">
-                    {t(`pulse.later.${area}.body`)}
-                  </Text>
+        {grw ? null : (
+          <Card title={t("pulse.later.title")}>
+            <View>
+              {LATER.map((area, index) => (
+                <View
+                  key={area}
+                  accessible
+                  accessibilityLabel={`${t(`pulse.later.${area}.title`)}, ${t(`pulse.later.${area}.body`)}, ${t("pulse.later.badge")}`}
+                  className={`min-h-14 flex-row items-center gap-3 py-2 ${index > 0 ? "border-t border-border" : ""}`}
+                >
+                  <Icon icon={Clock} size={16} color="faintForeground" />
+                  <View className="flex-1 gap-0.5">
+                    <Text variant="bodySm" weight="extrabold">
+                      {t(`pulse.later.${area}.title`)}
+                    </Text>
+                    <Text variant="caption" color="mutedForeground">
+                      {t(`pulse.later.${area}.body`)}
+                    </Text>
+                  </View>
+                  <Badge variant="neutral" label={t("pulse.later.badge")} />
                 </View>
-                <Badge variant="neutral" label={t("pulse.later.badge")} />
-              </View>
-            ))}
-          </View>
-        </Card>
+              ))}
+            </View>
+          </Card>
+        )}
       </ScrollView>
       <ContextSwitcherSheet
         visible={switching}
         current={gymTarget(gym.id)}
         onClose={() => setSwitching(false)}
       />
+      {firstRun.overlays}
     </View>
   );
+}
+
+/** Two frames: a scroll without animation is laid out by then. */
+const settled = () =>
+  new Promise<void>((resolve) =>
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+  );
+
+/**
+ * Scrolls Gym pulse so a GR2 target is in view before the tour measures it:
+ * a content card is brought below the status bar when any part of it is
+ * outside the area between the status bar and the tab bar; the identity
+ * pill scrolls the page to the top; the tab bar needs nothing.
+ */
+function useReveal(scroll: RefObject<ScrollView | null>, topInset: number) {
+  const offset = useRef(0);
+  const window = useWindowDimensions();
+  const { measure } = useSpotlightTargets();
+  const to = useCallback(
+    async (step: GymTourStep) => {
+      if (step.reveal === "none") return;
+      if (step.reveal === "top") {
+        scroll.current?.scrollTo({ y: 0, animated: false });
+        return settled();
+      }
+      // Let a reflow of the page (the introduction becoming a notice) land first.
+      await settled();
+      const [rect, bar] = await Promise.all([measure(step.target), measure(GYM_TOUR_TARGETS.tabs)]);
+      if (rect === undefined) return;
+      const bottom = bar?.y ?? window.height;
+      if (rect.y >= topInset && rect.y + rect.height <= bottom) return;
+      scroll.current?.scrollTo({
+        y: Math.max(0, offset.current + rect.y - topInset - 16),
+        animated: false,
+      });
+      return settled();
+    },
+    [measure, scroll, topInset, window.height],
+  );
+  const onScroll = useCallback((event: { nativeEvent: { contentOffset: { y: number } } }) => {
+    offset.current = event.nativeEvent.contentOffset.y;
+  }, []);
+  return { to, onScroll };
 }
 
 function Card({
   title,
   aside,
+  targetRef,
   children,
 }: {
   title: string;
   aside?: ReactNode;
+  /** A GR2 spotlight target (SF-92). */
+  targetRef?: Ref<View>;
   children: ReactNode;
 }) {
   return (
-    <View className="gap-3.5 rounded-3xl border border-border bg-surface px-4 py-4">
+    <View
+      ref={targetRef}
+      collapsable={false}
+      className="gap-3.5 rounded-3xl border border-border bg-surface px-4 py-4"
+    >
       <View className="flex-row items-center justify-between gap-3">
         <Text
           variant="label"
