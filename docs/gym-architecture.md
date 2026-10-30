@@ -262,5 +262,6 @@ invitation_recipient_mismatch`, `404`, `409 gym_member: already_active`).
   import commit until the proposed decision D-G27 (lawful basis, retention) is
   approved.
 - **Checklist:** `invite_members` is now `available` at a completed gym and
-  `completed` once a member became active. The checklist row shows it
-  without an action until a member screen exists.
+  `completed` once a member became active. The mobile row shows it without
+  an action until a member screen exists there; on the web (SF-96) it links
+  to the gym's members page.
