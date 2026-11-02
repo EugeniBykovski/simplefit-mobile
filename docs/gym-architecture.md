@@ -266,10 +266,11 @@ invitation_recipient_mismatch`, `404`, `409 gym_member: already_active`).
   an action until a member screen exists there; on the web (SF-96) it links
   to the gym's members page.
 
-## SF-97: gym classes, venues and the timetable API (no screens yet)
+## SF-97: gym classes, venues and the timetable API (no mobile screens yet)
 
 The generated client gains the "Gym timetable" operations (ADR 0026 SF-97
-amendment). No screen uses them yet; the timetable UI is a later ticket.
+amendment). No mobile screen uses them yet; SF-98 builds the web timetable on
+them (`D-WEB-GYM-TIMETABLE`). The Expo timetable (G08, G03) is a later ticket.
 
 - **Venues:** `listGymVenues`, `createGymVenue`, `getGymVenue`,
   `updateGymVenue`, `deactivateGymVenue`. A training area at one of the gym's
@@ -302,4 +303,6 @@ amendment). No screen uses them yet; the timetable UI is a later ticket.
 - **Who:** every staff role reads; owner and managers write; a coach cancels
   only a class they instruct; front desk reads only (`403` otherwise).
 - **Checklist:** `add_class` is now `available` at a completed gym and
-  `completed` once the gym has scheduled a class (a template alone does not).
+  `completed` once the gym has scheduled a class (a template alone does not). The mobile row shows it without an action until a
+  timetable screen exists there; on the web (SF-98) it links to the gym's
+  timetable.
