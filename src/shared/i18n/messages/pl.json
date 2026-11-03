@@ -290,6 +290,11 @@
       "sponsor": {
         "unavailable": "Wniosek partnera jest na stronie SimpleFit, której ta wersja nie może otworzyć.",
         "failed": "Nie udało się otworzyć wniosku partnera. Spróbuj ponownie."
+      },
+      "member": {
+        "title": "Członkostwa w klubach na Twoim koncie: {count}",
+        "body": "Możesz rezerwować zajęcia bez wybierania roli.",
+        "action": "Otwórz moje kluby"
       }
     }
   },
@@ -348,7 +353,6 @@
       "mobile/events/_event-id/register": "Rejestracja na wydarzenie",
       "mobile/following": "Obserwowani",
       "mobile/friends": "Znajomi",
-      "mobile/gym/_gym-id/classes/_class-id/book": "Zapisz się na zajęcia",
       "mobile/gym/_gym-id/community": "Społeczność klubu",
       "mobile/gym/_gym-id/memberships": "Karnety klubu",
       "mobile/gym/_gym-id/memberships/_membership-id": "Karnet",
@@ -437,7 +441,9 @@
       "mobile/profile/coaches/_relationship-id": "Trener",
       "mobile/profile/coaches/invitations": "Zaproszenia",
       "mobile/profile/coaches/invitations/_invitation-id": "Zaproszenie",
-      "mobile/profile/coaches/invitations/verify-email": "Potwierdź e-mail"
+      "mobile/profile/coaches/invitations/verify-email": "Potwierdź e-mail",
+      "mobile/me/gyms": "Moje kluby",
+      "mobile/me/gyms/_gym-id/classes": "Zarezerwuj zajęcia"
     }
   },
   "shells": {
@@ -1349,7 +1355,12 @@
     "gymSetup": "Dokończ konfigurację klubu",
     "gymDraftLine": "{name} · jeszcze nieskonfigurowany",
     "allGyms": "Wszystkie kluby ({count})",
-    "allGymsLine": "Każdy klub, w którym pracujesz"
+    "allGymsLine": "Każdy klub, w którym pracujesz",
+    "memberships": {
+      "heading": "Członkostwo w klubie",
+      "title": "Moje zajęcia w klubach",
+      "line": "Kluby: {count} · rezerwacje"
+    }
   },
   "coachHome": {
     "loading": "Wczytujemy Twój profil trenera…",
@@ -2254,10 +2265,6 @@
           "title": "Zajęcia i grafik",
           "body": "Planuj zajęcia na cały tydzień."
         },
-        "attendance": {
-          "title": "Rezerwacje i wejścia",
-          "body": "Rezerwacje i wejścia na każde zajęcia."
-        },
         "staff": {
           "title": "Trenerzy i personel",
           "body": "Zaproś zespół i nadaj każdemu rolę."
@@ -2433,6 +2440,187 @@
           }
         }
       }
+    }
+  },
+  "gymBooking": {
+    "problems": {
+      "unknown": "Nie udało się potwierdzić wyniku. Nic nie jest oznaczone jako zrobione, dopóki SimpleFit tego nie potwierdzi. Spróbuj ponownie: nikt nie zostanie zapisany ani zarejestrowany dwa razy.",
+      "loadFailed": "Nie udało się tego wczytać. Sprawdź połączenie i spróbuj ponownie.",
+      "limited": "Za dużo żądań w krótkim czasie. Spróbuj ponownie za {minutes} min.",
+      "limitedLater": "Za dużo żądań w krótkim czasie. Spróbuj ponownie trochę później.",
+      "full": "Zajęcia są pełne (limit: {capacity}). Nie utworzono rezerwacji i nie ma listy oczekujących.",
+      "fullSome": "Na tych zajęciach nie ma już miejsc. Rezerwacja nie została utworzona i nie ma listy oczekujących.",
+      "classCancelled": "Te zajęcia są odwołane. Nic nie zostało zarezerwowane ani zarejestrowane.",
+      "started": "Te zajęcia już się zaczęły, więc rezerwacji nie można już zmienić.",
+      "notToday": "Wejście rejestruje się w dniu zajęć. Nic nie zostało zarejestrowane.",
+      "alreadyBooked": "Masz już miejsce na tych zajęciach. Druga rezerwacja nie została utworzona.",
+      "bookingCancelled": "Ta rezerwacja jest już anulowana.",
+      "checkedIn": "Wejście tego członka jest już zarejestrowane, więc rezerwacja zostaje.",
+      "membership": "Twoje członkostwo w tym klubie nie jest aktywne, więc nie możesz rezerwować jego zajęć.",
+      "membershipRequested": "Twoja prośba o dołączenie do tego klubu wciąż czeka na akceptację, więc nie możesz jeszcze rezerwować.",
+      "keyReused": "Nie udało się dopasować tego żądania. Odśwież stronę i spróbuj ponownie.",
+      "forbidden": "Twoja rola na to nie pozwala. Nic się nie zmieniło.",
+      "gone": "To nie jest dla Ciebie dostępne. Strona jest aktualna.",
+      "session": "Twoja sesja wygasła. Zaloguj się ponownie, aby kontynuować.",
+      "failed": "Coś poszło nie tak i nic się nie zmieniło. Spróbuj ponownie."
+    },
+    "roster": {
+      "eyebrow": "{day} · {from} – {to} · {venue}",
+      "description": "Kto zarezerwował te zajęcia, według danych SimpleFit.",
+      "close": "Zamknij",
+      "classCancelled": "Te zajęcia są odwołane. Ich rezerwacje zostały zwolnione i nie można zarejestrować żadnego wejścia.",
+      "views": {
+        "label": "Rezerwacje",
+        "confirmed": "Zarezerwowane",
+        "cancelled": "Anulowane"
+      },
+      "checkInNote": "Rejestruj wejścia członków, gdy przychodzą. Wejście rejestruje się w dniu zajęć, raz na rezerwację.",
+      "retry": "Spróbuj ponownie",
+      "loading": "Wczytywanie listy uczestników",
+      "empty": {
+        "confirmed": "Nikt jeszcze nie zarezerwował tych zajęć.",
+        "cancelled": "Brak anulowanych rezerwacji."
+      },
+      "privacy": "Widać tylko skrócone imię i dane rezerwacji. E-mail, profil ani dane treningowe nie są częścią listy uczestników.",
+      "unnamed": "Członek",
+      "cancelledAt": "Anulowano {time}",
+      "bookedVia": {
+        "member": "Zarezerwowane przez członka · {time}",
+        "staff": "Zarezerwowane przez zespół · {time}"
+      },
+      "reasons": {
+        "member_cancelled": "Anulowane przez członka",
+        "staff_cancelled": "Anulowane przez zespół",
+        "occurrence_cancelled": "Zajęcia odwołane",
+        "membership_ended": "Członkostwo zakończone"
+      },
+      "checkedInAt": "Wejście zarejestrowane {time}",
+      "checkInFor": "Zarejestruj wejście: {name}",
+      "checkingIn": "Rejestrowanie…",
+      "checkIn": "Zarejestruj wejście",
+      "booked": "Zarezerwowane",
+      "checkedInDone": "Wejście zarejestrowane: {name}.",
+      "summary": {
+        "booked": "{confirmed}/{capacity}",
+        "bookedLabel": "zarezerwowane",
+        "remaining": "Wolne miejsca: {count}",
+        "checkedIn": "Zarejestrowane wejścia: {count}",
+        "a11y": "Zarezerwowane miejsca: {confirmed} z {capacity}"
+      },
+      "coach": "Trener {name}",
+      "noInstructor": "Bez prowadzącego"
+    },
+    "member": {
+      "cancel": {
+        "title": "Anulować rezerwację?",
+        "body": "Twoje miejsce na zajęciach {title} ({when}) zostanie zwolnione dla kogoś innego. Możesz zarezerwować ponownie, dopóki są wolne miejsca.",
+        "keep": "Zachowaj rezerwację",
+        "pending": "Anulowanie…",
+        "again": "Spróbuj ponownie",
+        "confirm": "Anuluj rezerwację"
+      },
+      "gyms": {
+        "eyebrow": "Członkostwo",
+        "title": "Moje kluby",
+        "retry": "Spróbuj ponownie",
+        "loading": "Wczytywanie Twoich klubów",
+        "empty": {
+          "title": "Nie jesteś członkiem żadnego klubu",
+          "body": "Gdy klub zatwierdzi Cię jako członka, pojawi się tutaj i będziesz mieć możliwość rezerwowania jego zajęć. Dołączanie do klubu w aplikacji nie jest jeszcze dostępne."
+        },
+        "unnamedGym": "Klub",
+        "activeLine": "Rezerwuj zajęcia i przeglądaj swoje rezerwacje",
+        "requestedLine": "Czeka na akceptację prośby przez klub",
+        "status": {
+          "active": "Członek",
+          "requested": "Oczekuje"
+        },
+        "open": "Otwórz zajęcia klubu {gym}",
+        "note": "Członkostwo w klubie nie wymaga profilu zawodnika ani trenera. SimpleFit pokazuje tylko to, co zapisał klub: bez planów, płatności i kredytów."
+      },
+      "classes": {
+        "eyebrow": "Członkostwo",
+        "title": "Zarezerwuj zajęcia",
+        "retry": "Spróbuj ponownie",
+        "loading": "Wczytywanie zajęć",
+        "notMember": {
+          "title": "Nie jesteś członkiem tego klubu",
+          "body": "Tylko aktywni członkowie klubu mogą widzieć i rezerwować jego zajęcia."
+        },
+        "requested": {
+          "title": "Twoja prośba czeka",
+          "body": "Klub {gym} nie zaakceptował jeszcze Twojej prośby. Zajęcia zarezerwujesz, gdy zostaniesz członkiem."
+        },
+        "ended": {
+          "title": "Twoje członkostwo nie jest aktywne",
+          "body": "Twoje członkostwo w klubie {gym} się zakończyło, więc nie możesz rezerwować jego zajęć. Wcześniejsze rezerwacje zostają w zakładce Moje rezerwacje."
+        },
+        "thisGym": "Ten klub",
+        "backToGyms": "Wróć do moich klubów",
+        "listHeading": "Zajęcia",
+        "previousWeek": "Poprzedni tydzień",
+        "nextWeek": "Następny tydzień",
+        "days": "Dni",
+        "today": "Dziś",
+        "zone": "Godziny w strefie {zone}",
+        "emptyDay": "Brak zajęć tego dnia.",
+        "hint": "Wybierz zajęcia, aby zobaczyć szczegóły i zarezerwować miejsce.",
+        "note": "Liczba wolnych miejsc może się zmienić w każdej chwili: rezerwacja liczy się dopiero, gdy SimpleFit ją potwierdzi.",
+        "places": {
+          "cancelled": "Odwołane",
+          "full": "Brak miejsc · limit {capacity}",
+          "left": "Wolne: {left} z {capacity}"
+        },
+        "states": {
+          "booked": "Zarezerwowane",
+          "checkedIn": "Wejście zarejestrowane",
+          "cancelled": "Odwołane",
+          "started": "Rozpoczęte",
+          "full": "Brak miejsc",
+          "open": "Zarezerwuj"
+        },
+        "detailsEyebrow": "{day} · {minutes} min · {venue}",
+        "instructor": "Prowadzący: {name}",
+        "until": "Do {time}",
+        "confirmedNotice": "Rezerwacja potwierdzona. Twoje miejsce jest zapisane.",
+        "cancelledBefore": "Wcześniejsza rezerwacja tych zajęć została przez Ciebie anulowana. Możesz zarezerwować ponownie, dopóki są wolne miejsca.",
+        "booking": "Rezerwowanie…",
+        "tryAgain": "Spróbuj ponownie",
+        "confirm": "Potwierdź rezerwację",
+        "cancelBooking": "Anuluj rezerwację",
+        "checkedInNotice": "Twoje wejście zarejestrowano o {time}.",
+        "fullNotice": "Na tych zajęciach nie ma już miejsc. Nie ma listy oczekujących: sprawdź później, czy jakieś miejsce się zwolni.",
+        "startedNotice": "Te zajęcia już się zaczęły i nie można ich zarezerwować.",
+        "cancelledNotice": "Klub odwołał te zajęcia.",
+        "cancelNote": "Możesz anulować do rozpoczęcia zajęć.",
+        "startedBooked": "Te zajęcia już się zaczęły. Twojej rezerwacji nie można już anulować.",
+        "close": "Zamknij"
+      }
+    },
+    "classes": {
+      "eyebrow": "{gym} · {date}",
+      "title": "Zajęcia",
+      "range": "Dni",
+      "ranges": {
+        "today": "Dziś",
+        "tomorrow": "Jutro",
+        "week": "Ten tydzień"
+      },
+      "retry": "Spróbuj ponownie",
+      "loading": "Wczytujemy zajęcia",
+      "empty": {
+        "today": "Dziś nie ma zajęć.",
+        "tomorrow": "Jutro nie ma zajęć.",
+        "week": "W tym tygodniu nie ma zajęć."
+      },
+      "zone": "Godziny w strefie {zone}",
+      "hint": "Dotknij zajęć, aby zobaczyć listę uczestników i wejścia.",
+      "hintCoach": "Możesz otworzyć listy uczestników zajęć, które prowadzisz.",
+      "noInstructor": "Bez prowadzącego",
+      "minutes": "{count} min",
+      "capacity": "Maks. {count}",
+      "cancelled": "Odwołane",
+      "open": "{title} o {time}, otwórz listę uczestników"
     }
   }
 }

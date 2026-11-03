@@ -71,15 +71,16 @@ export const tabNavigation: Record<
     ],
   },
   // The gym MVP (Claude Design GymTabs, version 1792675284-1046, SF-89): Pulse
-  // is linked; Classes, QR check-in, Members and Staff arrive with their
-  // domains and are Soon until then (D-MOBILE-GYM-SHELL-MVP).
+  // and, since SF-100, Classes are linked; QR check-in, Members and Staff
+  // arrive with their domains and are Soon until then (D-MOBILE-GYM-SHELL-MVP).
   gym: {
     shell: "mobile.gym",
     icons: { pulse: Activity, classes: Calendar, checkin: ScanLine, members: Users, staff: IdCard },
     center: "checkin",
     items: [
       { key: "pulse", route: "mobile.gyms._gym-id.pulse" },
-      { key: "classes" },
+      // SF-100: G08 Classes, with G03 rosters and manual check-in (D-GYM-CLASS-ROSTER).
+      { key: "classes", route: "mobile.gyms._gym-id.classes" },
       { key: "checkin" },
       { key: "members" },
       { key: "staff" },

@@ -543,11 +543,11 @@ describe("canonical routes resolve", () => {
 
   it("passes dynamic parameters through unchanged", async () => {
     await signIn(FIGHTER_HOME);
-    const result = await renderApp("/gym/g-42/classes/c-7/book");
+    const result = await renderApp("/gym/g-42/memberships/m-7");
     expect(
-      await screen.findByTestId(placeholderId("mobile.gym._gym-id.classes._class-id.book")),
+      await screen.findByTestId(placeholderId("mobile.gym._gym-id.memberships._membership-id")),
     ).toBeOnTheScreen();
-    expect(result.getSearchParams()).toEqual({ gymId: "g-42", classId: "c-7" });
+    expect(result.getSearchParams()).toEqual({ gymId: "g-42", membershipId: "m-7" });
   });
 
   it("serves fighter and workspace routes that share the /gym and /coach prefixes", async () => {
@@ -836,13 +836,16 @@ describe("tab navigation", () => {
     expect(await screen.findByRole("tab", { name: "Today", selected: true })).toBeOnTheScreen();
   });
 
-  it("links the gym tab bar's Pulse only; the other gym tabs are Soon (SF-89)", async () => {
+  it("links the gym tab bar's Pulse and Classes; the other gym tabs are Soon (SF-89, SF-100)", async () => {
     await signIn(GYM_HOME, FIGHTER_NOT_STARTED, "completed", coachProfile(), [COMPLETED_GYM]);
     const result = await renderApp(`/gyms/${COMPLETED_GYM.id}/staff/on-shift`);
-    for (const tab of ["Classes", "QR check-in", "Members", "Staff"]) {
+    for (const tab of ["QR check-in", "Members", "Staff"]) {
       const soon = await screen.findByRole("tab", { name: `${tab}, not available yet` });
       expect(soon).toBeDisabled();
     }
+    await fireEvent.press(screen.getByRole("tab", { name: "Classes" }));
+    await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${COMPLETED_GYM.id}/classes`));
+    expect(await screen.findByRole("tab", { name: "Classes", selected: true })).toBeOnTheScreen();
     await fireEvent.press(screen.getByRole("tab", { name: "Pulse" }));
     await waitFor(() => expect(result.getPathname()).toBe(`/gyms/${COMPLETED_GYM.id}/pulse`));
     expect(await screen.findByRole("tab", { name: "Pulse", selected: true })).toBeOnTheScreen();
@@ -1046,12 +1049,17 @@ describe("entry resolution (SF-45)", () => {
     expect(result.getPathname()).toBe("/onboarding/role");
     expect(screen.queryByTestId(placeholderId("mobile.workspaces"))).toBeNull();
 
-    // Routing only read: the viewer and the entry, never a workspace, and nothing was written.
+    // Routing only read: the viewer, the entry and (SF-100, for O05's member
+    // shortcut) the account's gym memberships; never a workspace, nothing written.
     const calls = (global.fetch as jest.Mock).mock.calls as [string, RequestInit?][];
     const requests = calls.map(
       ([url, init]) => `${init?.method ?? "GET"} ${new URL(url).pathname}`,
     );
-    expect(requests.every((request) => /^GET \/api\/(me|v1\/me\/entry)$/.test(request))).toBe(true);
+    expect(
+      requests.every((request) =>
+        /^GET \/api\/(me|v1\/me\/entry|v1\/me\/gym-memberships)$/.test(request),
+      ),
+    ).toBe(true);
     expect(requests).toContain("GET /api/v1/me/entry");
     expect(calls.some(([url]) => /workspace/i.test(url))).toBe(false);
   });

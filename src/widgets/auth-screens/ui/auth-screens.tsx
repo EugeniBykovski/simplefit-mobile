@@ -31,6 +31,7 @@ import {
   SignInEmailForm,
   type CodeStepLayout,
 } from "@/features/email-auth";
+import { currentMemberships, useMyGymMemberships } from "@/entities/gym-booking";
 import { useSession } from "@/entities/session";
 import { AccountBasicsForm } from "@/features/account-registration";
 import { useEntryChoice } from "@/features/session-gate";
@@ -44,6 +45,7 @@ import {
   type Continuation,
   type EntryIntent,
 } from "@/shared/routes/continuation";
+import { routeHref } from "@/shared/routes/routes";
 import { useTheme } from "@/shared/styles/theme";
 import { BrandLockup } from "@/shared/ui/brand-mark";
 import { Button } from "@/shared/ui/button";
@@ -516,6 +518,7 @@ export function RoleChoiceScreen() {
         </Text>
         <Text color="mutedForeground">{t("description")}</Text>
       </View>
+      <MemberShortcut />
       <View accessibilityRole="radiogroup" accessibilityLabel={t("groupLabel")} className="gap-2.5">
         {JOURNEYS.map(({ intent, icon }) => (
           <JourneyCard
@@ -597,5 +600,34 @@ function JourneyCard({
         {checked ? <View className="size-2.5 rounded-full bg-highlight" /> : null}
       </View>
     </Pressable>
+  );
+}
+
+/**
+ * A gym member needs no role to book classes (ADR 0026 D-G07): when the
+ * account holds an active membership or a pending request (SF-95), My gyms
+ * is offered here too. Choosing a journey stays optional; nothing is created.
+ */
+function MemberShortcut() {
+  const t = useTranslations("auth.role.member");
+  const router = useRouter();
+  const list = useMyGymMemberships();
+  const count = currentMemberships(list.memberships).length;
+  if (!list.complete || count === 0) return null;
+  return (
+    <View className="gap-2.5 rounded-2xl border border-accent-border bg-accent px-4 py-3.5">
+      <Text variant="bodySm" weight="extrabold" color="accentForeground">
+        {t("title", { count })}
+      </Text>
+      <Text variant="caption" color="accentForeground">
+        {t("body")}
+      </Text>
+      <Button
+        variant="outline"
+        size="sm"
+        label={t("action")}
+        onPress={() => router.push(routeHref("mobile.me.gyms"))}
+      />
+    </View>
   );
 }

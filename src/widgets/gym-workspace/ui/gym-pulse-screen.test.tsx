@@ -93,13 +93,10 @@ describe("G01 Gym pulse (SF-89)", () => {
     expect(screen.getByLabelText("Website: Not added")).toBeOnTheScreen();
     expect(screen.getByText(/Praga/)).toBeOnTheScreen();
     // Coming later, never a number.
-    for (const area of [
-      "Members",
-      "Classes & timetable",
-      "Bookings & check-ins",
-      "Coaches & staff",
-    ])
+    for (const area of ["Members", "Classes & timetable", "Coaches & staff"])
       expect(screen.getByText(area)).toBeOnTheScreen();
+    // SF-100: rosters and check-ins are real (the Classes tab), never "coming later".
+    expect(screen.queryByText("Bookings & check-ins")).toBeNull();
     expect(screen.queryByText(/^\d+$/)).toBeNull();
   });
 

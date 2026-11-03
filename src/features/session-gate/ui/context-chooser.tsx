@@ -5,6 +5,7 @@ import { useTranslations } from "use-intl";
 
 import { useCoachProfile } from "@/entities/coach-profile";
 import { useFighterProfile } from "@/entities/fighter-profile";
+import { currentMemberships, useMyGymMemberships } from "@/entities/gym-booking";
 import { routeHref } from "@/shared/routes/routes";
 import { initialsOf } from "@/shared/ui/avatar";
 import { Notice } from "@/shared/ui/notice";
@@ -68,6 +69,10 @@ export function ContextChooser({
   const gyms = gymWorkspaceOptions(entry);
   const { state, open, continueJourney, openGym, continueGymSetup } = useContextSwitch(onLeave);
   const names = useProfileNames(completed);
+  // The account's gym memberships (SF-95): a member's classes and bookings
+  // are account-level (D-G07), never a workspace, so they are a row of their own.
+  const memberships = useMyGymMemberships();
+  const membershipCount = currentMemberships(memberships.memberships).length;
   const pending = state.status === "pending";
   const current = mode.kind === "switch" ? mode.current : undefined;
   // E11: nothing completed to open; only the journeys already started are offered.
@@ -164,6 +169,28 @@ export function ContextChooser({
           />
         ) : null}
         {rows(journeyRows)}
+        {membershipCount > 0 ? (
+          <>
+            <Text
+              variant="label"
+              color="faintForeground"
+              accessibilityRole="header"
+              className="pt-1.5"
+            >
+              {t("memberships.heading")}
+            </Text>
+            <ChooserRow
+              title={t("memberships.title")}
+              line={t("memberships.line", { count: membershipCount })}
+              avatar={{ kind: "more" }}
+              pending={pending}
+              onPress={() => {
+                onLeave?.();
+                router.push(routeHref("mobile.me.gyms"));
+              }}
+            />
+          </>
+        ) : null}
       </View>
       {state.status === "failed" ? (
         <View accessibilityRole="alert" accessibilityLiveRegion="polite">
