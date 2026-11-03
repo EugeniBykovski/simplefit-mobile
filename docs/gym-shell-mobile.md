@@ -134,3 +134,41 @@ holds Settings (ST1: the account and Sign out).
 - Native iOS: the SF-87 development build (no native change), iPhone 13
   mini (375), iPhone 14 (390) and iPhone 16 Plus (430) simulators, dark and
   light, AX5 text.
+
+## SF-100: Classes, rosters and member booking
+
+- **Classes tab (G08):** linked in the gym tab bar; today, tomorrow or this
+  week of the SF-97 timetable, each class at its own wall time in its venue's
+  zone with "Up to N" (no booked counts). A class whose roster the viewer may
+  read (owner, managers, front desk; a coach only the classes they teach)
+  opens G03.
+- **Class roster (G03):** the backend's counts (booked of capacity, places
+  left, check-ins), each booking with a short name, and manual Check in for
+  `record_check_in` (one per booking, refused outside the class's local day).
+- **Member side:** `/me/gyms` and `/me/gyms/:gymId/classes` (F13) in the
+  shared stack, reached from A04 (sheet and `/workspaces`) and O05; no Fighter
+  profile needed. Booking history on mobile waits for an artboard.
+- **Real API (Jest, production router, nothing mocked but the transport):**
+  `src/providers/gym-member-booking.real-api.test.tsx` runs after the web leg
+  of `e2e/real-api/gym-member-booking.spec.ts` (simplefit-platform) with its
+  handoff file: the web booking shows on mobile and mobile cancels it; mobile
+  books another class (its first answer lost, the re-read shows one booking);
+  the owner's G03 shows the arrival the web recorded.
+
+  ```bash
+  E2E_REAL_API_URL=http://127.0.0.1:<port> E2E_API_DATABASE_URL=postgres://…/<…e2e…> \
+  E2E_API_DIR=../simplefit-api E2E_HANDOFF_FILE=<handoff.json> \
+  npx jest src/providers/gym-member-booking.real-api.test.tsx --forceExit
+  ```
+
+- **Native iOS (2026-11-02):** the SF-87 development build (no native change)
+  on iOS 18.5 simulators against a disposable API, driven by the SF-87
+  XCUITest step driver: sign-in, My gyms, F13, book (confirmed by the backend),
+  Cancel booking (confirmed), at iPhone 13 mini (375, light), iPhone 14 (390,
+  dark and light, AX5 text) and iPhone 16 Plus (430, dark); G08 → G03 → Check in
+  as the owner at 390 (one arrival recorded); a cold relaunch restores the
+  session and My gyms. Accessibility audits report only the development
+  client's gear button and zero-size text elements (as SF-89, SF-92).
+- Not verified: Android on a device or emulator (no Android tooling; the
+  Android JS bundle builds), VoiceOver and TalkBack by hand, foreground and
+  background by hand (covered by the focus manager wiring and Jest).

@@ -290,6 +290,11 @@
       "sponsor": {
         "unavailable": "The partner application is on the SimpleFit website, which this build can't open.",
         "failed": "We couldn't open the partner application. Try again."
+      },
+      "member": {
+        "title": "Gym memberships on your account: {count}",
+        "body": "You can book classes without choosing a role.",
+        "action": "Open my gyms"
       }
     }
   },
@@ -348,7 +353,6 @@
       "mobile/events/_event-id/register": "Event registration",
       "mobile/following": "Following",
       "mobile/friends": "Friends",
-      "mobile/gym/_gym-id/classes/_class-id/book": "Book a class",
       "mobile/gym/_gym-id/community": "Gym community",
       "mobile/gym/_gym-id/memberships": "Gym memberships",
       "mobile/gym/_gym-id/memberships/_membership-id": "Membership",
@@ -437,7 +441,9 @@
       "mobile/profile/coaches/_relationship-id": "Coach",
       "mobile/profile/coaches/invitations": "Invitations",
       "mobile/profile/coaches/invitations/_invitation-id": "Invitation",
-      "mobile/profile/coaches/invitations/verify-email": "Verify an email"
+      "mobile/profile/coaches/invitations/verify-email": "Verify an email",
+      "mobile/me/gyms": "My gyms",
+      "mobile/me/gyms/_gym-id/classes": "Book a class"
     }
   },
   "shells": {
@@ -1349,7 +1355,12 @@
     "gymSetup": "Continue gym setup",
     "gymDraftLine": "{name} · not set up yet",
     "allGyms": "All gyms ({count})",
-    "allGymsLine": "Every gym you work at"
+    "allGymsLine": "Every gym you work at",
+    "memberships": {
+      "heading": "Gym membership",
+      "title": "My gym classes",
+      "line": "Gyms: {count} · book and see bookings"
+    }
   },
   "coachHome": {
     "loading": "Loading your coach profile…",
@@ -2254,10 +2265,6 @@
           "title": "Classes & timetable",
           "body": "Plan classes across your week."
         },
-        "attendance": {
-          "title": "Bookings & check-ins",
-          "body": "Bookings and check-ins for each class."
-        },
         "staff": {
           "title": "Coaches & staff",
           "body": "Invite your team and give each person a role."
@@ -2433,6 +2440,187 @@
           }
         }
       }
+    }
+  },
+  "gymBooking": {
+    "problems": {
+      "unknown": "We couldn’t confirm the outcome. Nothing is shown as done until SimpleFit confirms it. Try again: it can’t book or check anyone in twice.",
+      "loadFailed": "We couldn’t load this. Check your connection and try again.",
+      "limited": "Too many requests in a short time. Try again in {minutes} min.",
+      "limitedLater": "Too many requests in a short time. Try again a little later.",
+      "full": "This class is full (capacity: {capacity}). No booking was made, and there is no waitlist.",
+      "fullSome": "This class is full. No booking was made, and there is no waitlist.",
+      "classCancelled": "This class is cancelled. Nothing was booked or recorded.",
+      "started": "This class has already started, so bookings can’t change any more.",
+      "notToday": "Check-in is recorded on the day of the class. Nothing was recorded.",
+      "alreadyBooked": "You already have a place in this class. No second booking was made.",
+      "bookingCancelled": "This booking is already cancelled.",
+      "checkedIn": "This member is already checked in, so the booking stays.",
+      "membership": "Your membership of this gym isn’t active, so you can’t book its classes.",
+      "membershipRequested": "Your request to join this gym is still waiting for approval, so you can’t book yet.",
+      "keyReused": "This request couldn’t be matched. Reload the page and try again.",
+      "forbidden": "Your role can’t do this. Nothing changed.",
+      "gone": "This isn’t available to you. The page is up to date.",
+      "session": "Your session has ended. Sign in again to continue.",
+      "failed": "Something went wrong and nothing changed. Try again."
+    },
+    "roster": {
+      "eyebrow": "{day} · {from} – {to} · {venue}",
+      "description": "Who has booked this class, from SimpleFit’s records.",
+      "close": "Close",
+      "classCancelled": "This class is cancelled. Its bookings were released and no one can be checked in.",
+      "views": {
+        "label": "Bookings",
+        "confirmed": "Booked",
+        "cancelled": "Cancelled"
+      },
+      "checkInNote": "Check members in as they arrive. Check-in is recorded on the day of the class, once per booking.",
+      "retry": "Try again",
+      "loading": "Loading the roster",
+      "empty": {
+        "confirmed": "No one has booked this class yet.",
+        "cancelled": "No cancelled bookings."
+      },
+      "privacy": "Only a short name and booking facts are shown. No email, profile or training data is part of a roster.",
+      "unnamed": "Member",
+      "cancelledAt": "Cancelled {time}",
+      "bookedVia": {
+        "member": "Booked by the member · {time}",
+        "staff": "Booked by staff · {time}"
+      },
+      "reasons": {
+        "member_cancelled": "Cancelled by the member",
+        "staff_cancelled": "Cancelled by staff",
+        "occurrence_cancelled": "Class cancelled",
+        "membership_ended": "Membership ended"
+      },
+      "checkedInAt": "Checked in {time}",
+      "checkInFor": "Check in {name}",
+      "checkingIn": "Checking in…",
+      "checkIn": "Check in",
+      "booked": "Booked",
+      "checkedInDone": "{name} is checked in.",
+      "summary": {
+        "booked": "{confirmed}/{capacity}",
+        "bookedLabel": "booked",
+        "remaining": "Places left: {count}",
+        "checkedIn": "Checked in: {count}",
+        "a11y": "{confirmed} of {capacity} places booked"
+      },
+      "coach": "Coach {name}",
+      "noInstructor": "No instructor"
+    },
+    "member": {
+      "cancel": {
+        "title": "Cancel your booking?",
+        "body": "Your place in {title} on {when} is released for someone else. You can book again while places are left.",
+        "keep": "Keep booking",
+        "pending": "Cancelling…",
+        "again": "Try again",
+        "confirm": "Cancel booking"
+      },
+      "gyms": {
+        "eyebrow": "Membership",
+        "title": "My gyms",
+        "retry": "Try again",
+        "loading": "Loading your gyms",
+        "empty": {
+          "title": "You’re not a member of a gym",
+          "body": "When a gym approves you as a member, it appears here and you can book its classes. Joining a gym in the app isn’t available yet."
+        },
+        "unnamedGym": "Gym",
+        "activeLine": "Book classes and see your bookings",
+        "requestedLine": "Waiting for the gym to approve your request",
+        "status": {
+          "active": "Member",
+          "requested": "Pending"
+        },
+        "open": "Open the classes of {gym}",
+        "note": "A gym membership needs no Fighter or Coach profile. SimpleFit shows only what the gym has recorded: no plan, payment or credits."
+      },
+      "classes": {
+        "eyebrow": "Membership",
+        "title": "Book a class",
+        "retry": "Try again",
+        "loading": "Loading classes",
+        "notMember": {
+          "title": "You’re not a member of this gym",
+          "body": "Only a gym’s active members can see and book its classes."
+        },
+        "requested": {
+          "title": "Your request is waiting",
+          "body": "{gym} hasn’t approved your request yet. You can book classes once you’re a member."
+        },
+        "ended": {
+          "title": "Your membership isn’t active",
+          "body": "Your membership of {gym} has ended, so you can’t book its classes. Your past bookings stay in My bookings."
+        },
+        "thisGym": "This gym",
+        "backToGyms": "Back to my gyms",
+        "listHeading": "Classes",
+        "previousWeek": "Previous week",
+        "nextWeek": "Next week",
+        "days": "Days",
+        "today": "Today",
+        "zone": "Times in {zone}",
+        "emptyDay": "No classes this day.",
+        "hint": "Choose a class to see its details and book a place.",
+        "note": "Places left can change at any moment: a booking counts only once SimpleFit confirms it.",
+        "places": {
+          "cancelled": "Cancelled",
+          "full": "Full · capacity {capacity}",
+          "left": "{left} of {capacity} left"
+        },
+        "states": {
+          "booked": "Booked",
+          "checkedIn": "Checked in",
+          "cancelled": "Cancelled",
+          "started": "Started",
+          "full": "Full",
+          "open": "Book"
+        },
+        "detailsEyebrow": "{day} · {minutes} min · {venue}",
+        "instructor": "Coach {name}",
+        "until": "Until {time}",
+        "confirmedNotice": "Booking confirmed. Your place is saved.",
+        "cancelledBefore": "You cancelled an earlier booking of this class. You can book again while places are left.",
+        "booking": "Booking…",
+        "tryAgain": "Try again",
+        "confirm": "Confirm booking",
+        "cancelBooking": "Cancel booking",
+        "checkedInNotice": "You were checked in at {time}.",
+        "fullNotice": "This class is full. There is no waitlist: check again later in case a place frees up.",
+        "startedNotice": "This class has started and can’t be booked.",
+        "cancelledNotice": "The gym cancelled this class.",
+        "cancelNote": "You can cancel until the class starts.",
+        "startedBooked": "This class has started. Your booking can’t be cancelled any more.",
+        "close": "Close"
+      }
+    },
+    "classes": {
+      "eyebrow": "{gym} · {date}",
+      "title": "Classes",
+      "range": "Days",
+      "ranges": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "week": "This week"
+      },
+      "retry": "Try again",
+      "loading": "Loading classes",
+      "empty": {
+        "today": "No classes today.",
+        "tomorrow": "No classes tomorrow.",
+        "week": "No classes this week."
+      },
+      "zone": "Times in {zone}",
+      "hint": "Tap a class for its roster and check-ins.",
+      "hintCoach": "You can open the rosters of the classes you teach.",
+      "noInstructor": "No instructor",
+      "minutes": "{count} min",
+      "capacity": "Up to {count}",
+      "cancelled": "Cancelled",
+      "open": "{title} at {time}, open the roster"
     }
   }
 }

@@ -18,8 +18,8 @@ describe("routeHref", () => {
 
   it("fills named parameters, URL-encoded, and appends the query", () => {
     expect(
-      routeHref("mobile.gym._gym-id.classes._class-id.book", { gymId: "g 1", classId: "c/2" }),
-    ).toBe("/gym/g%201/classes/c%2F2/book");
+      routeHref("mobile.gyms._gym-id.classes._class-id.roster", { gymId: "g 1", classId: "c/2" }),
+    ).toBe("/gyms/g%201/classes/c%2F2/roster");
     expect(routeHref("mobile.checkout", {}, { from: "pro" })).toBe("/checkout?from=pro");
   });
 

@@ -58,6 +58,11 @@ const REAL_SCREENS = [
   "mobile.sessions._session-id",
   // SF-89: G01 Gym pulse and the gym chooser (MGC1).
   "mobile.gyms._gym-id.pulse",
+  // SF-100: G08 Classes and G03 Class roster; F13 and My gyms at account level.
+  "mobile.gyms._gym-id.classes",
+  "mobile.gyms._gym-id.classes._class-id.roster",
+  "mobile.me.gyms",
+  "mobile.me.gyms._gym-id.classes",
   "mobile.gyms",
 ];
 
@@ -155,8 +160,8 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 34, catchAll: 1, placeholder: 115, deferred: 1 });
-    expect(routes).toHaveLength(151);
+    expect(counts).toEqual({ screen: 38, catchAll: 1, placeholder: 112, deferred: 1 });
+    expect(routes).toHaveLength(152);
   });
 
   it("makes placeholder files exactly the canonical placeholder module for their own route", () => {

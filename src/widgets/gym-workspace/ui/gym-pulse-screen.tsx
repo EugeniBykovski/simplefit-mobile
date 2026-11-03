@@ -58,8 +58,11 @@ const accentName = (color: string) => ACCENT_NAMES[ACCENT_COLORS.indexOf(color)]
 /** Ink on a chosen swatch (the OG3 contrast rule): always graphite. */
 const INK = rawPalette.graphite950;
 
-/** The gym areas whose domains do not exist yet: listed as coming later, never as numbers. */
-const LATER = ["members", "schedule", "attendance", "staff"] as const;
+/**
+ * The gym areas whose mobile screens do not exist yet: listed as coming
+ * later, never as numbers. Rosters and check-ins live in Classes (SF-100).
+ */
+const LATER = ["members", "schedule", "staff"] as const;
 
 export function GymPulseScreen() {
   const { gymId } = useLocalSearchParams<{ gymId: string }>();
