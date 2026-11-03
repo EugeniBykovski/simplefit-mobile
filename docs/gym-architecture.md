@@ -406,3 +406,15 @@ screen, checkout or gating is built:
 - **Not built (no approved design or contract):** plan selection, checkout,
   billing settings, trials, invoices, member product purchase, passes and
   credits (D-G09 prices are provisional drafts; D-G10/D-G11 open).
+
+## SF-102: Stripe billing API (no mobile screens)
+
+Generated client operations only (ADR 0026 amendment SF-102); the gym's
+SimpleFit plan is managed on the web (WG25). New operations under "SimpleFit
+plans": `getGymBillingSummary`, `listGymBillingInvoices`,
+`createGymSaasCheckoutSession`, `reconcileGymSaasSubscription`,
+`createGymBillingPortalSession` (owner only); `receiveStripeWebhook` is for
+Stripe, never a client. `cancel_reason` gains `provider_initiated`. A mobile
+billing screen would leave for the Stripe-hosted URLs the backend answers
+and never show a redirect as a payment; app-store payment rules for in-app
+digital purchases apply before any mobile checkout is built.
