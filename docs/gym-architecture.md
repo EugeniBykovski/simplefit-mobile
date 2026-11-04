@@ -418,3 +418,16 @@ Stripe, never a client. `cancel_reason` gains `provider_initiated`. A mobile
 billing screen would leave for the Stripe-hosted URLs the backend answers
 and never show a redirect as a payment; app-store payment rules for in-app
 digital purchases apply before any mobile checkout is built.
+
+## SF-103: business verification and go-live API (no mobile screens)
+
+Generated client operations only (ADR 0026 amendment SF-103); verification,
+community defaults and go-live are web screens (OG7, WG10 / OG13, OG14 in
+Gym settings). New operations under "Gym verification":
+`getGymBusinessVerification`, `saveGymBusinessVerification`,
+`submitGymBusinessVerification`, `createGymVerificationEvidence`,
+`confirmGymVerificationEvidence`, `removeGymVerificationEvidence` (owner
+only) and `getGymGoLive` (owner and managers). The permissions
+`manage_business_verification` and `view_go_live` appear in the gym viewer's
+permission lists. The route registry gains the two web routes
+(`D-WEB-GYM-VERIFICATION-GO-LIVE`); no mobile route changes.
