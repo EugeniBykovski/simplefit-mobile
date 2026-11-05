@@ -493,6 +493,7 @@ describe("approved SF-31 decisions", () => {
     expect(invite.map((r) => [r.id, r.path, r.access.session])).toEqual([
       ["web.invite.coach", "/invite/coach", "PUBLIC"],
       ["web.invite.staff", "/invite/staff", "PUBLIC"],
+      ["web.invite.gym", "/invite/gym", "PUBLIC"],
     ]);
     expect(invite[0]?.params).toEqual([]);
     const webInviteScreens = screens.filter(
