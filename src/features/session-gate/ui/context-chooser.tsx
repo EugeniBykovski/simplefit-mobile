@@ -169,7 +169,7 @@ export function ContextChooser({
           />
         ) : null}
         {rows(journeyRows)}
-        {membershipCount > 0 ? (
+        {memberships.complete ? (
           <>
             <Text
               variant="label"
@@ -181,7 +181,11 @@ export function ContextChooser({
             </Text>
             <ChooserRow
               title={t("memberships.title")}
-              line={t("memberships.line", { count: membershipCount })}
+              line={
+                membershipCount > 0
+                  ? t("memberships.line", { count: membershipCount })
+                  : t("memberships.join")
+              }
               avatar={{ kind: "more" }}
               pending={pending}
               onPress={() => {

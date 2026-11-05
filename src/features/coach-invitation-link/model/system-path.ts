@@ -19,6 +19,10 @@ import { mobileGuards, routeHref } from "@/shared/routes/routes";
  *   session gate would carry it into `returnTo`). Nothing of it is kept,
  *   stored, logged or sent anywhere.
  *
+ * The E07 member invitation (`/invite/gym#token=…`, SF-95) works the same way
+ * (SF-135): it leads to the member's own inbox, with no intent, since joining a
+ * gym needs no Fighter profile; the token is dropped with the fragment.
+ *
  * Every system URL passes through `systemPathOf` (`src/app/+native-intent.tsx`)
  * on a cold start and on every later link. It is pure and never throws.
  */
@@ -38,6 +42,21 @@ export const INVITATION_ENTRY = withContinuation(mobileGuards.signIn, {
   intent: "fighter",
 }) as string;
 
+/** The E07 link path (simplefit-api `Gyms.MemberInvitations`), exactly. */
+export const GYM_INVITATION_LINK_PATH = "/invite/gym";
+
+/** Where an E07 link leads: sign-in, then the entry, then the member's inbox. */
+export const GYM_INVITATION_ENTRY = withContinuation(mobileGuards.signIn, {
+  returnTo: routeHref("mobile.me.gyms.invitations") as string,
+}) as string;
+
+/** The entry of a claimed invitation path, if `path` is exactly one. */
+function entryOf(path: string): string | undefined {
+  if (path === INVITATION_LINK_PATH) return INVITATION_ENTRY;
+  if (path === GYM_INVITATION_LINK_PATH) return GYM_INVITATION_ENTRY;
+  return undefined;
+}
+
 const ROOT = "/";
 const APP_SCHEME = "simplefit:";
 
@@ -50,13 +69,13 @@ const withoutFragment = (url: string) => {
 /**
  * The in-app path for a URL the system delivered.
  *
- * - `https://<appLinkHost>/invite/coach` (any query, any fragment): the
- *   invitation entry. Any other path on that host: the entry `/` (the app
- *   claims only the invitation path, so none should arrive).
- * - `/invite/coach` without an origin: the same entry.
- * - `simplefit://invite/coach`: the same entry. The app scheme carries no
- *   authority and nothing ever sends a token through it; it routes the same
- *   way so the entry behaves identically whichever way the URL arrived.
+ * - `https://<appLinkHost>/invite/coach` or `/invite/gym` (any query, any
+ *   fragment): that invitation's entry. Any other path on that host: the entry
+ *   `/` (the app claims only the invitation paths, so none should arrive).
+ * - The same paths without an origin: the same entries.
+ * - `simplefit://invite/coach` and `simplefit://invite/gym`: the same entries. The
+ *   app scheme carries no authority and nothing ever sends a token through it; it
+ *   routes the same way so an entry behaves identically whichever way it arrived.
  * - Anything else: unchanged, except that a fragment never survives.
  */
 export function systemPathOf(path: string, appLinkHost: string | undefined): string {
@@ -67,17 +86,16 @@ export function systemPathOf(path: string, appLinkHost: string | undefined): str
   } catch {
     // A path without an origin (the form Expo Router's own location takes);
     // the app has no other screen at the invitation path.
-    if (bare.split("?")[0] === INVITATION_LINK_PATH) return INVITATION_ENTRY;
-    return bare === "" ? ROOT : bare;
+    return entryOf(bare.split("?")[0] ?? "") ?? (bare === "" ? ROOT : bare);
   }
 
   if (url.protocol === "https:" || url.protocol === "http:") {
     if (appLinkHost === undefined || !isAppLinkOrigin(url, appLinkHost)) return bare;
-    return url.pathname === INVITATION_LINK_PATH ? INVITATION_ENTRY : ROOT;
+    return entryOf(url.pathname) ?? ROOT;
   }
 
-  if (url.protocol === APP_SCHEME && url.host === "invite" && url.pathname === "/coach") {
-    return INVITATION_ENTRY;
+  if (url.protocol === APP_SCHEME && url.host === "invite") {
+    return entryOf(`/invite${url.pathname}`) ?? bare;
   }
   return bare;
 }

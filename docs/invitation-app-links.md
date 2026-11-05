@@ -49,6 +49,25 @@ untouched: the backend decides which invitations a user can see and accept.
 | B. Opaque one-time handoff               | Not needed. A handoff id in a URL is itself a credential, and it would need a new backend endpoint (an ADR 0021 change) for no gain over C.                                                                                                                                                                                                                            |
 | **C. Authenticated inbox (chosen)**      | No token in the app at all, no backend or email change, and it reuses the existing recipient binding, explicit acceptance and replay protection. Cost: a signed-out recipient sees sign-in without a preview of the invitation (the web page keeps its anonymous preview).                                                                                             |
 
+## The E07 member invitation (SF-135)
+
+The E07 link, `<WEB_APP_URL>/invite/gym#token=sgm_…`, follows the same decision: a
+navigation entry, not a token handoff. The app also claims exactly
+`https://<app link host>/invite/gym`. `systemPathOf` discards the fragment and leads
+to `/login?returnTo=/me/gyms/invitations`, with no intent, because joining a gym needs
+no Fighter profile. `/invite/gym` without an origin and `simplefit://invite/gym` route
+the same way.
+
+The backend lists only invitations sent to the account's verified addresses, in every
+status, so the recipient sees what became of one. The person answers there explicitly.
+For another address, "Missing an invitation?" verifies it on this account (FCI3). No
+token is ever read, stored or sent, so there is nothing to clear on logout, an account
+switch or a new link, and an invalid link can't show an earlier invitation.
+
+The association files are not deployed. Until they are, the email opens the web page
+(`/invite/gym`, SF-134), which answers the invitation itself; `simplefit://invite/gym`
+exists for development and testing.
+
 ## Threat model (summary)
 
 | Threat                                                                  | Handling                                                                                                                                                                                                                                                           |

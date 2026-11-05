@@ -87,7 +87,10 @@ describe("native association config (SF-80)", () => {
           {
             action: "VIEW",
             autoVerify: true,
-            data: [{ scheme: "https", host: "app.example.com", path: "/invite/coach" }],
+            data: [
+              { scheme: "https", host: "app.example.com", path: "/invite/coach" },
+              { scheme: "https", host: "app.example.com", path: "/invite/gym" },
+            ],
             category: ["BROWSABLE", "DEFAULT"],
           },
         ]);

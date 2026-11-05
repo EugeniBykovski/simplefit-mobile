@@ -613,7 +613,26 @@ function MemberShortcut() {
   const router = useRouter();
   const list = useMyGymMemberships();
   const count = currentMemberships(list.memberships).length;
-  if (!list.complete || count === 0) return null;
+  if (!list.complete) return null;
+  if (count === 0) {
+    // A person who only wants to join a gym needs no role first (SF-135).
+    return (
+      <View className="gap-2.5 rounded-2xl border border-border bg-surface px-4 py-3.5">
+        <Text variant="bodySm" weight="extrabold">
+          {t("join.title")}
+        </Text>
+        <Text variant="caption" color="mutedForeground">
+          {t("join.body")}
+        </Text>
+        <Button
+          variant="outline"
+          size="sm"
+          label={t("join.action")}
+          onPress={() => router.push(routeHref("mobile.me.gyms.join"))}
+        />
+      </View>
+    );
+  }
   return (
     <View className="gap-2.5 rounded-2xl border border-accent-border bg-accent px-4 py-3.5">
       <Text variant="bodySm" weight="extrabold" color="accentForeground">
