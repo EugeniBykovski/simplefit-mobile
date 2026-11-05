@@ -1,4 +1,4 @@
-import { INVITATION_ENTRY, systemPathOf } from "./system-path";
+import { GYM_INVITATION_ENTRY, INVITATION_ENTRY, systemPathOf } from "./system-path";
 
 const HOST = "app.example.com";
 const TOKEN = "sfi_c2VjcmV0LWludml0YXRpb24tdG9rZW4";
@@ -72,5 +72,53 @@ describe("invitation links (SF-80)", () => {
     expect(systemPathOf("simplefit://settings", HOST)).toBe("simplefit://settings");
     expect(systemPathOf("/profile/coaches/invitations", HOST)).toBe("/profile/coaches/invitations");
     expect(systemPathOf("", HOST)).toBe("/");
+  });
+});
+
+describe("the E07 member invitation link (SF-135)", () => {
+  const TOKEN = `sgm_${"a".repeat(43)}`;
+
+  it("leads to the member's own inbox, with no intent and no token", () => {
+    expect(GYM_INVITATION_ENTRY).toBe("/login?returnTo=%2Fme%2Fgyms%2Finvitations");
+    expect(GYM_INVITATION_ENTRY).not.toContain("intent");
+  });
+
+  it.each([
+    `https://${HOST}/invite/gym#token=${TOKEN}`,
+    `https://${HOST}/invite/gym?utm=x#token=${TOKEN}`,
+    `https://${HOST}/invite/gym`,
+    `simplefit://invite/gym#token=${TOKEN}`,
+    "simplefit://invite/gym",
+    `/invite/gym#token=${TOKEN}`,
+    "/invite/gym",
+  ])("%s", (url) => {
+    const path = systemPathOf(url, HOST);
+    expect(path).toBe(GYM_INVITATION_ENTRY);
+    expect(path).not.toContain(TOKEN);
+  });
+
+  it("a look-alike origin never reaches the entry, and never keeps the fragment", () => {
+    for (const url of [
+      `https://evil.example/invite/gym#token=${TOKEN}`,
+      `http://${HOST}/invite/gym#token=${TOKEN}`,
+      `https://${HOST}:8443/invite/gym#token=${TOKEN}`,
+      `https://user:pass@${HOST}/invite/gym#token=${TOKEN}`,
+    ]) {
+      const path = systemPathOf(url, HOST);
+      expect(path).not.toBe(GYM_INVITATION_ENTRY);
+      expect(path).not.toContain(TOKEN);
+    }
+  });
+
+  it("nearby paths are not the invitation", () => {
+    expect(systemPathOf(`https://${HOST}/invite/gymnasium`, HOST)).toBe("/");
+    expect(systemPathOf("simplefit://invite/gym/extra", HOST)).toBe("simplefit://invite/gym/extra");
+    expect(systemPathOf(`https://${HOST}/invite/staff#token=x`, HOST)).toBe("/");
+  });
+
+  it("without a configured host an https link stays unclaimed, minus the fragment", () => {
+    expect(systemPathOf(`https://${HOST}/invite/gym#token=${TOKEN}`, undefined)).toBe(
+      `https://${HOST}/invite/gym`,
+    );
   });
 });

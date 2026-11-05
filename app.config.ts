@@ -29,7 +29,7 @@ function googleSignInPlugin(): [string, { iosUrlScheme: string }][] {
  * Verified invitation links (SF-80, docs/invitation-app-links.md): with
  * EXPO_PUBLIC_APP_LINK_HOST set, iOS (Associated Domains) and Android
  * (verified App Links) may open that domain's E08 invitation path,
- * `/invite/coach`, and nothing else, in the app. The domain must publish
+ * `/invite/coach` and `/invite/gym`, and nothing else, in the app. The domain must publish
  * `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json`
  * for this app's Team ID and signing certificates (simplefit-platform), or the
  * links keep opening the web page. Unset (the default): no domain is claimed.
@@ -55,8 +55,8 @@ export function appLinkHost(value: string | undefined): string | undefined {
   return host;
 }
 
-/** The E08 invitation link path (simplefit-api `Coaching.Invitations`). */
-const INVITATION_LINK_PATH = "/invite/coach";
+/** The invitation link paths: E08 (`Coaching.Invitations`) and E07 (`Gyms.MemberInvitations`). */
+const INVITATION_LINK_PATHS = ["/invite/coach", "/invite/gym"];
 
 function appLinks(host: string | undefined) {
   if (host === undefined) return { ios: {}, android: {} };
@@ -67,7 +67,7 @@ function appLinks(host: string | undefined) {
         {
           action: "VIEW",
           autoVerify: true,
-          data: [{ scheme: "https", host, path: INVITATION_LINK_PATH }],
+          data: INVITATION_LINK_PATHS.map((path) => ({ scheme: "https", host, path })),
           category: ["BROWSABLE", "DEFAULT"],
         },
       ],

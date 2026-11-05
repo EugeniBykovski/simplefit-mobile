@@ -435,3 +435,30 @@ only) and `getGymGoLive` (owner and managers). The permissions
 `manage_business_verification` and `view_go_live` appear in the gym viewer's
 permission lists. The route registry gains the two web routes
 (`D-WEB-GYM-VERIFICATION-GO-LIVE`); no mobile route changes.
+
+## SF-135: member join and invitation inbox on mobile
+
+The member lifecycle now works natively on the SF-95 API, at account level. The backend
+owns every rule and status; these screens ask and show the answer.
+
+| Design                           | Screen                                              | Route                               | API                                                                       | Status           |
+| -------------------------------- | --------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------- | ---------------- |
+| F16 rows                         | MMG1 My gyms: every status, leave, cancel a request | `/me/gyms`                          | `listMyGymMemberships`, `leaveGymMembership`, `cancelMyGymJoinRequest`    | ADAPTED          |
+| A03, OF6                         | MMG2 Join a gym                                     | `/me/gyms/join`                     | `previewGymJoin`, `joinGym`                                               | ADAPTED          |
+| None (FCI1 pattern)              | MMG3 Gym invitations                                | `/me/gyms/invitations`              | `listMyGymInvitations`, `acceptMyGymInvitation`, `declineMyGymInvitation` | MISSING, interim |
+| FCI3                             | MMG4 Verify an email                                | `/me/gyms/invitations/verify-email` | SF-77                                                                     | APPROVED, reused |
+| F13                              | Classes and booking (SF-100)                        | `/me/gyms/:gymId/classes`           | SF-99                                                                     | As built         |
+| QR, plans, pass in A03, GC1, F16 | Not built                                           | None                                | No contract                                                               | FUTURE           |
+
+Claude Design (`1793198527-a0fc`) was read, not edited (`D-MOBILE-GYM-MEMBER-JOIN`).
+Proposed: MMG2 with eight symbols and no role or QR, MMG3 with its states, and an MMG1
+state sheet.
+
+- **The code** stays on the join screen while it is open. It goes in request bodies only:
+  never a route param, store or log. `/join/:code` stays an unlinked placeholder.
+- **An unconfirmed join** claims nothing. The memberships are read again before anything is
+  sent again; joining again returns the pending request, so a retry can't duplicate it.
+- **The E07 link** is a navigation entry and the app never holds its token
+  (`docs/invitation-app-links.md`).
+- **My gyms** is not the gym workspace: a membership grants no capability, and joining
+  creates no profile, staff membership or coaching relationship.

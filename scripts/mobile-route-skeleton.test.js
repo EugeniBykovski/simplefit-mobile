@@ -62,6 +62,10 @@ const REAL_SCREENS = [
   "mobile.gyms._gym-id.classes",
   "mobile.gyms._gym-id.classes._class-id.roster",
   "mobile.me.gyms",
+  // SF-135: join by code and the member invitation inbox.
+  "mobile.me.gyms.join",
+  "mobile.me.gyms.invitations",
+  "mobile.me.gyms.invitations.verify-email",
   "mobile.me.gyms._gym-id.classes",
   "mobile.gyms",
 ];
@@ -160,8 +164,8 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 38, catchAll: 1, placeholder: 112, deferred: 1 });
-    expect(routes).toHaveLength(152);
+    expect(counts).toEqual({ screen: 41, catchAll: 1, placeholder: 112, deferred: 1 });
+    expect(routes).toHaveLength(155);
   });
 
   it("makes placeholder files exactly the canonical placeholder module for their own route", () => {

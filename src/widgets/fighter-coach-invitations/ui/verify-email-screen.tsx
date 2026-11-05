@@ -18,11 +18,19 @@ import { routeHref } from "@/shared/routes/routes";
  * again, and an invitation to the address is opened and answered there
  * explicitly (FCI2). No token, address or code is ever in the route.
  */
-export function VerifyEmailScreen() {
+export function VerifyEmailScreen({
+  backTo = "mobile.profile.coaches.invitations",
+  titleRoute = "mobile/profile/coaches/invitations/verify-email",
+}: {
+  /** The inbox this flow returns to (SF-135 reuses it for gym invitations). */
+  backTo?: "mobile.profile.coaches.invitations" | "mobile.me.gyms.invitations";
+  titleRoute?:
+    "mobile/profile/coaches/invitations/verify-email" | "mobile/me/gyms/invitations/verify-email";
+}) {
   const titles = useTranslations("routes.titles");
   const navigation = useNavigation();
   const router = useRouter();
-  const title = titles("mobile/profile/coaches/invitations/verify-email");
+  const title = titles(titleRoute);
 
   useLayoutEffect(() => {
     navigation.setOptions({ title });
@@ -30,7 +38,7 @@ export function VerifyEmailScreen() {
 
   const backToInvitations = () => {
     if (router.canGoBack()) router.back();
-    else router.replace(routeHref("mobile.profile.coaches.invitations"));
+    else router.replace(routeHref(backTo));
   };
 
   return (
