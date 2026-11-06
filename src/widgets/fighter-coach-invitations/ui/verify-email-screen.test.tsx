@@ -2,6 +2,7 @@ import { act, screen, userEvent, waitFor } from "@testing-library/react-native";
 
 import { completeAuthentication } from "@/entities/session";
 import { resetSessionForTests } from "@/entities/session/model/session";
+import { useMyGymInvitations } from "@/features/gym-membership-manage";
 import { jsonResponse, mockFetch, renderWithProviders } from "@/test/render";
 
 import { InvitationsScreen } from "./invitations-screen";
@@ -171,6 +172,32 @@ describe("invitation continuation (SF-79)", () => {
     ).toBeOnTheScreen();
     expect(of(calls, INBOX)).toHaveLength(2);
     expect(calls.some((call) => /\/accept$|\/decline$/.test(call.path))).toBe(false);
+  });
+
+  it("SF-137: linking reads the gym inbox again too, since it lists by verified address", async () => {
+    const GYM_INBOX = "GET /api/v1/me/gym-invitations";
+    const calls = backend({
+      [REQUEST]: accepted(),
+      [CONFIRM]: linked(),
+      [LIST]: jsonResponse({ email_identities: [] }),
+      [INBOX]: jsonResponse({ invitations: [], next_cursor: null }),
+      [GYM_INBOX]: jsonResponse({ invitations: [], next_cursor: null }),
+    });
+    function GymInbox() {
+      useMyGymInvitations();
+      return null;
+    }
+    await renderWithProviders(
+      <>
+        <GymInbox />
+        <VerifyEmailScreen />
+      </>,
+    );
+    await waitFor(() => expect(of(calls, GYM_INBOX)).toHaveLength(1));
+    await user.type(await toCode(), CODE);
+    expect(await screen.findByRole("header", { name: "Email verified" })).toBeOnTheScreen();
+
+    await waitFor(() => expect(of(calls, GYM_INBOX)).toHaveLength(2));
   });
 
   it("20: with sharing off the inbox is unavailable and offers no linking", async () => {
