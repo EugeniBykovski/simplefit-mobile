@@ -98,6 +98,9 @@ const ROLE_SELECTION: Entry = {
   gym_id: null,
   gym_workspaces: [],
   gym_workspace_count: 0,
+  sponsor_id: null,
+  sponsor_workspaces: [],
+  sponsor_workspace_count: 0,
 };
 const FIGHTER_HOME: Entry = {
   ...ROLE_SELECTION,
@@ -160,6 +163,9 @@ const GYM_HOME: Entry = {
     },
   ],
   gym_workspace_count: 1,
+  sponsor_id: null,
+  sponsor_workspaces: [],
+  sponsor_workspace_count: 0,
 };
 
 /** Account registration before its first save (SF-44), for O04. */
@@ -1629,6 +1635,9 @@ describe("Gym shell, context switching and navigation (SF-89)", () => {
         selected: gym.id === lastGym?.id,
       })) as Entry["gym_workspaces"],
       gym_workspace_count: listed.length + (account.unlisted?.length ?? 0),
+      sponsor_id: null,
+      sponsor_workspaces: [],
+      sponsor_workspace_count: 0,
     };
   }
 
