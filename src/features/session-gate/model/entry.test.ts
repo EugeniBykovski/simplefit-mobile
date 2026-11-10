@@ -166,3 +166,25 @@ describe("gym destinations (SF-89, ADR 0026 D-G23)", () => {
     expect(entryHref(both, { returnTo: `/gyms/${GYM}/pulse` })).toBe(`/gyms/${GYM}/pulse`);
   });
 });
+
+describe("sponsor destinations on mobile (SF-117, D-MOBILE-SPONSOR-ADMIN)", () => {
+  it("never maps a sponsor workspace: no mobile sponsor surface exists, so it fails visibly", () => {
+    const sponsorHome = {
+      ...entry({ capabilities: ["SPONSOR_WORKSPACE"] }),
+      destination: "sponsor_home",
+      sponsor_id: "4c2e8a1d-6b3f-4e7a-9c5d-2f1b8e3a7d60",
+    } as const;
+    expect(isKnownEntry(sponsorHome)).toBe(false);
+  });
+
+  it("opens O05 for an applicant's draft or status, as for a new one, never a workspace", () => {
+    for (const destination of [
+      "sponsor_application",
+      "sponsor_application_draft",
+      "sponsor_application_status",
+    ] as const) {
+      expect(isKnownEntry(entry({ destination }))).toBe(true);
+      expect(destinationRoute(destination)).toBe("mobile.onboarding.role");
+    }
+  });
+});

@@ -510,7 +510,7 @@ describe("approved SF-31 decisions", () => {
     expect(gapIds.has("GAP-SPONSOR-ANALYTICS-INDEX")).toBe(true);
     expect(pathsOf("web")).not.toEqual(expect.arrayContaining(["/sponsor/analytics"]));
     expect(route("web.sponsor.analytics._campaign-id")?.path).toBe(
-      "/sponsor/analytics/:campaignId",
+      "/sponsor/:sponsorId/analytics/:campaignId",
     );
   });
 
@@ -643,9 +643,13 @@ describe("entry resolution (SF-45, design 1791448557-b0b9)", () => {
     "gym_home",
     "gym_selection",
     "sponsor_application",
+    "sponsor_application_draft",
+    "sponsor_application_status",
+    "sponsor_home",
   ];
   /** Destinations with no route on a platform yet (they stay unknown there, never guessed). */
-  const UNROUTED = {};
+  // SF-117: no sponsor surface on mobile (D-MOBILE-SPONSOR-ADMIN, D-SA27).
+  const UNROUTED = { sponsor_home: ["mobile"] };
   const { entryDestinations } = registry.guards;
 
   it("carries intent as an ephemeral query parameter next to returnTo", () => {
