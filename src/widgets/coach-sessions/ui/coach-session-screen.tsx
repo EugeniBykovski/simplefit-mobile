@@ -46,6 +46,11 @@ export function CoachSessionScreen({ sessionId }: { sessionId: string }) {
   const query = useCoachTrainingSession(sessionId);
   useScreenTitle("mobile/coach/sessions/_session-id");
 
+  // A session already shown stays on screen when reading it again fails
+  // (offline, 5xx): the backend's last answer, never an error instead of it.
+  // Only the backend saying it is gone (404) replaces it (SF-70).
+  if (query.data && !(query.isError && isUnavailable(query.error)))
+    return <Detail session={query.data} />;
   if (query.isError && !isUnavailable(query.error)) {
     return (
       <Screen>
