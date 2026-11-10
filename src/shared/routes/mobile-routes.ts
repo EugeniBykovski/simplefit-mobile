@@ -2311,6 +2311,8 @@ export const mobileGuards = {
     gym_home: "mobile.gyms._gym-id.pulse",
     gym_selection: "mobile.gyms",
     sponsor_application: "mobile.onboarding.role",
+    sponsor_application_draft: "mobile.onboarding.role",
+    sponsor_application_status: "mobile.onboarding.role",
   },
 } as const;
 
