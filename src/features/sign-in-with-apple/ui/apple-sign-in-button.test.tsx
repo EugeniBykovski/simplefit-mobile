@@ -164,6 +164,12 @@ describe("AppleSignInButton", () => {
 
   it.each([
     [401, "unauthorized", "We couldn't verify your Apple sign-in. Please try again."],
+    // SF-160: a suspended account gets no session (SF-122); nothing to appeal from here.
+    [
+      403,
+      "account_suspended",
+      "This account is suspended, so it can't sign in until the suspension is lifted.",
+    ],
     [429, "rate_limited", "Too many sign-in attempts. Wait a few minutes and try again."],
     [
       503,

@@ -1,6 +1,7 @@
 export {
   callWithSession,
   completeAuthentication,
+  crossWorkspaceBoundary,
   onSessionBoundary,
   refresh,
   restoreSession,

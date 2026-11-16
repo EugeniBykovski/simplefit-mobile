@@ -14,7 +14,7 @@ import {
 import { Button, type ButtonVariant } from "@/shared/ui/button";
 import { Text } from "@/shared/ui/text";
 
-type Failure = "rejected" | "rateLimited" | "unavailable" | "network" | "generic";
+type Failure = "suspended" | "rejected" | "rateLimited" | "unavailable" | "network" | "generic";
 
 /**
  * "Continue with Apple" (SF-23, simplefit-api ADR 0014). Rendered only on
@@ -127,6 +127,9 @@ function failureOf(error: unknown): Failure | undefined {
     switch (error.code) {
       case "unauthorized":
         return "rejected";
+      // SF-160: the identity is right but the account is suspended (SF-122).
+      case "account_suspended":
+        return "suspended";
       case "rate_limited":
         return "rateLimited";
       case "service_unavailable":

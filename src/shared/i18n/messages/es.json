@@ -113,6 +113,7 @@
       "exchanging": "Iniciando sesión…",
       "notConfigured": "El inicio de sesión con Google no está disponible en esta versión.",
       "errors": {
+        "suspended": "Esta cuenta está suspendida: no se puede iniciar sesión hasta que se levante la suspensión.",
         "rejected": "No hemos podido verificar tu inicio de sesión con Google. Inténtalo de nuevo.",
         "rateLimited": "Demasiados intentos de inicio de sesión. Espera unos minutos e inténtalo de nuevo.",
         "unavailable": "El inicio de sesión con Google no está disponible temporalmente. Inténtalo más tarde.",
@@ -126,6 +127,7 @@
       "continue": "Continuar con Apple",
       "exchanging": "Iniciando sesión con Apple…",
       "errors": {
+        "suspended": "Esta cuenta está suspendida: no se puede iniciar sesión hasta que se levante la suspensión.",
         "rejected": "No hemos podido verificar tu inicio de sesión con Apple. Inténtalo de nuevo.",
         "rateLimited": "Demasiados intentos de inicio de sesión. Espera unos minutos e inténtalo de nuevo.",
         "unavailable": "El inicio de sesión con Apple no está disponible temporalmente. Inténtalo más tarde.",
@@ -192,7 +194,8 @@
           "expired": "Este código ha caducado. Envía uno nuevo para iniciar sesión.",
           "success": "Has iniciado sesión.",
           "throttled": "Demasiados intentos. Vuelve a intentarlo en un momento.",
-          "error": "Algo ha salido mal. Inténtalo de nuevo."
+          "error": "Algo ha salido mal. Inténtalo de nuevo.",
+          "suspended": "Esta cuenta está suspendida: no se puede iniciar sesión hasta que se levante la suspensión."
         }
       },
       "registration": {
@@ -1294,10 +1297,20 @@
     }
   },
   "accountMenu": {
-    "profileNote": "Tu perfil llegará con su función. La configuración y el cierre de sesión ya funcionan.",
     "settingsLink": "Configuración · cuenta · privacidad",
     "settingsNote": "La configuración de la cuenta, la privacidad y las notificaciones llegará con sus funciones. Aquí puedes cerrar sesión en este dispositivo.",
-    "coachesLink": "Entrenadores"
+    "coachesLink": "Entrenadores",
+    "profile": {
+      "identity": "Peleador",
+      "identityWithHandle": "Peleador · @{username}",
+      "stance": "Guardia",
+      "weightClass": "Categoría",
+      "gymsLink": "Gimnasios",
+      "switchWorkspace": "Cambiar de espacio",
+      "loading": "Cargando tu perfil…",
+      "loadFailed": "No hemos podido cargar tu perfil. Comprueba tu conexión e inténtalo de nuevo.",
+      "retry": "Reintentar"
+    }
   },
   "contextSwitcher": {
     "close": "Cerrar",

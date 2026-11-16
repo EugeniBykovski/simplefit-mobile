@@ -8,6 +8,7 @@ import { jsonResponse, mockFetch } from "@/test/render";
 import {
   callWithSession,
   completeAuthentication,
+  crossWorkspaceBoundary,
   onSessionBoundary,
   refresh,
   resetSessionForTests,
@@ -375,6 +376,64 @@ describe("session", () => {
       slow.resolve(jsonResponse({ fighter_profile: { status: "completed" } }));
 
       expect(await pending).toBeInstanceOf(SessionChangedError);
+    });
+
+    describe("workspace boundary (SF-160)", () => {
+      it("discards a response requested in the workspace the user left", async () => {
+        const slow = deferred<Response>();
+        mockFetch(
+          jest.fn((url: string) =>
+            new URL(url).pathname === "/api/v1/me/fighter-profile"
+              ? slow.promise
+              : Promise.resolve(viewer()),
+          ),
+        );
+        await completeAuthentication(tokenBody(OLD, "sfa_a"));
+        const pending = callWithSession((init) =>
+          fetch("http://api.test/api/v1/me/fighter-profile", init).then((response) =>
+            response.json(),
+          ),
+        ).catch((error: unknown) => error);
+
+        crossWorkspaceBoundary();
+        slow.resolve(jsonResponse({ fighter_profile: { display_name: "Fighter" } }));
+
+        expect(await pending).toBeInstanceOf(SessionChangedError);
+      });
+
+      it("keeps the session, its credentials and a refresh in flight", async () => {
+        const lateRefresh = deferred<Response>();
+        const fetchMock = mockFetch(
+          jest.fn((url: string) => {
+            const path = new URL(url).pathname;
+            if (path === "/api/auth/session/refresh") return lateRefresh.promise;
+            return Promise.resolve(viewer());
+          }),
+        );
+        await completeAuthentication(tokenBody(OLD, "sfa_a"));
+        const rotation = refresh();
+
+        crossWorkspaceBoundary();
+        lateRefresh.resolve(tokens(NEW, "sfa_rotated"));
+
+        // The rotation belongs to this session: its single-use token is stored.
+        await expect(rotation).resolves.toBe("refreshed");
+        expect(await getSecureItem(KEY)).toBe(NEW);
+        const { result } = await renderHook(() => useSession());
+        expect(result.current.status).toBe("authenticated");
+        // A call started in the new workspace uses the rotated token and is kept.
+        await expect(callWithSession((init) => getCurrentUser(init))).resolves.toEqual({
+          user: VIEWER,
+        });
+        expect(header(calls(fetchMock).at(-1)!, "authorization")).toBe("Bearer sfa_rotated");
+      });
+
+      it("runs the boundary listeners", async () => {
+        const boundary = jest.fn();
+        onSessionBoundary(boundary);
+        crossWorkspaceBoundary();
+        expect(boundary).toHaveBeenCalledTimes(1);
+      });
     });
 
     it("an offline sign-out says it is local, deletes the token and queues nothing", async () => {

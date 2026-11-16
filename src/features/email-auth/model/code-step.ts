@@ -3,10 +3,10 @@ import type { CodeInputState } from "@/shared/ui/code-input";
 
 /**
  * States of the 6-digit code step (Claude Design O01c / WA1b for sign-in,
- * O03 / WA4 for sign-up). `invalid`, `expired`, `throttled`, `success` and
- * `verified-elsewhere` come from the API; `typing`, `submitting`, the
- * countdown and `sent` / `resent` (shown after an accepted request) are
- * local.
+ * O03 / WA4 for sign-up). `invalid`, `expired`, `throttled`, `success`,
+ * `verified-elsewhere` and `suspended` come from the API; `typing`,
+ * `submitting`, the countdown and `sent` / `resent` (shown after an accepted
+ * request) are local.
  */
 export type CodeStepStatus =
   | "sent"
@@ -18,7 +18,8 @@ export type CodeStepStatus =
   | "success"
   | "throttled"
   | "error"
-  | "verified-elsewhere";
+  | "verified-elsewhere"
+  | "suspended";
 
 export type Purpose = "sign-in" | "registration";
 
@@ -35,6 +36,10 @@ export function statusForVerifyError(
       return { status: "expired" };
     case "rate_limited":
       return { status: "throttled", retryAfterSeconds: error.retryAfterSeconds ?? undefined };
+    case "account_suspended":
+      // SF-160: the code was right but the account is suspended (SF-122); no
+      // session exists, so the step ends here. Nothing to appeal from the app.
+      return purpose === "sign-in" ? { status: "suspended" } : { status: "error" };
     case "verified_elsewhere":
     case "conflict":
       // The address now has an account (verified through the link, or taken
@@ -68,6 +73,7 @@ export function inputStateFor(status: CodeStepStatus, code: string): CodeInputSt
       return "success";
     case "throttled":
     case "verified-elsewhere":
+    case "suspended":
       return "locked";
     case "error":
       return "filled";

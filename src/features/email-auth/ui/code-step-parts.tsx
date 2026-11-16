@@ -24,6 +24,7 @@ const NOTICES: Partial<Record<CodeStepStatus, { tone: NoticeTone; icon: LucideIc
   throttled: { tone: "coral", icon: TriangleAlert },
   error: { tone: "coral", icon: TriangleAlert },
   "verified-elsewhere": { tone: "amber", icon: Lock },
+  suspended: { tone: "coral", icon: Lock },
 };
 
 /** The status message of the step (olive, amber or coral), announced politely. */
@@ -108,6 +109,7 @@ export function ctaFor(
     case "error":
       return { action: "retry", label: "tryAgain", disabled: false };
     case "throttled":
+    case "suspended":
       return { action: "none", label: "submit", disabled: true };
     default:
       return { action: "submit", label: "submit", disabled: !codeComplete };

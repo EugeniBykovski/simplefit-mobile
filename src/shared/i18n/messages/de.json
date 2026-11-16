@@ -113,6 +113,7 @@
       "exchanging": "Du wirst angemeldet …",
       "notConfigured": "Die Anmeldung mit Google ist in diesem Build nicht verfügbar.",
       "errors": {
+        "suspended": "Dieses Konto ist gesperrt. Eine Anmeldung ist erst möglich, wenn die Sperre aufgehoben ist.",
         "rejected": "Deine Google-Anmeldung konnte nicht bestätigt werden. Bitte versuche es erneut.",
         "rateLimited": "Zu viele Anmeldeversuche. Warte ein paar Minuten und versuche es erneut.",
         "unavailable": "Die Anmeldung mit Google ist vorübergehend nicht verfügbar. Bitte versuche es später erneut.",
@@ -126,6 +127,7 @@
       "continue": "Weiter mit Apple",
       "exchanging": "Du wirst mit Apple angemeldet …",
       "errors": {
+        "suspended": "Dieses Konto ist gesperrt. Eine Anmeldung ist erst möglich, wenn die Sperre aufgehoben ist.",
         "rejected": "Deine Apple-Anmeldung konnte nicht bestätigt werden. Bitte versuche es erneut.",
         "rateLimited": "Zu viele Anmeldeversuche. Warte ein paar Minuten und versuche es erneut.",
         "unavailable": "Die Anmeldung mit Apple ist vorübergehend nicht verfügbar. Bitte versuche es später erneut.",
@@ -192,7 +194,8 @@
           "expired": "Dieser Code ist abgelaufen. Fordere einen neuen an, um dich anzumelden.",
           "success": "Du bist angemeldet.",
           "throttled": "Zu viele Versuche. Versuch es gleich noch einmal.",
-          "error": "Etwas ist schiefgelaufen. Versuch es noch einmal."
+          "error": "Etwas ist schiefgelaufen. Versuch es noch einmal.",
+          "suspended": "Dieses Konto ist gesperrt. Eine Anmeldung ist erst möglich, wenn die Sperre aufgehoben ist."
         }
       },
       "registration": {
@@ -1294,10 +1297,20 @@
     }
   },
   "accountMenu": {
-    "profileNote": "Dein Profil kommt mit seiner Funktion. Einstellungen und Abmelden funktionieren schon.",
     "settingsLink": "Einstellungen · Konto · Privatsphäre",
     "settingsNote": "Konto-, Privatsphäre- und Benachrichtigungseinstellungen kommen mit ihren Funktionen. Hier kannst du dich auf diesem Gerät abmelden.",
-    "coachesLink": "Coaches"
+    "coachesLink": "Coaches",
+    "profile": {
+      "identity": "Fighter",
+      "identityWithHandle": "Fighter · @{username}",
+      "stance": "Auslage",
+      "weightClass": "Klasse",
+      "gymsLink": "Gyms",
+      "switchWorkspace": "Bereich wechseln",
+      "loading": "Dein Profil wird geladen…",
+      "loadFailed": "Dein Profil konnte nicht geladen werden. Prüfe deine Verbindung und versuch es noch einmal.",
+      "retry": "Noch einmal versuchen"
+    }
   },
   "contextSwitcher": {
     "close": "Schließen",

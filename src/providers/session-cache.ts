@@ -9,8 +9,10 @@ import { onSessionBoundary } from "@/entities/session";
  * this before publishing the new state, so nobody ever sees another account's
  * cached profile, onboarding state or entry, not even for one render.
  * In-flight queries are cancelled; their late answers are discarded by the
- * session (`SessionChangedError`). A refresh of the same session, or a session
- * that is only `unavailable` (no network), keeps its cache.
+ * session (`SessionChangedError`). Moving to another workspace of the same
+ * session (Fighter, Coach, a gym; SF-160) is a boundary too: nothing cached
+ * in one workspace is shown in the next. A refresh of the same session, or a
+ * session that is only `unavailable` (no network), keeps its cache.
  */
 export function useSessionScopedCache(client: QueryClient): void {
   useEffect(
