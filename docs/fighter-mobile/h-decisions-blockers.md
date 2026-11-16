@@ -105,3 +105,17 @@ must not be treated as approved until that register says so.
 | Id         | Blocker                                                                                                                 | Effect                                                                               |
 | ---------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | D-SF159-46 | Jira was not accessible in this session (no Jira CLI or connector); SF-158 child issues SF-160–SF-186 could not be read | Reconciliation against Jira text is BLOCKED ([Artifact G](g-jira-reconciliation.md)) |
+
+## SF-160 updates
+
+[SF-160](sf-160-five-tab-shell.md) changed the status of these entries. The
+rows above keep the SF-159 wording.
+
+| Id         | Status after SF-160                                                                                                                                                                           |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-SF159-09 | Code unchanged: the Home tab stays on FR4. The design's FighterTabs link to F01 is recorded as D-SF160-01 for the design owner.                                                               |
+| D-SF159-11 | Mobile matches the backend: no signed-in ST14; sign-in says the account is suspended. The ST14/ST15 product decision stays open (D-SF160-03).                                                 |
+| D-SF159-12 | Resolved: a workspace switch clears the cache and discards late calls (`crossWorkspaceBoundary`).                                                                                             |
+| D-SF159-22 | `account_suspended` is handled (email code, Google, Apple). `enrollment_required`, `invitation_recipient_mismatch`, `revision_conflict` and `password_not_set` are still unhandled on mobile. |
+| D-SF159-25 | Resolved: the registry copies are identical (sha256 `38ade19d…9c10`); `route-architecture.md` differs only by mobile's SF-80 paragraph.                                                       |
+| D-SF159-26 | F18 Profile has router tests (`router.test.tsx`, "Fighter five-tab shell (SF-160)") and the real-API scenarios A and G.                                                                       |

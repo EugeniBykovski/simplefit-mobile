@@ -19,6 +19,7 @@ registry, generated client, Jira issue or Claude Design file was changed.
 | G        | [g-jira-reconciliation.md](g-jira-reconciliation.md)   | Jira reconciliation (BLOCKED), proposed breakdown, amendments, done work                               |
 | H        | [h-decisions-blockers.md](h-decisions-blockers.md)     | Register `D-SF159-01`… of decisions, blockers and design gaps                                          |
 | I        | [i-roadmap.md](i-roadmap.md)                           | Dependency-aware order, start-now items, boxing timer requirements                                     |
+| SF-160   | [sf-160-five-tab-shell.md](sf-160-five-tab-shell.md)   | Five-tab shell, route reconciliation, workspace isolation, design discrepancies `D-SF160-*`            |
 
 ## Scope
 

@@ -260,9 +260,10 @@ Backend-granted internal staff capability on the same User → ADMIN (D-ADMIN-ID
   of the web sidebars (an action, no route) or, on mobile, the A04 sheet of
   the Fighter and Coach homes and the Gym pulse (`/workspaces` is the same
   chooser as a screen). A
-  resource that belongs to another workspace resolves as not found. Workspace
-  ids may enter deep links later, only when an email or push feature needs
-  cross-workspace links (`D-WORKSPACE-NOT-IN-URL`,
+  resource that belongs to another workspace resolves as not found. The gym
+  consoles (SF-88, SF-89) and the partner portal (`/sponsor/:sponsorId`, SF-117,
+  D-SA26) name their workspace in the path, a lookup key the backend
+  authorizes on every request (`D-WORKSPACE-NOT-IN-URL`,
   `D-WEB-WORKSPACE-SWITCHER`).
 - **Admin** is a backend-granted internal-staff capability on the same global
   User; there is no separate admin user (`D-ADMIN-IDENTITY`). `/admin/login`
@@ -1152,7 +1153,7 @@ and `decidedOn`. Six discrepancies await a product decision (marked in the table
 | `D-WEB-WORKSPACE-SWITCHER`           | RESOLVED               | In-shell switcher action, no route                                                                                                      |
 | `D-SPONSOR-NAV`                      | RESOLVED               | Challenges/Events filter `/sponsor/campaigns`; no Creative route; analytics index is a gap                                              |
 | `D-NAV-DETAIL-TARGETS`               | RESOLVED               | Creator targets kept; list roots designed in `1791276973-ad1d` (G08, G09, WC7, WG27, AD21)                                              |
-| `D-WORKSPACE-NOT-IN-URL`             | RESOLVED               | Active workspace is session context; the gym consoles are id-based (web SF-88, mobile SF-89)                                            |
+| `D-WORKSPACE-NOT-IN-URL`             | RESOLVED               | Superseded by D-SA26 (SF-117): gym consoles and the partner portal are id-based, each id authorized per request                         |
 | `D-WEB-DEFAULT-WORKSPACE`            | RESOLVED               | `/app` resolves the active workspace; `/app/home` is fighter-only                                                                       |
 | `D-SHARED-ROUTES-ON-PERSONA-PAGES`   | RESOLVED               | Account-level routes need no capability                                                                                                 |
 | `D-TRIAL-AUDIENCE`                   | RESOLVED               | Shared signed-in trial/pricing; backend decides eligibility                                                                             |
@@ -1182,6 +1183,8 @@ and `decidedOn`. Six discrepancies await a product decision (marked in the table
 | `D-WEB-STAFF-INVITATION`             | NEEDS_PRODUCT_DECISION | /invite/staff (SF-133) has no web artboard: WFI1 composition with OS1/OS1b content                                                      |
 | `D-WEB-GYM-MEMBER-JOIN`              | NEEDS_PRODUCT_DECISION | /invite/gym, /app/me/gyms/join and /invitations (SF-134) have no web artboards: interim compositions with A03, OF6 and E07 content      |
 | `D-MOBILE-GYM-MEMBER-JOIN`           | NEEDS_PRODUCT_DECISION | /me/gyms/join and /me/gyms/invitations (SF-135) have no complete boards: A03 and FCI1 adapted, FCI3 reused                              |
+| `D-SF131-PARTNERSHIP-BOARDS`         | NEEDS_PRODUCT_DECISION | Partnership interests, opportunities and requests (SF-131) have no boards: SPX9 cards, SP3–SP6 fields and SPE1 states adapted           |
+| `D-SF157-05`                         | NEEDS_PRODUCT_DECISION | Control Plane email and password sign-in and password set/reset (SF-157) have no board: AD0 header and card adapted                     |
 | `D-MOBILE-GYM-ONBOARDING-FLOW`       | DEFERRED               | Mobile Gym owner registration: the web steps natively, no mobile artboards; OG0 handoff superseded                                      |
 | `D-MOBILE-GYM-SHELL-MVP`             | DEFERRED               | Mobile gym shell: G01 with real data, gym rows in A04, MGC1 chooser, Pulse the only linked tab                                          |
 | `D-MOBILE-GYM-FIRST-RUN`             | RESOLVED               | Mobile gym owner first run: GR1 + four MVP GR2 steps on measured targets; FUTURE steps not built                                        |

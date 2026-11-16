@@ -25,7 +25,8 @@
         "id": "gallery-3",
         "artboard": "GalleryIndex4.dc.html",
         "title": "route gallery 3 / 3 · partners, admin, site & backend",
-        "rows": 118
+        "rows": 124,
+        "rowsNote": "118 Route Gallery rows + SPP1–SPP5 (SF-131: partnership interests, no opportunities, partnership requests, a new request and one request; no artboard; SPX9 cards, SP3–SP6 fields and SPE1 states; D-SF131-PARTNERSHIP-BOARDS) + AD0P (SF-157: setting or resetting a password with an emailed code; no artboard; AD0's header and card; D-SF157-05)"
       }
     ]
   },
@@ -558,8 +559,42 @@
         },
         {
           "key": "applications",
-          "label": "Applications",
+          "label": "Application",
           "route": "web.sponsor.application"
+        },
+        {
+          "key": "organization",
+          "label": "Organization",
+          "route": "web.sponsor.settings",
+          "query": {
+            "section": "organization"
+          }
+        },
+        {
+          "key": "members",
+          "label": "Members",
+          "route": "web.sponsor.settings",
+          "query": {
+            "section": "members"
+          }
+        },
+        {
+          "key": "interests",
+          "label": "Interests",
+          "route": "web.sponsor.interests",
+          "note": "SF-131: SponsorNav has no partnership item; added for the SF-130 domain (D-SF131-PARTNERSHIP-BOARDS)."
+        },
+        {
+          "key": "opportunities",
+          "label": "Opportunities",
+          "route": "web.sponsor.opportunities",
+          "note": "SF-131: SponsorNav has no partnership item; added for the SF-130 domain (D-SF131-PARTNERSHIP-BOARDS)."
+        },
+        {
+          "key": "requests",
+          "label": "Requests",
+          "route": "web.sponsor.requests",
+          "note": "SF-131: SponsorNav has no partnership item; added for the SF-130 domain (D-SF131-PARTNERSHIP-BOARDS)."
         },
         {
           "key": "campaigns",
@@ -2223,7 +2258,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/campaigns/new/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket. SF-117: re-keyed under /sponsor/:sponsorId (D-SA26); the id stays (frozen)."
+        "note": "SF-118: SPE1 'Unsupported feature' inside the partner portal: the page says the feature isn't part of SimpleFit yet (no campaign, analytics or invoice domain exists: D-SA21, D-SA23, D-SA24) and links back to the overview. Never mock data; hidden from the sidebar."
       },
       "screens": ["SRW2", "SPC1", "SPC2", "SPC3", "SPC4", "SPC5", "SPC6"]
     },
@@ -2248,7 +2283,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/welcome/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-120: ARW1, the Control Plane first visit (FirstRunAdmin MVP): the operator's access from the backend's permissions, how sensitive actions work and an optional tour on real elements only (access card, sensitive-actions card, operator block); Skip, Finish and Skip tour record simplefit-api ADR 0018 control_plane_web_tour (account-wide, final). Design deviations: docs/admin-design/sf-120-design-register.md."
       },
       "screens": ["ARW1"]
     },
@@ -2477,7 +2512,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(fighter)/(tabs)/(profile)/profile.tsx",
-        "note": "SF-28: the Profile tab's way into Settings (Claude Design F18 → ST1): the route title, a Planned badge, one line that the profile arrives with its feature, and Settings · account · privacy. The profile itself (stats, camps, sparring, workspaces) is built by its feature ticket."
+        "note": "SF-28: the Profile tab's way into Settings (Claude Design F18 → ST1). SF-59: F18's Coaches row (FC1). SF-160 (Claude Design 1794841517-868f): F18 from the fighter's own FighterProfile only (display name, @username, stance and weight class, which only the owner sees) and the F18 rows whose destination exists: Coaches (FC1), Gyms (mobile.me.gyms, MMG1), Switch workspace (the A04 sheet) and Settings · account · privacy (ST1). The record, friends, Go Pro, progress, fight camps, sparring, payments, emergency contact and privacy rows belong to domains that do not exist yet and are not shown."
       },
       "screens": ["F18"]
     },
@@ -6907,7 +6942,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/application/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket. SF-117: re-keyed under /sponsor/:sponsorId (D-SA26; the id stays, frozen) as the organization's application inside its portal (phase ACTIVE); an applicant's status before any organization exists is web.partners.apply?step=status (SF-115)."
+        "note": "SF-118: the organization's application inside the portal: the viewer's own application (GET /api/v1/me/sponsor-application) when it created this organization, its status and its answers read-only; anyone else is told only the applicant can see it (no endpoint exposes an organization's application to its members). An applicant before approval uses web.partners.apply?step=status (SF-115)."
       },
       "screens": ["SPX5"]
     },
@@ -6933,7 +6968,7 @@
       "discrepancies": ["D-SPONSOR-NAV"],
       "production": {
         "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/campaigns/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket. SF-117: re-keyed under /sponsor/:sponsorId (D-SA26); the id stays (frozen)."
+        "note": "SF-118: SPE1 'Unsupported feature' inside the partner portal: the page says the feature isn't part of SimpleFit yet (no campaign, analytics or invoice domain exists: D-SA21, D-SA23, D-SA24) and links back to the overview. Never mock data; hidden from the sidebar."
       },
       "screens": ["SPX6"]
     },
@@ -6958,7 +6993,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/campaigns/[campaignId]/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket. SF-117: re-keyed under /sponsor/:sponsorId (D-SA26); the id stays (frozen)."
+        "note": "SF-118: SPE1 'Unsupported feature' inside the partner portal: the page says the feature isn't part of SimpleFit yet (no campaign, analytics or invoice domain exists: D-SA21, D-SA23, D-SA24) and links back to the overview. Never mock data; hidden from the sidebar."
       },
       "screens": ["SPC7"]
     },
@@ -6984,7 +7019,7 @@
       "discrepancies": ["D-SPONSOR-NAV"],
       "production": {
         "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/analytics/[campaignId]/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket. SF-117: re-keyed under /sponsor/:sponsorId (D-SA26); the id stays (frozen)."
+        "note": "SF-118: SPE1 'Unsupported feature' inside the partner portal: the page says the feature isn't part of SimpleFit yet (no campaign, analytics or invoice domain exists: D-SA21, D-SA23, D-SA24) and links back to the overview. Never mock data; hidden from the sidebar."
       },
       "screens": ["SPX7"]
     },
@@ -7009,7 +7044,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/invoices/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket. SF-117: re-keyed under /sponsor/:sponsorId (D-SA26); the id stays (frozen)."
+        "note": "SF-118: SPE1 'Unsupported feature' inside the partner portal: the page says the feature isn't part of SimpleFit yet (no campaign, analytics or invoice domain exists: D-SA21, D-SA23, D-SA24) and links back to the overview. Never mock data; hidden from the sidebar."
       },
       "screens": ["SPX8"]
     },
@@ -7024,7 +7059,7 @@
       "parent": null,
       "nav": {
         "type": "NAV_ITEM",
-        "from": ["web.sponsor#settings"]
+        "from": ["web.sponsor#settings", "web.sponsor#organization", "web.sponsor#members"]
       },
       "access": {
         "session": "AUTHENTICATED",
@@ -7034,9 +7069,134 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/settings/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket. SF-117: re-keyed under /sponsor/:sponsorId (D-SA26); the id stays (frozen)."
+        "note": "SF-118: SPX9 (MVP) for the organization in the path, sections as query state (?section=organization|contact|members|application|account; the sidebar's Organization and Members open theirs). Everything is read-only: the API has no organization, contact or membership write (D-SA08, D-SA12 undecided), so no edit, invite, role change, transfer or leave control is rendered. Organization from GET /api/v1/sponsor-organizations/{sponsor_id}; contacts from …/contacts for owner and manager only (view_contacts; 403 otherwise, never requested without the permission); members from …/members, paged. Your account explains that the account isn't the organization's; account settings show as Soon (WS1 isn't built). Notifications and Privacy are not built (they would state unapproved claims). A suspended organization shows the SPX9 suspended notice."
       },
       "screens": ["SPX9"]
+    },
+    {
+      "id": "web.sponsor.interests",
+      "platform": "web",
+      "path": "/sponsor/:sponsorId/interests",
+      "params": ["sponsorId"],
+      "name": "Partnership interests",
+      "surface": "SPONSOR",
+      "shell": "web.sponsor",
+      "parent": null,
+      "nav": {
+        "type": "NAV_ITEM",
+        "from": ["web.sponsor#interests"]
+      },
+      "access": {
+        "session": "AUTHENTICATED",
+        "capability": "SPONSOR_WORKSPACE",
+        "phase": "ACTIVE"
+      },
+      "status": "IMPLEMENTED",
+      "production": {
+        "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/interests/page.tsx",
+        "note": "SF-131: the organization's partnership interests, markets and goals (SF-130 preferences), editable by owners and managers of an active organization, beside what its application submitted (read-only). No budget (D-SA39). No artboard: composed from SP3/SP4/SP6 and SPX9 (D-SF131-PARTNERSHIP-BOARDS)."
+      },
+      "screens": ["SPP1"]
+    },
+    {
+      "id": "web.sponsor.opportunities",
+      "platform": "web",
+      "path": "/sponsor/:sponsorId/opportunities",
+      "params": ["sponsorId"],
+      "name": "Sponsorship opportunities",
+      "surface": "SPONSOR",
+      "shell": "web.sponsor",
+      "parent": null,
+      "nav": {
+        "type": "NAV_ITEM",
+        "from": ["web.sponsor#opportunities"]
+      },
+      "access": {
+        "session": "AUTHENTICATED",
+        "capability": "SPONSOR_WORKSPACE",
+        "phase": "ACTIVE"
+      },
+      "status": "IMPLEMENTED",
+      "production": {
+        "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/opportunities/page.tsx",
+        "note": "SF-131: SPE1 'No opportunities' from the backend's availability answer (SF-130: unavailable, no_inventory; D-SA21). Never an inventory, example or 'Apply' action."
+      },
+      "screens": ["SPP2"]
+    },
+    {
+      "id": "web.sponsor.requests",
+      "platform": "web",
+      "path": "/sponsor/:sponsorId/requests",
+      "params": ["sponsorId"],
+      "name": "Partnership requests",
+      "surface": "SPONSOR",
+      "shell": "web.sponsor",
+      "parent": null,
+      "nav": {
+        "type": "NAV_ITEM",
+        "from": ["web.sponsor#requests"]
+      },
+      "access": {
+        "session": "AUTHENTICATED",
+        "capability": "SPONSOR_WORKSPACE",
+        "phase": "ACTIVE"
+      },
+      "status": "IMPLEMENTED",
+      "production": {
+        "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/requests/page.tsx",
+        "note": "SF-131: the organization's nonbinding partnership requests (SF-130 proposals), newest first, filtered by `?status=`, paged. No artboard (D-SF131-PARTNERSHIP-BOARDS)."
+      },
+      "screens": ["SPP3"]
+    },
+    {
+      "id": "web.sponsor.requests.new",
+      "platform": "web",
+      "path": "/sponsor/:sponsorId/requests/new",
+      "params": ["sponsorId"],
+      "name": "New partnership request",
+      "surface": "SPONSOR",
+      "shell": "web.sponsor",
+      "parent": "web.sponsor.requests",
+      "nav": {
+        "type": "STACK",
+        "from": []
+      },
+      "access": {
+        "session": "AUTHENTICATED",
+        "capability": "SPONSOR_WORKSPACE",
+        "phase": "ACTIVE"
+      },
+      "status": "IMPLEMENTED",
+      "production": {
+        "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/requests/new/page.tsx",
+        "note": "SF-131: starts a draft general inquiry (owner, manager, active organization). No artboard (D-SF131-PARTNERSHIP-BOARDS)."
+      },
+      "screens": ["SPP4"]
+    },
+    {
+      "id": "web.sponsor.requests._request-id",
+      "platform": "web",
+      "path": "/sponsor/:sponsorId/requests/:requestId",
+      "params": ["sponsorId", "requestId"],
+      "name": "Partnership request",
+      "surface": "SPONSOR",
+      "shell": "web.sponsor",
+      "parent": "web.sponsor.requests",
+      "nav": {
+        "type": "STACK",
+        "from": []
+      },
+      "access": {
+        "session": "AUTHENTICATED",
+        "capability": "SPONSOR_WORKSPACE",
+        "phase": "ACTIVE"
+      },
+      "status": "IMPLEMENTED",
+      "production": {
+        "file": "src/app/[locale]/(sponsor)/sponsor/[sponsorId]/requests/[requestId]/page.tsx",
+        "note": "SF-131: one request: answers, backend status and history, change request, and the actions the backend allows (edit, submit, withdraw). No artboard (D-SF131-PARTNERSHIP-BOARDS)."
+      },
+      "screens": ["SPP5"]
     },
     {
       "id": "web.admin.login",
@@ -7057,12 +7217,38 @@
         "phase": null
       },
       "status": "IMPLEMENTED",
-      "discrepancies": ["D-ADMIN-IDENTITY"],
+      "discrepancies": ["D-ADMIN-IDENTITY", "D-SF157-05"],
       "production": {
         "file": "src/app/[locale]/(auth)/admin/login/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-157: AD0 handoff as an email and password sign-in (ADR 0012 and 0028 amendments, founder-approved), with links to set or reset a password and to the one SimpleFit sign-in (Google, Apple, email code) with the same validated continuation. Signing in grants nothing: the Control Plane gate and every operator endpoint authorize. Interim composition in AD0's card language: no artboard for a password (docs/admin-design/sf-157-design-register.md, D-SF157-05)."
       },
       "screens": ["AD0"]
+    },
+    {
+      "id": "web.admin.password",
+      "platform": "web",
+      "path": "/admin/login/password",
+      "params": [],
+      "name": "Admin password set or reset",
+      "surface": "AUTH",
+      "shell": "web.auth",
+      "parent": "web.admin.login",
+      "nav": {
+        "type": "STACK",
+        "from": []
+      },
+      "access": {
+        "session": "GUEST_ONLY",
+        "capability": null,
+        "phase": null
+      },
+      "status": "IMPLEMENTED",
+      "discrepancies": ["D-SF157-05"],
+      "production": {
+        "file": "src/app/[locale]/(auth)/admin/login/password/page.tsx",
+        "note": "SF-157: set or reset a password with a code emailed to the account's address (ADR 0012 amendment); signs out everywhere and signs nobody in. No artboard: interim composition in AD0's card language (D-SF157-05)."
+      },
+      "screens": ["AD0P"]
     },
     {
       "id": "web.admin.access",
@@ -7111,7 +7297,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-121: AD1, the Control Plane overview (AdminOverview MVP) behind the SF-120 operator gate: platform counts, the sponsor review queue and system health from GET /api/v1/admin/overview, each section shown only with its permission and never as zero without it; a 24 h / 7 d / 30 d period drives only the explicit 'new in the last …' counts; no trends. While the backend offers control_plane_web_tour it sends the operator to ARW1 once. Metric definitions: simplefit-api docs/architecture/admin-overview-metrics.md; design deviations: docs/admin-design/sf-121-design-register.md."
       },
       "screens": ["AD1"]
     },
@@ -7136,7 +7322,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/tenants/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-123: AD2 (MVP), the gym list from GET /api/v1/admin/gyms (gyms.read, each query recorded): name prefix, setup, verification and country filters on the server, newest first in keyset pages; each gym's own state, primary location and staff count, never member data. Design deviations: docs/admin-design/sf-123-design-register.md."
       },
       "screens": ["AD2"]
     },
@@ -7161,7 +7347,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/tenants/[tenantId]/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-123: AD12 (MVP reduced), one gym from GET /api/v1/admin/gyms/:id (gyms.read, reason recorded): setup, primary location, the owner's short name, staff counts by role, pending staff invitations, member counts (never names) and the business verification status. Read only: no suspension, verification review or publication exists in the Control Plane."
       },
       "screens": ["AD12"]
     },
@@ -7186,7 +7372,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/users/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-122: AD7, exact account search (exact email address or user id, with a recorded reason code; at most one masked result, never a list) from GET /api/v1/admin/users (users.read). SF-123: the Fighters and Coaches tabs, an exact lookup (fighter @username, or the account's email or user id) from GET /api/v1/admin/fighters|coaches (fighters.read, coaches.read), each tab shown only with its permission; the result opens its profile in place: shared fields, onboarding and account state, relationship counts. Design deviations: docs/admin-design/sf-122-design-register.md, docs/admin-design/sf-123-design-register.md."
       },
       "screens": ["AD7", "AD10"]
     },
@@ -7211,7 +7397,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/users/[userId]/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-122: AD8, one account from GET /api/v1/admin/users/:id (users.read, reason recorded): masked addresses, sign-in methods, registration, state, active sessions, context counts; reveal email (users.reveal_email), and the AD9 actions suspend / lift suspension (users.restrict) and sign out everywhere (users.sessions.revoke) through the SF-111 preview, fresh key check and confirmation. Never against the operator's own account or a platform operator's account. No recovery or act-as-user."
       },
       "screens": ["AD8", "AD9"]
     },
@@ -7236,7 +7422,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/moderation/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-125: AD4 is FUTURE. A truthful 'not available' screen (no API call, no data): SimpleFit has no reports, user-generated or public content, enforcement cases or appeals to review (simplefit-api D-SA32). It points to the real, separate controls: account suspension (Users) and sponsor organization suspension. Design deviations: docs/admin-design/sf-125-design-register.md."
       },
       "screens": ["AD4"]
     },
@@ -7261,7 +7447,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/enforcement/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-125: AD11 is FUTURE. A truthful 'not available' screen (no API call, no data): SimpleFit has no reports, user-generated or public content, enforcement cases or appeals to review (simplefit-api D-SA32). It points to the real, separate controls: account suspension (Users) and sponsor organization suspension. Design deviations: docs/admin-design/sf-125-design-register.md."
       },
       "screens": ["AD11"]
     },
@@ -7462,7 +7648,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/integrations/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-126: AD17 (MVP reduced), system health from GET /api/v1/admin/operations/health (system.health.read): measured checks with status and observation time (unknown and no telemetry never healthy, no uptime), job counts per queue and state, applied migrations and the configured release; with system.jobs.read the background job list from GET /api/v1/admin/operations/jobs (metadata only, never arguments or error messages). No retry or control exists (D-SA33). Design deviations: docs/admin-design/sf-126-design-register.md."
       },
       "screens": ["AD17"]
     },
@@ -7712,7 +7898,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/[locale]/(admin)/admin/sponsors/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-124: AS1 (MVP), the sponsor application queue from GET /api/v1/admin/sponsor-applications (sponsors.applications.read, each query recorded): status and submission-date filters on the server, oldest submission first in signed keyset pages; never drafts, contacts, budgets or goals. Design deviations: docs/admin-design/sf-124-design-register.md."
       },
       "screens": ["AS1"]
     },
@@ -7738,7 +7924,7 @@
       "discrepancies": ["D-ADMIN-SPONSOR-CAMPAIGN-PATHS"],
       "production": {
         "file": "src/app/[locale]/(admin)/admin/sponsors/[sponsorId]/page.tsx",
-        "note": "SF-32: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-124: AS2 (MVP) with AS4's organization state, keyed by the sponsor application id (every review endpoint is): exactly what was last submitted, submitted documents through a 5-minute attachment link (read_files), the history, and the SF-116 actions through SF-111 (claim, request changes, approve, reject; suspend and reinstate the approved organization), each with its own permission, reason, revision, fresh key check and, for decisions, a one-time confirmation. No revoked state, closure, release or reassignment exists."
       },
       "screens": ["AS2", "AS4"]
     },
@@ -15509,14 +15695,39 @@
       "code": "AD0",
       "name": "Admin sign-in",
       "route": "web.admin.login",
-      "states": ["key"],
+      "states": ["key", "password", "invalid", "throttled", "suspended", "network"],
       "design": {
         "gallery": "gallery-3",
         "page": "admin",
         "section": "19a · Admin · access & platform",
         "step": "19.1",
         "tag": "WEB_ADMIN",
-        "artboard": "AdminSignIn.dc.html"
+        "artboard": "AdminSignIn.dc.html",
+        "note": "SF-157: the handoff is an email and password sign-in, interim in AD0's card language: no artboard draws a password (D-SF157-05)."
+      }
+    },
+    {
+      "id": "AD0P",
+      "code": "AD0P",
+      "name": "Admin password set or reset",
+      "route": "web.admin.password",
+      "states": [
+        "email",
+        "code",
+        "invalid-code",
+        "expired-code",
+        "weak-password",
+        "throttled",
+        "done"
+      ],
+      "design": {
+        "gallery": "gallery-3",
+        "page": "admin",
+        "section": "19a · Admin · access & platform",
+        "step": "19.1",
+        "tag": "WEB_ADMIN",
+        "artboard": "AdminSignIn.dc.html",
+        "note": "SF-157: No artboard: AD0's header and card with the design system's fields and notices, interim. Needs design approval (D-SF157-05)."
       }
     },
     {
@@ -16847,6 +17058,97 @@
         "tag": "MOBILE",
         "artboard": "FighterCoaches.dc.html",
         "note": "SF-135: FCI3 reused as designed, reached from the gym invitations (D-MOBILE-GYM-MEMBER-JOIN)."
+      }
+    },
+    {
+      "id": "SPP1",
+      "code": "SPP1",
+      "name": "Sponsor · Partnership interests",
+      "route": "web.sponsor.interests",
+      "states": ["read-only", "editing", "empty", "stale", "suspended"],
+      "design": {
+        "gallery": "gallery-3",
+        "page": "sponsor-portal",
+        "section": "29 · Sponsor portal · dashboard, campaigns, analytics",
+        "step": "29.14a",
+        "tag": "WEB_PARTNERS",
+        "artboard": "SponsorSettings.dc.html",
+        "note": "SF-131: No artboard: SPX9's card composition with SP3, SP4 and SP6 fields (SponsorReg3–6), interim. Needs design approval (D-SF131-PARTNERSHIP-BOARDS)."
+      }
+    },
+    {
+      "id": "SPP2",
+      "code": "SPP2",
+      "name": "Sponsor · No opportunities",
+      "route": "web.sponsor.opportunities",
+      "states": ["no inventory", "failed"],
+      "design": {
+        "gallery": "gallery-3",
+        "page": "sponsor-portal",
+        "section": "29 · Sponsor portal · dashboard, campaigns, analytics",
+        "step": "29.14b",
+        "tag": "WEB_PARTNERS",
+        "artboard": "SponsorSystemStates.dc.html",
+        "note": "SF-131: SPE1 'No opportunities' state, from the backend's no_inventory answer (D-SA21). Needs design approval (D-SF131-PARTNERSHIP-BOARDS)."
+      }
+    },
+    {
+      "id": "SPP3",
+      "code": "SPP3",
+      "name": "Sponsor · Partnership requests",
+      "route": "web.sponsor.requests",
+      "states": ["filtered", "empty", "read-only", "suspended", "failed"],
+      "design": {
+        "gallery": "gallery-3",
+        "page": "sponsor-portal",
+        "section": "29 · Sponsor portal · dashboard, campaigns, analytics",
+        "step": "29.14c",
+        "tag": "WEB_PARTNERS",
+        "artboard": "SponsorSettings.dc.html",
+        "note": "SF-131: No artboard: SPX9's section links and cards, interim. Needs design approval (D-SF131-PARTNERSHIP-BOARDS)."
+      }
+    },
+    {
+      "id": "SPP4",
+      "code": "SPP4",
+      "name": "Sponsor · New partnership request",
+      "route": "web.sponsor.requests.new",
+      "states": ["form", "read-only", "open limit", "unconfirmed"],
+      "design": {
+        "gallery": "gallery-3",
+        "page": "sponsor-portal",
+        "section": "29 · Sponsor portal · dashboard, campaigns, analytics",
+        "step": "29.14d",
+        "tag": "WEB_PARTNERS",
+        "artboard": "SponsorSettings.dc.html",
+        "note": "SF-131: No artboard: SPX9's card with SP3/SP4 fields, interim. Needs design approval (D-SF131-PARTNERSHIP-BOARDS)."
+      }
+    },
+    {
+      "id": "SPP5",
+      "code": "SPP5",
+      "name": "Sponsor · Partnership request",
+      "route": "web.sponsor.requests._request-id",
+      "states": [
+        "draft",
+        "incomplete",
+        "submitted",
+        "under review",
+        "changes requested",
+        "accepted",
+        "declined",
+        "withdrawn",
+        "unknown",
+        "not found"
+      ],
+      "design": {
+        "gallery": "gallery-3",
+        "page": "sponsor-portal",
+        "section": "29 · Sponsor portal · dashboard, campaigns, analytics",
+        "step": "29.14e",
+        "tag": "WEB_PARTNERS",
+        "artboard": "SponsorSettings.dc.html",
+        "note": "SF-131: No artboard: SPX9's cards and SPE1 notices, interim. Needs design approval (D-SF131-PARTNERSHIP-BOARDS)."
       }
     }
   ],
@@ -18799,6 +19101,36 @@
         "mobile.me.gyms.invitations.verify-email"
       ],
       "screens": ["MMG2", "MMG3", "MMG4"]
+    },
+    {
+      "id": "D-SF131-PARTNERSHIP-BOARDS",
+      "title": "Sponsor partnership pages built without boards",
+      "sourceA": "Claude Design 1794299393-d9d6: SponsorNav (mode=mvp) has no partnership items; no board for partnership interests, requests or their lifecycle. SPE1 draws only 'No opportunities' (D-SA21); SP3–SP6 exist only as application steps",
+      "sourceB": "SF-130 API: organization partnership preferences (interests, markets, goals; no budget), an opportunities answer of unavailable/no_inventory, and nonbinding requests (draft, submitted, under_review, changes_requested, accepted, declined, withdrawn) with allowed_actions",
+      "mismatch": "The domain has five screens and three nav items the canvas doesn't draw",
+      "impact": "The pages are interim compositions of approved boards and primitives, not an approved design",
+      "resolution": "Interim: SPX9's header, section links and cards; SP3/SP4/SP6 fields; SPE1's 'No opportunities' and notices; a Partnerships nav section. No inventory, figures or commercial claims. Design approval needed; Claude Design is unchanged",
+      "status": "NEEDS_PRODUCT_DECISION",
+      "routes": [
+        "web.sponsor.interests",
+        "web.sponsor.opportunities",
+        "web.sponsor.requests",
+        "web.sponsor.requests.new",
+        "web.sponsor.requests._request-id"
+      ],
+      "screens": ["SPP1", "SPP2", "SPP3", "SPP4", "SPP5"]
+    },
+    {
+      "id": "D-SF157-05",
+      "title": "Control Plane email and password sign-in without a board",
+      "sourceA": "Claude Design 1794573984-270f: AdminSignIn (AD0) handoff draws 'Sign in to continue' with Google, Apple and Email (code); no password field, no password set or reset, no password code email",
+      "sourceB": "SF-157 (founder-approved ADR 0012 and ADR 0028 amendments): email and password sign-in for the Control Plane, a password set or reset with an emailed code, reads at session assurance and keys for every write",
+      "mismatch": "Two screens and their states (invalid, throttled, suspended, network; code sent, wrong or expired code, weak password, done) have no artboard",
+      "impact": "The sign-in and password pages are interim compositions in AD0's card language, not an approved design",
+      "resolution": "Interim: AD0's header (brand, CONTROL PLANE) and centred card, the design system's fields, buttons and alerts, and links to the one SimpleFit sign-in. Design approval needed; Claude Design is unchanged",
+      "status": "NEEDS_PRODUCT_DECISION",
+      "routes": ["web.admin.login", "web.admin.password"],
+      "screens": ["AD0", "AD0P"]
     }
   ]
 }
