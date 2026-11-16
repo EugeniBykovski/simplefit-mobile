@@ -297,6 +297,28 @@ describe("O01c sign-in code", () => {
     expect(screen.getByRole("button", { name: "Sign in" })).toBeDisabled();
   });
 
+  it("ends at a suspended account: no session, no resend, no retry (SF-160)", async () => {
+    seed();
+    const fetchMock = api({
+      "/api/auth/email/sign-in/verify": [() => apiError(403, "account_suspended")],
+      "/api/auth/email/sign-in": [accepted],
+    });
+    await renderWithProviders(<SignInCodeScreen />);
+
+    await userEvent.type(screen.getByLabelText("6-digit code"), CODE);
+
+    expect(
+      await screen.findByText(
+        "This account is suspended, so it can’t sign in until the suspension is lifted.",
+      ),
+    ).toBeOnTheScreen();
+    expect(screen.getByRole("button", { name: "Sign in" })).toBeDisabled();
+    expect(screen.queryByRole("button", { name: "Send a new code" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Try again" })).toBeNull();
+    // Only the verification was sent: no session, no viewer, no entry.
+    expect(sent(fetchMock).map(({ path }) => path)).toEqual(["/api/auth/email/sign-in/verify"]);
+  });
+
   it("offers Open Mail on iOS only, through the system URL handler", async () => {
     seed();
     const open = jest.spyOn(Linking, "openURL").mockResolvedValue(true);

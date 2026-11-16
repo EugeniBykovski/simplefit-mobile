@@ -2,12 +2,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, type Href } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 
+import { crossWorkspaceBoundary } from "@/entities/session";
 import { getResolveMyEntryQueryKey } from "@/shared/api/generated/endpoints/entry/entry";
 import type { Continuation } from "@/shared/routes/continuation";
 import { routeHref } from "@/shared/routes/routes";
 
 import type { ProfileContext } from "../model/contexts";
-import { entryHref, fetchEntry, isKnownEntry } from "../model/entry";
+import { entryHref, entryParams, fetchEntry, isKnownEntry, type Entry } from "../model/entry";
 import { chooseEntryContext } from "../model/entry-context";
 
 /**
@@ -28,6 +29,9 @@ export type ContextSwitchState =
 export type SwitchKind = "open" | "continue";
 
 class UnexpectedDestination extends Error {}
+
+/** Where a move leads, and the entry resolved for it when there is one. */
+type Move = { href: Href; entry?: Entry };
 
 /**
  * Moving between the contexts of one account (SF-51, SF-55, SF-89), the same
@@ -53,6 +57,14 @@ class UnexpectedDestination extends Error {}
  * meanwhile disappears from every list. The client decides no destination of
  * its own. `onLeave` runs just before navigating (a sheet closes itself
  * there).
+ *
+ * Opening another workspace crosses the session's workspace boundary
+ * (SF-160) once the backend accepted it and before navigating: the query
+ * cache of the workspace left behind is cancelled and cleared, and its calls
+ * still running are discarded, so no Fighter, Coach or gym data of one
+ * workspace is ever shown in another. Only the entry just resolved for the
+ * new workspace is kept. Continuing a journey stays in the same workspace
+ * (Back returns to it) and keeps the cache.
  */
 export function useContextSwitch(onLeave?: () => void) {
   const router = useRouter();
@@ -61,12 +73,16 @@ export function useContextSwitch(onLeave?: () => void) {
   const busy = useRef(false);
 
   const run = useCallback(
-    async (target: SwitchTarget, kind: SwitchKind, move: () => Promise<Href>) => {
+    async (target: SwitchTarget, kind: SwitchKind, move: () => Promise<Move>) => {
       if (busy.current) return;
       busy.current = true;
       setState({ status: "pending", target, kind });
       try {
-        const href = await move();
+        const { href, entry } = await move();
+        if (kind === "open") {
+          crossWorkspaceBoundary();
+          if (entry !== undefined) client.setQueryData(getResolveMyEntryQueryKey(), entry);
+        }
         onLeave?.();
         // Another context is another workspace: it replaces the current
         // screen, so Back does not return to the one it left. A journey is
@@ -84,7 +100,7 @@ export function useContextSwitch(onLeave?: () => void) {
     [client, onLeave, router],
   );
 
-  const resolve = useCallback(async (continuation: Continuation) => {
+  const resolve = useCallback(async (continuation: Continuation): Promise<Move> => {
     const entry = await fetchEntry(continuation);
     const destination: string = entry.destination;
     if (!isKnownEntry(entry)) {
@@ -92,7 +108,9 @@ export function useContextSwitch(onLeave?: () => void) {
       console.error(`Unknown entry destination "${destination}"`);
       throw new UnexpectedDestination();
     }
-    return entryHref(entry, continuation);
+    const href = entryHref(entry, continuation);
+    // Only the plain entry (no intent) is the one the shells' gates read.
+    return entryParams(continuation) === undefined ? { href, entry } : { href };
   }, []);
 
   return {
@@ -107,7 +125,7 @@ export function useContextSwitch(onLeave?: () => void) {
     openGym: (gymId: string) =>
       run(gymTarget(gymId), "open", async () => {
         await chooseEntryContext("gym", gymId);
-        return routeHref("mobile.gyms._gym-id.pulse", { gymId });
+        return { href: routeHref("mobile.gyms._gym-id.pulse", { gymId }) };
       }),
     continueGymSetup: () => run("gym-setup", "continue", () => resolve({ intent: "gym" })),
   };

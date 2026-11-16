@@ -149,12 +149,19 @@ export function useCodeStep({
     /** Applies a status the API reported outside a verification (registration status check). */
     report: setStatus,
     // Locked steps show empty cells (the artboards' throttled and verified-elsewhere states).
-    code: status === "throttled" || status === "verified-elsewhere" ? "" : code,
+    code:
+      status === "throttled" || status === "verified-elsewhere" || status === "suspended"
+        ? ""
+        : code,
     changeCode,
     submit,
     resend,
     retry,
     secondsUntilResend,
-    canResend: secondsUntilResend === 0 && status !== "throttled" && status !== "submitting",
+    canResend:
+      secondsUntilResend === 0 &&
+      status !== "throttled" &&
+      status !== "submitting" &&
+      status !== "suspended",
   };
 }

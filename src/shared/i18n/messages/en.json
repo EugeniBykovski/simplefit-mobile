@@ -113,6 +113,7 @@
       "exchanging": "Signing you in…",
       "notConfigured": "Google sign-in is not available in this build.",
       "errors": {
+        "suspended": "This account is suspended, so it can't sign in until the suspension is lifted.",
         "rejected": "We couldn't verify your Google sign-in. Please try again.",
         "rateLimited": "Too many sign-in attempts. Wait a few minutes and try again.",
         "unavailable": "Google sign-in is temporarily unavailable. Please try again later.",
@@ -126,6 +127,7 @@
       "continue": "Continue with Apple",
       "exchanging": "Signing you in with Apple…",
       "errors": {
+        "suspended": "This account is suspended, so it can't sign in until the suspension is lifted.",
         "rejected": "We couldn't verify your Apple sign-in. Please try again.",
         "rateLimited": "Too many sign-in attempts. Wait a few minutes and try again.",
         "unavailable": "Apple sign-in is temporarily unavailable. Please try again later.",
@@ -192,7 +194,8 @@
           "expired": "This code has expired. Send a new one to sign in.",
           "success": "You’re signed in.",
           "throttled": "Too many attempts. Try again shortly.",
-          "error": "Something went wrong. Try again."
+          "error": "Something went wrong. Try again.",
+          "suspended": "This account is suspended, so it can’t sign in until the suspension is lifted."
         }
       },
       "registration": {
@@ -1294,10 +1297,20 @@
     }
   },
   "accountMenu": {
-    "profileNote": "Your profile arrives with its feature. Settings and sign-out work now.",
     "settingsLink": "Settings · account · privacy",
     "settingsNote": "Account, privacy and notification settings arrive with their features. You can sign out of this device here.",
-    "coachesLink": "Coaches"
+    "coachesLink": "Coaches",
+    "profile": {
+      "identity": "Fighter",
+      "identityWithHandle": "Fighter · @{username}",
+      "stance": "Stance",
+      "weightClass": "Class",
+      "gymsLink": "Gyms",
+      "switchWorkspace": "Switch workspace",
+      "loading": "Loading your profile…",
+      "loadFailed": "We couldn’t load your profile. Check your connection and try again.",
+      "retry": "Try again"
+    }
   },
   "contextSwitcher": {
     "close": "Close",

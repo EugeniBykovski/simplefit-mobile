@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { focusManager } from "@tanstack/react-query";
+import { focusManager, type QueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import {
   act,
@@ -9,14 +9,16 @@ import {
   renderRouter,
   screen,
   waitFor,
+  within,
   type MockContextConfig,
 } from "expo-router/testing-library";
 // The navigation state itself (SF-80 asserts no URL fragment ever reaches it).
 import { store } from "expo-router/build/global-state/router-store";
 
-import { completeAuthentication } from "@/entities/session";
+import { callWithSession, completeAuthentication } from "@/entities/session";
 import { pending } from "@/features/email-auth/model/pending";
 import { resetSessionForTests } from "@/entities/session/model/session";
+import { setPreference } from "@/shared/storage/preferences";
 import { getSecureItem, setSecureItem } from "@/shared/storage/secure-storage";
 import { jsonResponse, mockFetch } from "@/test/render";
 import { mobileRoutes } from "@/shared/routes/mobile-routes";
@@ -31,6 +33,29 @@ import { RootNavigator } from "./root-navigator";
 
 // System-state motion rests static (deterministic renders, no act() noise).
 jest.mock("@/shared/lib/reduced-motion", () => ({ useReducedMotion: () => true }));
+
+// The app's own QueryClient, unchanged; SF-160 reads what it holds after a workspace switch.
+const mockQueryClients: QueryClient[] = [];
+jest.mock("@/shared/api/query-client", () => {
+  const actual = jest.requireActual<{ makeQueryClient: () => QueryClient }>(
+    "@/shared/api/query-client",
+  );
+  return {
+    ...actual,
+    makeQueryClient: () => {
+      const client = actual.makeQueryClient();
+      mockQueryClients.push(client);
+      return client;
+    },
+  };
+});
+const appQueryClient = () => mockQueryClients.at(-1)!;
+/** Cached queries whose key starts with `path` that hold data. */
+const cachedWithData = (path: string) =>
+  appQueryClient()
+    .getQueryCache()
+    .findAll({ predicate: (query) => query.queryKey[0] === path })
+    .filter((query) => query.state.data !== undefined);
 
 /*
  * SF-33: the production Expo Router tree (src/app) resolves the SF-31 mobile
@@ -898,6 +923,154 @@ describe("tab navigation", () => {
     await waitFor(() => expect(result.getPathname()).toBe("/profile"));
   });
 
+  describe("Fighter five-tab shell (SF-160)", () => {
+    const FIGHTER_TABS = ["Home", "Training", "Live Board", "Community", "Profile"];
+
+    it("has exactly five tabs, in order, with the Live Board in the centre", async () => {
+      await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
+      await renderApp("/home");
+      await screen.findByRole("tab", { name: "Home", selected: true });
+      const tabs = screen.getAllByRole("tab");
+      expect(tabs.map((tab) => tab.props.accessibilityLabel as string)).toEqual(FIGHTER_TABS);
+      expect(tabs.indexOf(screen.getByRole("tab", { name: "Live Board" }))).toBe(2);
+      // Every tab opens its route: none is a disabled Soon item.
+      for (const tab of tabs) expect(tab).not.toBeDisabled();
+    });
+
+    it.each([
+      ["/home", "Home"],
+      ["/training", "Training"],
+      ["/board", "Live Board"],
+      ["/community", "Community"],
+      ["/profile", "Profile"],
+    ])("a deep link to %s opens that tab, selected", async (url, tab) => {
+      await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
+      const result = await renderApp(url);
+      expect(await screen.findByRole("tab", { name: tab, selected: true })).toBeOnTheScreen();
+      expect(result.getPathname()).toBe(url);
+      for (const other of FIGHTER_TABS.filter((name) => name !== tab))
+        expect(screen.getByRole("tab", { name: other })).not.toBeSelected();
+    });
+
+    it("Home is the working Fighter home (FR4), never the FUTURE F01", async () => {
+      await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
+      await renderApp("/profile");
+      await fireEvent.press(await screen.findByRole("tab", { name: "Home" }));
+      expect(
+        await screen.findByRole("button", { name: "Alex Rivera, Fighter. Switch profile" }),
+      ).toBeOnTheScreen();
+      expect(screen.queryByTestId(placeholderId("mobile.home"))).toBeNull();
+    });
+
+    it.each([
+      ["Live Board", "mobile.board"],
+      ["Community", "mobile.community"],
+    ] as const)(
+      "%s is a truthful placeholder: no data, no controls, no backend calls",
+      async (tab, route) => {
+        await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
+        await renderApp("/training");
+        await screen.findByRole("tab", { name: "Training", selected: true });
+        const fetchMock = global.fetch as jest.Mock;
+        const before = fetchMock.mock.calls.length;
+
+        await fireEvent.press(screen.getByRole("tab", { name: tab }));
+        const placeholder = await screen.findByTestId(placeholderId(route));
+        expect(screen.getByRole("tab", { name: tab, selected: true })).toBeOnTheScreen();
+        expect(within(placeholder).getByLabelText("Planned")).toBeOnTheScreen();
+        expect(within(placeholder).queryAllByRole("button")).toEqual([]);
+        expect(within(placeholder).queryAllByRole("link")).toEqual([]);
+        // Nothing asks a backend for places, people, feeds or activity.
+        const paths = (fetchMock.mock.calls.slice(before) as [string][]).map(
+          ([url]) => new URL(url).pathname,
+        );
+        expect(paths.filter((path) => path !== "/api/v1/me/entry")).toEqual([]);
+      },
+    );
+
+    it("Profile shows the fighter's own profile and only destinations that exist", async () => {
+      await signIn(FIGHTER_HOME, { ...FIGHTER_COMPLETED, weight_class: "minus_75" });
+      const result = await renderApp("/profile");
+      expect(await screen.findByRole("header", { name: "Alex Rivera" })).toBeOnTheScreen();
+      expect(screen.getByText("Fighter · @alex")).toBeOnTheScreen();
+      expect(screen.getByLabelText("Stance: Orthodox")).toBeOnTheScreen();
+      expect(screen.getByLabelText("Class: −75")).toBeOnTheScreen();
+      expect(screen.queryByLabelText("Planned")).toBeNull();
+      expect(screen.getAllByRole("link").map((link) => link.props.accessibilityLabel)).toEqual([
+        "Coaches",
+        "Gyms",
+      ]);
+      // Domains that do not exist are not offered.
+      for (const absent of [/Go Pro/, /Progress/, /Fight camps/, /Payments/, /Friends/])
+        expect(screen.queryByText(absent)).toBeNull();
+
+      await fireEvent.press(screen.getByRole("link", { name: "Gyms" }));
+      await waitFor(() => expect(result.getPathname()).toBe("/me/gyms"));
+      await act(async () => router.back());
+      await waitFor(() => expect(result.getPathname()).toBe("/profile"));
+      await fireEvent.press(await screen.findByRole("link", { name: "Coaches" }));
+      await waitFor(() => expect(result.getPathname()).toBe("/profile/coaches"));
+      // Nested inside the Profile tab: the tab stays selected, Back returns to its root.
+      expect(await screen.findByRole("tab", { name: "Profile", selected: true })).toBeOnTheScreen();
+      await act(async () => router.back());
+      await waitFor(() => expect(result.getPathname()).toBe("/profile"));
+    });
+
+    it("Profile opens the workspace switcher (A04) for the current Fighter context", async () => {
+      await signIn(BOTH, FIGHTER_COMPLETED, "completed", COACH_COMPLETED);
+      await renderApp("/profile");
+      await fireEvent.press(await screen.findByRole("button", { name: "Switch workspace" }));
+      expect(
+        await screen.findByRole("button", { name: "Fighter, Alex Rivera · Fighter home" }),
+      ).toBeSelected();
+    });
+
+    it("Profile keeps its working links when the profile cannot be read", async () => {
+      await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
+      const fetchMock = global.fetch as jest.Mock;
+      const original = fetchMock.getMockImplementation();
+      fetchMock.mockImplementation((url: string, init?: RequestInit) =>
+        new URL(url).pathname === "/api/v1/me/fighter-profile"
+          ? Promise.resolve(
+              jsonResponse({ error: { code: "service_unavailable" } }, { status: 503 }),
+            )
+          : original?.(url, init),
+      );
+      await renderApp("/profile");
+      expect(
+        await screen.findByText(
+          "We couldn’t load your profile. Check your connection and try again.",
+        ),
+      ).toBeOnTheScreen();
+      expect(screen.getByRole("button", { name: "Try again" })).toBeOnTheScreen();
+      expect(screen.getByRole("link", { name: "Coaches" })).toBeOnTheScreen();
+      expect(
+        screen.getByRole("button", { name: "Settings · account · privacy" }),
+      ).toBeOnTheScreen();
+    });
+
+    it("labels the tabs in every full locale", async () => {
+      const labels: Record<string, string[]> = {
+        ru: ["Главная", "Тренировки", "Live Board", "Сообщество", "Профиль"],
+        pl: ["Start", "Trening", "Live Board", "Społeczność", "Profil"],
+        de: ["Start", "Training", "Live Board", "Community", "Profil"],
+        uk: ["Головна", "Тренування", "Live Board", "Спільнота", "Профіль"],
+        es: ["Inicio", "Entrenamiento", "Live Board", "Comunidad", "Perfil"],
+        fr: ["Accueil", "Entraînement", "Live Board", "Communauté", "Profil"],
+      };
+      for (const [locale, expected] of Object.entries(labels)) {
+        await signIn(FIGHTER_HOME, FIGHTER_COMPLETED);
+        await setPreference("locale", locale);
+        const result = await renderApp("/profile");
+        await screen.findByRole("tab", { name: expected[4], selected: true });
+        expect(
+          screen.getAllByRole("tab").map((tab) => tab.props.accessibilityLabel as string),
+        ).toEqual(expected);
+        await result.unmount();
+      }
+    });
+  });
+
   it("keeps the tabs underneath a deep-linked pushed screen", async () => {
     await signIn(BOTH);
     const result = await renderApp("/coach/fighters/f-1/note");
@@ -1424,6 +1597,8 @@ describe("Coach shell and context switching (SF-55)", () => {
           return Promise.resolve(jsonResponse(firstRun("completed")));
         if (pathname === "/api/v1/me/coach/fighters")
           return Promise.resolve(jsonResponse({ relationships: [], next_cursor: null }));
+        if (pathname === "/api/v1/me/training-sessions")
+          return Promise.resolve(jsonResponse({ training_sessions: [], next_cursor: null }));
         return Promise.resolve(
           jsonResponse({
             user: {
@@ -1536,6 +1711,120 @@ describe("Coach shell and context switching (SF-55)", () => {
       await screen.findByText("We couldn’t open that. Nothing changed. Try again."),
     ).toBeOnTheScreen();
     expect(result.getPathname()).toBe("/workspaces");
+  });
+
+  describe("workspace isolation (SF-160)", () => {
+    const TRAINING = "/api/v1/me/training-sessions";
+    const FIGHTER_PROFILE = "/api/v1/me/fighter-profile";
+
+    /** Fighter training answers are held until `release`; everything else as `contexts`. */
+    function holdFighterTraining() {
+      const fetchMock = global.fetch as jest.Mock;
+      const original = fetchMock.getMockImplementation();
+      const held: (() => void)[] = [];
+      let holding = true;
+      fetchMock.mockImplementation((url: string, init?: RequestInit) => {
+        if (new URL(url).pathname !== TRAINING) return original?.(url, init);
+        const answer = () => jsonResponse({ training_sessions: [], next_cursor: null });
+        if (!holding) return Promise.resolve(answer());
+        return new Promise<Response>((resolve) => held.push(() => resolve(answer())));
+      });
+      return {
+        held,
+        release: () => {
+          holding = false;
+          for (const answer of held.splice(0)) answer();
+        },
+      };
+    }
+
+    async function switchFromFighterHomeToCoach(rendered?: Awaited<ReturnType<typeof renderApp>>) {
+      const result = rendered ?? (await renderApp("/home"));
+      await fireEvent.press(
+        await screen.findByRole("button", { name: "Alex Rivera, Fighter. Switch profile" }),
+      );
+      await fireEvent.press(
+        await screen.findByRole("button", { name: "Coach, Coach Sam · Coach today" }),
+      );
+      await waitFor(() => expect(result.getPathname()).toBe("/coach/today"));
+      return result;
+    }
+
+    it("opening the Coach workspace clears the Fighter workspace's cached data", async () => {
+      const calls = await contexts(BOTH);
+      const result = await renderApp("/home");
+      await screen.findByRole("button", { name: "Alex Rivera, Fighter. Switch profile" });
+      await waitFor(() => expect(cachedWithData(FIGHTER_PROFILE)).toHaveLength(1));
+      await result.unmount();
+
+      await switchFromFighterHomeToCoach();
+      expect(calls.writes).toEqual([{ context: "coach" }]);
+      expect(await screen.findByRole("header", { name: "Welcome, Coach Sam" })).toBeOnTheScreen();
+      expect(cachedWithData(FIGHTER_PROFILE)).toEqual([]);
+      expect(cachedWithData(TRAINING)).toEqual([]);
+      // The entry just resolved for the Coach workspace is the one kept.
+      expect(appQueryClient().getQueryData(["/api/v1/me/entry"])).toMatchObject({
+        destination: "coach_home",
+      });
+    });
+
+    it("drops a Fighter answer that arrives after the switch to Coach", async () => {
+      await contexts(BOTH);
+      const training = holdFighterTraining();
+      const result = await renderApp("/home");
+      await screen.findByRole("button", { name: "Alex Rivera, Fighter. Switch profile" });
+      // A Fighter read that no unmounting screen cancels (no abort signal),
+      // still running when the user opens the Coach workspace.
+      const late = appQueryClient()
+        .fetchQuery({
+          queryKey: [TRAINING, { probe: true }],
+          queryFn: () =>
+            callWithSession((init) =>
+              fetch(`http://api.test${TRAINING}?probe=1`, init).then((response) => response.json()),
+            ),
+        })
+        .then(
+          () => "stored",
+          (error: unknown) => error,
+        );
+      await switchFromFighterHomeToCoach(result);
+      expect(training.held.length).toBeGreaterThan(0);
+      await act(async () => training.release());
+      expect(await late).not.toBe("stored");
+      // Settled: every training read either landed or was discarded.
+      const fetching = () =>
+        appQueryClient()
+          .getQueryCache()
+          .findAll({ predicate: (query) => query.queryKey[0] === TRAINING })
+          .filter((query) => query.state.fetchStatus === "fetching");
+      await waitFor(() => expect(fetching()).toEqual([]));
+
+      expect(cachedWithData(TRAINING)).toEqual([]);
+      expect(screen.queryByText("Training")).toBeNull();
+    });
+
+    it("returning to the Fighter workspace reads its data again from the backend", async () => {
+      await contexts(BOTH);
+      await switchFromFighterHomeToCoach();
+      const fetchMock = global.fetch as jest.Mock;
+      const before = fetchMock.mock.calls.filter(([url]: [string]) =>
+        url.includes(FIGHTER_PROFILE),
+      ).length;
+
+      await fireEvent.press(
+        await screen.findByRole("button", { name: "Coach Sam, Coach. Switch profile" }),
+      );
+      await fireEvent.press(
+        await screen.findByRole("button", { name: "Fighter, Alex Rivera · Fighter home" }),
+      );
+      expect(
+        await screen.findByRole("button", { name: "Alex Rivera, Fighter. Switch profile" }),
+      ).toBeOnTheScreen();
+      const after = fetchMock.mock.calls.filter(([url]: [string]) =>
+        url.includes(FIGHTER_PROFILE),
+      ).length;
+      expect(after).toBeGreaterThan(before);
+    });
   });
 });
 

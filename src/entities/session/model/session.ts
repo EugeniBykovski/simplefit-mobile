@@ -57,6 +57,11 @@ let credentials: Credentials | undefined;
 // Bumped whenever the signed-in identity may change (sign-in, sign-out,
 // expiry): work started under an older epoch belongs to another session.
 let epoch = 0;
+// Bumped when the same session moves to another workspace (SF-160): data
+// requested in the workspace the user left is never handed to the next one.
+// Separate from `epoch`, which also guards the refresh-token rotation: a
+// rotation in flight during a switch still belongs to this session.
+let scope = 0;
 let refreshing: Promise<RefreshOutcome> | undefined;
 let restoring: Promise<SessionStatus> | undefined;
 let refreshFailure: unknown;
@@ -86,9 +91,10 @@ const getSnapshot = () => snapshot;
 
 /**
  * Registers `listener` to run, synchronously, whenever the signed-in identity
- * changes or ends (SF-28): before the new state is published, so user-scoped
- * client state (the query cache) is gone before anything renders for the
- * next user. Returns the unsubscribe function.
+ * changes or ends (SF-28), or the session moves to another workspace
+ * (SF-160): before the new state is published or the next workspace opens,
+ * so client state of the previous one (the query cache) is gone before
+ * anything renders. Returns the unsubscribe function.
  */
 export function onSessionBoundary(listener: () => void): () => void {
   boundaryListeners.add(listener);
@@ -97,6 +103,20 @@ export function onSessionBoundary(listener: () => void): () => void {
 
 function crossBoundary() {
   epoch += 1;
+  scope += 1;
+  for (const listener of boundaryListeners) listener();
+}
+
+/**
+ * The same session leaves one workspace for another (Fighter, Coach, a gym;
+ * SF-160): the identity stays, but nothing requested in the workspace left
+ * behind reaches the next one. Calls still running reject with
+ * `SessionChangedError`, and the boundary listeners clear the client state.
+ * Credentials and a refresh in flight are untouched. Call it after the
+ * backend accepted the move and before navigating to the new workspace.
+ */
+export function crossWorkspaceBoundary(): void {
+  scope += 1;
   for (const listener of boundaryListeners) listener();
 }
 
@@ -215,6 +235,10 @@ function assertEpoch(owner: number) {
   if (epoch !== owner) throw new SessionChangedError();
 }
 
+function assertOwner(owner: number, ownerScope: number) {
+  if (epoch !== owner || scope !== ownerScope) throw new SessionChangedError();
+}
+
 async function accessToken(owner: number): Promise<string> {
   const current = freshCredentials();
   if (current !== undefined) return current.accessToken;
@@ -240,17 +264,19 @@ async function accessToken(owner: number): Promise<string> {
  * answered before any business logic runs (the API's authentication plug), so
  * the retry never repeats an operation. A 403, a server failure or no network
  * never refreshes and never ends the session. A response that arrives after
- * the session ended or changed is discarded (`SessionChangedError`).
+ * the session ended or changed, or after the user moved to another workspace
+ * (`crossWorkspaceBoundary`), is discarded (`SessionChangedError`).
  */
 export async function callWithSession<T>(call: (init: RequestInit) => Promise<T>): Promise<T> {
   const owner = epoch;
+  const ownerScope = scope;
   const used = await accessToken(owner);
   try {
     const result = await call(bearer(used));
-    assertEpoch(owner);
+    assertOwner(owner, ownerScope);
     return result;
   } catch (error) {
-    assertEpoch(owner);
+    assertOwner(owner, ownerScope);
     if (!isRejection(error)) throw error;
   }
 
@@ -268,10 +294,10 @@ export async function callWithSession<T>(call: (init: RequestInit) => Promise<T>
 
   try {
     const result = await call(bearer(retryWith));
-    assertEpoch(owner);
+    assertOwner(owner, ownerScope);
     return result;
   } catch (error) {
-    assertEpoch(owner);
+    assertOwner(owner, ownerScope);
     if (isRejection(error)) await end("expired");
     throw error;
   }

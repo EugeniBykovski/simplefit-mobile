@@ -113,6 +113,7 @@
       "exchanging": "Connexion en cours…",
       "notConfigured": "La connexion avec Google n’est pas disponible dans cette version.",
       "errors": {
+        "suspended": "Ce compte est suspendu : impossible de se connecter tant que la suspension n'est pas levée.",
         "rejected": "Impossible de vérifier votre connexion avec Google. Veuillez réessayer.",
         "rateLimited": "Trop de tentatives de connexion. Patientez quelques minutes, puis réessayez.",
         "unavailable": "La connexion avec Google est temporairement indisponible. Veuillez réessayer plus tard.",
@@ -126,6 +127,7 @@
       "continue": "Continuer avec Apple",
       "exchanging": "Connexion avec Apple en cours…",
       "errors": {
+        "suspended": "Ce compte est suspendu : impossible de se connecter tant que la suspension n'est pas levée.",
         "rejected": "Impossible de vérifier votre connexion avec Apple. Veuillez réessayer.",
         "rateLimited": "Trop de tentatives de connexion. Patientez quelques minutes, puis réessayez.",
         "unavailable": "La connexion avec Apple est temporairement indisponible. Veuillez réessayer plus tard.",
@@ -192,7 +194,8 @@
           "expired": "Ce code a expiré. Demandez-en un nouveau pour vous connecter.",
           "success": "Vous êtes connecté.",
           "throttled": "Trop de tentatives. Réessayez dans un instant.",
-          "error": "Un problème est survenu. Réessayez."
+          "error": "Un problème est survenu. Réessayez.",
+          "suspended": "Ce compte est suspendu : impossible de se connecter tant que la suspension n’est pas levée."
         }
       },
       "registration": {
@@ -1294,10 +1297,20 @@
     }
   },
   "accountMenu": {
-    "profileNote": "Votre profil arrive avec sa fonctionnalité. Les réglages et la déconnexion fonctionnent déjà.",
     "settingsLink": "Réglages · compte · confidentialité",
     "settingsNote": "Les réglages du compte, de la confidentialité et des notifications arrivent avec leurs fonctionnalités. Vous pouvez vous déconnecter de cet appareil ici.",
-    "coachesLink": "Coachs"
+    "coachesLink": "Coachs",
+    "profile": {
+      "identity": "Boxeur",
+      "identityWithHandle": "Boxeur · @{username}",
+      "stance": "Garde",
+      "weightClass": "Catégorie",
+      "gymsLink": "Salles",
+      "switchWorkspace": "Changer d’espace",
+      "loading": "Chargement de votre profil…",
+      "loadFailed": "Impossible de charger votre profil. Vérifiez votre connexion et réessayez.",
+      "retry": "Réessayer"
+    }
   },
   "contextSwitcher": {
     "close": "Fermer",
