@@ -8,18 +8,19 @@ registry, generated client, Jira issue or Claude Design file was changed.
 
 ## Artifacts
 
-| Artifact | File                                                   | Content                                                                                                |
-| -------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| A        | [a-design-inventory.md](a-design-inventory.md)         | Every fighter-mobile board (113) and the fighter-relevant boards on other pages, with route and status |
-| B        | [b-screen-to-code.md](b-screen-to-code.md)             | Artboard → mobile module → API operation → backend owner                                               |
-| C        | [c-navigation-flows.md](c-navigation-flows.md)         | Five tab trees, per-destination access, key flows, context-switch safety                               |
-| D        | [d-domain-gaps.md](d-domain-gaps.md)                   | Domain gaps, existing domain detail, API contract and route-registry parity                            |
-| E        | [e-security-privacy.md](e-security-privacy.md)         | Ownership, visibility, consent, retention, cache isolation, lifecycle                                  |
-| F        | [f-commercial-readiness.md](f-commercial-readiness.md) | Commercial surfaces, GO/NO-GO, design inconsistencies                                                  |
-| G        | [g-jira-reconciliation.md](g-jira-reconciliation.md)   | Jira reconciliation (BLOCKED), proposed breakdown, amendments, done work                               |
-| H        | [h-decisions-blockers.md](h-decisions-blockers.md)     | Register `D-SF159-01`… of decisions, blockers and design gaps                                          |
-| I        | [i-roadmap.md](i-roadmap.md)                           | Dependency-aware order, start-now items, boxing timer requirements                                     |
-| SF-160   | [sf-160-five-tab-shell.md](sf-160-five-tab-shell.md)   | Five-tab shell, route reconciliation, workspace isolation, design discrepancies `D-SF160-*`            |
+| Artifact | File                                                     | Content                                                                                                |
+| -------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| A        | [a-design-inventory.md](a-design-inventory.md)           | Every fighter-mobile board (113) and the fighter-relevant boards on other pages, with route and status |
+| B        | [b-screen-to-code.md](b-screen-to-code.md)               | Artboard → mobile module → API operation → backend owner                                               |
+| C        | [c-navigation-flows.md](c-navigation-flows.md)           | Five tab trees, per-destination access, key flows, context-switch safety                               |
+| D        | [d-domain-gaps.md](d-domain-gaps.md)                     | Domain gaps, existing domain detail, API contract and route-registry parity                            |
+| E        | [e-security-privacy.md](e-security-privacy.md)           | Ownership, visibility, consent, retention, cache isolation, lifecycle                                  |
+| F        | [f-commercial-readiness.md](f-commercial-readiness.md)   | Commercial surfaces, GO/NO-GO, design inconsistencies                                                  |
+| G        | [g-jira-reconciliation.md](g-jira-reconciliation.md)     | Jira reconciliation (BLOCKED), proposed breakdown, amendments, done work                               |
+| H        | [h-decisions-blockers.md](h-decisions-blockers.md)       | Register `D-SF159-01`… of decisions, blockers and design gaps                                          |
+| I        | [i-roadmap.md](i-roadmap.md)                             | Dependency-aware order, start-now items, boxing timer requirements                                     |
+| SF-160   | [sf-160-five-tab-shell.md](sf-160-five-tab-shell.md)     | Five-tab shell, route reconciliation, workspace isolation, design discrepancies `D-SF160-*`            |
+| SF-161   | [sf-161-profile-settings.md](sf-161-profile-settings.md) | Settings ST1–ST9, ST13, S18, S19: preflight matrix, sign-in methods API, decisions `D-SF161-*`         |
 
 ## Scope
 

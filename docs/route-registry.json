@@ -2940,7 +2940,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/account.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: ST2 Account details (Claude Design 1794843261-39f9, SetAccount.dc.html): the global account's full name, saved with PATCH /api/v1/me/account-profile (the backend validates it); the date of birth, unchangeable after registration, and the proven email addresses (listMySignInMethods) are read-only; no email change contract exists. Language is this device's preference (SF-38). Phone, region and currency, the handle and the workspaces have no account field (D-SF161-03). Unsaved edits ask before leaving."
       },
       "screens": ["ST2"]
     },
@@ -2965,7 +2965,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/security.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: ST3 Sign-in & security (Claude Design 1794843261-39f9, SetSecurity.dc.html, design scope SF-21): how the account signs in, from GET /api/v1/me/sign-in-methods (proven email addresses; Google and Apple by provider only, never their account ids), and Sign out on this phone. Passwordless (D-SF157-02): no password, passkey or session list. No sign-in alert email is sent, so ST3's Alerts section is not shown."
       },
       "screens": ["ST3"]
     },
@@ -2990,7 +2990,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/profile.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: ST4 Edit profile (Claude Design 1794843261-39f9, SetProfile.dc.html): the signed-in user's own completed FighterProfile, edited with the onboarding fields and rules (name, username, country, city, level, bouts, stance, weight class, private body data) and saved with PATCH /api/v1/me/fighter-profile, only changed fields; backend validation codes shown per field. Without a completed FighterProfile it is a not-available state and never creates one (Settings is shared). No photo, bio, home gym or visibility switches (D-SF161-04). Unsaved edits ask before leaving."
       },
       "screens": ["ST4"]
     },
@@ -3015,7 +3015,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/privacy.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: S19 Privacy (Claude Design 1794843261-39f9, PrivacySettings.dc.html): the visibility rules the backend enforces today for every account (no public profile or search; coaches see what the disclosure lists; gyms see their own memberships and bookings; weight and body data private), and a link to My coaches. No switch: the artboard's controls govern projections that do not exist (D-SF161-05)."
       },
       "screens": ["S19"]
     },
@@ -3040,7 +3040,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/notifications.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: S18 Notifications (Claude Design 1794843261-39f9, NotifSettings.dc.html): the product news email consent, read from and saved to the AccountProfile (append-only consent history, ADR 0016), never optimistically; account emails are always sent; push is not available. No categories, channels, digest or quiet hours (SF-167, D-SF161-06)."
       },
       "screens": ["S18"]
     },
@@ -3065,7 +3065,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/blocked.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: ST5 Blocked & muted (Claude Design 1794843261-39f9, SetBlocked.dc.html): a truthful not-available state; there is no social graph to block or mute (SF-173 to SF-177, D-SA32). No list, no unblock."
       },
       "screens": ["ST5"]
     },
@@ -3090,7 +3090,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/training.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: ST6 Training & timer (Claude Design 1794843261-39f9, SetTraining.dc.html): a truthful not-available state; there is no round timer or training log yet (SF-171). Nothing is stored."
       },
       "screens": ["ST6"]
     },
@@ -3115,7 +3115,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/apps.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: ST7 Connected apps (Claude Design 1794843261-39f9, SetApps.dc.html): a truthful not-available state; no integration exists, nothing is connected, requested or shared."
       },
       "screens": ["ST7"]
     },
@@ -3165,7 +3165,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/data.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: ST9 Your data (Claude Design 1794843261-39f9, SetData.dc.html): the kinds of data the backend keeps (account, fighter profile, coaching, gyms); export and deletion are not available in the app and no retention period is promised (SF-180, D-SF161-07)."
       },
       "screens": ["ST9"]
     },
@@ -3267,7 +3267,7 @@
       "status": "IMPLEMENTED",
       "production": {
         "file": "src/app/(shared)/settings/help.tsx",
-        "note": "SF-33: canonical feature placeholder (FeaturePlaceholder) in its shell; the screen is built by its feature ticket."
+        "note": "SF-161: ST13 Help & legal (Claude Design 1794843261-39f9, SetHelp.dc.html): the Terms of Service and Privacy Policy versions the account accepted and whether a newer one is in force (AccountProfile consents), and the published fighter-coach data sharing notice (getLegalDocument, the app language). Full texts, support, help search, guidelines and licences are not available and are stated as such (D-SF161-08)."
       },
       "screens": ["ST13"]
     },
