@@ -1298,7 +1298,6 @@
   },
   "accountMenu": {
     "settingsLink": "Settings · account · privacy",
-    "settingsNote": "Account, privacy and notification settings arrive with their features. You can sign out of this device here.",
     "coachesLink": "Coaches",
     "profile": {
       "identity": "Fighter",
@@ -2799,6 +2798,206 @@
         "title": "Missing an invitation?",
         "body": "If a gym sent it to another email of yours, verify that address. Your account stays the same.",
         "action": "Add the email it was sent to"
+      }
+    }
+  },
+  "accountSettings": {
+    "unavailable": "Not available yet",
+    "loading": "Loading…",
+    "loadFailed": "We couldn’t load this. Check your connection and try again.",
+    "retry": "Try again",
+    "hub": {
+      "identityHint": "Opens your account details",
+      "roles": {
+        "fighter": "Fighter",
+        "coach": "Coach",
+        "gym": "Gym"
+      },
+      "sections": {
+        "account": "Account",
+        "privacy": "Privacy & alerts",
+        "training": "Training",
+        "more": "More"
+      },
+      "rows": {
+        "account": {
+          "label": "Account details",
+          "line": "Name, email, language"
+        },
+        "security": {
+          "label": "Sign-in & security",
+          "line": "How you sign in"
+        },
+        "profile": {
+          "label": "Edit profile",
+          "line": "Name, level, stance, weight class"
+        },
+        "privacy": {
+          "label": "Privacy",
+          "line": "Who sees what"
+        },
+        "blocked": {
+          "label": "Blocked & muted",
+          "line": "Not available yet"
+        },
+        "notifications": {
+          "label": "Notifications",
+          "line": "Product news email"
+        },
+        "training": {
+          "label": "Training & timer",
+          "line": "Not available yet"
+        },
+        "apps": {
+          "label": "Connected apps",
+          "line": "Not available yet"
+        },
+        "memberships": {
+          "label": "Gym memberships",
+          "line": "Your gyms and bookings"
+        },
+        "data": {
+          "label": "Your data",
+          "line": "What SimpleFit keeps"
+        },
+        "help": {
+          "label": "Help & legal",
+          "line": "Terms, privacy, notices"
+        },
+        "delete": {
+          "label": "Delete account",
+          "line": "Not available in the app yet"
+        }
+      }
+    },
+    "discard": {
+      "title": "Discard your changes?",
+      "body": "Your edits haven’t been saved.",
+      "discard": "Discard",
+      "keep": "Keep editing"
+    },
+    "account": {
+      "fullName": "Full name",
+      "fullNameHint": "Your name on your SimpleFit account. Your fighter profile has its own display name.",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "saveFailed": "We couldn’t save that. Check your connection and try again.",
+      "errors": {
+        "required": "Enter your full name.",
+        "tooLong": "That’s too long."
+      },
+      "email": "Email",
+      "verified": "Verified",
+      "noEmail": "No email address on this account",
+      "emailNote": "Changing your email isn’t available in the app yet.",
+      "dateOfBirth": "Date of birth",
+      "dateOfBirthNote": "Can’t be changed after registration"
+    },
+    "security": {
+      "methodsTitle": "How you sign in",
+      "providers": {
+        "email": "Email",
+        "google": "Google",
+        "apple": "Apple"
+      },
+      "emailLine": "{email} · a one-time code each time",
+      "providerLine": "Sign in with this account",
+      "since": "Added {date}",
+      "passwordless": "SimpleFit doesn’t use passwords in the app. Each sign-in uses a one-time code sent to your email, or Google or Apple if you added them.",
+      "thisPhone": "This phone",
+      "signOutLine": "Signing out here keeps you signed in on other devices."
+    },
+    "profile": {
+      "notFighter": {
+        "title": "No fighter profile to edit",
+        "body": "Edit profile changes your fighter profile. Set one up from Switch workspace first."
+      },
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Profile saved",
+      "saveFailed": "We couldn’t save your profile. Check your connection and try again."
+    },
+    "privacy": {
+      "rulesTitle": "Who sees what today",
+      "rules": {
+        "discovery": {
+          "title": "Profile and search",
+          "body": "No one can find or open your fighter profile: SimpleFit has no public profiles or search yet."
+        },
+        "coaches": {
+          "title": "Coaches",
+          "body": "Coaches you accept see what the coach data sharing notice describes. You can end a coaching relationship at any time."
+        },
+        "gyms": {
+          "title": "Gyms",
+          "body": "A gym you join sees your membership and your bookings there."
+        },
+        "body": {
+          "title": "Weight and body",
+          "body": "Your weight, height and weight class are private and never shown to other people."
+        }
+      },
+      "noControls": "There are no privacy switches yet: these rules apply to every account.",
+      "coachesLink": "Manage your coaches"
+    },
+    "notifications": {
+      "productNews": "Product news by email",
+      "productNewsLine": "Whether SimpleFit may email you about new features. Saved with your account.",
+      "saveFailed": "We couldn’t save that. Check your connection and try again.",
+      "accountEmails": "Emails you need for your account, such as sign-in codes and invitations, are always sent.",
+      "push": "Push notifications aren’t available yet."
+    },
+    "data": {
+      "keptTitle": "What SimpleFit keeps",
+      "categories": {
+        "account": {
+          "title": "Account",
+          "body": "Your name, date of birth, email addresses and consents"
+        },
+        "fighter": {
+          "title": "Fighter profile",
+          "body": "What you entered in your fighter profile"
+        },
+        "coaching": {
+          "title": "Coaching",
+          "body": "Coaches you accepted and the sessions they planned for you"
+        },
+        "gyms": {
+          "title": "Gyms",
+          "body": "Your gym memberships and class bookings"
+        }
+      },
+      "export": "Downloading your data isn’t available in the app yet.",
+      "delete": "Deleting your account isn’t available in the app yet."
+    },
+    "help": {
+      "legalTitle": "Legal",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "accepted": "Version {version} · accepted {date}",
+      "notAccepted": "Not accepted",
+      "newer": "version {version} is now in force",
+      "disclosure": "Coach data sharing notice",
+      "disclosureLine": "Version {version} · shown with each coach invitation",
+      "disclosureUnavailable": "No published version",
+      "loadingLine": "Loading…",
+      "textUnavailable": "The full Terms of Service and Privacy Policy aren’t available in the app yet.",
+      "supportTitle": "Support",
+      "supportUnavailable": "In-app support isn’t available yet"
+    },
+    "unavailableScreens": {
+      "blocked": {
+        "title": "Blocking and muting aren’t available yet",
+        "body": "SimpleFit has no feeds, messages or public profiles yet, so there is no one to block or mute."
+      },
+      "training": {
+        "title": "Training and timer settings aren’t available yet",
+        "body": "There is no round timer or training log in the app yet, so there is nothing to set."
+      },
+      "apps": {
+        "title": "No connected apps",
+        "body": "SimpleFit doesn’t connect to other apps or devices yet. Nothing is shared with them."
       }
     }
   }

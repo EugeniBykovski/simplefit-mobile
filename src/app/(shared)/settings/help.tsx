@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { HelpScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.help");
+export default function HelpRoute() {
+  return <HelpScreen />;
+}

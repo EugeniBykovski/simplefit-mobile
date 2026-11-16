@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { NotificationsScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.notifications");
+export default function NotificationSettingsRoute() {
+  return <NotificationsScreen />;
+}

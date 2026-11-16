@@ -1,4 +1,4 @@
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import {
   ArrowLeftRight,
   Building2,
@@ -8,14 +8,13 @@ import {
   UsersRound,
   type LucideIcon,
 } from "lucide-react-native";
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslations } from "use-intl";
 
 import { useFighterProfile, type FighterProfile } from "@/entities/fighter-profile";
 import { ContextSwitcherSheet } from "@/features/session-gate";
-import { SignOutButton } from "@/features/sign-out";
 import { routeHref, type MobileRouteId } from "@/shared/routes/routes";
 import { Avatar } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
@@ -210,26 +209,5 @@ function Row({
       </Text>
       <Icon icon={ChevronRight} size={16} color="faintForeground" />
     </Pressable>
-  );
-}
-
-/** ST1's Sign out, on the Settings route (`mobile.settings`). */
-export function SettingsScreen() {
-  const t = useTranslations("accountMenu");
-  const titles = useTranslations("routes.titles");
-  const navigation = useNavigation();
-  const title = titles("mobile/settings");
-
-  useLayoutEffect(() => {
-    navigation.setOptions({ title });
-  }, [navigation, title]);
-
-  return (
-    <Screen>
-      <View className="gap-4 pt-2" testID="account-menu:settings">
-        <Text color="mutedForeground">{t("settingsNote")}</Text>
-        <SignOutButton />
-      </View>
-    </Screen>
   );
 }

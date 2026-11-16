@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { TrainingSettingsScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.training");
+export default function TrainingSettingsRoute() {
+  return <TrainingSettingsScreen />;
+}

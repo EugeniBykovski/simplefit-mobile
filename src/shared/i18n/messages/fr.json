@@ -1298,7 +1298,6 @@
   },
   "accountMenu": {
     "settingsLink": "Réglages · compte · confidentialité",
-    "settingsNote": "Les réglages du compte, de la confidentialité et des notifications arrivent avec leurs fonctionnalités. Vous pouvez vous déconnecter de cet appareil ici.",
     "coachesLink": "Coachs",
     "profile": {
       "identity": "Boxeur",
@@ -2799,6 +2798,206 @@
         "title": "Une invitation manque ?",
         "body": "Si une salle l’a envoyée à une autre de tes adresses e-mail, vérifie cette adresse. Ton compte reste le même.",
         "action": "Ajouter l’e-mail destinataire"
+      }
+    }
+  },
+  "accountSettings": {
+    "unavailable": "Pas encore disponible",
+    "loading": "Chargement…",
+    "loadFailed": "Impossible de charger ces informations. Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer",
+    "hub": {
+      "identityHint": "Ouvre les informations du compte",
+      "roles": {
+        "fighter": "Boxeur",
+        "coach": "Coach",
+        "gym": "Salle"
+      },
+      "sections": {
+        "account": "Compte",
+        "privacy": "Confidentialité et alertes",
+        "training": "Entraînement",
+        "more": "Plus"
+      },
+      "rows": {
+        "account": {
+          "label": "Informations du compte",
+          "line": "Nom, email, langue"
+        },
+        "security": {
+          "label": "Connexion et sécurité",
+          "line": "Comment vous vous connectez"
+        },
+        "profile": {
+          "label": "Modifier le profil",
+          "line": "Nom, niveau, garde, catégorie de poids"
+        },
+        "privacy": {
+          "label": "Confidentialité",
+          "line": "Qui voit quoi"
+        },
+        "blocked": {
+          "label": "Bloqués et masqués",
+          "line": "Pas encore disponible"
+        },
+        "notifications": {
+          "label": "Notifications",
+          "line": "Nouveautés produit par email"
+        },
+        "training": {
+          "label": "Entraînement et minuteur",
+          "line": "Pas encore disponible"
+        },
+        "apps": {
+          "label": "Applications connectées",
+          "line": "Pas encore disponible"
+        },
+        "memberships": {
+          "label": "Adhésions aux salles",
+          "line": "Vos salles et réservations"
+        },
+        "data": {
+          "label": "Vos données",
+          "line": "Ce que SimpleFit conserve"
+        },
+        "help": {
+          "label": "Aide et mentions légales",
+          "line": "Conditions, confidentialité, informations"
+        },
+        "delete": {
+          "label": "Supprimer le compte",
+          "line": "Pas encore disponible dans l’app"
+        }
+      }
+    },
+    "discard": {
+      "title": "Abandonner vos modifications ?",
+      "body": "Vos modifications n’ont pas été enregistrées.",
+      "discard": "Abandonner",
+      "keep": "Continuer à modifier"
+    },
+    "account": {
+      "fullName": "Nom complet",
+      "fullNameHint": "Votre nom sur votre compte SimpleFit. Votre profil de boxeur a son propre nom affiché.",
+      "save": "Enregistrer les modifications",
+      "saving": "Enregistrement…",
+      "saved": "Enregistré",
+      "saveFailed": "Impossible d’enregistrer. Vérifiez votre connexion et réessayez.",
+      "errors": {
+        "required": "Saisissez votre nom complet.",
+        "tooLong": "C’est trop long."
+      },
+      "email": "Email",
+      "verified": "Vérifié",
+      "noEmail": "Aucune adresse email sur ce compte",
+      "emailNote": "La modification de l’email n’est pas encore disponible dans l’app.",
+      "dateOfBirth": "Date de naissance",
+      "dateOfBirthNote": "Ne peut pas être modifiée après l’inscription"
+    },
+    "security": {
+      "methodsTitle": "Comment vous vous connectez",
+      "providers": {
+        "email": "Email",
+        "google": "Google",
+        "apple": "Apple"
+      },
+      "emailLine": "{email} · un code à usage unique à chaque fois",
+      "providerLine": "Connexion avec ce compte",
+      "since": "Ajouté le {date}",
+      "passwordless": "SimpleFit n’utilise pas de mot de passe dans l’app. Chaque connexion utilise un code à usage unique envoyé à votre email, ou Google ou Apple si vous les avez ajoutés.",
+      "thisPhone": "Ce téléphone",
+      "signOutLine": "Se déconnecter ici ne vous déconnecte pas de vos autres appareils."
+    },
+    "profile": {
+      "notFighter": {
+        "title": "Aucun profil de boxeur",
+        "body": "Ici, vous modifiez votre profil de boxeur. Créez-en d’abord un depuis Changer d’espace."
+      },
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "saved": "Profil enregistré",
+      "saveFailed": "Impossible d’enregistrer votre profil. Vérifiez votre connexion et réessayez."
+    },
+    "privacy": {
+      "rulesTitle": "Qui voit quoi aujourd’hui",
+      "rules": {
+        "discovery": {
+          "title": "Profil et recherche",
+          "body": "Personne ne peut trouver ni ouvrir votre profil de boxeur : SimpleFit n’a pas encore de profils publics ni de recherche."
+        },
+        "coaches": {
+          "title": "Coachs",
+          "body": "Les coachs que vous acceptez voient ce que décrit l’avis sur le partage de données avec les coachs. Vous pouvez mettre fin à une relation de coaching à tout moment."
+        },
+        "gyms": {
+          "title": "Salles",
+          "body": "Une salle que vous rejoignez voit votre adhésion et vos réservations chez elle."
+        },
+        "body": {
+          "title": "Poids et corps",
+          "body": "Votre poids, votre taille et votre catégorie de poids sont privés et ne sont jamais montrés aux autres."
+        }
+      },
+      "noControls": "Il n’y a pas encore de réglages de confidentialité : ces règles s’appliquent à tous les comptes.",
+      "coachesLink": "Gérer vos coachs"
+    },
+    "notifications": {
+      "productNews": "Nouveautés produit par email",
+      "productNewsLine": "Si SimpleFit peut vous écrire au sujet des nouvelles fonctionnalités. Enregistré sur votre compte.",
+      "saveFailed": "Impossible d’enregistrer. Vérifiez votre connexion et réessayez.",
+      "accountEmails": "Les emails nécessaires à votre compte, comme les codes de connexion et les invitations, sont toujours envoyés.",
+      "push": "Les notifications push ne sont pas encore disponibles."
+    },
+    "data": {
+      "keptTitle": "Ce que SimpleFit conserve",
+      "categories": {
+        "account": {
+          "title": "Compte",
+          "body": "Votre nom, votre date de naissance, vos adresses email et vos consentements"
+        },
+        "fighter": {
+          "title": "Profil de boxeur",
+          "body": "Ce que vous avez indiqué dans votre profil de boxeur"
+        },
+        "coaching": {
+          "title": "Coaching",
+          "body": "Les coachs acceptés et les séances qu’ils ont planifiées pour vous"
+        },
+        "gyms": {
+          "title": "Salles",
+          "body": "Vos adhésions aux salles et vos réservations de cours"
+        }
+      },
+      "export": "Le téléchargement de vos données n’est pas encore disponible dans l’app.",
+      "delete": "La suppression de votre compte n’est pas encore disponible dans l’app."
+    },
+    "help": {
+      "legalTitle": "Mentions légales",
+      "terms": "Conditions d’utilisation",
+      "privacy": "Politique de confidentialité",
+      "accepted": "Version {version} · acceptée le {date}",
+      "notAccepted": "Non acceptée",
+      "newer": "la version {version} est désormais en vigueur",
+      "disclosure": "Avis sur le partage de données avec les coachs",
+      "disclosureLine": "Version {version} · affichée avec chaque invitation de coach",
+      "disclosureUnavailable": "Aucune version publiée",
+      "loadingLine": "Chargement…",
+      "textUnavailable": "Les textes complets des Conditions d’utilisation et de la Politique de confidentialité ne sont pas encore disponibles dans l’app.",
+      "supportTitle": "Assistance",
+      "supportUnavailable": "L’assistance dans l’app n’est pas encore disponible"
+    },
+    "unavailableScreens": {
+      "blocked": {
+        "title": "Le blocage et le masquage ne sont pas encore disponibles",
+        "body": "SimpleFit n’a pas encore de fil, de messages ni de profils publics : il n’y a donc personne à bloquer ou masquer."
+      },
+      "training": {
+        "title": "Les réglages d’entraînement et du minuteur ne sont pas encore disponibles",
+        "body": "L’app n’a pas encore de minuteur de rounds ni de journal d’entraînement : il n’y a donc rien à régler."
+      },
+      "apps": {
+        "title": "Aucune application connectée",
+        "body": "SimpleFit ne se connecte pas encore à d’autres applications ou appareils. Rien ne leur est partagé."
       }
     }
   }

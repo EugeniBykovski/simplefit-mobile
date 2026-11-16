@@ -56,6 +56,17 @@ const REAL_SCREENS = [
   // SF-66: FT1 Training and FT2 Session.
   "mobile.training",
   "mobile.sessions._session-id",
+  // SF-161: ST2–ST7, ST9, ST13, S18 and S19 (the Settings screens; real data or a truthful unavailable state).
+  "mobile.settings.account",
+  "mobile.settings.security",
+  "mobile.settings.profile",
+  "mobile.settings.privacy",
+  "mobile.settings.blocked",
+  "mobile.settings.notifications",
+  "mobile.settings.training",
+  "mobile.settings.apps",
+  "mobile.settings.data",
+  "mobile.settings.help",
   // SF-89: G01 Gym pulse and the gym chooser (MGC1).
   "mobile.gyms._gym-id.pulse",
   // SF-100: G08 Classes and G03 Class roster; F13 and My gyms at account level.
@@ -164,7 +175,7 @@ describe("route resolution strategy", () => {
       const key = kind(route);
       return { ...acc, [key]: (acc[key] ?? 0) + 1 };
     }, {});
-    expect(counts).toEqual({ screen: 41, catchAll: 1, placeholder: 112, deferred: 1 });
+    expect(counts).toEqual({ screen: 51, catchAll: 1, placeholder: 102, deferred: 1 });
     expect(routes).toHaveLength(155);
   });
 

@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { BlockedScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.blocked");
+export default function BlockedSettingsRoute() {
+  return <BlockedScreen />;
+}

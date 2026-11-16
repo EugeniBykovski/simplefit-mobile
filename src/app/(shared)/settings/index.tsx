@@ -1,5 +1,5 @@
-import { SettingsScreen } from "@/widgets/account-menu";
+import { SettingsHubScreen } from "@/widgets/account-settings";
 
 export default function SettingsRoute() {
-  return <SettingsScreen />;
+  return <SettingsHubScreen />;
 }

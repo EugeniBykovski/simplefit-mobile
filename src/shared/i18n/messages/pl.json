@@ -1298,7 +1298,6 @@
   },
   "accountMenu": {
     "settingsLink": "Ustawienia · konto · prywatność",
-    "settingsNote": "Ustawienia konta, prywatności i powiadomień pojawią się razem ze swoimi funkcjami. Tutaj możesz wylogować się z tego urządzenia.",
     "coachesLink": "Trenerzy",
     "profile": {
       "identity": "Zawodnik",
@@ -2799,6 +2798,206 @@
         "title": "Brakuje zaproszenia?",
         "body": "Jeśli klub wysłał je na inny Twój adres e-mail, zweryfikuj ten adres. Twoje konto pozostaje to samo.",
         "action": "Dodaj adres, na który je wysłano"
+      }
+    }
+  },
+  "accountSettings": {
+    "unavailable": "Jeszcze niedostępne",
+    "loading": "Wczytywanie…",
+    "loadFailed": "Nie udało się wczytać. Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie",
+    "hub": {
+      "identityHint": "Otwiera dane konta",
+      "roles": {
+        "fighter": "Zawodnik",
+        "coach": "Trener",
+        "gym": "Klub"
+      },
+      "sections": {
+        "account": "Konto",
+        "privacy": "Prywatność i alerty",
+        "training": "Trening",
+        "more": "Więcej"
+      },
+      "rows": {
+        "account": {
+          "label": "Dane konta",
+          "line": "Imię i nazwisko, email, język"
+        },
+        "security": {
+          "label": "Logowanie i bezpieczeństwo",
+          "line": "Jak się logujesz"
+        },
+        "profile": {
+          "label": "Edytuj profil",
+          "line": "Nazwa, poziom, postawa, kategoria wagowa"
+        },
+        "privacy": {
+          "label": "Prywatność",
+          "line": "Kto co widzi"
+        },
+        "blocked": {
+          "label": "Zablokowani i wyciszeni",
+          "line": "Jeszcze niedostępne"
+        },
+        "notifications": {
+          "label": "Powiadomienia",
+          "line": "Nowości produktu e-mailem"
+        },
+        "training": {
+          "label": "Trening i timer",
+          "line": "Jeszcze niedostępne"
+        },
+        "apps": {
+          "label": "Połączone aplikacje",
+          "line": "Jeszcze niedostępne"
+        },
+        "memberships": {
+          "label": "Członkostwa w klubach",
+          "line": "Twoje kluby i rezerwacje"
+        },
+        "data": {
+          "label": "Twoje dane",
+          "line": "Co przechowuje SimpleFit"
+        },
+        "help": {
+          "label": "Pomoc i informacje prawne",
+          "line": "Regulamin, prywatność, informacje"
+        },
+        "delete": {
+          "label": "Usuń konto",
+          "line": "Jeszcze niedostępne w aplikacji"
+        }
+      }
+    },
+    "discard": {
+      "title": "Odrzucić zmiany?",
+      "body": "Twoje zmiany nie zostały zapisane.",
+      "discard": "Odrzuć",
+      "keep": "Edytuj dalej"
+    },
+    "account": {
+      "fullName": "Imię i nazwisko",
+      "fullNameHint": "Imię i nazwisko na Twoim koncie SimpleFit. Profil zawodnika ma własną nazwę wyświetlaną.",
+      "save": "Zapisz zmiany",
+      "saving": "Zapisywanie…",
+      "saved": "Zapisano",
+      "saveFailed": "Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie.",
+      "errors": {
+        "required": "Wpisz imię i nazwisko.",
+        "tooLong": "To za długie."
+      },
+      "email": "Email",
+      "verified": "Zweryfikowany",
+      "noEmail": "Brak adresu email na tym koncie",
+      "emailNote": "Zmiana adresu email nie jest jeszcze dostępna w aplikacji.",
+      "dateOfBirth": "Data urodzenia",
+      "dateOfBirthNote": "Nie można zmienić po rejestracji"
+    },
+    "security": {
+      "methodsTitle": "Jak się logujesz",
+      "providers": {
+        "email": "Email",
+        "google": "Google",
+        "apple": "Apple"
+      },
+      "emailLine": "{email} · za każdym razem jednorazowy kod",
+      "providerLine": "Logowanie tym kontem",
+      "since": "Dodano {date}",
+      "passwordless": "SimpleFit nie używa haseł w aplikacji. Każde logowanie to jednorazowy kod wysłany na Twój email — albo Google lub Apple, jeśli je dodano.",
+      "thisPhone": "Ten telefon",
+      "signOutLine": "Wylogowanie tutaj nie wylogowuje Cię na innych urządzeniach."
+    },
+    "profile": {
+      "notFighter": {
+        "title": "Brak profilu zawodnika",
+        "body": "Tutaj edytujesz profil zawodnika. Najpierw załóż go w „Zmień przestrzeń”."
+      },
+      "save": "Zapisz",
+      "saving": "Zapisywanie…",
+      "saved": "Profil zapisany",
+      "saveFailed": "Nie udało się zapisać profilu. Sprawdź połączenie i spróbuj ponownie."
+    },
+    "privacy": {
+      "rulesTitle": "Kto co widzi teraz",
+      "rules": {
+        "discovery": {
+          "title": "Profil i wyszukiwanie",
+          "body": "Nikt nie może znaleźć ani otworzyć Twojego profilu zawodnika: SimpleFit nie ma jeszcze publicznych profili ani wyszukiwania."
+        },
+        "coaches": {
+          "title": "Trenerzy",
+          "body": "Zaakceptowani trenerzy widzą to, co opisuje informacja o udostępnianiu danych trenerowi. Współpracę z trenerem możesz zakończyć w każdej chwili."
+        },
+        "gyms": {
+          "title": "Kluby",
+          "body": "Klub, do którego dołączysz, widzi Twoje członkostwo i rezerwacje w nim."
+        },
+        "body": {
+          "title": "Waga i ciało",
+          "body": "Twoja waga, wzrost i kategoria wagowa są prywatne i nigdy nie są pokazywane innym osobom."
+        }
+      },
+      "noControls": "Nie ma jeszcze przełączników prywatności: te zasady obowiązują każde konto.",
+      "coachesLink": "Zarządzaj trenerami"
+    },
+    "notifications": {
+      "productNews": "Nowości produktu e-mailem",
+      "productNewsLine": "Czy SimpleFit może pisać do Ciebie o nowych funkcjach. Zapisywane na koncie.",
+      "saveFailed": "Nie udało się zapisać. Sprawdź połączenie i spróbuj ponownie.",
+      "accountEmails": "Wiadomości potrzebne do konta, np. kody logowania i zaproszenia, są wysyłane zawsze.",
+      "push": "Powiadomienia push nie są jeszcze dostępne."
+    },
+    "data": {
+      "keptTitle": "Co przechowuje SimpleFit",
+      "categories": {
+        "account": {
+          "title": "Konto",
+          "body": "Twoje imię i nazwisko, data urodzenia, adresy email i zgody"
+        },
+        "fighter": {
+          "title": "Profil zawodnika",
+          "body": "To, co podano w profilu zawodnika"
+        },
+        "coaching": {
+          "title": "Współpraca z trenerem",
+          "body": "Zaakceptowani trenerzy i zaplanowane przez nich treningi"
+        },
+        "gyms": {
+          "title": "Kluby",
+          "body": "Twoje członkostwa w klubach i rezerwacje zajęć"
+        }
+      },
+      "export": "Pobranie danych nie jest jeszcze dostępne w aplikacji.",
+      "delete": "Usunięcie konta nie jest jeszcze dostępne w aplikacji."
+    },
+    "help": {
+      "legalTitle": "Informacje prawne",
+      "terms": "Regulamin",
+      "privacy": "Polityka prywatności",
+      "accepted": "Wersja {version} · zaakceptowano {date}",
+      "notAccepted": "Nie zaakceptowano",
+      "newer": "obowiązuje teraz wersja {version}",
+      "disclosure": "Informacja o udostępnianiu danych trenerowi",
+      "disclosureLine": "Wersja {version} · pokazywana przy każdym zaproszeniu od trenera",
+      "disclosureUnavailable": "Brak opublikowanej wersji",
+      "loadingLine": "Wczytywanie…",
+      "textUnavailable": "Pełne teksty Regulaminu i Polityki prywatności nie są jeszcze dostępne w aplikacji.",
+      "supportTitle": "Wsparcie",
+      "supportUnavailable": "Wsparcie w aplikacji nie jest jeszcze dostępne"
+    },
+    "unavailableScreens": {
+      "blocked": {
+        "title": "Blokowanie i wyciszanie nie są jeszcze dostępne",
+        "body": "SimpleFit nie ma jeszcze aktualności, wiadomości ani publicznych profili, więc nie ma kogo blokować ani wyciszać."
+      },
+      "training": {
+        "title": "Ustawienia treningu i timera nie są jeszcze dostępne",
+        "body": "W aplikacji nie ma jeszcze timera rund ani dziennika treningów, więc nie ma czego ustawiać."
+      },
+      "apps": {
+        "title": "Brak połączonych aplikacji",
+        "body": "SimpleFit nie łączy się jeszcze z innymi aplikacjami ani urządzeniami. Nic nie jest im udostępniane."
       }
     }
   }

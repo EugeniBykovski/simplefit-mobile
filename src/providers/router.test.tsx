@@ -351,45 +351,55 @@ async function signIn(
             ? jsonResponse({ setup: gymSetup(gyms.find((gym) => url.includes(gym.id))) })
             : /\/api\/v1\/gyms\/[^/?]+$/.test(url)
               ? gymResponse(gyms.find((gym) => url.endsWith(`/gyms/${gym.id}`)))
-              : url.includes("/api/v1/me/entry")
-                ? jsonResponse({ entry: resolve(new URL(url).searchParams.get("intent")) })
-                : url.includes("/api/v1/me/account-profile")
-                  ? jsonResponse({ account_profile: NOT_STARTED })
-                  : url.includes("/api/v1/me/fighter-profile")
-                    ? jsonResponse({ fighter_profile: fighter })
-                    : url.includes("/api/v1/me/coach-profile")
-                      ? jsonResponse({ coach_profile: coach })
-                      : url.includes("/api/v1/me/first-run")
-                        ? jsonResponse(firstRun(mobileFirstRun))
-                        : /\/api\/v1\/me\/(coach\/fighters|coach\/training-sessions|training-sessions)\/[^?]/.test(
-                              url,
-                            )
-                          ? jsonResponse(
-                              {
-                                error: {
-                                  code: "not_found",
-                                  message: "Not found",
-                                  details: {},
-                                  request_id: "r",
+              : url.includes("/api/v1/me/sign-in-methods")
+                ? jsonResponse({
+                    sign_in_methods: [
+                      {
+                        provider: "email",
+                        email: "alex@example.com",
+                        linked_at: "2026-10-01T10:00:00Z",
+                      },
+                    ],
+                  })
+                : url.includes("/api/v1/me/entry")
+                  ? jsonResponse({ entry: resolve(new URL(url).searchParams.get("intent")) })
+                  : url.includes("/api/v1/me/account-profile")
+                    ? jsonResponse({ account_profile: NOT_STARTED })
+                    : url.includes("/api/v1/me/fighter-profile")
+                      ? jsonResponse({ fighter_profile: fighter })
+                      : url.includes("/api/v1/me/coach-profile")
+                        ? jsonResponse({ coach_profile: coach })
+                        : url.includes("/api/v1/me/first-run")
+                          ? jsonResponse(firstRun(mobileFirstRun))
+                          : /\/api\/v1\/me\/(coach\/fighters|coach\/training-sessions|training-sessions)\/[^?]/.test(
+                                url,
+                              )
+                            ? jsonResponse(
+                                {
+                                  error: {
+                                    code: "not_found",
+                                    message: "Not found",
+                                    details: {},
+                                    request_id: "r",
+                                  },
                                 },
-                              },
-                              { status: 404 },
-                            )
-                          : url.includes("/api/v1/me/coaches") ||
-                              url.includes("/api/v1/me/coach/fighters")
-                            ? jsonResponse({ relationships: [], next_cursor: null })
-                            : url.includes("/api/v1/me/coach/training-sessions") ||
-                                url.includes("/api/v1/me/training-sessions")
-                              ? jsonResponse({ training_sessions: [], next_cursor: null })
-                              : url.includes("/api/v1/me/coach/invitations") ||
-                                  url.includes("/api/v1/me/coach-invitations")
-                                ? jsonResponse({ invitations: [], next_cursor: null })
-                                : jsonResponse({
-                                    user: {
-                                      id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
-                                      created_at: "2026-10-01T10:00:00Z",
-                                    },
-                                  }),
+                                { status: 404 },
+                              )
+                            : url.includes("/api/v1/me/coaches") ||
+                                url.includes("/api/v1/me/coach/fighters")
+                              ? jsonResponse({ relationships: [], next_cursor: null })
+                              : url.includes("/api/v1/me/coach/training-sessions") ||
+                                  url.includes("/api/v1/me/training-sessions")
+                                ? jsonResponse({ training_sessions: [], next_cursor: null })
+                                : url.includes("/api/v1/me/coach/invitations") ||
+                                    url.includes("/api/v1/me/coach-invitations")
+                                  ? jsonResponse({ invitations: [], next_cursor: null })
+                                  : jsonResponse({
+                                      user: {
+                                        id: "8a6e0804-2bd0-4672-b79d-d97027f9071b",
+                                        created_at: "2026-10-01T10:00:00Z",
+                                      },
+                                    }),
       ),
     ),
   );
@@ -778,7 +788,7 @@ describe("sign-out and session end (SF-28)", () => {
       if (router.canGoBack()) router.back();
     });
     await act(async () => jest.runOnlyPendingTimers());
-    expect(screen.queryByTestId("account-menu:settings")).toBeNull();
+    expect(screen.queryByTestId("settings:hub")).toBeNull();
     expect(screen.queryByTestId("account-menu:profile")).toBeNull();
     await result.unmount();
   });
@@ -860,7 +870,7 @@ describe("tab navigation", () => {
     // The shared ST1 (SF-28), pushed above the tabs.
     await fireEvent.press(screen.getByRole("tab", { name: "Settings" }));
     await waitFor(() => expect(result.getPathname()).toBe("/settings"));
-    expect(await screen.findByTestId("account-menu:settings")).toBeOnTheScreen();
+    expect(await screen.findByTestId("settings:hub")).toBeOnTheScreen();
     // The first screen of the shared stack goes back to the tab it was opened from.
     await fireEvent.press(await screen.findByRole("button", { name: "Back" }));
     await waitFor(() => expect(result.getPathname()).toBe("/coach/today"));
@@ -2374,5 +2384,354 @@ describe("Gym shell, context switching and navigation (SF-89)", () => {
     expect(
       requests(fetchMock).filter((request) => request.includes(`${GYM_B.id}/first-run`)),
     ).toEqual([]);
+  });
+});
+
+/*
+ * SF-161: Settings (ST1–ST7, ST9, ST13, S18, S19) on the real route tree,
+ * against a stateful double of the account endpoints: the account profile
+ * and fighter profile answer what was last saved, writes are recorded, and
+ * the sign-in methods and the published coach notice are the backend's.
+ */
+describe("Settings (SF-161)", () => {
+  const COMPLETE_ACCOUNT = {
+    ...NOT_STARTED,
+    registration: {
+      status: "complete",
+      completed_at: "2026-10-01T10:00:00Z",
+      missing_requirements: [],
+    },
+    full_name: "Alex Rivera",
+    date_of_birth: "1994-03-14",
+    consents: {
+      terms: {
+        accepted: true,
+        accepted_version: "terms-v1",
+        accepted_at: "2026-10-01T10:00:00Z",
+        current_version: "terms-v2",
+        current: false,
+      },
+      privacy: {
+        accepted: true,
+        accepted_version: "privacy-v1",
+        accepted_at: "2026-10-01T10:00:00Z",
+        current_version: "privacy-v1",
+        current: true,
+      },
+    },
+  };
+  const EMAIL = { provider: "email", email: "alex@example.com", linked_at: "2026-10-01T10:00:00Z" };
+  const GOOGLE = { provider: "google", email: null, linked_at: "2026-10-05T18:30:00Z" };
+  const DISCLOSURE = {
+    document_id: "fighter-coach-disclosure",
+    status: "published",
+    version: "disclosure-v3",
+    title: "Coach data sharing",
+    language: "en",
+    requested_language: "en",
+    available_languages: ["en"],
+    summary: null,
+    full: null,
+    checkbox: null,
+    effective_at: "2026-10-01T00:00:00Z",
+    published_at: "2026-10-01T00:00:00Z",
+  };
+  const apiFailure = (status: number, code: string, details: object = {}) =>
+    jsonResponse({ error: { code, message: "", details, request_id: "r" } }, { status });
+
+  type Write = [kind: "account" | "fighter", body: Record<string, unknown>];
+
+  async function account({
+    entry = FIGHTER_HOME as Entry,
+    fighter = FIGHTER_COMPLETED as Record<string, unknown>,
+    profile = COMPLETE_ACCOUNT as Record<string, unknown>,
+    methods = [EMAIL] as object[],
+    patchAccount,
+    patchFighter,
+  }: {
+    entry?: Entry;
+    fighter?: Record<string, unknown>;
+    profile?: Record<string, unknown>;
+    methods?: object[];
+    patchAccount?: (body: Record<string, unknown>) => Response | undefined;
+    patchFighter?: (body: Record<string, unknown>) => Response | undefined;
+  } = {}) {
+    await signIn(entry, fighter, "completed", COACH_COMPLETED);
+    const state = { account: structuredClone(profile), fighter: structuredClone(fighter) };
+    const writes: Write[] = [];
+    const fetchMock = global.fetch as jest.Mock;
+    const original = fetchMock.getMockImplementation();
+    fetchMock.mockImplementation((url: string, init: RequestInit = {}) => {
+      const { pathname } = new URL(url);
+      const method = init.method ?? "GET";
+      const body = () => JSON.parse(String(init.body)) as Record<string, unknown>;
+      if (pathname === "/api/v1/me/account-profile") {
+        if (method === "PATCH") {
+          const patch = body();
+          writes.push(["account", patch]);
+          const refused = patchAccount?.(patch);
+          if (refused) return Promise.resolve(refused);
+          const { product_news: news, ...fields } = patch;
+          state.account = {
+            ...state.account,
+            ...fields,
+            ...(typeof news === "boolean"
+              ? { product_news: { subscribed: news, updated_at: "2026-11-16T10:00:00Z" } }
+              : {}),
+          };
+        }
+        return Promise.resolve(jsonResponse({ account_profile: state.account }));
+      }
+      if (pathname === "/api/v1/me/fighter-profile") {
+        if (method === "PATCH") {
+          const patch = body();
+          writes.push(["fighter", patch]);
+          const refused = patchFighter?.(patch);
+          if (refused) return Promise.resolve(refused);
+          state.fighter = { ...state.fighter, ...patch };
+        }
+        return Promise.resolve(jsonResponse({ fighter_profile: state.fighter }));
+      }
+      if (pathname === "/api/v1/me/sign-in-methods")
+        return Promise.resolve(jsonResponse({ sign_in_methods: methods }));
+      if (pathname === "/api/v1/legal-documents/fighter-coach-disclosure")
+        return Promise.resolve(jsonResponse({ document: DISCLOSURE }));
+      return original?.(url, init);
+    });
+    return { writes, state };
+  }
+
+  it("ST1 shows the account's own identity and opens only real screens", async () => {
+    await account({ entry: { ...BOTH }, methods: [EMAIL, GOOGLE] });
+    const result = await renderApp("/settings");
+    expect(await screen.findByText("Alex Rivera")).toBeOnTheScreen();
+    expect(screen.getByText("alex@example.com")).toBeOnTheScreen();
+    for (const context of ["Fighter", "Coach"])
+      expect(screen.getByLabelText(context)).toBeOnTheScreen();
+    expect(screen.getByRole("link", { name: /^Edit profile/ })).toBeOnTheScreen();
+    // Deletion has no screen yet (SF-180): visible, disabled, not a link.
+    const remove = screen.getByTestId("settings:delete");
+    expect(remove).toBeDisabled();
+    expect(screen.queryByRole("link", { name: /^Delete account/ })).toBeNull();
+    expect(screen.getByRole("button", { name: "Sign out" })).toBeOnTheScreen();
+
+    await fireEvent.press(screen.getByRole("link", { name: /^Account details/ }));
+    await waitFor(() => expect(result.getPathname()).toBe("/settings/account"));
+    await act(async () => router.back());
+    await fireEvent.press(await screen.findByRole("link", { name: /^Gym memberships/ }));
+    await waitFor(() => expect(result.getPathname()).toBe("/me/gyms"));
+  });
+
+  it("a Coach without a fighter profile gets no Edit profile, and ST4 never creates one", async () => {
+    const calls = await account({ entry: COACH_HOME, fighter: FIGHTER_NOT_STARTED });
+    await renderApp("/settings");
+    await screen.findByText("Alex Rivera");
+    expect(screen.queryByRole("link", { name: /^Edit profile/ })).toBeNull();
+    expect(screen.getByLabelText("Coach")).toBeOnTheScreen();
+
+    await act(async () => router.push("/settings/profile"));
+    expect(await screen.findByTestId("settings:profile:unavailable")).toBeOnTheScreen();
+    expect(screen.queryByRole("button", { name: "Save" })).toBeNull();
+    expect(calls.writes).toEqual([]);
+  });
+
+  it("ST2 saves the full name, refuses an empty one, and keeps email and birth date read-only", async () => {
+    const calls = await account();
+    await renderApp("/settings/account");
+    const name = await screen.findByLabelText("Full name");
+    expect(name.props.value).toBe("Alex Rivera");
+    expect(screen.getByLabelText("alex@example.com")).toBeOnTheScreen();
+    expect(screen.getByText("Verified")).toBeOnTheScreen();
+    expect(
+      screen.getByLabelText(/^Date of birth, Can’t be changed after registration/),
+    ).toBeOnTheScreen();
+    // The email is shown, never an editable field.
+    expect(screen.queryByDisplayValue("alex@example.com")).toBeNull();
+
+    await fireEvent.changeText(name, "  ");
+    await fireEvent.press(screen.getByRole("button", { name: "Save changes" }));
+    expect(await screen.findByText("Enter your full name.")).toBeOnTheScreen();
+    expect(calls.writes).toEqual([]);
+
+    await fireEvent.changeText(name, "Alex R. Rivera");
+    await fireEvent.press(screen.getByRole("button", { name: "Save changes" }));
+    await waitFor(() =>
+      expect(calls.writes).toEqual([["account", { full_name: "Alex R. Rivera" }]]),
+    );
+    expect(await screen.findByText("Saved")).toBeOnTheScreen();
+    expect(calls.state.account.full_name).toBe("Alex R. Rivera");
+  });
+
+  it("ST2 shows the backend's validation code, and a network failure without losing the edit", async () => {
+    let answer = apiFailure(422, "validation_error", {
+      fields: { full_name: ["should be at most 200 character(s)"] },
+      field_codes: { full_name: ["too_long"] },
+    });
+    await account({ patchAccount: () => answer });
+    await renderApp("/settings/account");
+    const name = await screen.findByLabelText("Full name");
+    await fireEvent.changeText(name, "A".repeat(10));
+    await fireEvent.press(screen.getByRole("button", { name: "Save changes" }));
+    expect(await screen.findByText("That’s too long.")).toBeOnTheScreen();
+
+    answer = apiFailure(503, "service_unavailable");
+    await fireEvent.press(screen.getByRole("button", { name: "Save changes" }));
+    expect(
+      await screen.findByText("We couldn’t save that. Check your connection and try again."),
+    ).toBeOnTheScreen();
+    expect(screen.getByLabelText("Full name").props.value).toBe("A".repeat(10));
+  });
+
+  it("ST3 lists how the account signs in, from the backend, with no password", async () => {
+    await account({ methods: [EMAIL, GOOGLE] });
+    await renderApp("/settings/security");
+    expect(
+      await screen.findByLabelText(/^Email, alex@example.com · a one-time code each time/),
+    ).toBeOnTheScreen();
+    expect(screen.getByLabelText(/^Google, Sign in with this account/)).toBeOnTheScreen();
+    expect(screen.queryByLabelText(/^Apple/)).toBeNull();
+    expect(screen.queryByRole("button", { name: /password/i })).toBeNull();
+    expect(screen.queryByRole("link", { name: /password/i })).toBeNull();
+    expect(screen.getByRole("button", { name: "Sign out" })).toBeOnTheScreen();
+  });
+
+  it("ST4 saves only the changed fields of the fighter profile and shows the backend's rules", async () => {
+    const calls = await account({
+      patchFighter: (patch) =>
+        patch.username === "taken"
+          ? apiFailure(422, "validation_error", {
+              fields: { username: ["has already been taken"] },
+              field_codes: { username: ["already_exists"] },
+            })
+          : undefined,
+    });
+    const result = await renderApp("/settings");
+    await fireEvent.press(await screen.findByRole("link", { name: /^Edit profile/ }));
+    await waitFor(() => expect(result.getPathname()).toBe("/settings/profile"));
+    const name = await screen.findByLabelText("Name");
+    expect(name.props.value).toBe("Alex Rivera");
+
+    await fireEvent.changeText(screen.getByLabelText("Username"), "taken");
+    await fireEvent.press(screen.getByRole("button", { name: "Save" }));
+    expect(await screen.findByText("That username is taken.")).toBeOnTheScreen();
+    expect(calls.writes).toEqual([["fighter", { username: "taken" }]]);
+
+    await fireEvent.changeText(screen.getByLabelText("Username"), "alex");
+    await fireEvent.changeText(name, "Alex R.");
+    await fireEvent.press(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => expect(result.getPathname()).toBe("/settings"));
+    expect(calls.writes.at(-1)).toEqual(["fighter", { display_name: "Alex R." }]);
+    expect(calls.state.fighter.display_name).toBe("Alex R.");
+  });
+
+  it("ST4 asks before discarding unsaved edits", async () => {
+    const calls = await account();
+    const result = await renderApp("/settings");
+    await fireEvent.press(await screen.findByRole("link", { name: /^Edit profile/ }));
+    await fireEvent.changeText(await screen.findByLabelText("Name"), "Changed");
+    await act(async () => router.back());
+    expect(await screen.findByRole("header", { name: "Discard your changes?" })).toBeOnTheScreen();
+    await fireEvent.press(screen.getAllByRole("button", { name: "Keep editing" }).at(-1)!);
+    expect(result.getPathname()).toBe("/settings/profile");
+
+    await act(async () => router.back());
+    await fireEvent.press(await screen.findByRole("button", { name: "Discard" }));
+    await waitFor(() => expect(result.getPathname()).toBe("/settings"));
+    expect(calls.writes).toEqual([]);
+  });
+
+  it("S18 saves the product news consent with the backend and shows its answer", async () => {
+    let fail = false;
+    const calls = await account({
+      patchAccount: () => (fail ? apiFailure(503, "service_unavailable") : undefined),
+    });
+    await renderApp("/settings/notifications");
+    const toggle = await screen.findByRole("switch", { name: "Product news by email" });
+    expect(toggle.props.value).toBe(false);
+    await fireEvent(toggle, "valueChange", true);
+    await waitFor(() => expect(calls.writes).toEqual([["account", { product_news: true }]]));
+    await waitFor(() =>
+      expect(screen.getByRole("switch", { name: "Product news by email" }).props.value).toBe(true),
+    );
+
+    fail = true;
+    await fireEvent(
+      screen.getByRole("switch", { name: "Product news by email" }),
+      "valueChange",
+      false,
+    );
+    expect(
+      await screen.findByText("We couldn’t save that. Check your connection and try again."),
+    ).toBeOnTheScreen();
+    expect(screen.getByRole("switch", { name: "Product news by email" }).props.value).toBe(true);
+    expect(screen.getByText(/Push notifications aren’t available yet/)).toBeOnTheScreen();
+  });
+
+  it.each([
+    ["/settings/privacy", "settings:privacy"],
+    ["/settings/blocked", "settings:blocked"],
+    ["/settings/training", "settings:training"],
+    ["/settings/apps", "settings:apps"],
+    ["/settings/data", "settings:data"],
+  ])("%s states what is true and offers no switch, list or connection", async (url, id) => {
+    const calls = await account();
+    await renderApp(url);
+    expect(await screen.findByTestId(id)).toBeOnTheScreen();
+    expect(screen.queryAllByRole("switch")).toEqual([]);
+    expect(screen.queryAllByRole("button", { name: /^(Connect|Unblock|Request export)/ })).toEqual(
+      [],
+    );
+    expect(calls.writes).toEqual([]);
+  });
+
+  it("ST13 shows the accepted legal versions and the published coach notice", async () => {
+    await account();
+    await renderApp("/settings/help");
+    expect(
+      await screen.findByLabelText(
+        /^Terms of Service, Version terms-v1 · accepted .* · version terms-v2 is now in force$/,
+      ),
+    ).toBeOnTheScreen();
+    expect(
+      screen.getByLabelText(/^Privacy Policy, Version privacy-v1 · accepted [^·]*$/),
+    ).toBeOnTheScreen();
+    expect(
+      await screen.findByLabelText(
+        "Coach data sharing, Version disclosure-v3 · shown with each coach invitation",
+      ),
+    ).toBeOnTheScreen();
+  });
+
+  it.each([
+    ["pl", "Dane konta", "Logowanie i bezpieczeństwo"],
+    ["uk", "Дані облікового запису", "Вхід і безпека"],
+    ["fr", "Informations du compte", "Connexion et sécurité"],
+  ])("ST1 is localized (%s)", async (locale, accountRow, securityRow) => {
+    await account();
+    await setPreference("locale", locale);
+    await renderApp("/settings");
+    expect(
+      await screen.findByRole("link", { name: new RegExp(`^${accountRow}`) }),
+    ).toBeOnTheScreen();
+    expect(screen.getByRole("link", { name: new RegExp(`^${securityRow}`) })).toBeOnTheScreen();
+  });
+
+  it("each account sees only its own settings: A signs out, B signs in", async () => {
+    await account();
+    const result = await renderApp("/settings/account");
+    expect((await screen.findByLabelText("Full name")).props.value).toBe("Alex Rivera");
+    await act(async () => router.replace("/settings"));
+    await fireEvent.press(await screen.findByRole("button", { name: "Sign out" }));
+    await waitFor(() => expect(result.getPathname()).toBe("/welcome"));
+
+    await account({
+      profile: { ...COMPLETE_ACCOUNT, full_name: "Bea Boxer" },
+      methods: [{ ...EMAIL, email: "bea@example.com" }],
+    });
+    await act(async () => router.replace("/settings/account"));
+    expect((await screen.findByLabelText("Full name")).props.value).toBe("Bea Boxer");
+    expect(screen.getByLabelText("bea@example.com")).toBeOnTheScreen();
+    expect(screen.queryByText("Alex Rivera")).toBeNull();
+    expect(screen.queryByLabelText("alex@example.com")).toBeNull();
   });
 });

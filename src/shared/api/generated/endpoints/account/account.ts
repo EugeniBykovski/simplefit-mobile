@@ -31,6 +31,7 @@ import type {
   EmailIdentityList,
   ErrorResponse,
   InternalErrorResponse,
+  SignInMethodList,
   UnauthorizedResponse,
   ValidationErrorResponse
 } from '../../model';
@@ -726,6 +727,110 @@ export function useRequestMyEmailIdentityLink<TData = Awaited<ReturnType<typeof 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getRequestMyEmailIdentityLinkQueryOptions(emailIdentityLinkRequest,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export const getListMySignInMethodsUrl = () => {
+
+
+
+
+  return `/api/v1/me/sign-in-methods`
+}
+
+/**
+ * How the viewer's account can be signed in to, oldest first (within the same second, by provider): every email address whose ownership was proven
+ * with a code, and every Google or Apple account that signed in to it. An email method carries its address; a
+ * Google or Apple method carries only its provider and when it was added (the provider's account id is never
+ * returned, and an email a provider reported is never listed). Credentials are never included.
+ * @summary My sign-in methods
+ */
+export const listMySignInMethods = async ( options?: Parameters<typeof apiFetch>[1]): Promise<SignInMethodList> => {
+
+  return apiFetch<SignInMethodList>(getListMySignInMethodsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListMySignInMethodsQueryKey = () => {
+    return [
+    `/api/v1/me/sign-in-methods`
+    ] as const;
+    }
+
+
+export const getListMySignInMethodsQueryOptions = <TData = Awaited<ReturnType<typeof listMySignInMethods>>, TError = ErrorType<UnauthorizedResponse | InternalErrorResponse>>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMySignInMethods>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListMySignInMethodsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMySignInMethods>>> = ({ signal }) => listMySignInMethods({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMySignInMethods>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListMySignInMethodsQueryResult = NonNullable<Awaited<ReturnType<typeof listMySignInMethods>>>
+export type ListMySignInMethodsQueryError = ErrorType<UnauthorizedResponse | InternalErrorResponse>
+
+
+export function useListMySignInMethods<TData = Awaited<ReturnType<typeof listMySignInMethods>>, TError = ErrorType<UnauthorizedResponse | InternalErrorResponse>>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMySignInMethods>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listMySignInMethods>>,
+          TError,
+          Awaited<ReturnType<typeof listMySignInMethods>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListMySignInMethods<TData = Awaited<ReturnType<typeof listMySignInMethods>>, TError = ErrorType<UnauthorizedResponse | InternalErrorResponse>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMySignInMethods>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listMySignInMethods>>,
+          TError,
+          Awaited<ReturnType<typeof listMySignInMethods>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListMySignInMethods<TData = Awaited<ReturnType<typeof listMySignInMethods>>, TError = ErrorType<UnauthorizedResponse | InternalErrorResponse>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMySignInMethods>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary My sign-in methods
+ */
+
+export function useListMySignInMethods<TData = Awaited<ReturnType<typeof listMySignInMethods>>, TError = ErrorType<UnauthorizedResponse | InternalErrorResponse>>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMySignInMethods>>, TError, TData>>, request?: SecondParameter<typeof apiFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListMySignInMethodsQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

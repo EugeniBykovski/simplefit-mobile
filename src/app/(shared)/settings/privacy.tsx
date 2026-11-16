@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { PrivacyScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.privacy");
+export default function PrivacySettingsRoute() {
+  return <PrivacyScreen />;
+}

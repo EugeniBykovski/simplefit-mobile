@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { SecurityScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.security");
+export default function SecuritySettingsRoute() {
+  return <SecurityScreen />;
+}

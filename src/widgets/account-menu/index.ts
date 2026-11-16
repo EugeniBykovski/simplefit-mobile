@@ -1,1 +1,1 @@
-export { ProfileScreen, SettingsScreen } from "./ui/account-menu";
+export { ProfileScreen } from "./ui/account-menu";

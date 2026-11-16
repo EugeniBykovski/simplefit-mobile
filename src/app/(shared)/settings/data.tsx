@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { YourDataScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.data");
+export default function YourDataRoute() {
+  return <YourDataScreen />;
+}

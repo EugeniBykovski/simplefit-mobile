@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { EditProfileScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.profile");
+export default function EditProfileRoute() {
+  return <EditProfileScreen />;
+}

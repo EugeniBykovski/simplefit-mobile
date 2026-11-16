@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { ConnectedAppsScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.apps");
+export default function ConnectedAppsRoute() {
+  return <ConnectedAppsScreen />;
+}

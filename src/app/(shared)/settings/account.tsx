@@ -1,3 +1,5 @@
-import { placeholderRoute } from "@/widgets/feature-placeholder";
+import { AccountDetailsScreen } from "@/widgets/account-settings";
 
-export default placeholderRoute("mobile.settings.account");
+export default function AccountSettingsRoute() {
+  return <AccountDetailsScreen />;
+}
